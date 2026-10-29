@@ -1,0 +1,19 @@
+{
+  "name": "달빛 마을 RPG",
+  "short_name": "달빛 RPG",
+  "description": "마법사가 되어 달빛 마을을 지키는 모바일 액션 RPG",
+  "lang": "ko",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#16122a",
+  "theme_color": "#16122a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

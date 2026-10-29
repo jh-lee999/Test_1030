@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
+    <meta name="theme-color" content="#17132a" />
+    <meta name="description" content="마법사가 되어 달빛 마을을 지키는 모바일 탑다운 액션 RPG" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>달빛 마을 RPG</title>
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="hud-top">
+        <div class="hero-status">
+          <div class="portrait" aria-hidden="true"><span>✦</span></div>
+          <div class="status-copy">
+            <div class="name-row"><strong>루미</strong><span id="level-label">LV. 1</span></div>
+            <div class="bar hp-bar" aria-label="체력"><span id="hp-fill"></span><b id="hp-label">100 / 100</b></div>
+            <div class="bar xp-bar" aria-label="경험치"><span id="xp-fill"></span></div>
+          </div>
+        </div>
+        <div class="resource-row">
+          <span class="resource coin"><i>●</i><b id="coin-label">0</b></span>
+          <span class="resource crystal"><i>◆</i><b id="crystal-label">0</b></span>
+          <button class="sound-button" id="sound-button" aria-label="효과음 켜기 또는 끄기">♪</button>
+        </div>
+      </header>
+
+      <section class="game-stage" id="game-stage">
+        <canvas id="game-canvas" aria-label="달빛 마을 게임 화면"></canvas>
+
+        <div class="quest-tracker" id="quest-tracker">
+          <span class="quest-mark">!</span>
+          <div><small>현재 퀘스트</small><strong id="quest-title">달빛 마녀 루나를 만나기</strong></div>
+          <span class="quest-progress" id="quest-progress"></span>
+        </div>
+
+        <div class="area-banner" id="area-banner"><small>MOONLIGHT VILLAGE</small><strong>달빛 마을</strong></div>
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+        <div class="dialogue" id="dialogue" hidden>
+          <div class="dialogue-portrait" id="dialogue-avatar">☾</div>
+          <div class="dialogue-copy"><strong id="dialogue-name">달빛 마녀 루나</strong><p id="dialogue-text"></p></div>
+          <button id="dialogue-close" aria-label="대화 닫기">›</button>
+        </div>
+
+        <div class="mobile-controls" aria-label="게임 조작">
+          <div class="joystick" id="joystick" aria-label="이동 조이스틱">
+            <span class="joystick-knob" id="joystick-knob"></span>
+          </div>
+          <div class="action-controls">
+            <button class="action-button potion-button" id="potion-button" aria-label="회복 물약 사용"><span>♥</span><b id="potion-count">2</b></button>
+            <button class="action-button interact-button" id="interact-button" aria-label="NPC와 대화"><span>…</span><small>대화</small></button>
+            <button class="action-button attack-button" id="attack-button" aria-label="마법 공격"><span>✦</span><small>마법</small></button>
+          </div>
+        </div>
+
+        <div class="start-screen" id="start-screen">
+          <div class="title-stars" aria-hidden="true">✦　·　✧</div>
+          <div class="title-emblem" aria-hidden="true"><span>☾</span><i>✦</i></div>
+          <p class="title-kicker">A TINY ACTION RPG</p>
+          <h1>달빛 마을</h1>
+          <p>작은 마법사 루미와 함께<br />그림자 슬라임으로부터 마을을 지켜주세요.</p>
+          <button class="start-button" id="start-button">모험 시작</button>
+          <div class="control-hint"><span>● 조이스틱 이동</span><span>✦ 버튼으로 마법</span></div>
+        </div>
+
+        <div class="result-screen" id="result-screen" hidden>
+          <div class="result-card">
+            <span class="result-icon" id="result-icon">☾</span>
+            <p id="result-kicker">MOONLIGHT HERO</p>
+            <h2 id="result-title">달빛 마을의 수호자!</h2>
+            <p id="result-copy">킹 슬라임을 물리치고 마을에 평화를 되찾았습니다.</p>
+            <div class="result-stats">
+              <div><strong id="result-level">1</strong><span>레벨</span></div>
+              <div><strong id="result-kills">0</strong><span>슬라임</span></div>
+              <div><strong id="result-coins">0</strong><span>골드</span></div>
+            </div>
+            <button class="start-button" id="restart-button">다시 모험하기</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
