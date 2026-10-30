@@ -3,84 +3,104 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
-    <meta name="theme-color" content="#17132a" />
-    <meta name="description" content="마법사가 되어 달빛 마을을 지키는 모바일 탑다운 액션 RPG" />
+    <meta name="theme-color" content="#100d18" />
+    <meta name="description" content="증강을 선택하며 몰려오는 적을 버티는 클래식 생존 액션" />
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="icon" href="./icon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
-    <title>달빛 마을 RPG</title>
+    <title>별빛 생존자</title>
   </head>
   <body>
     <main class="game-shell">
-      <header class="hud-top">
-        <div class="hero-status">
-          <div class="portrait" aria-hidden="true"><span>✦</span></div>
-          <div class="status-copy">
-            <div class="name-row"><strong>루미</strong><span id="level-label">LV. 1</span></div>
-            <div class="bar hp-bar" aria-label="체력"><span id="hp-fill"></span><b id="hp-label">100 / 100</b></div>
-            <div class="bar xp-bar" aria-label="경험치"><span id="xp-fill"></span></div>
+      <header class="hud">
+        <section class="health-block">
+          <div class="portrait" aria-hidden="true">✦</div>
+          <div>
+            <div class="hud-label"><strong>방랑 마법사</strong><span id="level-label">LV. 1</span></div>
+            <div class="health-bar"><span id="health-fill"></span><b id="health-label">100 / 100</b></div>
           </div>
-        </div>
-        <div class="resource-row">
-          <span class="resource coin"><i>●</i><b id="coin-label">0</b></span>
-          <span class="resource crystal"><i>◆</i><b id="crystal-label">0</b></span>
-          <button class="sound-button" id="sound-button" aria-label="효과음 켜기 또는 끄기">♪</button>
-        </div>
+        </section>
+        <section class="timer-block">
+          <small>SURVIVE</small>
+          <strong id="timer-label">3:00</strong>
+        </section>
+        <section class="kill-block">
+          <small>처치</small>
+          <strong><span aria-hidden="true">☠</span> <b id="kill-label">0</b></strong>
+        </section>
       </header>
 
-      <section class="game-stage" id="game-stage">
-        <canvas id="game-canvas" aria-label="달빛 마을 게임 화면"></canvas>
+      <div class="xp-bar" aria-label="경험치">
+        <span id="xp-fill"></span>
+        <b id="xp-label">0 / 11</b>
+      </div>
 
-        <div class="quest-tracker" id="quest-tracker">
-          <span class="quest-mark">!</span>
-          <div><small>현재 퀘스트</small><strong id="quest-title">달빛 마녀 루나를 만나기</strong></div>
-          <span class="quest-progress" id="quest-progress"></span>
+      <section class="game-stage" id="game-stage">
+        <canvas id="game-canvas" aria-label="별빛 생존자 게임 화면"></canvas>
+
+        <div class="wave-banner" id="wave-banner">
+          <small id="wave-kicker">THE FIRST WAVE</small>
+          <strong id="wave-title">어둠이 몰려옵니다</strong>
         </div>
 
-        <div class="area-banner" id="area-banner"><small>MOONLIGHT VILLAGE</small><strong>달빛 마을</strong></div>
+        <div class="augment-strip" id="augment-strip" aria-label="보유 증강"></div>
+        <button class="pause-button" id="pause-button" aria-label="일시 정지">Ⅱ</button>
         <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-        <div class="dialogue" id="dialogue" hidden>
-          <div class="dialogue-portrait" id="dialogue-avatar">☾</div>
-          <div class="dialogue-copy"><strong id="dialogue-name">달빛 마녀 루나</strong><p id="dialogue-text"></p></div>
-          <button id="dialogue-close" aria-label="대화 닫기">›</button>
+        <div class="joystick" id="joystick" aria-label="이동 조이스틱">
+          <span class="joystick-knob" id="joystick-knob"></span>
         </div>
 
-        <div class="mobile-controls" aria-label="게임 조작">
-          <div class="joystick" id="joystick" aria-label="이동 조이스틱">
-            <span class="joystick-knob" id="joystick-knob"></span>
+        <div class="auto-attack">
+          <span class="pulse-ring"></span>
+          <b>✦</b>
+          <small>AUTO</small>
+        </div>
+
+        <section class="start-screen" id="start-screen">
+          <div class="logo-mark"><span>✦</span><i>☾</i></div>
+          <p class="kicker">CLASSIC SURVIVAL</p>
+          <h1>별빛 생존자</h1>
+          <p>이동은 직접, 공격은 자동.<br />3분 동안 증강을 조합해 살아남으세요.</p>
+          <button class="primary-button" id="start-button">생존 시작</button>
+          <div class="start-features">
+            <span><b>●</b> 조이스틱 이동</span>
+            <span><b>✦</b> 자동 공격</span>
+            <span><b>◈</b> 3지선다 증강</span>
           </div>
-          <div class="action-controls">
-            <button class="action-button potion-button" id="potion-button" aria-label="회복 물약 사용"><span>♥</span><b id="potion-count">2</b></button>
-            <button class="action-button interact-button" id="interact-button" aria-label="NPC와 대화"><span>…</span><small>대화</small></button>
-            <button class="action-button attack-button" id="attack-button" aria-label="마법 공격"><span>✦</span><small>마법</small></button>
+        </section>
+
+        <section class="augment-screen" id="augment-screen" hidden>
+          <div class="augment-heading">
+            <p>CHOOSE YOUR POWER</p>
+            <h2>증강 선택</h2>
+            <span>이번 생존에 적용할 힘을 하나 고르세요</span>
           </div>
-        </div>
+          <div class="augment-cards" id="augment-cards"></div>
+        </section>
 
-        <div class="start-screen" id="start-screen">
-          <div class="title-stars" aria-hidden="true">✦　·　✧</div>
-          <div class="title-emblem" aria-hidden="true"><span>☾</span><i>✦</i></div>
-          <p class="title-kicker">A TINY ACTION RPG</p>
-          <h1>달빛 마을</h1>
-          <p>작은 마법사 루미와 함께<br />그림자 슬라임으로부터 마을을 지켜주세요.</p>
-          <button class="start-button" id="start-button">모험 시작</button>
-          <div class="control-hint"><span>● 조이스틱 이동</span><span>✦ 버튼으로 마법</span></div>
-        </div>
+        <section class="pause-screen" id="pause-screen" hidden>
+          <div>
+            <span>Ⅱ</span>
+            <h2>일시 정지</h2>
+            <button class="primary-button" id="resume-button">계속하기</button>
+          </div>
+        </section>
 
-        <div class="result-screen" id="result-screen" hidden>
+        <section class="result-screen" id="result-screen" hidden>
           <div class="result-card">
-            <span class="result-icon" id="result-icon">☾</span>
-            <p id="result-kicker">MOONLIGHT HERO</p>
-            <h2 id="result-title">달빛 마을의 수호자!</h2>
-            <p id="result-copy">킹 슬라임을 물리치고 마을에 평화를 되찾았습니다.</p>
+            <span class="result-emblem" id="result-emblem">♛</span>
+            <p id="result-kicker">SURVIVOR</p>
+            <h2 id="result-title">새벽까지 살아남았습니다</h2>
+            <p id="result-copy"></p>
             <div class="result-stats">
-              <div><strong id="result-level">1</strong><span>레벨</span></div>
-              <div><strong id="result-kills">0</strong><span>슬라임</span></div>
-              <div><strong id="result-coins">0</strong><span>골드</span></div>
+              <div><strong id="result-level">1</strong><span>최종 레벨</span></div>
+              <div><strong id="result-kills">0</strong><span>처치 수</span></div>
+              <div><strong id="result-augments">0</strong><span>증강 수</span></div>
             </div>
-            <button class="start-button" id="restart-button">다시 모험하기</button>
+            <button class="primary-button" id="restart-button">다시 생존하기</button>
           </div>
-        </div>
+        </section>
       </section>
     </main>
 

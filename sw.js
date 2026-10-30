@@ -1,10 +1,10 @@
-const CACHE_NAME = "moonlight-rpg-v2";
+const CACHE_NAME = "arcane-survivor-v3";
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
-  "./rpg-engine.js",
+  "./survivor-engine.js",
   "./manifest.webmanifest",
   "./icon.svg"
 ];

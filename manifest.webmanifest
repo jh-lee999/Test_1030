@@ -1,7 +1,7 @@
 {
-  "name": "달빛 마을 RPG",
-  "short_name": "달빛 RPG",
-  "description": "마법사가 되어 달빛 마을을 지키는 모바일 액션 RPG",
+  "name": "별빛 생존자",
+  "short_name": "별빛 생존자",
+  "description": "증강을 선택하며 몰려오는 적을 버티는 클래식 생존 액션",
   "lang": "ko",
   "start_url": "./",
   "display": "standalone",
