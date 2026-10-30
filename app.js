@@ -15,7 +15,7 @@ import {
   rollAugments,
   takeDamage,
   xpNeeded
-} from "./survivor-engine.js?v=12";
+} from "./survivor-engine.js?v=13";
 
 const WORLD = { width: 2400, height: 1800 };
 const canvas = document.querySelector("#game-canvas");
@@ -37,7 +37,7 @@ const artSprites = {
 let artReady = false;
 artAtlas.decoding = "async";
 artAtlas.addEventListener("load", () => { artReady = true; });
-artAtlas.src = "./assets/starlight-atlas.webp?v=12";
+artAtlas.src = "./assets/starlight-atlas.webp?v=13";
 
 function drawArt(name, x, y, width, height, options = {}) {
   if (!artReady || !artAtlas.naturalWidth) return false;
@@ -74,7 +74,7 @@ const animatedRows = { player: 0, bat: 1, shade: 2, brute: 3, elite: 4 };
 let animatedArtReady = false;
 animatedAtlas.decoding = "async";
 animatedAtlas.addEventListener("load", () => { animatedArtReady = true; });
-animatedAtlas.src = "./assets/animated-characters.webp?v=12";
+animatedAtlas.src = "./assets/animated-characters.webp?v=13";
 
 function drawAnimatedArt(name, x, y, width, height, phase, options = {}) {
   if (!animatedArtReady || !animatedAtlas.naturalWidth || animatedRows[name] === undefined) {
@@ -109,53 +109,64 @@ function drawAnimatedArt(name, x, y, width, height, phase, options = {}) {
   return true;
 }
 
-const playerWalkAtlas = new Image();
-const playerWalkInbetweens = new Image();
-let playerWalkReady = false;
-let playerWalkInbetweensReady = false;
-playerWalkAtlas.decoding = "async";
-playerWalkInbetweens.decoding = "async";
-playerWalkAtlas.addEventListener("load", () => { playerWalkReady = true; });
-playerWalkInbetweens.addEventListener("load", () => { playerWalkInbetweensReady = true; });
-playerWalkAtlas.src = "./assets/player-walk.webp?v=12";
-playerWalkInbetweens.src = "./assets/player-walk-inbetweens.webp?v=12";
+const playerRig = {
+  body: new Image(),
+  leftLeg: new Image(),
+  rightLeg: new Image()
+};
+let playerRigPartsLoaded = 0;
+for (const [part, filename] of [
+  ["body", "player-rig-body.webp"],
+  ["leftLeg", "player-rig-left-leg.webp"],
+  ["rightLeg", "player-rig-right-leg.webp"]
+]) {
+  playerRig[part].decoding = "async";
+  playerRig[part].addEventListener("load", () => { playerRigPartsLoaded += 1; });
+  playerRig[part].src = "./assets/" + filename + "?v=13";
+}
 
-function drawPlayerWalk(x, y, width, height, time, options = {}) {
-  if (!playerWalkReady || !playerWalkAtlas.naturalWidth) {
-    return drawAnimatedArt("player", x, y, width, height, time * 8, options);
-  }
-  const frame = Math.floor(time * 15.5) % 16;
-  const pose = Math.floor(frame / 2);
-  const useInbetween = frame % 2 === 1 && playerWalkInbetweensReady;
-  const source = useInbetween ? playerWalkInbetweens : playerWalkAtlas;
-  const groundOffsets = useInbetween
-    ? [0, 0, 1, 0, 26, 26, 26, 23]
-    : [0, 13, 0, 0, 25, 49, 25, 26];
-  const column = pose % 4;
-  const row = Math.floor(pose / 4);
-  const cellWidth = source.naturalWidth / 4;
-  const cellHeight = source.naturalHeight / 2;
-  const groundOffset = groundOffsets[pose] / cellHeight * height;
-  const inset = 3;
+function drawRigPart(image, scale, pivotX, pivotY, rotation, lift, partScale) {
   ctx.save();
-  ctx.translate(x, y + groundOffset);
+  ctx.translate((pivotX - 222) * scale, (pivotY - 222) * scale + lift);
+  ctx.rotate(rotation);
+  ctx.scale(partScale, partScale);
+  ctx.drawImage(image, -pivotX * scale, -pivotY * scale, 444 * scale, 444 * scale);
+  ctx.restore();
+}
+
+function drawRiggedPlayer(x, y, size, time, options = {}) {
+  if (playerRigPartsLoaded < 3) {
+    return drawAnimatedArt("player", x, y, size, size, time * 7, options);
+  }
+  const scale = size / 444;
+  const phase = time * Math.PI * 2;
+  const swing = Math.sin(phase) * (options.motion ?? 1);
+  const stride = swing * 0.34;
+  const leftForward = swing >= 0;
+  const leftForwardAmount = Math.max(0, swing);
+  const rightForwardAmount = Math.max(0, -swing);
+  const leftLift = leftForwardAmount * 3 - rightForwardAmount * 5;
+  const rightLift = rightForwardAmount * 2 - leftForwardAmount * 5;
+  const leftScale = 1.12 + leftForwardAmount * 0.34 - rightForwardAmount * 0.08;
+  const rightScale = 0.9 + rightForwardAmount * 0.18 - leftForwardAmount * 0.08;
+
+  ctx.save();
+  ctx.translate(x, y);
   ctx.rotate(options.rotation || 0);
   ctx.scale(options.flip ? -1 : 1, 1);
   ctx.globalAlpha *= options.alpha ?? 1;
   ctx.filter = options.filter || "none";
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
-  ctx.drawImage(
-    source,
-    column * cellWidth + inset,
-    row * cellHeight + inset,
-    cellWidth - inset * 2,
-    cellHeight - inset * 2,
-    -width / 2,
-    -height / 2,
-    width,
-    height
-  );
+
+  if (leftForward) {
+    drawRigPart(playerRig.rightLeg, scale, 239, 342, stride, rightLift, rightScale);
+    drawRigPart(playerRig.leftLeg, scale, 183, 350, stride, leftLift, leftScale);
+  } else {
+    drawRigPart(playerRig.leftLeg, scale, 183, 350, stride, leftLift, leftScale);
+    drawRigPart(playerRig.rightLeg, scale, 239, 342, stride, rightLift, rightScale);
+  }
+  ctx.drawImage(playerRig.body, -size / 2, -size / 2, size, size);
   ctx.restore();
   return true;
 }
@@ -231,7 +242,16 @@ for (let i = 0; i < 17; i += 1) {
 
 function resetGame() {
   run = createRunState();
-  player = { x: WORLD.width / 2, y: WORLD.height / 2, radius: 15, facingX: 0, facingY: -1, moving: false };
+  player = {
+    x: WORLD.width / 2,
+    y: WORLD.height / 2,
+    radius: 15,
+    facingX: 0,
+    facingY: -1,
+    moving: false,
+    walkPhase: 0,
+    walkBlend: 0
+  };
   enemies = [];
   projectiles = [];
   slashes = [];
@@ -368,6 +388,7 @@ function movePlayer(dt) {
   const length = Math.hypot(movement.x, movement.y);
   if (length < 0.08) {
     player.moving = false;
+    player.walkBlend = Math.max(0, player.walkBlend - dt * 6);
     footstepTimer = 0;
     return;
   }
@@ -376,6 +397,8 @@ function movePlayer(dt) {
   player.facingX = dx;
   player.facingY = dy;
   player.moving = true;
+  player.walkPhase += dt * (run.moveSpeed / 175);
+  player.walkBlend = Math.min(1, player.walkBlend + dt * 8);
   player.x = clamp(player.x + dx * run.moveSpeed * dt, 40, WORLD.width - 40);
   player.y = clamp(player.y + dy * run.moveSpeed * dt, 40, WORLD.height - 40);
   footstepTimer -= dt;
@@ -909,8 +932,6 @@ function drawGround() {
 }
 
 function drawPlayer() {
-  const bob = player.moving ? 0 : Math.sin(elapsedVisual * 3) * 0.7;
-  const animationPhase = elapsedVisual * 4.2;
   const facingSign = player.facingX < -0.04 ? -1 : 1;
   drawShadow(player.x, player.y + 19, 23, 8, 0.34);
   if (castPulse > 0) {
@@ -932,12 +953,8 @@ function drawPlayer() {
     rotation: facingSign * meleePulse * 0.08
   };
   const artX = player.x - player.facingX * castPulse * 3;
-  if (player.moving) {
-    const walkTime = elapsedVisual * (run.moveSpeed / 175);
-    if (drawPlayerWalk(artX, player.y - 17, 94 * (1 + meleePulse * 0.035), 94 * (1 - meleePulse * 0.02), walkTime, artOptions)) return;
-  } else if (drawAnimatedArt("player", artX, player.y - 6 + bob, 86 * (1 + meleePulse * 0.035), 86 * (1 - meleePulse * 0.02), animationPhase, artOptions)) {
-    return;
-  }
+  artOptions.motion = player.walkBlend;
+  if (drawRiggedPlayer(artX, player.y - 27, 96 * (1 + meleePulse * 0.035), player.walkPhase, artOptions)) return;
   ctx.save();
   ctx.translate(player.x, player.y + bob);
   ctx.fillStyle = "#544064";
