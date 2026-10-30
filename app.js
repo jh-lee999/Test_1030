@@ -15,7 +15,7 @@ import {
   rollAugments,
   takeDamage,
   xpNeeded
-} from "./survivor-engine.js?v=13";
+} from "./survivor-engine.js?v=14";
 
 const WORLD = { width: 2400, height: 1800 };
 const canvas = document.querySelector("#game-canvas");
@@ -37,7 +37,7 @@ const artSprites = {
 let artReady = false;
 artAtlas.decoding = "async";
 artAtlas.addEventListener("load", () => { artReady = true; });
-artAtlas.src = "./assets/starlight-atlas.webp?v=13";
+artAtlas.src = "./assets/starlight-atlas.webp?v=14";
 
 function drawArt(name, x, y, width, height, options = {}) {
   if (!artReady || !artAtlas.naturalWidth) return false;
@@ -74,7 +74,7 @@ const animatedRows = { player: 0, bat: 1, shade: 2, brute: 3, elite: 4 };
 let animatedArtReady = false;
 animatedAtlas.decoding = "async";
 animatedAtlas.addEventListener("load", () => { animatedArtReady = true; });
-animatedAtlas.src = "./assets/animated-characters.webp?v=13";
+animatedAtlas.src = "./assets/animated-characters.webp?v=14";
 
 function drawAnimatedArt(name, x, y, width, height, phase, options = {}) {
   if (!animatedArtReady || !animatedAtlas.naturalWidth || animatedRows[name] === undefined) {
@@ -122,7 +122,7 @@ for (const [part, filename] of [
 ]) {
   playerRig[part].decoding = "async";
   playerRig[part].addEventListener("load", () => { playerRigPartsLoaded += 1; });
-  playerRig[part].src = "./assets/" + filename + "?v=13";
+  playerRig[part].src = "./assets/" + filename + "?v=14";
 }
 
 function drawRigPart(image, scale, pivotX, pivotY, rotation, lift, partScale) {
@@ -134,21 +134,34 @@ function drawRigPart(image, scale, pivotX, pivotY, rotation, lift, partScale) {
   ctx.restore();
 }
 
+function walkLegPose(progress, frontAngle, backAngle) {
+  // Traditional top-down gait: half a cycle planted, half a cycle swinging.
+  // Limb volume and the character's ground line stay constant throughout.
+  if (progress < 0.5) {
+    const stance = progress * 2;
+    return {
+      rotation: frontAngle + (backAngle - frontAngle) * stance,
+      lift: 0
+    };
+  }
+  const swing = (progress - 0.5) * 2;
+  const eased = swing * swing * (3 - 2 * swing);
+  return {
+    rotation: backAngle + (frontAngle - backAngle) * eased,
+    lift: -Math.sin(swing * Math.PI) * 3
+  };
+}
+
 function drawRiggedPlayer(x, y, size, time, options = {}) {
   if (playerRigPartsLoaded < 3) {
     return drawAnimatedArt("player", x, y, size, size, time * 7, options);
   }
   const scale = size / 444;
-  const phase = time * Math.PI * 2;
-  const swing = Math.sin(phase) * (options.motion ?? 1);
-  const stride = swing * 0.34;
-  const leftForward = swing >= 0;
-  const leftForwardAmount = Math.max(0, swing);
-  const rightForwardAmount = Math.max(0, -swing);
-  const leftLift = leftForwardAmount * 3 - rightForwardAmount * 5;
-  const rightLift = rightForwardAmount * 2 - leftForwardAmount * 5;
-  const leftScale = 1.12 + leftForwardAmount * 0.34 - rightForwardAmount * 0.08;
-  const rightScale = 0.9 + rightForwardAmount * 0.18 - leftForwardAmount * 0.08;
+  const motion = options.motion ?? 1;
+  const cycle = ((time % 1) + 1) % 1;
+  const leftPose = walkLegPose(cycle, 0.19, -0.12);
+  const rightPose = walkLegPose((cycle + 0.5) % 1, -0.19, 0.12);
+  const leftIsPlanted = cycle < 0.5;
 
   ctx.save();
   ctx.translate(x, y);
@@ -159,12 +172,12 @@ function drawRiggedPlayer(x, y, size, time, options = {}) {
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
 
-  if (leftForward) {
-    drawRigPart(playerRig.rightLeg, scale, 239, 342, stride, rightLift, rightScale);
-    drawRigPart(playerRig.leftLeg, scale, 183, 350, stride, leftLift, leftScale);
+  if (leftIsPlanted) {
+    drawRigPart(playerRig.rightLeg, scale, 239, 342, rightPose.rotation * motion, rightPose.lift * motion, 0.98);
+    drawRigPart(playerRig.leftLeg, scale, 183, 350, leftPose.rotation * motion, leftPose.lift * motion, 1.28);
   } else {
-    drawRigPart(playerRig.leftLeg, scale, 183, 350, stride, leftLift, leftScale);
-    drawRigPart(playerRig.rightLeg, scale, 239, 342, stride, rightLift, rightScale);
+    drawRigPart(playerRig.leftLeg, scale, 183, 350, leftPose.rotation * motion, leftPose.lift * motion, 1.28);
+    drawRigPart(playerRig.rightLeg, scale, 239, 342, rightPose.rotation * motion, rightPose.lift * motion, 0.98);
   }
   ctx.drawImage(playerRig.body, -size / 2, -size / 2, size, size);
   ctx.restore();
