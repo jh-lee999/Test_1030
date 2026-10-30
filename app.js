@@ -1,10 +1,12 @@
 import {
   AUGMENTS,
   RUN_DURATION,
+  WEAPON_LABELS,
   applyAugment,
   clamp,
   createRunState,
   currentDamage,
+  currentMeleeDamage,
   distance,
   formatTime,
   gainExperience,
@@ -31,6 +33,7 @@ let run;
 let player;
 let enemies;
 let projectiles;
+let slashes;
 let gems;
 let particles;
 let damageNumbers;
@@ -41,6 +44,9 @@ let gameEnded = false;
 let levelQueue = 0;
 let spawnTimer = 0;
 let attackTimer = 0;
+let meleeTimer = 0;
+let shotCounter = 0;
+let enemyId = 0;
 let elapsedVisual = 0;
 let lastTime = performance.now();
 let viewWidth = 390;
@@ -79,12 +85,15 @@ function resetGame() {
   player = { x: WORLD.width / 2, y: WORLD.height / 2, radius: 15, facingX: 0, facingY: -1, moving: false };
   enemies = [];
   projectiles = [];
+  slashes = [];
   gems = [];
   particles = [];
   damageNumbers = [];
   levelQueue = 0;
   spawnTimer = 0;
   attackTimer = 0.2;
+  meleeTimer = 0.25;
+  shotCounter = 0;
   gameEnded = false;
   choosingAugment = false;
   paused = false;
@@ -168,6 +177,7 @@ function spawnEnemy(forcedType, radiusOverride) {
   const y = clamp(player.y + Math.sin(angle) * radius, 45, WORLD.height - 45);
   const scaling = 1 + time / 210;
   enemies.push({
+    id: ++enemyId,
     type,
     x,
     y,
@@ -250,6 +260,8 @@ function fireVolley(target, echo = false) {
       radius: run.projectileSize,
       damage,
       life: 1.25,
+      pierce: run.projectilePierce,
+      hitIds: new Set(),
       dead: false,
       echo
     });
@@ -258,14 +270,67 @@ function fireVolley(target, echo = false) {
   playTone(echo ? 620 : 510, 0.06, "triangle", echo ? 0.015 : 0.022);
 }
 
+function fireNova() {
+  for (let i = 0; i < 8; i += 1) {
+    const angle = i / 8 * Math.PI * 2;
+    projectiles.push({
+      x: player.x + Math.cos(angle) * 20,
+      y: player.y + Math.sin(angle) * 20,
+      vx: Math.cos(angle) * run.projectileSpeed * 0.86,
+      vy: Math.sin(angle) * run.projectileSpeed * 0.86,
+      radius: run.projectileSize * 0.85,
+      damage: currentDamage(run) * 0.58,
+      life: 1,
+      pierce: 0,
+      hitIds: new Set(),
+      dead: false,
+      echo: true
+    });
+  }
+  emitParticles(player.x, player.y, "#e6c477", 18, 120);
+  playTone(760, 0.12, "sine", 0.03);
+}
+
 function autoAttack(dt) {
   attackTimer -= dt;
   if (attackTimer > 0) return;
   const target = nearestEnemy();
   if (!target) return;
   fireVolley(target);
+  shotCounter += 1;
+  if (run.novaEvery > 0 && shotCounter % run.novaEvery === 0) fireNova();
   if (Math.random() < run.echoChance) fireVolley(target, true);
   attackTimer = run.cooldown;
+}
+
+function autoMelee(dt) {
+  meleeTimer -= dt;
+  if (meleeTimer > 0) return;
+  const target = nearestEnemy(run.meleeRange + 40);
+  if (!target) return;
+  const angle = Math.atan2(target.y - player.y, target.x - player.x);
+  const arc = Math.PI * 1.3;
+  const baseDamage = currentMeleeDamage(run);
+  slashes.push({ x: player.x, y: player.y, angle, radius: run.meleeRange, life: 0.24, maxLife: 0.24 });
+
+  for (const enemy of enemies) {
+    if (enemy.dead || distance(player, enemy) > run.meleeRange + enemy.radius) continue;
+    const enemyAngle = Math.atan2(enemy.y - player.y, enemy.x - player.x);
+    const difference = Math.atan2(Math.sin(enemyAngle - angle), Math.cos(enemyAngle - angle));
+    if (Math.abs(difference) > arc / 2) continue;
+    const execute = run.meleeExecute > 0 && enemy.hp / enemy.maxHp <= run.meleeExecute;
+    const damage = execute ? enemy.hp + 1 : baseDamage;
+    enemy.hp -= damage;
+    enemy.hitFlash = 0.12;
+    const d = Math.max(1, distance(player, enemy));
+    enemy.x += (enemy.x - player.x) / d * 22;
+    enemy.y += (enemy.y - player.y) / d * 22;
+    addDamageNumber(enemy.x, enemy.y - enemy.radius, execute ? "처형" : Math.round(damage), "#d5ade9");
+    if (enemy.hp <= 0) killEnemy(enemy, "melee");
+  }
+  emitParticles(player.x + Math.cos(angle) * run.meleeRange * 0.6, player.y + Math.sin(angle) * run.meleeRange * 0.6, "#c89ce2", 10, 90);
+  playTone(310, 0.09, "sawtooth", 0.022);
+  meleeTimer = run.meleeCooldown;
 }
 
 function updateSpawning(dt) {
@@ -309,7 +374,8 @@ function updateEnemies(dt) {
     enemy.y += dy * enemy.speed * slowMultiplier * dt;
 
     if (d < enemy.radius + player.radius && enemy.attackCooldown <= 0) {
-      const result = takeDamage(run, enemy.damage);
+      const bonusArmor = run.closeArmor > 0 && d <= run.meleeRange + enemy.radius ? run.closeArmor : 0;
+      const result = takeDamage(run, enemy.damage, bonusArmor);
       run = result.state;
       enemy.attackCooldown = enemy.type === "elite" ? 1.05 : 0.72;
       enemy.x -= dx * 22;
@@ -320,7 +386,7 @@ function updateEnemies(dt) {
       playTone(115, 0.13, "sawtooth", 0.03);
       if (run.thorns > 0) {
         enemy.hp -= run.thorns;
-        if (enemy.hp <= 0) killEnemy(enemy);
+        if (enemy.hp <= 0) killEnemy(enemy, "thorns");
       }
       updateHud();
       if (run.hp <= 0) endGame(false);
@@ -330,28 +396,51 @@ function updateEnemies(dt) {
 
 function updateProjectiles(dt) {
   for (const projectile of projectiles) {
+    if (run.projectileHoming > 0) {
+      let target = null;
+      let nearest = 220;
+      for (const enemy of enemies) {
+        if (enemy.dead || projectile.hitIds.has(enemy.id)) continue;
+        const d = distance(projectile, enemy);
+        if (d < nearest) {
+          nearest = d;
+          target = enemy;
+        }
+      }
+      if (target) {
+        const speed = Math.hypot(projectile.vx, projectile.vy);
+        const currentAngle = Math.atan2(projectile.vy, projectile.vx);
+        const targetAngle = Math.atan2(target.y - projectile.y, target.x - projectile.x);
+        const difference = Math.atan2(Math.sin(targetAngle - currentAngle), Math.cos(targetAngle - currentAngle));
+        const nextAngle = currentAngle + clamp(difference, -run.projectileHoming * dt, run.projectileHoming * dt);
+        projectile.vx = Math.cos(nextAngle) * speed;
+        projectile.vy = Math.sin(nextAngle) * speed;
+      }
+    }
     projectile.x += projectile.vx * dt;
     projectile.y += projectile.vy * dt;
     projectile.life -= dt;
     if (projectile.life <= 0) projectile.dead = true;
     if (projectile.dead) continue;
     for (const enemy of enemies) {
-      if (enemy.dead || distance(projectile, enemy) > projectile.radius + enemy.radius) continue;
-      projectile.dead = true;
+      if (enemy.dead || projectile.hitIds.has(enemy.id) || distance(projectile, enemy) > projectile.radius + enemy.radius) continue;
+      projectile.hitIds.add(enemy.id);
       enemy.hp -= projectile.damage;
       enemy.hitFlash = 0.1;
       if (Math.random() < run.slowChance) enemy.slow = 1.6;
       addDamageNumber(enemy.x, enemy.y - enemy.radius, Math.round(projectile.damage), "#f2dea0");
       emitParticles(projectile.x, projectile.y, projectile.echo ? "#af85d5" : "#e9cc84", 6, 90);
-      if (enemy.hp <= 0) killEnemy(enemy);
-      break;
+      if (enemy.hp <= 0) killEnemy(enemy, "ranged");
+      if (projectile.pierce > 0) projectile.pierce -= 1;
+      else projectile.dead = true;
+      if (projectile.dead) break;
     }
   }
   projectiles = projectiles.filter((projectile) => !projectile.dead);
 }
 
 function orbitalPosition(index) {
-  const angle = elapsedVisual * 2.7 + index / Math.max(1, run.orbitals) * Math.PI * 2;
+  const angle = elapsedVisual * 2.7 * run.orbitalSpeedMultiplier + index / Math.max(1, run.orbitals) * Math.PI * 2;
   return { x: player.x + Math.cos(angle) * 64, y: player.y + Math.sin(angle) * 64, angle };
 }
 
@@ -361,21 +450,21 @@ function updateOrbitals() {
     const blade = orbitalPosition(i);
     for (const enemy of enemies) {
       if (enemy.dead || enemy.orbitalCooldown > 0 || distance(blade, enemy) > enemy.radius + 13) continue;
-      const damage = currentDamage(run) * 0.62;
+      const damage = currentDamage(run) * 0.62 * run.orbitalDamageMultiplier;
       enemy.hp -= damage;
       enemy.orbitalCooldown = 0.38;
       enemy.hitFlash = 0.1;
       addDamageNumber(enemy.x, enemy.y - enemy.radius, Math.round(damage), "#c9a9e4");
       emitParticles(blade.x, blade.y, "#b991db", 5, 75);
-      if (enemy.hp <= 0) killEnemy(enemy);
+      if (enemy.hp <= 0) killEnemy(enemy, "orbital");
     }
   }
 }
 
-function killEnemy(enemy) {
+function killEnemy(enemy, source = "ranged") {
   if (enemy.dead) return;
   enemy.dead = true;
-  run = registerKill(run);
+  run = registerKill(run, source);
   gems.push({
     x: enemy.x,
     y: enemy.y,
@@ -397,8 +486,9 @@ function updateGems(dt) {
   for (const gem of gems) {
     gem.phase += dt * 4;
     const d = distance(gem, player);
-    if (d < run.pickupRadius) {
-      const speed = 260 + (run.pickupRadius - Math.min(run.pickupRadius, d)) * 4;
+    const attractionRange = run.pickupRadius * 3.2;
+    if (d < attractionRange) {
+      const speed = 220 + (attractionRange - Math.min(attractionRange, d)) * 2.2;
       gem.vx += (player.x - gem.x) / Math.max(1, d) * speed * dt;
       gem.vy += (player.y - gem.y) / Math.max(1, d) * speed * dt;
     }
@@ -432,9 +522,9 @@ function showAugmentChoices() {
   container.innerHTML = choices.map((id) => {
     const augment = AUGMENTS[id];
     const legendary = augment.rarity === "전설" ? " legendary" : "";
-    return "<button class=\"augment-card" + legendary + "\" data-augment=\"" + id + "\">" +
+    return "<button class=\"augment-card weapon-" + augment.weapon + legendary + "\" data-augment=\"" + id + "\">" +
       "<span class=\"augment-icon\">" + augment.icon + "</span>" +
-      "<span class=\"augment-copy\"><small>" + augment.rarity + " 증강</small><h3>" + augment.name +
+      "<span class=\"augment-copy\"><small><em>" + WEAPON_LABELS[augment.weapon] + "</em>" + augment.rarity + "</small><h3>" + augment.name +
       "</h3><p>" + augment.description + "</p></span><span class=\"augment-arrow\">›</span></button>";
   }).join("");
   $("#augment-screen").hidden = false;
@@ -457,7 +547,8 @@ function chooseAugment(id) {
 
 function renderAugmentStrip() {
   $("#augment-strip").innerHTML = run.augments.map((id) => (
-    "<span class=\"augment-chip\" title=\"" + AUGMENTS[id].name + "\">" + AUGMENTS[id].icon + "</span>"
+    "<span class=\"augment-chip weapon-" + AUGMENTS[id].weapon + "\" title=\"" +
+      WEAPON_LABELS[AUGMENTS[id].weapon] + " · " + AUGMENTS[id].name + "\">" + AUGMENTS[id].icon + "</span>"
   )).join("");
 }
 
@@ -475,6 +566,8 @@ function updateParticles(dt) {
     number.life -= dt;
   }
   damageNumbers = damageNumbers.filter((number) => number.life > 0);
+  for (const slash of slashes) slash.life -= dt;
+  slashes = slashes.filter((slash) => slash.life > 0);
 }
 
 function emitParticles(x, y, color, count, speed) {
@@ -514,6 +607,7 @@ function update(dt) {
   movePlayer(dt);
   updateSpawning(dt);
   autoAttack(dt);
+  autoMelee(dt);
   updateEnemies(dt);
   updateProjectiles(dt);
   updateOrbitals();
@@ -709,6 +803,28 @@ function drawProjectiles() {
   }
 }
 
+function drawSlashes() {
+  for (const slash of slashes) {
+    const progress = 1 - slash.life / slash.maxLife;
+    ctx.save();
+    ctx.globalAlpha = Math.sin(progress * Math.PI);
+    ctx.strokeStyle = "#d9b5eb";
+    ctx.lineWidth = 12 - progress * 5;
+    ctx.lineCap = "round";
+    ctx.shadowColor = "#a775ca";
+    ctx.shadowBlur = 15;
+    ctx.beginPath();
+    ctx.arc(slash.x, slash.y, slash.radius * (0.72 + progress * 0.28), slash.angle - Math.PI * 0.65, slash.angle + Math.PI * 0.65);
+    ctx.stroke();
+    ctx.strokeStyle = "#f4e6fa";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(slash.x, slash.y, slash.radius * (0.72 + progress * 0.28), slash.angle - Math.PI * 0.65, slash.angle + Math.PI * 0.65);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
 function drawOrbitals() {
   for (let i = 0; i < run.orbitals; i += 1) {
     const blade = orbitalPosition(i);
@@ -775,6 +891,7 @@ function render() {
   drawGems();
   enemies.forEach(drawEnemy);
   drawProjectiles();
+  drawSlashes();
   drawOrbitals();
   drawPlayer();
   drawEffects();

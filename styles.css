@@ -495,6 +495,8 @@ button:focus-visible {
 .start-features {
   display: flex;
   margin-top: 18px;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 12px;
   color: #807689;
   font-size: 7px;
@@ -561,6 +563,18 @@ button:focus-visible {
   background: linear-gradient(120deg, rgba(77, 55, 64, 0.98), rgba(34, 25, 39, 0.98));
 }
 
+.augment-card.weapon-starbolt {
+  border-left: 3px solid #75bccf;
+}
+
+.augment-card.weapon-crescent {
+  border-left: 3px solid #c18bda;
+}
+
+.augment-card.weapon-orbit {
+  border-left: 3px solid #e1bd68;
+}
+
 .augment-icon {
   display: grid;
   width: 58px;
@@ -585,10 +599,41 @@ button:focus-visible {
 }
 
 .augment-copy small {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   color: #b38ad1;
   font-size: 7px;
   font-weight: 900;
 }
+
+.augment-copy small em {
+  padding: 3px 6px;
+  border-radius: 99px;
+  color: #c9c0cf;
+  background: rgba(255, 255, 255, 0.07);
+  font-style: normal;
+  letter-spacing: 0;
+}
+
+.weapon-starbolt .augment-copy small em {
+  color: #a8dce7;
+  background: rgba(117, 188, 207, 0.12);
+}
+
+.weapon-crescent .augment-copy small em {
+  color: #ddb5ec;
+  background: rgba(193, 139, 218, 0.12);
+}
+
+.weapon-orbit .augment-copy small em {
+  color: #ebcf8d;
+  background: rgba(225, 189, 104, 0.12);
+}
+
+.augment-chip.weapon-starbolt { border-color: rgba(117, 188, 207, 0.45); color: #9fd7e4; }
+.augment-chip.weapon-crescent { border-color: rgba(193, 139, 218, 0.45); color: #d6a8e8; }
+.augment-chip.weapon-orbit { border-color: rgba(225, 189, 104, 0.5); color: #e7c879; }
 
 .legendary .augment-copy small {
   color: var(--gold);

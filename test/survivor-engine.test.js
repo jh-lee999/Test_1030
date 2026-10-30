@@ -23,6 +23,8 @@ test("새 게임은 3분 생존용 기본 능력치로 시작한다", () => {
   assert.equal(state.level, 1);
   assert.equal(state.hp, 100);
   assert.equal(state.projectileCount, 1);
+  assert.equal(state.meleeDamage, 22);
+  assert.equal(state.meleeRange, 76);
   assert.deepEqual(state.augments, []);
 });
 
@@ -42,6 +44,7 @@ test("증강 선택지는 중복 없이 세 개를 제공한다", () => {
   assert.equal(choices.length, 3);
   assert.equal(new Set(choices).size, 3);
   choices.forEach((id) => assert.ok(AUGMENTS[id]));
+  assert.ok(choices.some((id) => AUGMENTS[id].weapon !== "common"), "무기 특수 증강이 최소 하나 포함되어야 한다");
 });
 
 test("이미 보유한 증강은 다시 선택지에 나오지 않는다", () => {
@@ -59,9 +62,32 @@ test("쌍둥이 인장은 투사체를 늘리고 피해량을 조정한다", () 
 
 test("유리별 대포는 공격력을 높이는 대신 최대 체력을 줄인다", () => {
   const state = applyAugment(createRunState(), "glass_star");
-  assert.equal(state.damage, 12 * 1.65);
+  assert.equal(state.damage, 12 * 1.6);
+  assert.equal(state.meleeDamage, 22 * 1.6);
   assert.equal(state.maxHp, 75);
   assert.equal(state.hp, 75);
+});
+
+test("거대 초승달은 근접 범위와 피해를 함께 높인다", () => {
+  const state = applyAugment(createRunState(), "giant_crescent");
+  assert.equal(state.meleeRange, 76 * 1.4);
+  assert.equal(state.meleeDamage, 22 * 1.35);
+});
+
+test("피의 초승달은 근접 처치에만 추가 회복을 제공한다", () => {
+  let state = applyAugment(createRunState(), "blood_moon");
+  state.hp = 50;
+  assert.equal(registerKill(state, "ranged").hp, 50);
+  assert.equal(registerKill(state, "melee").hp, 53);
+});
+
+test("공전 칼날 특수 증강은 무기를 얻은 뒤에만 적용된다", () => {
+  const initial = createRunState();
+  assert.equal(applyAugment(initial, "razor_orbit").augments.includes("razor_orbit"), false);
+  const unlocked = applyAugment(initial, "orbiting_blades");
+  const upgraded = applyAugment(unlocked, "razor_orbit");
+  assert.equal(upgraded.orbitalSpeedMultiplier, 1.45);
+  assert.equal(upgraded.orbitalDamageMultiplier, 1.6);
 });
 
 test("영혼 포식은 처치 시 체력을 회복한다", () => {
@@ -76,6 +102,7 @@ test("방어력은 받는 피해를 줄이되 최소 피해 1은 유지한다", 
   const armored = applyAugment(createRunState(), "thorn_skin");
   assert.equal(takeDamage(armored, 10).damage, 7);
   assert.equal(takeDamage(armored, 2).damage, 1);
+  assert.equal(takeDamage(armored, 10, 5).damage, 2);
 });
 
 test("최후의 저항은 낮은 체력에서만 피해량을 두 배로 만든다", () => {
