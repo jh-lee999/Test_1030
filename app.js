@@ -15,7 +15,7 @@ import {
   rollAugments,
   takeDamage,
   xpNeeded
-} from "./survivor-engine.js?v=9";
+} from "./survivor-engine.js?v=10";
 
 const WORLD = { width: 2400, height: 1800 };
 const canvas = document.querySelector("#game-canvas");
@@ -37,7 +37,7 @@ const artSprites = {
 let artReady = false;
 artAtlas.decoding = "async";
 artAtlas.addEventListener("load", () => { artReady = true; });
-artAtlas.src = "./assets/starlight-atlas.webp?v=9";
+artAtlas.src = "./assets/starlight-atlas.webp?v=10";
 
 function drawArt(name, x, y, width, height, options = {}) {
   if (!artReady || !artAtlas.naturalWidth) return false;
@@ -74,7 +74,7 @@ const animatedRows = { player: 0, bat: 1, shade: 2, brute: 3, elite: 4 };
 let animatedArtReady = false;
 animatedAtlas.decoding = "async";
 animatedAtlas.addEventListener("load", () => { animatedArtReady = true; });
-animatedAtlas.src = "./assets/animated-characters.webp?v=9";
+animatedAtlas.src = "./assets/animated-characters.webp?v=10";
 
 function drawAnimatedArt(name, x, y, width, height, phase, options = {}) {
   if (!animatedArtReady || !animatedAtlas.naturalWidth || animatedRows[name] === undefined) {
@@ -98,6 +98,45 @@ function drawAnimatedArt(name, x, y, width, height, phase, options = {}) {
     animatedAtlas,
     frame * cellWidth + inset,
     animatedRows[name] * cellHeight + inset,
+    cellWidth - inset * 2,
+    cellHeight - inset * 2,
+    -width / 2,
+    -height / 2,
+    width,
+    height
+  );
+  ctx.restore();
+  return true;
+}
+
+const playerWalkAtlas = new Image();
+let playerWalkReady = false;
+playerWalkAtlas.decoding = "async";
+playerWalkAtlas.addEventListener("load", () => { playerWalkReady = true; });
+playerWalkAtlas.src = "./assets/player-walk.webp?v=10";
+
+function drawPlayerWalk(x, y, width, height, time, options = {}) {
+  if (!playerWalkReady || !playerWalkAtlas.naturalWidth) {
+    return drawAnimatedArt("player", x, y, width, height, time * 8, options);
+  }
+  const frame = Math.floor(time * 11.5) % 8;
+  const column = frame % 4;
+  const row = Math.floor(frame / 4);
+  const cellWidth = playerWalkAtlas.naturalWidth / 4;
+  const cellHeight = playerWalkAtlas.naturalHeight / 2;
+  const inset = 3;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(options.rotation || 0);
+  ctx.scale(options.flip ? -1 : 1, 1);
+  ctx.globalAlpha *= options.alpha ?? 1;
+  ctx.filter = options.filter || "none";
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(
+    playerWalkAtlas,
+    column * cellWidth + inset,
+    row * cellHeight + inset,
     cellWidth - inset * 2,
     cellHeight - inset * 2,
     -width / 2,
@@ -141,6 +180,7 @@ let dpr = 1;
 let screenShake = 0;
 let castPulse = 0;
 let meleePulse = 0;
+let footstepTimer = 0;
 let toastTimer;
 let audioContext;
 let soundEnabled = true;
@@ -192,6 +232,7 @@ function resetGame() {
   shotCounter = 0;
   castPulse = 0;
   meleePulse = 0;
+  footstepTimer = 0;
   gameEnded = false;
   choosingAugment = false;
   paused = false;
@@ -315,6 +356,7 @@ function movePlayer(dt) {
   const length = Math.hypot(movement.x, movement.y);
   if (length < 0.08) {
     player.moving = false;
+    footstepTimer = 0;
     return;
   }
   const dx = movement.x / Math.max(1, length);
@@ -324,6 +366,11 @@ function movePlayer(dt) {
   player.moving = true;
   player.x = clamp(player.x + dx * run.moveSpeed * dt, 40, WORLD.width - 40);
   player.y = clamp(player.y + dy * run.moveSpeed * dt, 40, WORLD.height - 40);
+  footstepTimer -= dt;
+  if (footstepTimer <= 0) {
+    emitParticles(player.x - dx * 9, player.y - dy * 9 + 17, "rgba(127,108,145,.55)", 3, 28);
+    footstepTimer = 0.27;
+  }
 }
 
 function nearestEnemy(maxDistance = 720) {
@@ -835,8 +882,8 @@ function drawGround() {
 }
 
 function drawPlayer() {
-  const bob = player.moving ? Math.sin(elapsedVisual * 13) * 2 : Math.sin(elapsedVisual * 3) * 0.7;
-  const animationPhase = elapsedVisual * (player.moving ? 9.5 : 4.2);
+  const bob = player.moving ? 0 : Math.sin(elapsedVisual * 3) * 0.7;
+  const animationPhase = elapsedVisual * 4.2;
   const facingSign = player.facingX < -0.04 ? -1 : 1;
   drawShadow(player.x, player.y + 19, 23, 8, 0.34);
   if (castPulse > 0) {
@@ -853,10 +900,17 @@ function drawPlayer() {
     ctx.stroke();
     ctx.restore();
   }
-  if (drawAnimatedArt("player", player.x - player.facingX * castPulse * 3, player.y - 6 + bob, 86 * (1 + meleePulse * 0.035), 86 * (1 - meleePulse * 0.02), animationPhase, {
+  const artOptions = {
     flip: facingSign < 0,
     rotation: facingSign * meleePulse * 0.08
-  })) return;
+  };
+  const artX = player.x - player.facingX * castPulse * 3;
+  if (player.moving) {
+    const walkTime = elapsedVisual * (run.moveSpeed / 175);
+    if (drawPlayerWalk(artX, player.y - 17, 94 * (1 + meleePulse * 0.035), 94 * (1 - meleePulse * 0.02), walkTime, artOptions)) return;
+  } else if (drawAnimatedArt("player", artX, player.y - 6 + bob, 86 * (1 + meleePulse * 0.035), 86 * (1 - meleePulse * 0.02), animationPhase, artOptions)) {
+    return;
+  }
   ctx.save();
   ctx.translate(player.x, player.y + bob);
   ctx.fillStyle = "#544064";
