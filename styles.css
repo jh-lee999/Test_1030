@@ -1,11 +1,11 @@
 :root {
   color-scheme: dark;
-  --night: #0d0a14;
-  --panel: rgba(22, 17, 31, 0.94);
-  --ink: #f6f1e6;
-  --muted: #9c93a8;
-  --gold: #e6c477;
-  --purple: #a47ad4;
+  --night: #0a0813;
+  --panel: rgba(20, 15, 34, 0.94);
+  --ink: #f5f0e8;
+  --muted: #a49ab2;
+  --gold: #e9c875;
+  --purple: #9f77da;
   --red: #d95f72;
   --blue: #7fc4d3;
   --line: rgba(255, 255, 255, 0.1);
@@ -26,7 +26,7 @@ body {
   margin: 0;
   overflow: hidden;
   overscroll-behavior: none;
-  background: #07050b;
+  background: #05040a;
   touch-action: none;
 }
 
@@ -61,7 +61,10 @@ button:focus-visible {
   align-items: center;
   gap: 10px;
   border-bottom: 1px solid var(--line);
-  background: linear-gradient(180deg, #21182b, #15101d);
+  background:
+    linear-gradient(180deg, rgba(40, 27, 59, 0.98), rgba(16, 12, 27, 0.99)),
+    #100c1b;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32);
 }
 
 .health-block {
@@ -79,12 +82,13 @@ button:focus-visible {
   place-items: center;
   border: 2px solid #ad8c55;
   border-radius: 50%;
-  color: var(--gold);
-  background:
-    radial-gradient(circle at 50% 65%, #685087 0 28%, transparent 29%),
-    radial-gradient(circle at 50% 44%, #e7bc94 0 20%, transparent 21%),
-    #2e213c;
-  box-shadow: 0 0 0 3px #17101f, 0 0 18px rgba(164, 122, 212, 0.2);
+  color: transparent;
+  background-color: #21172f;
+  background-image: url("./assets/starlight-atlas.webp?v=8");
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-size: 400% 200%;
+  box-shadow: 0 0 0 3px #17101f, 0 0 20px rgba(164, 122, 212, 0.34);
 }
 
 .hud-label {
@@ -201,7 +205,7 @@ button:focus-visible {
   flex: 1;
   overflow: hidden;
   isolation: isolate;
-  background: #24202a;
+  background: #171424;
 }
 
 #game-canvas {
@@ -263,7 +267,7 @@ button:focus-visible {
   border: 1px solid rgba(230, 196, 119, 0.35);
   border-radius: 9px;
   color: var(--gold);
-  background: rgba(22, 16, 29, 0.82);
+  background: linear-gradient(145deg, rgba(38, 27, 53, 0.92), rgba(15, 11, 25, 0.92));
   box-shadow: 0 5px 14px rgba(0, 0, 0, 0.28);
   font-family: Georgia, serif;
   font-size: 12px;
@@ -282,7 +286,7 @@ button:focus-visible {
   border: 1px solid rgba(255, 255, 255, 0.13);
   border-radius: 50%;
   color: #d6cedc;
-  background: rgba(22, 16, 29, 0.75);
+  background: rgba(18, 13, 30, 0.82);
   backdrop-filter: blur(5px);
   font-size: 11px;
 }
@@ -318,10 +322,10 @@ button:focus-visible {
   left: 22px;
   width: 112px;
   height: 112px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(207, 182, 237, 0.22);
   border-radius: 50%;
-  background: rgba(13, 9, 18, 0.32);
-  box-shadow: inset 0 0 26px rgba(0, 0, 0, 0.28);
+  background: radial-gradient(circle, rgba(41, 29, 59, 0.52), rgba(10, 8, 18, 0.34));
+  box-shadow: inset 0 0 26px rgba(0, 0, 0, 0.34), 0 0 22px rgba(110, 72, 158, 0.08);
   backdrop-filter: blur(3px);
   touch-action: none;
 }
@@ -356,8 +360,8 @@ button:focus-visible {
   height: 48px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 50%;
-  background: linear-gradient(145deg, #76589c, #463653);
-  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.45);
+  background: radial-gradient(circle at 35% 30%, #a987d3, #543d76 52%, #2c203e);
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.45), inset 0 0 0 3px rgba(255, 255, 255, 0.04);
 }
 
 .auto-attack {
@@ -374,7 +378,8 @@ button:focus-visible {
   border: 1px solid rgba(230, 196, 119, 0.34);
   border-radius: 50%;
   color: var(--gold);
-  background: rgba(23, 16, 31, 0.6);
+  background: radial-gradient(circle, rgba(52, 38, 69, 0.78), rgba(16, 12, 26, 0.68));
+  box-shadow: inset 0 0 20px rgba(196, 149, 232, 0.1), 0 0 24px rgba(230, 196, 119, 0.08);
   pointer-events: none;
 }
 
@@ -415,9 +420,26 @@ button:focus-visible {
   justify-content: center;
   text-align: center;
   background:
-    radial-gradient(circle at 50% 33%, rgba(115, 76, 145, 0.3), transparent 28%),
-    linear-gradient(155deg, rgba(29, 21, 39, 0.98), rgba(9, 7, 13, 0.99));
+    radial-gradient(circle at 50% 27%, rgba(129, 86, 176, 0.28), transparent 31%),
+    radial-gradient(circle at 15% 80%, rgba(61, 129, 153, 0.1), transparent 28%),
+    linear-gradient(155deg, rgba(29, 20, 45, 0.99), rgba(7, 6, 13, 0.995));
 }
+
+.start-screen::before,
+.start-screen::after {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border: 1px solid rgba(233, 200, 117, 0.08);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.start-screen::before { transform: rotate(23deg); }
+.start-screen::after { width: 220px; height: 220px; border-style: dashed; opacity: 0.55; }
+
+.start-screen > * { position: relative; z-index: 1; }
 
 .start-screen.hidden {
   display: none;
@@ -426,33 +448,17 @@ button:focus-visible {
 .logo-mark {
   position: relative;
   display: grid;
-  width: 100px;
-  height: 100px;
-  margin-bottom: 22px;
+  width: 152px;
+  height: 152px;
+  margin-bottom: 8px;
   place-items: center;
-  border: 1px solid rgba(230, 196, 119, 0.25);
+  border: 0;
   border-radius: 50%;
-  color: var(--gold);
-  background: rgba(230, 196, 119, 0.04);
-  box-shadow: 0 0 65px rgba(155, 108, 189, 0.16);
-  font-family: Georgia, serif;
-  font-size: 48px;
-}
-
-.logo-mark i {
-  position: absolute;
-  right: 4px;
-  bottom: 4px;
-  display: grid;
-  width: 32px;
-  height: 32px;
-  place-items: center;
-  border: 2px solid #1b1423;
-  border-radius: 50%;
-  color: #251b2e;
-  background: var(--gold);
-  font-size: 19px;
-  font-style: normal;
+  background-image: url("./assets/starlight-atlas.webp?v=8");
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-size: 400% 200%;
+  filter: drop-shadow(0 18px 18px rgba(0, 0, 0, 0.42)) drop-shadow(0 0 24px rgba(156, 113, 213, 0.2));
 }
 
 .kicker,
@@ -486,8 +492,9 @@ button:focus-visible {
   border: 0;
   border-radius: 15px;
   color: #251a2c;
-  background: linear-gradient(135deg, #e8c979, #ae82d3);
-  box-shadow: 0 13px 34px rgba(139, 91, 174, 0.25);
+  border: 1px solid rgba(255, 246, 203, 0.24);
+  background: linear-gradient(135deg, #f0d27f, #b28add 68%, #8a64bd);
+  box-shadow: 0 13px 34px rgba(139, 91, 174, 0.3), inset 0 1px rgba(255, 255, 255, 0.35);
   font-size: 12px;
   font-weight: 900;
 }

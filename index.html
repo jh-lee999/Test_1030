@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
     <meta name="theme-color" content="#100d18" />
     <meta name="description" content="증강을 선택하며 몰려오는 적을 버티는 클래식 생존 액션" />
-    <link rel="manifest" href="./manifest.webmanifest?v=7" />
-    <link rel="icon" href="./icon.svg?v=7" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css?v=7" />
+    <link rel="manifest" href="./manifest.webmanifest?v=8" />
+    <link rel="icon" href="./icon.svg?v=8" type="image/svg+xml" />
+    <link rel="preload" href="./assets/starlight-atlas.webp?v=8" as="image" type="image/webp" />
+    <link rel="stylesheet" href="./styles.css?v=8" />
     <title>별빛 생존자</title>
   </head>
   <body>
@@ -58,7 +59,7 @@
         </div>
 
         <section class="start-screen" id="start-screen">
-          <div class="logo-mark"><span>✦</span><i>☾</i></div>
+          <div class="logo-mark" role="img" aria-label="별빛 방랑 마법사"></div>
           <p class="kicker">CLASSIC SURVIVAL</p>
           <h1>별빛 생존자</h1>
           <p>별마탄은 멀리, 초승달은 가까이.<br />무기별 증강을 조합해 3분을 버티세요.</p>
@@ -117,6 +118,6 @@
           .catch(() => {});
       }
     </script>
-    <script type="module" src="./app.js?v=7"></script>
+    <script type="module" src="./app.js?v=8"></script>
   </body>
 </html>

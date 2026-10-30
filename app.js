@@ -15,13 +15,59 @@ import {
   rollAugments,
   takeDamage,
   xpNeeded
-} from "./survivor-engine.js?v=7";
+} from "./survivor-engine.js?v=8";
 
 const WORLD = { width: 2400, height: 1800 };
 const canvas = document.querySelector("#game-canvas");
 const stage = document.querySelector("#game-stage");
 const ctx = canvas.getContext("2d");
 const $ = (selector) => document.querySelector(selector);
+
+const artAtlas = new Image();
+const artSprites = {
+  player: [0, 0],
+  bat: [1, 0],
+  shade: [2, 0],
+  brute: [3, 0],
+  elite: [0, 1],
+  projectile: [1, 1],
+  gem: [2, 1],
+  blade: [3, 1]
+};
+let artReady = false;
+artAtlas.decoding = "async";
+artAtlas.addEventListener("load", () => { artReady = true; });
+artAtlas.src = "./assets/starlight-atlas.webp?v=8";
+
+function drawArt(name, x, y, width, height, options = {}) {
+  if (!artReady || !artAtlas.naturalWidth) return false;
+  const sprite = artSprites[name];
+  if (!sprite) return false;
+  const cellWidth = artAtlas.naturalWidth / 4;
+  const cellHeight = artAtlas.naturalHeight / 2;
+  const inset = 3;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(options.rotation || 0);
+  ctx.scale(options.flip ? -1 : 1, 1);
+  ctx.globalAlpha *= options.alpha ?? 1;
+  ctx.filter = options.filter || "none";
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(
+    artAtlas,
+    sprite[0] * cellWidth + inset,
+    sprite[1] * cellHeight + inset,
+    cellWidth - inset * 2,
+    cellHeight - inset * 2,
+    -width / 2,
+    -height / 2,
+    width,
+    height
+  );
+  ctx.restore();
+  return true;
+}
 
 const ENEMY_TYPES = {
   shade: { hp: 18, speed: 47, radius: 18, damage: 10, xp: 25, color: "#6f557d" },
@@ -64,6 +110,7 @@ const keys = new Set();
 
 const ruins = [];
 const deadTrees = [];
+const sigils = [];
 for (let i = 0; i < 54; i += 1) {
   ruins.push({
     x: 100 + ((i * 337) % 2180),
@@ -77,6 +124,14 @@ for (let i = 0; i < 38; i += 1) {
     x: 80 + ((i * 421) % 2240),
     y: 80 + ((i * 263) % 1640),
     size: 28 + (i % 4) * 7
+  });
+}
+for (let i = 0; i < 17; i += 1) {
+  sigils.push({
+    x: 150 + ((i * 577) % 2100),
+    y: 130 + ((i * 359) % 1520),
+    radius: 30 + (i % 4) * 9,
+    rotation: (i % 9) * 0.38
   });
 }
 
@@ -635,33 +690,80 @@ function endGame(won) {
 }
 
 function drawGround() {
-  ctx.fillStyle = "#29262c";
+  ctx.fillStyle = "#171522";
   ctx.fillRect(0, 0, WORLD.width, WORLD.height);
-  const tile = 64;
+
+  const haze = ctx.createRadialGradient(WORLD.width * 0.5, WORLD.height * 0.45, 80, WORLD.width * 0.5, WORLD.height * 0.45, 1100);
+  haze.addColorStop(0, "rgba(77,55,101,.2)");
+  haze.addColorStop(0.55, "rgba(35,29,53,.08)");
+  haze.addColorStop(1, "rgba(5,5,12,.28)");
+  ctx.fillStyle = haze;
+  ctx.fillRect(0, 0, WORLD.width, WORLD.height);
+
+  const tile = 96;
   for (let y = 0; y < WORLD.height; y += tile) {
     for (let x = 0; x < WORLD.width; x += tile) {
-      const hash = (x * 7 + y * 13) % 5;
-      ctx.fillStyle = hash < 2 ? "rgba(255,255,255,.012)" : "rgba(0,0,0,.025)";
-      ctx.fillRect(x, y, tile, tile);
-      ctx.strokeStyle = "rgba(255,255,255,.018)";
+      const hash = ((x / tile) * 7 + (y / tile) * 13) % 7;
+      ctx.fillStyle = hash < 2 ? "rgba(125,105,153,.025)" : "rgba(0,0,0,.025)";
+      ctx.fillRect(x + 2, y + 2, tile - 4, tile - 4);
+      ctx.strokeStyle = "rgba(181,160,205,.025)";
+      ctx.lineWidth = 1;
       ctx.strokeRect(x, y, tile, tile);
+      if (hash === 3) {
+        ctx.strokeStyle = "rgba(121,91,153,.07)";
+        ctx.beginPath();
+        ctx.moveTo(x + 15, y + 46);
+        ctx.lineTo(x + 38, y + 39);
+        ctx.lineTo(x + 49, y + 61);
+        ctx.lineTo(x + 78, y + 55);
+        ctx.stroke();
+      }
     }
+  }
+
+  for (const sigil of sigils) {
+    ctx.save();
+    ctx.translate(sigil.x, sigil.y);
+    ctx.rotate(sigil.rotation);
+    ctx.strokeStyle = "rgba(169,124,209,.08)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(0, 0, sigil.radius, 0, Math.PI * 2);
+    ctx.moveTo(-sigil.radius, 0);
+    ctx.lineTo(sigil.radius, 0);
+    ctx.moveTo(0, -sigil.radius);
+    ctx.lineTo(0, sigil.radius);
+    ctx.stroke();
+    ctx.strokeStyle = "rgba(231,199,117,.05)";
+    ctx.strokeRect(-sigil.radius * 0.48, -sigil.radius * 0.48, sigil.radius * 0.96, sigil.radius * 0.96);
+    ctx.restore();
   }
 
   for (const ruin of ruins) {
     ctx.save();
     ctx.translate(ruin.x, ruin.y);
     ctx.rotate(ruin.rotation);
-    ctx.fillStyle = "rgba(105,96,104,.32)";
-    ctx.fillRect(-ruin.size / 2, -ruin.size / 5, ruin.size, ruin.size / 2.5);
-    ctx.fillStyle = "rgba(22,18,24,.16)";
-    ctx.fillRect(-ruin.size / 2 + 5, ruin.size / 7, ruin.size, 4);
+    ctx.fillStyle = "rgba(8,7,14,.22)";
+    ctx.beginPath();
+    ctx.ellipse(3, ruin.size * 0.24, ruin.size * 0.68, ruin.size * 0.23, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "rgba(75,66,88,.46)";
+    ctx.beginPath();
+    ctx.moveTo(-ruin.size * 0.56, ruin.size * 0.22);
+    ctx.lineTo(-ruin.size * 0.38, -ruin.size * 0.23);
+    ctx.lineTo(ruin.size * 0.38, -ruin.size * 0.3);
+    ctx.lineTo(ruin.size * 0.55, ruin.size * 0.16);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = "rgba(174,151,195,.12)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
     ctx.restore();
   }
 
   for (const tree of deadTrees) {
-    ctx.strokeStyle = "rgba(53,42,51,.75)";
-    ctx.lineWidth = 6;
+    ctx.strokeStyle = "rgba(42,32,53,.72)";
+    ctx.lineWidth = 7;
     ctx.lineCap = "round";
     ctx.beginPath();
     ctx.moveTo(tree.x, tree.y + tree.size);
@@ -671,16 +773,23 @@ function drawGround() {
     ctx.moveTo(tree.x, tree.y - tree.size * 0.5);
     ctx.lineTo(tree.x + tree.size * 0.5, tree.y - tree.size * 0.9);
     ctx.stroke();
+    ctx.strokeStyle = "rgba(108,78,124,.18)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
   }
 
-  ctx.strokeStyle = "rgba(230,196,119,.13)";
-  ctx.lineWidth = 6;
+  ctx.strokeStyle = "rgba(230,196,119,.16)";
+  ctx.lineWidth = 5;
   ctx.strokeRect(22, 22, WORLD.width - 44, WORLD.height - 44);
+  ctx.strokeStyle = "rgba(156,116,195,.1)";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(34, 34, WORLD.width - 68, WORLD.height - 68);
 }
 
 function drawPlayer() {
   const bob = player.moving ? Math.sin(elapsedVisual * 13) * 2 : Math.sin(elapsedVisual * 3) * 0.7;
-  drawShadow(player.x, player.y + 17, 19, 7);
+  drawShadow(player.x, player.y + 19, 23, 8, 0.34);
+  if (drawArt("player", player.x, player.y - 6 + bob, 86, 86, { flip: player.facingX < -0.04 })) return;
   ctx.save();
   ctx.translate(player.x, player.y + bob);
   ctx.fillStyle = "#544064";
@@ -724,50 +833,32 @@ function drawPlayer() {
 
 function drawEnemy(enemy) {
   const bounce = Math.sin(enemy.phase) * (enemy.type === "bat" ? 5 : 2);
-  drawShadow(enemy.x, enemy.y + enemy.radius * 0.7, enemy.radius * 0.85, enemy.radius * 0.28);
-  ctx.save();
-  ctx.translate(enemy.x, enemy.y + bounce);
-  ctx.fillStyle = enemy.hitFlash > 0 ? "#f7f0e5" : enemy.color;
-  if (enemy.type === "bat") {
-    ctx.beginPath();
-    ctx.moveTo(0, 5);
-    ctx.quadraticCurveTo(-13, -11, -24, -3);
-    ctx.quadraticCurveTo(-14, 2, -9, 12);
-    ctx.quadraticCurveTo(0, 4, 9, 12);
-    ctx.quadraticCurveTo(14, 2, 24, -3);
-    ctx.quadraticCurveTo(13, -11, 0, 5);
-    ctx.fill();
-    ctx.fillStyle = "#d7b0da";
-    ctx.fillRect(-5, -2, 3, 3);
-    ctx.fillRect(3, -2, 3, 3);
-  } else {
-    ctx.beginPath();
-    ctx.arc(0, 0, enemy.radius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = enemy.type === "elite" ? "#e5c375" : "#c4acc9";
-    const eyeSize = enemy.type === "elite" ? 5 : 3;
-    ctx.beginPath();
-    ctx.arc(-enemy.radius * 0.34, -3, eyeSize, 0, Math.PI * 2);
-    ctx.arc(enemy.radius * 0.34, -3, eyeSize, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "rgba(30,20,30,.6)";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(0, enemy.radius * 0.2, enemy.radius * 0.35, 0.2, Math.PI - 0.2);
-    ctx.stroke();
-    if (enemy.type === "brute" || enemy.type === "elite") {
-      ctx.fillStyle = enemy.type === "elite" ? "#d3aa52" : "#4c3944";
+  drawShadow(enemy.x, enemy.y + enemy.radius * 0.78, enemy.radius, enemy.radius * 0.3, enemy.type === "elite" ? 0.44 : 0.3);
+  const sizes = { bat: 57, shade: 67, brute: 96, elite: 134 };
+  const spriteDrawn = drawArt(enemy.type, enemy.x, enemy.y + bounce - enemy.radius * 0.08, sizes[enemy.type], sizes[enemy.type], {
+    flip: enemy.x > player.x,
+    filter: enemy.hitFlash > 0 ? "brightness(2.2) saturate(.35)" : "none"
+  });
+  if (!spriteDrawn) {
+    ctx.save();
+    ctx.translate(enemy.x, enemy.y + bounce);
+    ctx.fillStyle = enemy.hitFlash > 0 ? "#f7f0e5" : enemy.color;
+    if (enemy.type === "bat") {
       ctx.beginPath();
-      ctx.moveTo(-enemy.radius * 0.65, -enemy.radius * 0.65);
-      ctx.lineTo(-enemy.radius * 0.3, -enemy.radius * 1.25);
-      ctx.lineTo(0, -enemy.radius * 0.75);
-      ctx.lineTo(enemy.radius * 0.35, -enemy.radius * 1.3);
-      ctx.lineTo(enemy.radius * 0.7, -enemy.radius * 0.62);
-      ctx.closePath();
+      ctx.arc(0, 0, enemy.radius, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.arc(0, 0, enemy.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = enemy.type === "elite" ? "#e5c375" : "#c4acc9";
+      ctx.beginPath();
+      ctx.arc(-enemy.radius * 0.34, -3, enemy.type === "elite" ? 5 : 3, 0, Math.PI * 2);
+      ctx.arc(enemy.radius * 0.34, -3, enemy.type === "elite" ? 5 : 3, 0, Math.PI * 2);
       ctx.fill();
     }
+    ctx.restore();
   }
-  ctx.restore();
   if (enemy.type === "elite" || enemy.hp < enemy.maxHp) {
     const width = enemy.type === "elite" ? 78 : enemy.radius * 2;
     ctx.fillStyle = "rgba(10,7,12,.72)";
@@ -782,27 +873,46 @@ function drawEnemy(enemy) {
 function drawGems() {
   for (const gem of gems) {
     const y = gem.y + Math.sin(gem.phase) * 3;
-    ctx.fillStyle = gem.value >= 10 ? "#e7c677" : gem.value >= 5 ? "#bd82d3" : "#73bfcb";
-    ctx.beginPath();
-    ctx.moveTo(gem.x, y - gem.radius);
-    ctx.lineTo(gem.x + gem.radius * 0.7, y);
-    ctx.lineTo(gem.x, y + gem.radius);
-    ctx.lineTo(gem.x - gem.radius * 0.7, y);
-    ctx.closePath();
-    ctx.fill();
+    const size = gem.value >= 400 ? 35 : gem.value >= 60 ? 25 : 19;
+    if (gem.value >= 400) {
+      const aura = ctx.createRadialGradient(gem.x, y, 2, gem.x, y, 26);
+      aura.addColorStop(0, "rgba(232,205,127,.28)");
+      aura.addColorStop(1, "rgba(139,100,190,0)");
+      ctx.fillStyle = aura;
+      ctx.beginPath();
+      ctx.arc(gem.x, y, 26, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    if (!drawArt("gem", gem.x, y, size, size, { rotation: Math.sin(gem.phase * 0.4) * 0.08 })) {
+      ctx.fillStyle = gem.value >= 10 ? "#e7c677" : gem.value >= 5 ? "#bd82d3" : "#73bfcb";
+      ctx.beginPath();
+      ctx.moveTo(gem.x, y - gem.radius);
+      ctx.lineTo(gem.x + gem.radius * 0.7, y);
+      ctx.lineTo(gem.x, y + gem.radius);
+      ctx.lineTo(gem.x - gem.radius * 0.7, y);
+      ctx.closePath();
+      ctx.fill();
+    }
   }
 }
 
 function drawProjectiles() {
   for (const projectile of projectiles) {
-    const glow = ctx.createRadialGradient(projectile.x, projectile.y, 1, projectile.x, projectile.y, projectile.radius * 2.4);
-    glow.addColorStop(0, "#fff8ce");
-    glow.addColorStop(0.4, projectile.echo ? "#b48ad3" : "#e7c573");
-    glow.addColorStop(1, "rgba(180,130,210,0)");
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(projectile.x, projectile.y, projectile.radius * 2.4, 0, Math.PI * 2);
-    ctx.fill();
+    const size = Math.max(27, projectile.radius * 5.4);
+    if (!drawArt("projectile", projectile.x, projectile.y, size, size, {
+      rotation: elapsedVisual * 3.5 + Math.atan2(projectile.vy, projectile.vx) * 0.12,
+      alpha: projectile.echo ? 0.78 : 1,
+      filter: projectile.echo ? "hue-rotate(28deg)" : "none"
+    })) {
+      const glow = ctx.createRadialGradient(projectile.x, projectile.y, 1, projectile.x, projectile.y, projectile.radius * 2.4);
+      glow.addColorStop(0, "#fff8ce");
+      glow.addColorStop(0.4, projectile.echo ? "#b48ad3" : "#e7c573");
+      glow.addColorStop(1, "rgba(180,130,210,0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(projectile.x, projectile.y, projectile.radius * 2.4, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
 }
 
@@ -831,6 +941,7 @@ function drawSlashes() {
 function drawOrbitals() {
   for (let i = 0; i < run.orbitals; i += 1) {
     const blade = orbitalPosition(i);
+    if (drawArt("blade", blade.x, blade.y, 46, 46, { rotation: blade.angle + Math.PI / 2 })) continue;
     ctx.save();
     ctx.translate(blade.x, blade.y);
     ctx.rotate(blade.angle + Math.PI / 2);
@@ -867,11 +978,19 @@ function drawEffects() {
   ctx.globalAlpha = 1;
 }
 
-function drawShadow(x, y, rx, ry) {
-  ctx.fillStyle = "rgba(0,0,0,.25)";
+function drawShadow(x, y, rx, ry, opacity = 0.25) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(rx, ry);
+  const shadow = ctx.createRadialGradient(0, 0, 0.05, 0, 0, 1);
+  shadow.addColorStop(0, "rgba(0,0,0," + opacity + ")");
+  shadow.addColorStop(0.65, "rgba(0,0,0," + opacity * 0.62 + ")");
+  shadow.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = shadow;
   ctx.beginPath();
-  ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+  ctx.arc(0, 0, 1, 0, Math.PI * 2);
   ctx.fill();
+  ctx.restore();
 }
 
 function roundedRect(x, y, width, height, radius) {
