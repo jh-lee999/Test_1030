@@ -6,6 +6,7 @@ import {
   RUN_DURATION,
   applyAugment,
   clamp,
+  consumePendingLevelUp,
   createRunState,
   currentDamage,
   distance,
@@ -34,6 +35,25 @@ test("경험치가 기준치를 넘으면 레벨이 오른다", () => {
   assert.equal(result.state.level, 2);
   assert.equal(result.state.xp, 2);
   assert.equal(result.levelsGained, 1);
+  assert.equal(result.state.pendingLevelUps, 1);
+});
+
+test("강한 경험치 결정은 여러 레벨과 증강 선택을 대기열에 쌓는다", () => {
+  const result = gainExperience(createRunState(), 400);
+  assert.equal(xpNeeded(1), 100);
+  assert.equal(xpNeeded(2), 120);
+  assert.equal(xpNeeded(3), 140);
+  assert.equal(result.state.level, 4);
+  assert.equal(result.state.xp, 40);
+  assert.equal(result.levelsGained, 3);
+  assert.equal(result.state.pendingLevelUps, 3);
+
+  let state = consumePendingLevelUp(result.state);
+  assert.equal(state.pendingLevelUps, 2);
+  state = consumePendingLevelUp(state);
+  assert.equal(state.pendingLevelUps, 1);
+  state = consumePendingLevelUp(state);
+  assert.equal(state.pendingLevelUps, 0);
 });
 
 test("증강 선택지는 중복 없이 세 개를 제공한다", () => {

@@ -1,12 +1,12 @@
-const CACHE_NAME = "arcane-survivor-v5";
+const CACHE_NAME = "arcane-survivor-v6";
 const ASSETS = [
   "./",
   "./index.html",
-  "./styles.css?v=5",
-  "./app.js?v=5",
+  "./styles.css?v=6",
+  "./app.js?v=6",
   "./survivor-engine.js",
-  "./manifest.webmanifest?v=5",
-  "./icon.svg?v=5"
+  "./manifest.webmanifest?v=6",
+  "./icon.svg?v=6"
 ];
 
 self.addEventListener("install", (event) => {

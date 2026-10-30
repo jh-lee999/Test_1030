@@ -163,7 +163,7 @@ export const AUGMENTS = {
 const clone = (value) => JSON.parse(JSON.stringify(value));
 
 export function xpNeeded(level) {
-  return 7 + Math.floor(Math.pow(level, 1.42) * 4);
+  return 80 + level * 20;
 }
 
 export function createRunState() {
@@ -171,6 +171,7 @@ export function createRunState() {
     version: SAVE_VERSION,
     level: 1,
     xp: 0,
+    pendingLevelUps: 0,
     kills: 0,
     time: 0,
     hp: 100,
@@ -213,7 +214,14 @@ export function gainExperience(current, amount) {
     state.level += 1;
     levelsGained += 1;
   }
+  state.pendingLevelUps += levelsGained;
   return { state, levelsGained };
+}
+
+export function consumePendingLevelUp(current) {
+  const state = clone(current);
+  if (state.pendingLevelUps > 0) state.pendingLevelUps -= 1;
+  return state;
 }
 
 export function applyAugment(current, augmentId) {

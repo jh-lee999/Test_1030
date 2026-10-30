@@ -4,6 +4,7 @@ import {
   WEAPON_LABELS,
   applyAugment,
   clamp,
+  consumePendingLevelUp,
   createRunState,
   currentDamage,
   currentMeleeDamage,
@@ -23,10 +24,10 @@ const ctx = canvas.getContext("2d");
 const $ = (selector) => document.querySelector(selector);
 
 const ENEMY_TYPES = {
-  shade: { hp: 18, speed: 47, radius: 18, damage: 10, xp: 2, color: "#6f557d" },
-  bat: { hp: 10, speed: 82, radius: 12, damage: 7, xp: 1, color: "#4c415f" },
-  brute: { hp: 68, speed: 34, radius: 27, damage: 16, xp: 5, color: "#765560" },
-  elite: { hp: 290, speed: 39, radius: 42, damage: 23, xp: 20, color: "#927045" }
+  shade: { hp: 18, speed: 47, radius: 18, damage: 10, xp: 25, color: "#6f557d" },
+  bat: { hp: 10, speed: 82, radius: 12, damage: 7, xp: 15, color: "#4c415f" },
+  brute: { hp: 68, speed: 34, radius: 27, damage: 16, xp: 60, color: "#765560" },
+  elite: { hp: 290, speed: 39, radius: 42, damage: 23, xp: 400, color: "#927045" }
 };
 
 let run;
@@ -41,7 +42,6 @@ let started = false;
 let paused = false;
 let choosingAugment = false;
 let gameEnded = false;
-let levelQueue = 0;
 let spawnTimer = 0;
 let attackTimer = 0;
 let meleeTimer = 0;
@@ -89,7 +89,6 @@ function resetGame() {
   gems = [];
   particles = [];
   damageNumbers = [];
-  levelQueue = 0;
   spawnTimer = 0;
   attackTimer = 0.2;
   meleeTimer = 0.25;
@@ -500,12 +499,11 @@ function updateGems(dt) {
       gem.collected = true;
       const gained = gainExperience(run, gem.value);
       run = gained.state;
-      levelQueue += gained.levelsGained;
       playTone(760 + gem.value * 20, 0.05, "sine", 0.016);
     }
   }
   gems = gems.filter((gem) => !gem.collected);
-  if (levelQueue > 0 && !choosingAugment) showAugmentChoices();
+  if (run.pendingLevelUps > 0 && !choosingAugment) showAugmentChoices();
   updateHud();
 }
 
@@ -513,11 +511,16 @@ function showAugmentChoices() {
   const choices = rollAugments(run);
   if (!choices.length) {
     run.damage *= 1.15;
-    levelQueue -= 1;
+    run.meleeDamage *= 1.15;
+    run = consumePendingLevelUp(run);
     showToast("모든 증강 완성: 피해량이 15% 증가합니다.");
+    if (run.pendingLevelUps > 0) setTimeout(showAugmentChoices, 120);
     return;
   }
   choosingAugment = true;
+  $("#augment-queue").textContent = run.pendingLevelUps > 1
+    ? "연속 레벨업 · 남은 선택 " + run.pendingLevelUps + "회"
+    : "이번 생존에 적용할 힘을 하나 고르세요";
   const container = $("#augment-cards");
   container.innerHTML = choices.map((id) => {
     const augment = AUGMENTS[id];
@@ -535,14 +538,14 @@ function chooseAugment(id) {
   if (!AUGMENTS[id]) return;
   run = applyAugment(run, id);
   run.hp = Math.min(run.hp, run.maxHp);
-  levelQueue = Math.max(0, levelQueue - 1);
+  run = consumePendingLevelUp(run);
   choosingAugment = false;
   $("#augment-screen").hidden = true;
   renderAugmentStrip();
   updateHud();
   showToast(AUGMENTS[id].name + " 획득!");
   emitParticles(player.x, player.y, "#e6c477", 20, 110);
-  if (levelQueue > 0) setTimeout(showAugmentChoices, 120);
+  if (run.pendingLevelUps > 0) setTimeout(showAugmentChoices, 120);
 }
 
 function renderAugmentStrip() {
