@@ -84,7 +84,7 @@ button:focus-visible {
   border-radius: 50%;
   color: transparent;
   background-color: #21172f;
-  background-image: url("./assets/starlight-atlas.webp?v=11");
+  background-image: url("./assets/starlight-atlas.webp?v=12");
   background-repeat: no-repeat;
   background-position: 0 0;
   background-size: 400% 200%;
@@ -454,7 +454,7 @@ button:focus-visible {
   place-items: center;
   border: 0;
   border-radius: 50%;
-  background-image: url("./assets/animated-characters.webp?v=11");
+  background-image: url("./assets/animated-characters.webp?v=12");
   background-repeat: no-repeat;
   background-position: 0 0;
   background-size: 800% 500%;

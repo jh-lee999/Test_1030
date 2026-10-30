@@ -15,7 +15,7 @@ import {
   rollAugments,
   takeDamage,
   xpNeeded
-} from "./survivor-engine.js?v=11";
+} from "./survivor-engine.js?v=12";
 
 const WORLD = { width: 2400, height: 1800 };
 const canvas = document.querySelector("#game-canvas");
@@ -37,7 +37,7 @@ const artSprites = {
 let artReady = false;
 artAtlas.decoding = "async";
 artAtlas.addEventListener("load", () => { artReady = true; });
-artAtlas.src = "./assets/starlight-atlas.webp?v=11";
+artAtlas.src = "./assets/starlight-atlas.webp?v=12";
 
 function drawArt(name, x, y, width, height, options = {}) {
   if (!artReady || !artAtlas.naturalWidth) return false;
@@ -74,7 +74,7 @@ const animatedRows = { player: 0, bat: 1, shade: 2, brute: 3, elite: 4 };
 let animatedArtReady = false;
 animatedAtlas.decoding = "async";
 animatedAtlas.addEventListener("load", () => { animatedArtReady = true; });
-animatedAtlas.src = "./assets/animated-characters.webp?v=11";
+animatedAtlas.src = "./assets/animated-characters.webp?v=12";
 
 function drawAnimatedArt(name, x, y, width, height, phase, options = {}) {
   if (!animatedArtReady || !animatedAtlas.naturalWidth || animatedRows[name] === undefined) {
@@ -117,8 +117,8 @@ playerWalkAtlas.decoding = "async";
 playerWalkInbetweens.decoding = "async";
 playerWalkAtlas.addEventListener("load", () => { playerWalkReady = true; });
 playerWalkInbetweens.addEventListener("load", () => { playerWalkInbetweensReady = true; });
-playerWalkAtlas.src = "./assets/player-walk.webp?v=11";
-playerWalkInbetweens.src = "./assets/player-walk-inbetweens.webp?v=11";
+playerWalkAtlas.src = "./assets/player-walk.webp?v=12";
+playerWalkInbetweens.src = "./assets/player-walk-inbetweens.webp?v=12";
 
 function drawPlayerWalk(x, y, width, height, time, options = {}) {
   if (!playerWalkReady || !playerWalkAtlas.naturalWidth) {
@@ -128,13 +128,17 @@ function drawPlayerWalk(x, y, width, height, time, options = {}) {
   const pose = Math.floor(frame / 2);
   const useInbetween = frame % 2 === 1 && playerWalkInbetweensReady;
   const source = useInbetween ? playerWalkInbetweens : playerWalkAtlas;
+  const groundOffsets = useInbetween
+    ? [0, 0, 1, 0, 26, 26, 26, 23]
+    : [0, 13, 0, 0, 25, 49, 25, 26];
   const column = pose % 4;
   const row = Math.floor(pose / 4);
   const cellWidth = source.naturalWidth / 4;
   const cellHeight = source.naturalHeight / 2;
+  const groundOffset = groundOffsets[pose] / cellHeight * height;
   const inset = 3;
   ctx.save();
-  ctx.translate(x, y);
+  ctx.translate(x, y + groundOffset);
   ctx.rotate(options.rotation || 0);
   ctx.scale(options.flip ? -1 : 1, 1);
   ctx.globalAlpha *= options.alpha ?? 1;
