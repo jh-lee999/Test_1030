@@ -15,7 +15,7 @@ import {
   rollAugments,
   takeDamage,
   xpNeeded
-} from "./survivor-engine.js?v=8";
+} from "./survivor-engine.js?v=9";
 
 const WORLD = { width: 2400, height: 1800 };
 const canvas = document.querySelector("#game-canvas");
@@ -37,7 +37,7 @@ const artSprites = {
 let artReady = false;
 artAtlas.decoding = "async";
 artAtlas.addEventListener("load", () => { artReady = true; });
-artAtlas.src = "./assets/starlight-atlas.webp?v=8";
+artAtlas.src = "./assets/starlight-atlas.webp?v=9";
 
 function drawArt(name, x, y, width, height, options = {}) {
   if (!artReady || !artAtlas.naturalWidth) return false;
@@ -58,6 +58,46 @@ function drawArt(name, x, y, width, height, options = {}) {
     artAtlas,
     sprite[0] * cellWidth + inset,
     sprite[1] * cellHeight + inset,
+    cellWidth - inset * 2,
+    cellHeight - inset * 2,
+    -width / 2,
+    -height / 2,
+    width,
+    height
+  );
+  ctx.restore();
+  return true;
+}
+
+const animatedAtlas = new Image();
+const animatedRows = { player: 0, bat: 1, shade: 2, brute: 3, elite: 4 };
+let animatedArtReady = false;
+animatedAtlas.decoding = "async";
+animatedAtlas.addEventListener("load", () => { animatedArtReady = true; });
+animatedAtlas.src = "./assets/animated-characters.webp?v=9";
+
+function drawAnimatedArt(name, x, y, width, height, phase, options = {}) {
+  if (!animatedArtReady || !animatedAtlas.naturalWidth || animatedRows[name] === undefined) {
+    return drawArt(name, x, y, width, height, options);
+  }
+  const frameCount = 8;
+  const wrappedPhase = ((phase % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+  const frame = Math.floor(wrappedPhase / (Math.PI * 2) * frameCount) % frameCount;
+  const cellWidth = animatedAtlas.naturalWidth / frameCount;
+  const cellHeight = animatedAtlas.naturalHeight / 5;
+  const inset = 1;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(options.rotation || 0);
+  ctx.scale(options.flip ? -1 : 1, 1);
+  ctx.globalAlpha *= options.alpha ?? 1;
+  ctx.filter = options.filter || "none";
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(
+    animatedAtlas,
+    frame * cellWidth + inset,
+    animatedRows[name] * cellHeight + inset,
     cellWidth - inset * 2,
     cellHeight - inset * 2,
     -width / 2,
@@ -99,6 +139,8 @@ let viewWidth = 390;
 let viewHeight = 700;
 let dpr = 1;
 let screenShake = 0;
+let castPulse = 0;
+let meleePulse = 0;
 let toastTimer;
 let audioContext;
 let soundEnabled = true;
@@ -148,6 +190,8 @@ function resetGame() {
   attackTimer = 0.2;
   meleeTimer = 0.25;
   shotCounter = 0;
+  castPulse = 0;
+  meleePulse = 0;
   gameEnded = false;
   choosingAugment = false;
   paused = false;
@@ -321,6 +365,7 @@ function fireVolley(target, echo = false) {
     });
   }
   emitParticles(player.x, player.y, echo ? "#af85d5" : "#e6c477", 4 + count, 55);
+  castPulse = Math.max(castPulse, echo ? 0.5 : 1);
   playTone(echo ? 620 : 510, 0.06, "triangle", echo ? 0.015 : 0.022);
 }
 
@@ -366,6 +411,7 @@ function autoMelee(dt) {
   const arc = Math.PI * 1.3;
   const baseDamage = currentMeleeDamage(run);
   slashes.push({ x: player.x, y: player.y, angle, radius: run.meleeRange, life: 0.24, maxLife: 0.24 });
+  meleePulse = 1;
 
   for (const enemy of enemies) {
     if (enemy.dead || distance(player, enemy) > run.meleeRange + enemy.radius) continue;
@@ -652,6 +698,8 @@ function addDamageNumber(x, y, text, color) {
 function update(dt) {
   elapsedVisual += dt;
   screenShake = Math.max(0, screenShake - dt * 28);
+  castPulse = Math.max(0, castPulse - dt * 7.5);
+  meleePulse = Math.max(0, meleePulse - dt * 5.5);
   updateParticles(dt);
   if (!started || paused || choosingAugment || gameEnded) return;
 
@@ -788,8 +836,27 @@ function drawGround() {
 
 function drawPlayer() {
   const bob = player.moving ? Math.sin(elapsedVisual * 13) * 2 : Math.sin(elapsedVisual * 3) * 0.7;
+  const animationPhase = elapsedVisual * (player.moving ? 9.5 : 4.2);
+  const facingSign = player.facingX < -0.04 ? -1 : 1;
   drawShadow(player.x, player.y + 19, 23, 8, 0.34);
-  if (drawArt("player", player.x, player.y - 6 + bob, 86, 86, { flip: player.facingX < -0.04 })) return;
+  if (castPulse > 0) {
+    const focusX = player.x + player.facingX * 27;
+    const focusY = player.y - 8 + player.facingY * 18;
+    ctx.save();
+    ctx.globalAlpha = castPulse;
+    ctx.strokeStyle = "#f2d982";
+    ctx.lineWidth = 2;
+    ctx.shadowColor = "#b985e0";
+    ctx.shadowBlur = 13;
+    ctx.beginPath();
+    ctx.arc(focusX, focusY, 7 + (1 - castPulse) * 11, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+  if (drawAnimatedArt("player", player.x - player.facingX * castPulse * 3, player.y - 6 + bob, 86 * (1 + meleePulse * 0.035), 86 * (1 - meleePulse * 0.02), animationPhase, {
+    flip: facingSign < 0,
+    rotation: facingSign * meleePulse * 0.08
+  })) return;
   ctx.save();
   ctx.translate(player.x, player.y + bob);
   ctx.fillStyle = "#544064";
@@ -835,7 +902,27 @@ function drawEnemy(enemy) {
   const bounce = Math.sin(enemy.phase) * (enemy.type === "bat" ? 5 : 2);
   drawShadow(enemy.x, enemy.y + enemy.radius * 0.78, enemy.radius, enemy.radius * 0.3, enemy.type === "elite" ? 0.44 : 0.3);
   const sizes = { bat: 57, shade: 67, brute: 96, elite: 134 };
-  const spriteDrawn = drawArt(enemy.type, enemy.x, enemy.y + bounce - enemy.radius * 0.08, sizes[enemy.type], sizes[enemy.type], {
+  const animationSpeeds = { bat: 2.25, shade: 0.82, brute: 1, elite: 0.68 };
+  const animationPhase = enemy.phase * animationSpeeds[enemy.type];
+  if (enemy.type === "elite") {
+    const pulse = (Math.sin(animationPhase) + 1) * 0.5;
+    const aura = ctx.createRadialGradient(enemy.x, enemy.y, 4, enemy.x, enemy.y, 58 + pulse * 10);
+    aura.addColorStop(0, "rgba(178,119,224,.2)");
+    aura.addColorStop(0.55, "rgba(222,187,104,.07)");
+    aura.addColorStop(1, "rgba(90,54,130,0)");
+    ctx.fillStyle = aura;
+    ctx.beginPath();
+    ctx.arc(enemy.x, enemy.y, 68, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  if (enemy.type === "shade") {
+    drawAnimatedArt(enemy.type, enemy.x, enemy.y + bounce + 5, sizes[enemy.type] * 0.98, sizes[enemy.type] * 0.98, animationPhase - 0.55, {
+      flip: enemy.x > player.x,
+      alpha: 0.13,
+      filter: "blur(1px)"
+    });
+  }
+  const spriteDrawn = drawAnimatedArt(enemy.type, enemy.x, enemy.y + bounce - enemy.radius * 0.08, sizes[enemy.type], sizes[enemy.type], animationPhase, {
     flip: enemy.x > player.x,
     filter: enemy.hitFlash > 0 ? "brightness(2.2) saturate(.35)" : "none"
   });
