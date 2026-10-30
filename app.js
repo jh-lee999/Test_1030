@@ -15,7 +15,7 @@ import {
   rollAugments,
   takeDamage,
   xpNeeded
-} from "./survivor-engine.js?v=10";
+} from "./survivor-engine.js?v=11";
 
 const WORLD = { width: 2400, height: 1800 };
 const canvas = document.querySelector("#game-canvas");
@@ -37,7 +37,7 @@ const artSprites = {
 let artReady = false;
 artAtlas.decoding = "async";
 artAtlas.addEventListener("load", () => { artReady = true; });
-artAtlas.src = "./assets/starlight-atlas.webp?v=10";
+artAtlas.src = "./assets/starlight-atlas.webp?v=11";
 
 function drawArt(name, x, y, width, height, options = {}) {
   if (!artReady || !artAtlas.naturalWidth) return false;
@@ -74,7 +74,7 @@ const animatedRows = { player: 0, bat: 1, shade: 2, brute: 3, elite: 4 };
 let animatedArtReady = false;
 animatedAtlas.decoding = "async";
 animatedAtlas.addEventListener("load", () => { animatedArtReady = true; });
-animatedAtlas.src = "./assets/animated-characters.webp?v=10";
+animatedAtlas.src = "./assets/animated-characters.webp?v=11";
 
 function drawAnimatedArt(name, x, y, width, height, phase, options = {}) {
   if (!animatedArtReady || !animatedAtlas.naturalWidth || animatedRows[name] === undefined) {
@@ -110,20 +110,28 @@ function drawAnimatedArt(name, x, y, width, height, phase, options = {}) {
 }
 
 const playerWalkAtlas = new Image();
+const playerWalkInbetweens = new Image();
 let playerWalkReady = false;
+let playerWalkInbetweensReady = false;
 playerWalkAtlas.decoding = "async";
+playerWalkInbetweens.decoding = "async";
 playerWalkAtlas.addEventListener("load", () => { playerWalkReady = true; });
-playerWalkAtlas.src = "./assets/player-walk.webp?v=10";
+playerWalkInbetweens.addEventListener("load", () => { playerWalkInbetweensReady = true; });
+playerWalkAtlas.src = "./assets/player-walk.webp?v=11";
+playerWalkInbetweens.src = "./assets/player-walk-inbetweens.webp?v=11";
 
 function drawPlayerWalk(x, y, width, height, time, options = {}) {
   if (!playerWalkReady || !playerWalkAtlas.naturalWidth) {
     return drawAnimatedArt("player", x, y, width, height, time * 8, options);
   }
-  const frame = Math.floor(time * 11.5) % 8;
-  const column = frame % 4;
-  const row = Math.floor(frame / 4);
-  const cellWidth = playerWalkAtlas.naturalWidth / 4;
-  const cellHeight = playerWalkAtlas.naturalHeight / 2;
+  const frame = Math.floor(time * 15.5) % 16;
+  const pose = Math.floor(frame / 2);
+  const useInbetween = frame % 2 === 1 && playerWalkInbetweensReady;
+  const source = useInbetween ? playerWalkInbetweens : playerWalkAtlas;
+  const column = pose % 4;
+  const row = Math.floor(pose / 4);
+  const cellWidth = source.naturalWidth / 4;
+  const cellHeight = source.naturalHeight / 2;
   const inset = 3;
   ctx.save();
   ctx.translate(x, y);
@@ -134,7 +142,7 @@ function drawPlayerWalk(x, y, width, height, time, options = {}) {
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
   ctx.drawImage(
-    playerWalkAtlas,
+    source,
     column * cellWidth + inset,
     row * cellHeight + inset,
     cellWidth - inset * 2,
@@ -368,8 +376,8 @@ function movePlayer(dt) {
   player.y = clamp(player.y + dy * run.moveSpeed * dt, 40, WORLD.height - 40);
   footstepTimer -= dt;
   if (footstepTimer <= 0) {
-    emitParticles(player.x - dx * 9, player.y - dy * 9 + 17, "rgba(127,108,145,.55)", 3, 28);
-    footstepTimer = 0.27;
+    emitFootstep(player.x - dx * 9, player.y - dy * 9 + 17, dx, dy);
+    footstepTimer = 0.5;
   }
 }
 
@@ -734,6 +742,21 @@ function emitParticles(x, y, color, count, speed) {
       maxLife: 0.78,
       size: 2 + Math.random() * 3.5,
       color
+    });
+  }
+}
+
+function emitFootstep(x, y, directionX, directionY) {
+  for (let i = 0; i < 3; i += 1) {
+    particles.push({
+      x: x + (Math.random() - 0.5) * 7,
+      y: y + (Math.random() - 0.5) * 3,
+      vx: -directionX * 7 + (Math.random() - 0.5) * 16,
+      vy: -directionY * 5 - 4 - Math.random() * 7,
+      life: 0.18 + Math.random() * 0.12,
+      maxLife: 0.3,
+      size: 0.8 + Math.random() * 1.5,
+      color: "rgba(134,116,150,.34)"
     });
   }
 }
