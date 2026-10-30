@@ -15,7 +15,7 @@ import {
   rollAugments,
   takeDamage,
   xpNeeded
-} from "./survivor-engine.js";
+} from "./survivor-engine.js?v=7";
 
 const WORLD = { width: 2400, height: 1800 };
 const canvas = document.querySelector("#game-canvas");
@@ -983,10 +983,6 @@ window.addEventListener("keydown", (event) => {
 window.addEventListener("keyup", (event) => keys.delete(event.key.toLowerCase()));
 window.addEventListener("blur", () => keys.clear());
 window.addEventListener("resize", resizeCanvas);
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
-}
 
 resizeCanvas();
 resetGame();
