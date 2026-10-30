@@ -1,12 +1,12 @@
-const CACHE_NAME = "arcane-survivor-v3";
+const CACHE_NAME = "arcane-survivor-v4";
 const ASSETS = [
   "./",
   "./index.html",
-  "./styles.css",
-  "./app.js",
+  "./styles.css?v=4",
+  "./app.js?v=4",
   "./survivor-engine.js",
-  "./manifest.webmanifest",
-  "./icon.svg"
+  "./manifest.webmanifest?v=4",
+  "./icon.svg?v=4"
 ];
 
 self.addEventListener("install", (event) => {
@@ -24,10 +24,14 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
-      const copy = response.clone();
-      caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-      return response;
-    }))
+    fetch(event.request)
+      .then((response) => {
+        if (response.ok && new URL(event.request.url).origin === self.location.origin) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        }
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
