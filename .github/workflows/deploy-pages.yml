@@ -25,6 +25,12 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Check game and sprite frame bounds
+        run: |
+          node --check app.js
+          npm test
+          npm run check:sprites
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
         with:
