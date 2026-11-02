@@ -1,0 +1,37 @@
+{
+  "version": 31,
+  "stage": "appearance-study",
+  "spec": "../../docs/butter-modeling31/spec.json",
+  "sourceSHA256": "03a424a32a0e8e367a07be55e457930169be3e8cdbf47a1887c8bcd6f572a1da",
+  "meshCount": 72,
+  "bones": 16,
+  "landmarks": {
+    "crown": 2.8080000000000003,
+    "eyes": 2.1,
+    "chin": 1.72,
+    "waist": 1.164,
+    "shortsHem": 0.764,
+    "knees": 0.47600000000000003,
+    "soles": 0.0
+  },
+  "frontCamera": {
+    "orthoScale": 3.548,
+    "center": [
+      0,
+      0,
+      1.446
+    ],
+    "imageSize": [
+      600,
+      887
+    ]
+  },
+  "views": [
+    "front",
+    "side",
+    "left",
+    "right",
+    "back",
+    "game"
+  ]
+}

@@ -12,6 +12,7 @@
     "check:reference-model": "blender --background assets/models/butter-reference29.blend --python-exit-code 1 --python tools/check-butter-reference.py",
     "render:base-model": "LP_NUM_THREADS=4 MESA_SHADER_CACHE_DIR=/tmp/butter-mesa-cache blender --threads 4 --background --factory-startup --python-exit-code 1 --python tools/build_butter_base30.py",
     "check:base-model": "blender --threads 4 --background assets/models/butter-base30.blend --python-exit-code 1 --python tools/check-butter-base30.py",
+    "render:aligned-model": "LP_NUM_THREADS=4 MESA_SHADER_CACHE_DIR=/tmp/butter-mesa-cache blender --threads 4 --background --factory-startup --python-exit-code 1 --python tools/build_butter_aligned31.py",
     "pack:model": "node tools/pack-butter-model.mjs",
     "pack:sprites": "node tools/pack-butter-sprites.mjs",
     "pack:motion": "node tools/pack-butter-model.mjs",

@@ -54,7 +54,13 @@ blender --background assets/models/butter.blend --python-exit-code 1 --python to
 
 이전 3D 시안과 비교 이미지는 페이지의 접힌 영역에 보관합니다.
 
-### CC0 캐릭터 베이스로 다시 만든 3D 외형 시안
+### 기준 자료에 맞춘 3D 외형 시안 (31)
+
+[현재 검토 페이지](butter-aligned-study.html)는 승인 2D를 바탕으로 만든 방향별 시트와 새 모델을 함께 보여줍니다. [자료 정합 문서](docs/butter-modeling31/README.md)에 출처 우선순위, 높이 기준, 복장 구조, 추정과 충돌 처리 내역을 기록했습니다. `spec.json`은 모델 생성기와 웹 비교 화면에서 함께 읽습니다. 정면 렌더와 도안을 같은 좌표·배율로 겹쳐 볼 수 있습니다.
+
+`npm run render:aligned-model`로 `assets/models/butter-aligned31.blend`, `.glb`, `assets/butter-aligned31/`를 재생성합니다. Blender 원본에는 기준 시트와 설명도 포함합니다. 외형 검토용이며 게임과 애니메이션은 교체하지 않았습니다.
+
+### 이전 CC0 캐릭터 베이스 시안 (30)
 
 [butter-3d-study.html](butter-3d-study.html)은 Kay Lousberg의 KayKit Adventurers(CC0) 캐릭터 베이스를 수정한 실제 3D 모델을 보여줍니다. 베이스 몸·팔다리의 메시와 웨이트를 사용하고 비율을 바꿨습니다. 머리는 둥글게 재구성하고, 머리카락·귀·복장·꼬리·새총은 별도 입체 메시로 만들었습니다. 원화 전체를 부풀려 붙이던 ref29 방식은 사용하지 않습니다. [정확한 출처·수정 내역·라이선스](assets/vendor/kaykit-base30/README.md)를 함께 보관합니다.
 

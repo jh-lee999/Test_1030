@@ -1,0 +1,11 @@
+{
+  "version": 31,
+  "units": "1 Blender unit = 250 turnaround pixels",
+  "sourcePriority": ["approved butter-2d-study.png likeness", "user clothing and anatomy corrections", "original Butter sprite", "generated turnaround: inferred construction"],
+  "turnaround": {"file":"docs/butter-modeling31/turnaround.png","width":1774,"height":887,"frontCenterX":390,"groundY":805,"pixelScale":0.004,"frontCrop":[90,0,600,887]},
+  "landmarks": {"crown":103,"eyes":280,"chin":375,"waist":514,"shortsHem":614,"knees":686,"soles":805},
+  "palette": {"hair":"#C7A697","hairShade":"#AF8C82","ink":"#624039","skin":"#FFF5EF","white":"#FFFAF3","yellow":"#F7D784","gold":"#D5AA5F","pink":"#F1B8C2","brown":"#806056","wood":"#916445"},
+  "construction": {"holdingHand":"right","pouchHip":"left","tailRootX":0,"headWidth":1.22,"headDepth":0.76,"rearHairDepth":0.90,"apronRear":"open","faceTexture":"facial ink only on the curved head mesh"},
+  "inferred": ["side-view skull depth", "hair rear cross-sections", "strap junction beneath rear hair", "tail curvature beyond central root"],
+  "correctionsToSheet": ["The generated left profile reveals the far slingshot and pouch for clarity; in 3D their physical handedness takes priority.", "The generated tail silhouette points to opposite screen sides in front/back; only its root is constrained to the pelvis midline.", "Depth is a modeling estimate, not an orthographic measurement of the approved three-quarter illustration."]
+}
