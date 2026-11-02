@@ -38,98 +38,98 @@ export const CHARACTERS = {
 export const ITEMS = {
   hot_candy: {
     name: "매운맛 사탕",
-    icon: "🍬",
+    icon: "clock",
     stat: "attackSpeed",
     value: 0.13,
     description: "공격 속도 +13%"
   },
   alarm_clock: {
     name: "등교 알람시계",
-    icon: "⏰",
+    icon: "clock",
     stat: "attackSpeed",
     value: 0.1,
     description: "공격 속도 +10%"
   },
   fresh_band: {
     name: "새 고무줄",
-    icon: "➰",
+    icon: "projectile",
     stat: "projectileSpeed",
     value: 0.2,
     description: "탄환 속도 +20%"
   },
   propeller_hat: {
     name: "프로펠러 모자",
-    icon: "🎩",
+    icon: "projectile",
     stat: "projectileSpeed",
     value: 0.15,
     description: "탄환 속도 +15%"
   },
   sweet_carrot: {
     name: "엄청 단 당근",
-    icon: "🥕",
+    icon: "attack",
     stat: "damage",
     value: 0.2,
     description: "공격력 +20%"
   },
   mystery_sauce: {
     name: "수상한 특제소스",
-    icon: "🫙",
+    icon: "attack",
     stat: "damage",
     value: 0.16,
     description: "공격력 +16%"
   },
   milk_carton: {
     name: "급식 우유",
-    icon: "🥛",
+    icon: "heart",
     stat: "maxHp",
     value: 24,
     description: "최대 체력 +24, 즉시 회복"
   },
   emergency_snack: {
     name: "비상용 간식",
-    icon: "🍞",
+    icon: "snack",
     stat: "maxHp",
     value: 18,
     description: "최대 체력 +18, 즉시 회복"
   },
   speedy_shoes: {
     name: "씽씽 실내화",
-    icon: "👟",
+    icon: "move",
     stat: "moveSpeed",
     value: 0.13,
     description: "이동 속도 +13%"
   },
   hall_pass: {
     name: "복도 통행증",
-    icon: "🎫",
+    icon: "move",
     stat: "moveSpeed",
     value: 0.1,
     description: "이동 속도 +10%"
   },
   lower_book: {
     name: "저학년 참고서",
-    icon: "📒",
+    icon: "book-low",
     stat: "lowerGrade",
     value: 1,
     description: "저학년 레벨 +1"
   },
   lower_badge: {
     name: "삐뚤빼뚤 명찰",
-    icon: "📛",
+    icon: "book-low",
     stat: "lowerGrade",
     value: 1,
     description: "저학년 레벨 +1"
   },
   upper_book: {
     name: "고학년 참고서",
-    icon: "📕",
+    icon: "book-high",
     stat: "upperGrade",
     value: 1,
     description: "고학년 레벨 +1"
   },
   upper_badge: {
     name: "반짝이는 완장",
-    icon: "🏅",
+    icon: "book-high",
     stat: "upperGrade",
     value: 1,
     description: "고학년 레벨 +1"

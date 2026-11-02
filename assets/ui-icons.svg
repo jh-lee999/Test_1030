@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="key" viewBox="0 0 32 32">
+    <circle cx="10" cy="11" r="6" fill="none" stroke="currentColor" stroke-width="3"/>
+    <path d="m14.5 15.5 11 11m-4-4 3-3m-7 0 3-3" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="bomb" viewBox="0 0 32 32">
+    <circle cx="15" cy="18" r="10" fill="currentColor"/>
+    <path d="M19 8c0-4 4-5 7-3" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <path d="m26 3 1-2m1 5 2-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="attack" viewBox="0 0 32 32">
+    <path d="m16 2 3.5 10.5L30 16l-10.5 3.5L16 30l-3.5-10.5L2 16l10.5-3.5z" fill="currentColor"/>
+  </symbol>
+  <symbol id="clock" viewBox="0 0 32 32">
+    <circle cx="16" cy="17" r="12" fill="none" stroke="currentColor" stroke-width="3"/>
+    <path d="M12 3h8M16 8v9l6 3" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="projectile" viewBox="0 0 32 32">
+    <path d="M3 16h19m-7-8 8 8-8 8" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M5 10H2m5 12H3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="heart" viewBox="0 0 32 32">
+    <path d="M16 28S3 21 3 11c0-7 9-9 13-3 4-6 13-4 13 3 0 10-13 17-13 17Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="move" viewBox="0 0 32 32">
+    <path d="M4 23c7-1 11-7 14-15 2 6 6 10 10 13-8 0-13 3-18 8 1-3 0-5-6-6Z" fill="currentColor"/>
+    <path d="M3 13h8M1 18h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="book-low" viewBox="0 0 32 32">
+    <path d="M4 5h10c3 0 4 2 4 4v19c0-3-2-4-5-4H4Zm24 0H18v23c0-3 2-4 5-4h5Z" fill="currentColor"/>
+    <path d="M8 11h6m-6 5h6m8-5h3m-3 5h3" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="book-high" viewBox="0 0 32 32">
+    <path d="M4 5h10c3 0 4 2 4 4v19c0-3-2-4-5-4H4Zm24 0H18v23c0-3 2-4 5-4h5Z" fill="currentColor"/>
+    <path d="m10 10 1.4 3.4L15 15l-3.6 1.4L10 20l-1.4-3.6L5 15l3.6-1.6Z" fill="#fff"/>
+    <path d="m23 10 1 2.4 2.5 1-2.5 1-1 2.6-1-2.6-2.5-1 2.5-1Z" fill="#fff"/>
+  </symbol>
+  <symbol id="snack" viewBox="0 0 32 32">
+    <path d="M6 7h20l-2 22H8Z" fill="currentColor"/>
+    <path d="M5 7h22M10 3h12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="16" cy="17" r="5" fill="#fff" opacity=".8"/>
+  </symbol>
+  <symbol id="slingshot" viewBox="0 0 32 32">
+    <path d="M8 4c0 8 8 8 8 14m8-14c0 8-8 8-8 14v11" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    <path d="M8 4h4m8 0h4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="pillow" viewBox="0 0 32 32">
+    <path d="M6 7c5 2 15-2 20 2-2 5 2 11-1 17-6-2-14 2-20-1 2-6-2-12 1-18Z" fill="currentColor"/>
+    <path d="M10 12h12m-8 5h8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+  </symbol>
+</svg>
