@@ -14,8 +14,9 @@ import {
   revealSecretAt,
   rollItems,
   upperPower
-} from "./survivor-engine.js?v=22";
-import { drawButterFrame } from "./sprite-layout.js?v=22";
+} from "./survivor-engine.js?v=23";
+import { drawButterFrame } from "./sprite-layout.js?v=23";
+import { advanceButterGait, drawButterMotion } from "./butter-motion.js?v=23";
 
 const LOGICAL = { width: 800, height: 1450 };
 const WALL = 58;
@@ -26,13 +27,13 @@ const canvas = document.querySelector("#game-canvas");
 const stage = document.querySelector("#game-stage");
 const ctx = canvas.getContext("2d");
 const $ = (selector) => document.querySelector(selector);
-const iconMarkup = (id) => "<svg class=\"ui-icon\" aria-hidden=\"true\"><use href=\"./assets/ui-icons.svg?v=22#" + id + "\"></use></svg>";
+const iconMarkup = (id) => "<svg class=\"ui-icon\" aria-hidden=\"true\"><use href=\"./assets/ui-icons.svg?v=23#" + id + "\"></use></svg>";
 
 const heroAtlas = new Image();
 let heroArtReady = false;
 heroAtlas.decoding = "async";
 heroAtlas.addEventListener("load", () => { heroArtReady = true; });
-heroAtlas.src = "./assets/trickcal-heroes.webp?v=22";
+heroAtlas.src = "./assets/trickcal-heroes.webp?v=23";
 
 const butterActionAtlases = {
   side: new Image(),
@@ -47,14 +48,23 @@ for (const [direction, filename] of [
 ]) {
   butterActionAtlases[direction].decoding = "async";
   butterActionAtlases[direction].addEventListener("load", () => { butterActionPartsLoaded += 1; });
-  butterActionAtlases[direction].src = "./assets/" + filename + "?v=22";
+  butterActionAtlases[direction].src = "./assets/" + filename + "?v=23";
 }
 
 const butterWalkAtlas = new Image();
 let butterWalkReady = false;
 butterWalkAtlas.decoding = "async";
 butterWalkAtlas.addEventListener("load", () => { butterWalkReady = true; });
-butterWalkAtlas.src = "./assets/butter-walk.webp?v=22";
+butterWalkAtlas.src = "./assets/butter-walk.webp?v=23";
+
+const butterMotionImages = { upper: new Image(), legs: new Image() };
+let butterMotionPartsLoaded = 0;
+for (const [part, image] of Object.entries(butterMotionImages)) {
+  image.decoding = "async";
+  image.addEventListener("load", () => { butterMotionPartsLoaded += 1; });
+  image.src = "./assets/butter-motion-" + part + ".webp?v=23";
+}
+let butterGait = { phase: 0, amount: 0, dx: 0, dy: -1 };
 
 const ENEMY_TYPES = {
   jelly: { hp: 34, speed: 78, radius: 25, damage: 9, color: "#b984cd", accent: "#f2d6ff" },
@@ -114,6 +124,7 @@ const aimStick = { x: 0, y: 0, pointerId: null };
 const mouseAim = { x: 1, y: 0, firing: false, pointerId: null };
 
 function resetGame(characterId = selectedCharacter) {
+  butterGait = { phase: 0, amount: 0, dx: 0, dy: -1 };
   run = createRunState(characterId);
   floor = generateFloor();
   roomStates = new Map();
@@ -163,6 +174,8 @@ function resizeCanvas() {
   dpr = Math.min(2, window.devicePixelRatio || 1);
   canvas.width = Math.round(viewWidth * dpr);
   canvas.height = Math.round(viewHeight * dpr);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
   renderScale = Math.min(viewWidth / LOGICAL.width, viewHeight / LOGICAL.height);
   renderOffsetX = (viewWidth - LOGICAL.width * renderScale) / 2;
   renderOffsetY = (viewHeight - LOGICAL.height * renderScale) / 2;
@@ -442,6 +455,7 @@ function getAim() {
 function movePlayer(dt) {
   if (sleepTimer > 0) {
     player.moving = false;
+    if (run.characterId === "butter") advanceButterGait(butterGait, 0, 0, 0, dt);
     return;
   }
   const movement = getMovement();
@@ -449,6 +463,7 @@ function movePlayer(dt) {
   if (length < 0.08) {
     player.moving = false;
     footstepTimer = 0;
+    if (run.characterId === "butter") advanceButterGait(butterGait, 0, 0, 0, dt);
   } else {
     player.moving = true;
     player.phase += dt * 9;
@@ -458,6 +473,7 @@ function movePlayer(dt) {
       player.facingY = movement.y / length;
     }
     const speed = run.moveSpeed * (giantTimer > 0 ? 0.88 : 1);
+    if (run.characterId === "butter") advanceButterGait(butterGait, speed * length * dt, movement.x / length, movement.y / length, dt);
     player.x += movement.x * speed * dt;
     player.y += movement.y * speed * dt;
     footstepTimer -= dt;
@@ -548,7 +564,7 @@ function beginButterAttack(dx, dy) {
   butterAction = {
     type: lowProc ? "low" : "normal",
     time: 0,
-    duration: lowProc ? 0.56 : Math.max(0.29, Math.min(0.44, run.attackCooldown * 0.9)),
+    duration: Math.min(lowProc ? 0.56 : 0.44, Math.max(0.12, run.attackCooldown * 0.9)),
     dx,
     dy,
     fired: false,
@@ -1297,6 +1313,7 @@ function drawDoorIcon(destination, locked) {
 function drawHero() {
   const giant = giantTimer > 0 ? upperPower(run).scale : 1;
   const size = (run.characterId === "butter" ? 112 : 118) * giant;
+  const butterRig = run.characterId === "butter" && butterMotionPartsLoaded === 2 && butterAction?.type !== "high";
   const butterWalking = run.characterId === "butter" && player.moving && !butterAction && butterWalkReady;
   const stride = player.moving && sleepTimer <= 0 && !butterWalking ? Math.sin(player.phase) : 0;
   const breathe = sleepTimer <= 0 && !butterWalking ? Math.sin(elapsed * 2.5) * 0.006 : 0;
@@ -1334,7 +1351,7 @@ function drawHero() {
   if (sleepTimer > 0) {
     ctx.rotate(-Math.PI / 2);
     ctx.translate(-8, 0);
-  } else {
+  } else if (!butterRig) {
     ctx.translate(-player.facingX * attackKick * 10, -player.facingY * attackKick * 10);
     ctx.rotate(stride * 0.022 + player.facingX * attackKick * 0.045);
     ctx.scale(1 + Math.abs(stride) * 0.012 + breathe, 1 - Math.abs(stride) * 0.008 - breathe);
@@ -1346,7 +1363,9 @@ function drawHero() {
   }
 
   if (hurtTimer > 0 && Math.floor(hurtTimer * 18) % 2 === 0) ctx.globalAlpha = 0.42;
-  if (butterWalking) {
+  if (butterRig) {
+    drawButterMotion(ctx, butterMotionImages, { size, facingX: player.facingX, facingY: player.facingY, gait: butterGait, action: butterAction, recoil: attackKick });
+  } else if (butterWalking) {
     drawButterWalkSprite(size);
   } else if (run.characterId === "butter" && butterActionPartsLoaded >= 3) {
     drawButterDirectionalSprite(size);

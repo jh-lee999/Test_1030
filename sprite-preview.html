@@ -14,11 +14,12 @@
     @media(max-width: 700px) { body { margin: 10px; } section { grid-template-columns: repeat(3, minmax(80px, 1fr)); } }
   </style>
   <h1>버터 전체 프레임</h1>
+  <p><a href="./motion-preview.html?v=23">현재 연속 보행·이동 사격 모션 보기</a></p>
   <p>게임과 같은 렌더 함수로 표시한 72프레임. 빨간 선은 각 프레임의 경계, 파란 선은 발 기준점이다.</p>
   <p><a href="./?v=sprite22">게임으로 돌아가기</a></p>
   <main id="frames"></main>
   <script type="module">
-    import { drawButterFrame, BUTTER_SPRITE_LAYOUT } from "./sprite-layout.js?v=22";
+    import { drawButterFrame, BUTTER_SPRITE_LAYOUT } from "./sprite-layout.js?v=23";
     const atlases = [
       ["butter-walk.webp", "걷기", ["정면", "측면", "후면"]],
       ["butter-actions.webp", "측면 공격", ["평타", "저학년", "고학년"]],
@@ -27,7 +28,7 @@
     ];
     for (const [file, title, names] of atlases) {
       const image = new Image();
-      image.src = "./assets/" + file + "?v=22";
+      image.src = "./assets/" + file + "?v=23";
       await image.decode();
       const heading = document.createElement("h2");
       heading.textContent = title;

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>버터 이동·사격 모션</title>
+<style>
+  body { background:#272637; color:#fff0dc; margin:24px; font:16px system-ui; }
+  main { display:grid; grid-template-columns:repeat(4,minmax(120px,1fr)); gap:12px; }
+  figure { margin:0; border:1px solid #827480; border-radius:10px; overflow:hidden; }
+  canvas { display:block; width:100%; background:#e4d4bd; }
+  figcaption { padding:8px; text-align:center; } button { padding:8px 16px; margin-bottom:16px; }
+  @media(max-width:700px) { main{grid-template-columns:repeat(2,minmax(120px,1fr));} }
+</style>
+<h1>버터 이동·사격 모션</h1>
+<p>정지 / 걷기 / 정지 사격 / 이동 사격</p>
+<button id="toggle">일시 정지</button>
+<main></main>
+<script type="module">
+import { drawButterMotion } from "./butter-motion.js?v=23";
+const upper = new Image(), legs = new Image();
+upper.src = "./assets/butter-motion-upper.webp?v=23";
+legs.src = "./assets/butter-motion-legs.webp?v=23";
+await Promise.all([upper.decode(), legs.decode()]);
+const cases = [];
+for (const [name, x, y] of [["정면",0,1],["측면",-1,0],["후면",0,-1]]) {
+  for (const [title, moving, firing] of [["정지",false,false],["걷기",true,false],["정지 사격",false,true],["이동 사격",true,true]]) {
+    const figure = document.createElement("figure"), canvas = document.createElement("canvas"), caption = document.createElement("figcaption");
+    canvas.width = 320; canvas.height = 340;
+    caption.textContent = name + " · " + title;
+    figure.append(canvas, caption); document.querySelector("main").append(figure);
+    cases.push({context:canvas.getContext("2d"), x, y, moving, firing});
+  }
+}
+let running = true, last = performance.now(), elapsed = 0;
+document.querySelector("button").onclick = () => {running=!running; document.querySelector("button").textContent=running?"일시 정지":"재생";};
+function draw(now) {
+  const dt = Math.min((now-last)/1000,0.05); last=now; if(running) elapsed+=dt;
+  for(const c of cases) {
+    const context=c.context;
+    context.clearRect(0,0,320,340); context.save(); context.translate(160,240);
+    context.fillStyle="#b6a69a"; context.beginPath(); context.ellipse(0,31,35,10,0,0,Math.PI*2); context.fill();
+    const progress=(elapsed%0.46)/0.46;
+    drawButterMotion(context,{upper,legs},{size:170,facingX:c.x,facingY:c.y,gait:{phase:elapsed*235/145*Math.PI*2,amount:c.moving?1:0,dx:c.x,dy:c.y},action:c.firing?{type:"normal",time:progress,duration:1}:null,recoil:c.firing?Math.max(0,1-Math.abs(progress-.6)*12):0});
+    context.restore();
+  }
+  requestAnimationFrame(draw);
+}
+document.body.dataset.ready="true";
+requestAnimationFrame(draw);
+</script>
+</html>

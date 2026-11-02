@@ -82,7 +82,7 @@ button:focus-visible {
   border: 3px solid #5d4139;
   border-radius: 17px;
   background-color: #fbd67b;
-  background-image: url("./assets/trickcal-heroes.webp?v=22");
+  background-image: url("./assets/trickcal-heroes.webp?v=23");
   background-repeat: no-repeat;
   background-position: 0 center;
   background-size: 200% 100%;
@@ -603,7 +603,7 @@ button:focus-visible {
   width: 100%;
   min-height: 137px;
   flex: 1;
-  background-image: url("./assets/trickcal-heroes.webp?v=22");
+  background-image: url("./assets/trickcal-heroes.webp?v=23");
   background-repeat: no-repeat;
   background-size: 200% 100%;
 }

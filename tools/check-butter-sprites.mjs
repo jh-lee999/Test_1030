@@ -34,3 +34,26 @@ for (const atlas of Object.values(manifest.atlases)) {
   }
 }
 console.log(`${checked} sprite frames: complete silhouettes, transparent gutters and foot baselines verified`);
+
+const motion = JSON.parse(readFileSync(new URL("butter-motion.json", assets), "utf8"));
+let layers = 0;
+for (const [part, layout] of Object.entries({ upper: motion.body, legs: motion.legs })) {
+  const file = fileURLToPath(new URL(layout.file, assets));
+  const width = layout.cell * layout.columns, height = layout.cell * layout.rows;
+  const dimensions = execFileSync("identify", ["-format", "%w %h", file], { encoding: "utf8" });
+  assert.equal(dimensions, `${width} ${height}`);
+  const alpha = execFileSync("convert", [file, "-alpha", "extract", "-depth", "8", "gray:-"], { maxBuffer: 4e6 });
+  for (let row = 0; row < layout.rows; row++) for (let col = 0; col < layout.columns; col++) {
+    let visible = 0;
+    for (let y = 0; y < layout.cell; y++) for (let x = 0; x < layout.cell; x++) {
+      if (alpha[(row * layout.cell + y) * width + col * layout.cell + x] < 8) continue;
+      visible++;
+      const padding = part === "upper" ? 24 : 8;
+      assert.ok(x >= padding && y >= padding && x < layout.cell - padding && y < layout.cell - padding,
+        `${part}/${row}/${col}: layer touches cell boundary`);
+    }
+    assert.ok(visible > (part === "upper" ? 10000 : 800), `${part}: missing motion layer`);
+    layers++;
+  }
+}
+console.log(`${layers} motion layers: complete bodies and independent boots, transparent gutters verified`);
