@@ -1,5 +1,12 @@
 export const SAVE_VERSION = 5;
-export const ROOM_COUNT = 7;
+export const ROOM_COUNT = 10;
+
+export const CARDINAL_DIRECTIONS = [
+  { id: "north", dx: 0, dy: -1, opposite: "south" },
+  { id: "east", dx: 1, dy: 0, opposite: "west" },
+  { id: "south", dx: 0, dy: 1, opposite: "north" },
+  { id: "west", dx: -1, dy: 0, opposite: "east" }
+];
 
 export const CHARACTERS = {
   butter: {
@@ -138,6 +145,10 @@ export function createRunState(characterId = "butter") {
     version: SAVE_VERSION,
     characterId: id,
     room: 1,
+    currentRoomId: "0,0",
+    roomsVisited: 1,
+    keys: 1,
+    bombs: 1,
     kills: 0,
     hp: character.maxHp,
     maxHp: character.maxHp,
@@ -150,6 +161,102 @@ export function createRunState(characterId = "butter") {
     inventory: {},
     itemsTaken: 0
   };
+}
+
+export function roomId(x, y) {
+  return x + "," + y;
+}
+
+export function generateFloor(random = Math.random, targetRooms = ROOM_COUNT) {
+  const rooms = [{
+    id: roomId(0, 0),
+    x: 0,
+    y: 0,
+    type: "start",
+    discovered: true,
+    visited: true,
+    unlocked: true,
+    revealed: true
+  }];
+  const occupied = new Set([roomId(0, 0)]);
+
+  while (rooms.length < Math.max(5, targetRooms)) {
+    const candidates = [];
+    for (const room of rooms) {
+      for (const direction of CARDINAL_DIRECTIONS) {
+        const x = room.x + direction.dx;
+        const y = room.y + direction.dy;
+        const id = roomId(x, y);
+        if (!occupied.has(id)) candidates.push({ x, y, id });
+      }
+    }
+    const selected = candidates[Math.floor(random() * candidates.length) % candidates.length];
+    occupied.add(selected.id);
+    rooms.push({
+      ...selected,
+      type: "normal",
+      discovered: false,
+      visited: false,
+      unlocked: true,
+      revealed: true
+    });
+  }
+
+  const distanceFromStart = (room) => Math.abs(room.x) + Math.abs(room.y);
+  const boss = rooms.slice(1).sort((a, b) => distanceFromStart(b) - distanceFromStart(a))[0];
+  boss.type = "boss";
+  const treasureCandidates = rooms.filter((room) => room.type === "normal");
+  const treasure = treasureCandidates[Math.floor(random() * treasureCandidates.length) % treasureCandidates.length];
+  treasure.type = "treasure";
+  treasure.unlocked = false;
+
+  const secretCandidates = [];
+  for (const room of rooms) {
+    for (const direction of CARDINAL_DIRECTIONS) {
+      const x = room.x + direction.dx;
+      const y = room.y + direction.dy;
+      const id = roomId(x, y);
+      if (occupied.has(id) || secretCandidates.some((candidate) => candidate.id === id)) continue;
+      const adjacency = CARDINAL_DIRECTIONS.reduce((count, neighbor) => (
+        count + (occupied.has(roomId(x + neighbor.dx, y + neighbor.dy)) ? 1 : 0)
+      ), 0);
+      secretCandidates.push({ id, x, y, adjacency });
+    }
+  }
+  secretCandidates.sort((a, b) => b.adjacency - a.adjacency);
+  const bestAdjacency = secretCandidates[0]?.adjacency || 1;
+  const bestSecrets = secretCandidates.filter((candidate) => candidate.adjacency === bestAdjacency);
+  const secret = bestSecrets[Math.floor(random() * bestSecrets.length) % bestSecrets.length];
+  rooms.push({
+    ...secret,
+    type: "secret",
+    discovered: false,
+    visited: false,
+    unlocked: true,
+    revealed: false
+  });
+
+  return { rooms, startId: roomId(0, 0), bossId: boss.id, secretId: secret.id };
+}
+
+export function getAdjacentRoom(floor, sourceRoom, directionId, includeHidden = false) {
+  const direction = CARDINAL_DIRECTIONS.find((entry) => entry.id === directionId);
+  if (!direction || !sourceRoom) return null;
+  return floor.rooms.find((room) => (
+    room.x === sourceRoom.x + direction.dx &&
+    room.y === sourceRoom.y + direction.dy &&
+    (includeHidden || room.type !== "secret" || room.revealed)
+  )) || null;
+}
+
+export function revealSecretAt(floor, sourceRoom, directionId) {
+  const next = clone(floor);
+  const source = next.rooms.find((room) => room.id === sourceRoom.id);
+  const secret = getAdjacentRoom(next, source, directionId, true);
+  if (!secret || secret.type !== "secret") return { floor: next, revealed: false };
+  secret.revealed = true;
+  secret.discovered = true;
+  return { floor: next, revealed: true, secretId: secret.id };
 }
 
 export function applyItem(current, itemId) {

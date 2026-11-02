@@ -1,7 +1,7 @@
 {
   "name": "셰이디의 아공간 탈출",
   "short_name": "아공간 탈출",
-  "description": "버터와 코미로 뒤틀린 방을 돌파하는 액션 로그라이트",
+  "description": "자동 생성된 아공간을 탐색하고 비밀방을 찾는 액션 로그라이트",
   "lang": "ko",
   "start_url": "./",
   "display": "standalone",

@@ -1,30 +1,25 @@
 import {
+  CARDINAL_DIRECTIONS,
   CHARACTERS,
   ITEMS,
-  ROOM_COUNT,
   applyItem,
   clamp,
   createRunState,
   damageState,
   distance,
+  generateFloor,
+  getAdjacentRoom,
   healState,
   lowerPower,
+  revealSecretAt,
   rollItems,
   upperPower
-} from "./survivor-engine.js?v=15";
+} from "./survivor-engine.js?v=16";
 
 const LOGICAL = { width: 800, height: 1450 };
 const WALL = 58;
 const DOOR = { left: 320, right: 480, top: 42, bottom: 90 };
-const ROOM_NAMES = [
-  "뒤틀린 교실",
-  "끝나지 않는 복도",
-  "거꾸로 된 급식실",
-  "낙서투성이 음악실",
-  "셰이디의 장난감방",
-  "출구 없는 자습실",
-  "아공간의 중심"
-];
+const ROOM_NAMES = ["뒤틀린 교실", "끝나지 않는 복도", "거꾸로 된 급식실", "낙서투성이 음악실", "셰이디의 장난감방"];
 
 const canvas = document.querySelector("#game-canvas");
 const stage = document.querySelector("#game-stage");
@@ -35,7 +30,7 @@ const heroAtlas = new Image();
 let heroArtReady = false;
 heroAtlas.decoding = "async";
 heroAtlas.addEventListener("load", () => { heroArtReady = true; });
-heroAtlas.src = "./assets/trickcal-heroes.webp?v=15";
+heroAtlas.src = "./assets/trickcal-heroes.webp?v=16";
 
 const ENEMY_TYPES = {
   jelly: { hp: 34, speed: 78, radius: 25, damage: 9, color: "#b984cd", accent: "#f2d6ff" },
@@ -45,10 +40,15 @@ const ENEMY_TYPES = {
 };
 
 let run = createRunState("butter");
+let floor;
+let currentRoom;
+let roomStates = new Map();
 let player;
 let enemies = [];
 let projectiles = [];
 let boulders = [];
+let placedBombs = [];
+let pickups = [];
 let enemyShots = [];
 let slashes = [];
 let particles = [];
@@ -58,7 +58,7 @@ let paused = false;
 let choosingItem = false;
 let gameEnded = false;
 let roomCleared = false;
-let rewardChosen = false;
+let itemChoicePurpose = "treasure";
 let attackTimer = 0;
 let lowerCooldown = 0;
 let upperCooldown = 0;
@@ -87,6 +87,9 @@ const mouseAim = { x: 1, y: 0, firing: false, pointerId: null };
 
 function resetGame(characterId = selectedCharacter) {
   run = createRunState(characterId);
+  floor = generateFloor();
+  roomStates = new Map();
+  currentRoom = null;
   player = {
     x: LOGICAL.width / 2,
     y: LOGICAL.height - 225,
@@ -98,6 +101,8 @@ function resetGame(characterId = selectedCharacter) {
   };
   projectiles = [];
   boulders = [];
+  placedBombs = [];
+  pickups = [];
   enemyShots = [];
   slashes = [];
   particles = [];
@@ -110,11 +115,10 @@ function resetGame(characterId = selectedCharacter) {
   invulnerableTimer = 0;
   hurtTimer = 0;
   roomCleared = false;
-  rewardChosen = false;
   choosingItem = false;
   gameEnded = false;
   paused = false;
-  spawnRoom();
+  loadRoom(floor.rooms.find((room) => room.id === floor.startId));
   renderInventory();
   updateHud();
   updateAbilityHud();
@@ -159,8 +163,21 @@ function showToast(message) {
 }
 
 function showRoomBanner() {
-  $("#room-kicker").textContent = run.room === ROOM_COUNT ? "마지막 방" : run.room + "교시";
-  $("#room-title").textContent = ROOM_NAMES[run.room - 1];
+  const labels = {
+    start: "시작방",
+    normal: "전투방",
+    treasure: "열쇠방",
+    boss: "보스방",
+    secret: "비밀방"
+  };
+  $("#room-kicker").textContent = labels[currentRoom.type] || "아공간";
+  $("#room-title").textContent = currentRoom.type === "boss"
+    ? "셰이디의 심술방"
+    : currentRoom.type === "treasure"
+      ? "잠긴 장난감방"
+      : currentRoom.type === "secret"
+        ? "벽 뒤의 비밀"
+        : ROOM_NAMES[Math.abs(currentRoom.x * 3 + currentRoom.y * 5) % ROOM_NAMES.length];
   const banner = $("#room-banner");
   banner.classList.remove("show");
   void banner.offsetWidth;
@@ -172,10 +189,15 @@ function updateHud() {
   $("#health-fill").style.width = hpPercent + "%";
   $("#health-label").textContent = Math.ceil(run.hp) + " / " + Math.round(run.maxHp);
   $("#hero-name").textContent = CHARACTERS[run.characterId].name;
-  $("#room-label").textContent = "방 " + run.room + " / " + ROOM_COUNT;
+  $("#room-label").textContent = "탐색 " + run.roomsVisited + " / " + floor.rooms.length;
+  $("#key-count").textContent = run.keys;
+  $("#bomb-count").textContent = run.bombs;
+  $("#bomb-label").textContent = "R · " + run.bombs;
+  $("#bomb-button").disabled = run.bombs <= 0;
   $("#lower-level").textContent = "LV." + run.lowerGrade;
   $("#upper-level").textContent = "LV." + run.upperGrade;
   $("#portrait").classList.toggle("komi", run.characterId === "komi");
+  renderMinimap();
 }
 
 function updateAbilityHud() {
@@ -210,44 +232,127 @@ function renderInventory() {
   }).join("");
 }
 
-function spawnRoom() {
-  enemies = [];
-  projectiles = [];
-  enemyShots = [];
-  slashes = [];
-  roomCleared = false;
-  rewardChosen = false;
-  choosingItem = false;
-  attackTimer = 0.15;
-  player.x = LOGICAL.width / 2;
-  player.y = LOGICAL.height - 200;
+function renderMinimap() {
+  if (!floor) return;
+  const map = $("#minimap");
+  const visible = floor.rooms.filter((room) => room.discovered && (room.type !== "secret" || room.revealed));
+  const layoutRooms = floor.rooms.filter((room) => room.type !== "secret");
+  const minX = Math.min(...layoutRooms.map((room) => room.x));
+  const maxX = Math.max(...layoutRooms.map((room) => room.x));
+  const minY = Math.min(...layoutRooms.map((room) => room.y));
+  const maxY = Math.max(...layoutRooms.map((room) => room.y));
+  const step = Math.min(18, 78 / Math.max(1, maxX - minX), 64 / Math.max(1, maxY - minY));
+  const centerX = 51 - (minX + maxX) * step / 2;
+  const centerY = 44 - (minY + maxY) * step / 2;
+  map.innerHTML = visible.map((room) => (
+    "<span class=\"map-room " + (room.visited ? "visited " : "") + room.type +
+      (room.unlocked ? " unlocked" : "") + (room.id === currentRoom?.id ? " current" : "") +
+      "\" data-room-id=\"" + room.id + "\" data-x=\"" + room.x + "\" data-y=\"" + room.y +
+      "\" style=\"left:" + (centerX + room.x * step) + "px;top:" + (centerY + room.y * step) + "px\"></span>"
+  )).join("");
+}
 
-  if (run.room === ROOM_COUNT) {
+function discoverNeighbors(room) {
+  for (const direction of CARDINAL_DIRECTIONS) {
+    const adjacent = getAdjacentRoom(floor, room, direction.id);
+    if (adjacent) adjacent.discovered = true;
+  }
+}
+
+function saveCurrentRoom() {
+  if (!currentRoom) return;
+  const state = roomStates.get(currentRoom.id);
+  if (!state) return;
+  state.enemies = enemies;
+  state.pickups = pickups;
+  state.cleared = roomCleared;
+  state.rewardTaken = state.rewardTaken || false;
+}
+
+function buildRoomState(room) {
+  enemies = [];
+  pickups = [];
+  const depth = Math.max(1, run.roomsVisited);
+  if (room.type === "boss") {
     createEnemy("boss", LOGICAL.width / 2, 410);
     createEnemy("jelly", 230, 600);
     createEnemy("jelly", 570, 600);
-  } else {
-    const count = 3 + run.room;
+  } else if (room.type === "normal") {
+    const count = 3 + Math.min(5, depth);
     for (let i = 0; i < count; i += 1) {
       let type = "jelly";
-      if (run.room >= 2 && i % 3 === 1) type = "crayon";
-      if (run.room >= 4 && i % 4 === 2) type = "locker";
-      const columns = 3;
-      const column = i % columns;
-      const row = Math.floor(i / columns);
-      createEnemy(
-        type,
-        180 + column * 220 + (row % 2) * 40,
-        310 + row * 220 + (i % 2) * 45
-      );
+      if (depth >= 2 && i % 3 === 1) type = "crayon";
+      if (depth >= 4 && i % 4 === 2) type = "locker";
+      const column = i % 3;
+      const row = Math.floor(i / 3);
+      createEnemy(type, 180 + column * 220 + (row % 2) * 40, 310 + row * 220 + (i % 2) * 45);
     }
   }
+  return {
+    enemies,
+    pickups,
+    cleared: room.type === "start" || room.type === "treasure" || room.type === "secret",
+    rewardTaken: false,
+    entered: false
+  };
+}
+
+function loadRoom(room, entryDirection = null) {
+  saveCurrentRoom();
+  currentRoom = room;
+  run.currentRoomId = room.id;
+  const firstVisit = !room.visited;
+  if (firstVisit) {
+    room.visited = true;
+    run.roomsVisited += 1;
+  }
+  room.discovered = true;
+  discoverNeighbors(room);
+  let state = roomStates.get(room.id);
+  if (!state) {
+    state = buildRoomState(room);
+    roomStates.set(room.id, state);
+  }
+  enemies = state.enemies;
+  pickups = state.pickups;
+  roomCleared = state.cleared;
+  projectiles = [];
+  boulders = [];
+  placedBombs = [];
+  projectiles = [];
+  enemyShots = [];
+  slashes = [];
+  choosingItem = false;
+  attackTimer = 0.15;
+  if (entryDirection === "north") {
+    player.x = LOGICAL.width / 2;
+    player.y = LOGICAL.height - WALL - player.radius - 12;
+  } else if (entryDirection === "south") {
+    player.x = LOGICAL.width / 2;
+    player.y = WALL + player.radius + 12;
+  } else if (entryDirection === "east") {
+    player.x = WALL + player.radius + 12;
+    player.y = LOGICAL.height / 2;
+  } else if (entryDirection === "west") {
+    player.x = LOGICAL.width - WALL - player.radius - 12;
+    player.y = LOGICAL.height / 2;
+  } else {
+    player.x = LOGICAL.width / 2;
+    player.y = LOGICAL.height - 220;
+  }
+  state.entered = true;
   showRoomBanner();
+  updateHud();
+  if ((room.type === "treasure" || room.type === "secret") && !state.rewardTaken) {
+    setTimeout(() => {
+      if (currentRoom.id === room.id && !gameEnded) showItemChoices(room.type);
+    }, 260);
+  }
 }
 
 function createEnemy(type, x, y) {
   const template = ENEMY_TYPES[type];
-  const roomScale = 1 + (run.room - 1) * 0.13;
+  const roomScale = 1 + Math.max(0, run.roomsVisited - 1) * 0.1;
   enemies.push({
     id: ++enemyId,
     type,
@@ -256,8 +361,8 @@ function createEnemy(type, x, y) {
     radius: template.radius,
     hp: template.hp * roomScale,
     maxHp: template.hp * roomScale,
-    speed: template.speed * (1 + (run.room - 1) * 0.025),
-    damage: template.damage + Math.floor((run.room - 1) * 1.2),
+    speed: template.speed * (1 + Math.max(0, run.roomsVisited - 1) * 0.02),
+    damage: template.damage + Math.floor(Math.max(0, run.roomsVisited - 1) * 0.9),
     color: template.color,
     accent: template.accent,
     hitFlash: 0,
@@ -316,13 +421,43 @@ function movePlayer(dt) {
   }
 
   const size = player.radius * (giantTimer > 0 ? upperPower(run).scale : 1);
-  player.x = clamp(player.x, WALL + size, LOGICAL.width - WALL - size);
-  const doorOpen = roomCleared && rewardChosen;
-  const inDoor = doorOpen && player.x > DOOR.left && player.x < DOOR.right;
-  const topLimit = inDoor ? 36 : WALL + size;
-  player.y = clamp(player.y, topLimit, LOGICAL.height - WALL - size);
+  const verticalDoor = player.x > DOOR.left && player.x < DOOR.right;
+  const horizontalDoor = player.y > LOGICAL.height / 2 - 100 && player.y < LOGICAL.height / 2 + 100;
+  const north = getAdjacentRoom(floor, currentRoom, "north");
+  const south = getAdjacentRoom(floor, currentRoom, "south");
+  const east = getAdjacentRoom(floor, currentRoom, "east");
+  const west = getAdjacentRoom(floor, currentRoom, "west");
 
-  if (inDoor && player.y <= 46) enterNextRoom();
+  const minX = west && horizontalDoor ? 28 : WALL + size;
+  const maxX = east && horizontalDoor ? LOGICAL.width - 28 : LOGICAL.width - WALL - size;
+  const minY = north && verticalDoor ? 28 : WALL + size;
+  const maxY = south && verticalDoor ? LOGICAL.height - 28 : LOGICAL.height - WALL - size;
+  player.x = clamp(player.x, minX, maxX);
+  player.y = clamp(player.y, minY, maxY);
+
+  if (north && verticalDoor && player.y <= 38) enterRoom(north, "north");
+  else if (south && verticalDoor && player.y >= LOGICAL.height - 38) enterRoom(south, "south");
+  else if (east && horizontalDoor && player.x >= LOGICAL.width - 38) enterRoom(east, "east");
+  else if (west && horizontalDoor && player.x <= 38) enterRoom(west, "west");
+}
+
+function enterRoom(destination, directionId) {
+  if (destination.type === "treasure" && !destination.unlocked) {
+    if (run.keys <= 0) {
+      showToast("열쇠가 없어서 보물방을 열 수 없다.");
+      playTone(115, 0.12, "square", 0.02);
+      if (directionId === "north") player.y = WALL + player.radius + 12;
+      if (directionId === "south") player.y = LOGICAL.height - WALL - player.radius - 12;
+      if (directionId === "east") player.x = LOGICAL.width - WALL - player.radius - 12;
+      if (directionId === "west") player.x = WALL + player.radius + 12;
+      return;
+    }
+    run.keys -= 1;
+    destination.unlocked = true;
+    showToast("열쇠를 사용해 보물방을 열었다!");
+    playTone(720, 0.16, "sine", 0.03);
+  }
+  loadRoom(destination, directionId);
 }
 
 function currentAimAngle() {
@@ -513,6 +648,79 @@ function activateUpper() {
   updateAbilityHud();
 }
 
+function placeBomb() {
+  if (!started || paused || choosingItem || gameEnded || run.bombs <= 0) return;
+  run.bombs -= 1;
+  placedBombs.push({ x: player.x, y: player.y, fuse: 1.15, maxFuse: 1.15, radius: 18 });
+  showToast("폭탄 설치! 수상한 벽 가까이에서 터뜨려 보자.");
+  playTone(210, 0.08, "square", 0.02);
+  updateHud();
+}
+
+function updatePlacedBombs(dt) {
+  for (const bomb of placedBombs) {
+    bomb.fuse -= dt;
+    if (bomb.fuse > 0 || bomb.exploded) continue;
+    bomb.exploded = true;
+    screenShake = 17;
+    emitParticles(bomb.x, bomb.y, "#ffcf58", 38, 230);
+    emitParticles(bomb.x, bomb.y, "#6d4d54", 22, 160);
+    playTone(72, 0.32, "sawtooth", 0.05);
+    for (const enemy of enemies) {
+      if (!enemy.dead && distance(bomb, enemy) < 190 + enemy.radius) {
+        damageEnemy(enemy, 70 + run.upperGrade * 8, "#d65c45");
+      }
+    }
+    if (distance(bomb, player) < 145 && invulnerableTimer <= 0) hurtPlayer(12);
+    tryRevealSecret(bomb);
+  }
+  placedBombs = placedBombs.filter((bomb) => !bomb.exploded);
+}
+
+function tryRevealSecret(bomb) {
+  const wallDistances = [
+    { id: "north", distance: bomb.y - WALL },
+    { id: "east", distance: LOGICAL.width - WALL - bomb.x },
+    { id: "south", distance: LOGICAL.height - WALL - bomb.y },
+    { id: "west", distance: bomb.x - WALL }
+  ].sort((a, b) => a.distance - b.distance);
+  for (const candidate of wallDistances) {
+    if (candidate.distance > 190) break;
+    const hidden = getAdjacentRoom(floor, currentRoom, candidate.id, true);
+    if (!hidden || hidden.type !== "secret" || hidden.revealed) continue;
+    const result = revealSecretAt(floor, currentRoom, candidate.id);
+    if (!result.revealed) continue;
+    const currentId = currentRoom.id;
+    floor = result.floor;
+    currentRoom = floor.rooms.find((room) => room.id === currentId);
+    showToast("쾅! 벽 뒤에서 비밀방을 발견했다!");
+    showRoomBanner();
+    updateHud();
+    return;
+  }
+}
+
+function updatePickups() {
+  for (const pickup of pickups) {
+    if (pickup.collected || distance(player, pickup) > player.radius + 28) continue;
+    pickup.collected = true;
+    if (pickup.type === "key") {
+      run.keys += 1;
+      showToast("열쇠를 주웠다.");
+    } else if (pickup.type === "bomb") {
+      run.bombs += 1;
+      showToast("폭탄을 주웠다.");
+    } else {
+      const result = healState(run, 22);
+      run = result.state;
+      showToast("간식을 먹고 체력을 " + Math.round(result.healed) + " 회복했다.");
+    }
+    playTone(780, 0.08, "sine", 0.025);
+    updateHud();
+  }
+  pickups = pickups.filter((pickup) => !pickup.collected);
+}
+
 function updateBoulders(dt) {
   for (const boulder of boulders) {
     boulder.x += boulder.vx * dt;
@@ -581,7 +789,7 @@ function updateEnemies(dt) {
       enemy.bossShotTimer -= dt;
       if (enemy.bossShotTimer <= 0) {
         fireBossPattern(enemy);
-        enemy.bossShotTimer = Math.max(0.65, 1.25 - run.room * 0.04);
+        enemy.bossShotTimer = Math.max(0.65, 1.25 - run.roomsVisited * 0.04);
       }
     }
 
@@ -691,19 +899,29 @@ function killEnemy(enemy) {
 function checkRoomClear() {
   if (roomCleared || gameEnded || enemies.some((enemy) => !enemy.dead)) return;
   roomCleared = true;
+  const state = roomStates.get(currentRoom.id);
+  if (state) state.cleared = true;
   enemyShots = [];
-  if (run.room >= ROOM_COUNT) {
+  if (currentRoom.type === "boss") {
     setTimeout(() => endGame(true), 650);
     return;
   }
   playTone(680, 0.12, "sine", 0.03);
-  setTimeout(() => {
-    if (!gameEnded) showItemChoices();
-  }, 420);
+  const roll = Math.random();
+  const type = roll < 0.38 ? "key" : roll < 0.76 ? "bomb" : "heart";
+  pickups.push({ type, x: LOGICAL.width / 2, y: LOGICAL.height / 2, phase: 0, collected: false });
+  if (state) state.pickups = pickups;
+  showToast(type === "key" ? "찰칵! 열쇠가 떨어졌다." : type === "bomb" ? "폭탄이 떨어졌다." : "간식이 떨어졌다.");
 }
 
-function showItemChoices() {
+function showItemChoices(purpose = "treasure") {
   choosingItem = true;
+  itemChoicePurpose = purpose;
+  $(".choice-heading p").textContent = purpose === "secret" ? "SECRET FOUND!" : "TREASURE ROOM";
+  $(".choice-heading h2").textContent = purpose === "secret" ? "숨겨둔 물건" : "하나만 챙기자";
+  $(".choice-heading span").textContent = purpose === "secret"
+    ? "비밀방에서 발견한 아이템을 선택하세요"
+    : "열쇠로 연 보물방의 아이템을 선택하세요";
   const choices = rollItems();
   $("#item-cards").innerHTML = choices.map((id) => {
     const item = ITEMS[id];
@@ -721,22 +939,15 @@ function chooseItem(id) {
   if (!ITEMS[id] || !choosingItem) return;
   run = applyItem(run, id);
   choosingItem = false;
-  rewardChosen = true;
+  const state = roomStates.get(currentRoom.id);
+  if (state) state.rewardTaken = true;
   $("#item-screen").hidden = true;
   renderInventory();
   updateHud();
   updateAbilityHud();
-  showToast(ITEMS[id].name + " 획득! 위쪽 문이 열렸다.");
+  showToast(ITEMS[id].name + " 획득! 다른 방도 자유롭게 탐색할 수 있다.");
   emitParticles(player.x, player.y, "#ffe272", 24, 120);
   playTone(840, 0.2, "sine", 0.035);
-}
-
-function enterNextRoom() {
-  if (!roomCleared || !rewardChosen || run.room >= ROOM_COUNT) return;
-  run.room += 1;
-  spawnRoom();
-  updateHud();
-  playTone(460, 0.12, "triangle", 0.025);
 }
 
 function updateParticles(dt) {
@@ -795,16 +1006,19 @@ function update(dt) {
   updatePlayerAttack(dt);
   updateProjectiles(dt);
   updateBoulders(dt);
+  updatePlacedBombs(dt);
   updateEnemies(dt);
   updateEnemyShots(dt);
+  updatePickups();
   enemies = enemies.filter((enemy) => !enemy.dead);
   checkRoomClear();
   updateAbilityHud();
 }
 
 function drawRoom() {
-  const hueShift = (run.room - 1) * 7;
-  ctx.fillStyle = run.room === ROOM_COUNT ? "#6e5682" : "hsl(" + (329 + hueShift) + " 31% 73%)";
+  const isBoss = currentRoom.type === "boss";
+  const hueShift = Math.abs(currentRoom.x * 7 + currentRoom.y * 11);
+  ctx.fillStyle = isBoss ? "#6e5682" : "hsl(" + (329 + hueShift) + " 31% 73%)";
   ctx.fillRect(0, 0, LOGICAL.width, LOGICAL.height);
 
   ctx.save();
@@ -815,19 +1029,19 @@ function drawRoom() {
   const tile = 80;
   for (let y = WALL; y < LOGICAL.height - WALL; y += tile) {
     for (let x = WALL; x < LOGICAL.width - WALL; x += tile) {
-      const odd = ((x / tile | 0) + (y / tile | 0) + run.room) % 2;
-      ctx.fillStyle = run.room === ROOM_COUNT
+      const odd = ((x / tile | 0) + (y / tile | 0) + currentRoom.x + currentRoom.y) % 2;
+      ctx.fillStyle = isBoss
         ? (odd ? "#765f8c" : "#806998")
         : (odd ? "#f1d7bd" : "#e8c5b5");
       ctx.fillRect(x, y, tile + 1, tile + 1);
     }
   }
 
-  ctx.strokeStyle = run.room === ROOM_COUNT ? "rgba(255,231,111,.16)" : "rgba(120,81,79,.12)";
+  ctx.strokeStyle = isBoss ? "rgba(255,231,111,.16)" : "rgba(120,81,79,.12)";
   ctx.lineWidth = 6;
   for (let i = 0; i < 4; i += 1) {
     ctx.beginPath();
-    ctx.arc(150 + i * 175, 240 + ((i * 157 + run.room * 71) % 520), 55 + (i % 2) * 18, 0, Math.PI * 1.65);
+    ctx.arc(150 + i * 175, 240 + ((i * 157 + currentRoom.x * 71 + currentRoom.y * 43) % 720), 55 + (i % 2) * 18, 0, Math.PI * 1.65);
     ctx.stroke();
   }
 
@@ -835,11 +1049,11 @@ function drawRoom() {
   ctx.restore();
 
   ctx.lineWidth = 22;
-  ctx.strokeStyle = run.room === ROOM_COUNT ? "#4d3a62" : "#8d627d";
+  ctx.strokeStyle = isBoss ? "#4d3a62" : "#8d627d";
   roundRectPath(WALL - 4, WALL - 4, LOGICAL.width - WALL * 2 + 8, LOGICAL.height - WALL * 2 + 8, 34);
   ctx.stroke();
   ctx.lineWidth = 6;
-  ctx.strokeStyle = run.room === ROOM_COUNT ? "#e5c65c" : "#f4d6a6";
+  ctx.strokeStyle = isBoss ? "#e5c65c" : "#f4d6a6";
   roundRectPath(WALL + 4, WALL + 4, LOGICAL.width - WALL * 2 - 8, LOGICAL.height - WALL * 2 - 8, 26);
   ctx.stroke();
 
@@ -850,15 +1064,16 @@ function drawRoomProps() {
   ctx.save();
   ctx.globalAlpha = 0.5;
   for (let i = 0; i < 5; i += 1) {
-    const x = 115 + ((i * 167 + run.room * 43) % 570);
-    const y = 205 + ((i * 311 + run.room * 41) % 1020);
+    const seed = Math.abs(currentRoom.x * 37 + currentRoom.y * 61);
+    const x = 115 + ((i * 167 + seed * 43) % 570);
+    const y = 205 + ((i * 311 + seed * 41) % 1020);
     ctx.save();
     ctx.translate(x, y);
-    ctx.rotate(((i + run.room) % 5 - 2) * 0.08);
-    ctx.fillStyle = run.room === ROOM_COUNT ? "#5c4770" : "#b98572";
+    ctx.rotate(((i + Math.abs(currentRoom.x + currentRoom.y)) % 5 - 2) * 0.08);
+    ctx.fillStyle = currentRoom.type === "boss" ? "#5c4770" : "#b98572";
     roundRectPath(-31, -20, 62, 40, 8);
     ctx.fill();
-    ctx.fillStyle = run.room === ROOM_COUNT ? "#9e81b5" : "#e8bb77";
+    ctx.fillStyle = currentRoom.type === "boss" ? "#9e81b5" : "#e8bb77";
     roundRectPath(-27, -16, 54, 26, 6);
     ctx.fill();
     ctx.restore();
@@ -867,30 +1082,47 @@ function drawRoomProps() {
 }
 
 function drawDoor() {
-  const open = roomCleared && rewardChosen;
+  for (const direction of CARDINAL_DIRECTIONS) {
+    const destination = getAdjacentRoom(floor, currentRoom, direction.id);
+    if (!destination) continue;
+    let x = LOGICAL.width / 2;
+    let y = WALL + 3;
+    let rotation = 0;
+    if (direction.id === "south") {
+      y = LOGICAL.height - WALL - 3;
+      rotation = Math.PI;
+    } else if (direction.id === "east") {
+      x = LOGICAL.width - WALL - 3;
+      y = LOGICAL.height / 2;
+      rotation = Math.PI / 2;
+    } else if (direction.id === "west") {
+      x = WALL + 3;
+      y = LOGICAL.height / 2;
+      rotation = -Math.PI / 2;
+    }
+    drawSingleDoor(x, y, rotation, destination);
+  }
+}
+
+function drawSingleDoor(x, y, rotation, destination) {
+  const locked = destination.type === "treasure" && !destination.unlocked;
   ctx.save();
-  ctx.translate(LOGICAL.width / 2, WALL + 3);
-  ctx.fillStyle = open ? "#fff0a5" : "#5f455f";
+  ctx.translate(x, y);
+  ctx.rotate(rotation);
+  ctx.fillStyle = locked ? "#d7a85b" : "#fff0a5";
   ctx.strokeStyle = "#51394e";
   ctx.lineWidth = 7;
   roundRectPath(-83, -28, 166, 76, 20);
   ctx.fill();
   ctx.stroke();
-  if (open) {
-    ctx.fillStyle = "#7b5f91";
-    roundRectPath(-65, -23, 130, 69, 14);
-    ctx.fill();
-    ctx.fillStyle = "#fff1a1";
-    ctx.font = "900 18px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText("EXIT ↑", 0, 20);
-  } else {
-    ctx.fillStyle = "#d5a95c";
-    ctx.beginPath();
-    ctx.arc(0, 7, 14, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillRect(-6, 14, 12, 17);
-  }
+  ctx.fillStyle = locked ? "#7d5a50" : destination.type === "boss" ? "#634773" : "#7b5f91";
+  roundRectPath(-65, -23, 130, 69, 14);
+  ctx.fill();
+  ctx.fillStyle = "#fff1a1";
+  ctx.font = "900 23px Arial";
+  ctx.textAlign = "center";
+  const symbol = locked ? "🔒" : destination.type === "boss" ? "☠" : destination.type === "secret" ? "?" : "↑";
+  ctx.fillText(symbol, 0, 21);
   ctx.restore();
 }
 
@@ -1011,6 +1243,46 @@ function drawEnemies() {
 }
 
 function drawAttacks() {
+  for (const pickup of pickups) {
+    const float = Math.sin(elapsed * 4 + pickup.x * 0.01) * 6;
+    ctx.save();
+    ctx.translate(pickup.x, pickup.y + float);
+    ctx.fillStyle = "rgba(72,48,61,.22)";
+    ctx.beginPath();
+    ctx.ellipse(0, 20, 24, 9, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.font = "34px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(pickup.type === "key" ? "🔑" : pickup.type === "bomb" ? "💣" : "🍞", 0, 0);
+    ctx.restore();
+  }
+
+  for (const bomb of placedBombs) {
+    const pulse = 1 + Math.sin(elapsed * 22) * 0.12 * (1 - bomb.fuse / bomb.maxFuse);
+    ctx.save();
+    ctx.translate(bomb.x, bomb.y);
+    ctx.scale(pulse, pulse);
+    ctx.fillStyle = "#51434b";
+    ctx.strokeStyle = "#2f2830";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.arc(0, 4, 22, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = "#f2bb4a";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(8, -14);
+    ctx.quadraticCurveTo(23, -30, 29, -15);
+    ctx.stroke();
+    ctx.fillStyle = bomb.fuse < 0.38 ? "#ff795b" : "#ffe574";
+    ctx.beginPath();
+    ctx.arc(30, -16, 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
   for (const projectile of projectiles) {
     ctx.save();
     ctx.translate(projectile.x, projectile.y);
@@ -1200,7 +1472,7 @@ function endGame(won) {
   $("#result-copy").textContent = won
     ? CHARACTERS[run.characterId].name + "가 모은 아이템과 학년 능력으로 마지막 방까지 돌파했습니다."
     : "다른 아이템 조합과 학년 능력을 키워 다시 도전해 보세요.";
-  $("#result-rooms").textContent = run.room;
+  $("#result-rooms").textContent = run.roomsVisited;
   $("#result-kills").textContent = run.kills;
   $("#result-items").textContent = run.itemsTaken;
   $("#result-screen").hidden = false;
@@ -1305,6 +1577,7 @@ $("#item-cards").addEventListener("click", (event) => {
 });
 $("#lower-ability").addEventListener("click", activateLower);
 $("#upper-ability").addEventListener("click", activateUpper);
+$("#bomb-button").addEventListener("click", placeBomb);
 $("#start-button").addEventListener("click", startGame);
 $("#restart-button").addEventListener("click", restartGame);
 $("#pause-button").addEventListener("click", () => togglePause());
@@ -1312,12 +1585,13 @@ $("#resume-button").addEventListener("click", () => togglePause(false));
 
 window.addEventListener("keydown", (event) => {
   const key = event.key.toLowerCase();
-  if (["arrowup", "arrowdown", "arrowleft", "arrowright", "w", "a", "s", "d", "q", "e", "escape"].includes(key)) {
+  if (["arrowup", "arrowdown", "arrowleft", "arrowright", "w", "a", "s", "d", "q", "e", "r", "escape"].includes(key)) {
     event.preventDefault();
   }
   if (key === "escape") togglePause();
   else if (key === "q") activateLower();
   else if (key === "e") activateUpper();
+  else if (key === "r") placeBomb();
   else keys.add(key);
 });
 window.addEventListener("keyup", (event) => keys.delete(event.key.toLowerCase()));

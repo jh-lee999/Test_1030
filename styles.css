@@ -82,7 +82,7 @@ button:focus-visible {
   border: 3px solid #5d4139;
   border-radius: 17px;
   background-color: #fbd67b;
-  background-image: url("./assets/trickcal-heroes.webp?v=15");
+  background-image: url("./assets/trickcal-heroes.webp?v=16");
   background-repeat: no-repeat;
   background-position: 0 center;
   background-size: 200% 100%;
@@ -241,6 +241,68 @@ button:focus-visible {
   pointer-events: none;
 }
 
+.minimap {
+  position: absolute;
+  z-index: 8;
+  top: 56px;
+  right: 12px;
+  width: 102px;
+  height: 88px;
+  border: 2px solid rgba(79, 51, 73, 0.6);
+  border-radius: 12px;
+  background: rgba(255, 245, 211, 0.82);
+  box-shadow: 0 4px 0 rgba(72, 45, 66, 0.28);
+  pointer-events: none;
+}
+
+.map-room {
+  position: absolute;
+  width: 14px;
+  height: 11px;
+  border: 2px solid #76566f;
+  border-radius: 3px;
+  background: #d7bdd2;
+  transform: translate(-50%, -50%);
+}
+
+.map-room.visited { background: #fff1a0; }
+.map-room.current {
+  border-color: #4f3849;
+  background: #f4a55f;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.75);
+}
+.map-room.boss { background: #9a6ac2; }
+.map-room.treasure::after {
+  position: absolute;
+  inset: -5px;
+  display: grid;
+  place-items: center;
+  font-size: 8px;
+  content: "🔒";
+}
+.map-room.treasure.unlocked::after { content: "★"; }
+.map-room.secret { background: #5f4a68; }
+
+.resource-bar {
+  position: absolute;
+  z-index: 9;
+  top: 151px;
+  right: 14px;
+  display: flex;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.resource-bar span {
+  padding: 4px 7px;
+  border: 2px solid rgba(82, 55, 72, 0.52);
+  border-radius: 9px;
+  color: #5c4146;
+  background: rgba(255, 245, 208, 0.9);
+  box-shadow: 0 3px 0 rgba(74, 49, 66, 0.22);
+  font-size: 10px;
+}
+
 .item-chip {
   position: relative;
   display: grid;
@@ -381,6 +443,18 @@ button:focus-visible {
   color: #5b3d35;
   background: #ffda68;
   box-shadow: 0 5px 0 #9b6544;
+}
+
+.ability.bomb-ability {
+  position: absolute;
+  bottom: 78px;
+  left: 50%;
+  width: 55px;
+  height: 55px;
+  color: #f6e7dc;
+  background: #574450;
+  box-shadow: 0 5px 0 #342a32;
+  transform: translateX(-50%);
 }
 
 .ability.upper-ability {
@@ -529,7 +603,7 @@ button:focus-visible {
   width: 100%;
   min-height: 137px;
   flex: 1;
-  background-image: url("./assets/trickcal-heroes.webp?v=15");
+  background-image: url("./assets/trickcal-heroes.webp?v=16");
   background-repeat: no-repeat;
   background-size: 200% 100%;
 }

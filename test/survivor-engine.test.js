@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  CARDINAL_DIRECTIONS,
   CHARACTERS,
   ITEMS,
   ROOM_COUNT,
@@ -10,8 +11,11 @@ import {
   createRunState,
   damageState,
   distance,
+  generateFloor,
+  getAdjacentRoom,
   healState,
   lowerPower,
+  revealSecretAt,
   rollItems,
   upperPower
 } from "../survivor-engine.js";
@@ -19,7 +23,7 @@ import {
 test("버터와 코미는 서로 다른 평타 능력치로 시작한다", () => {
   const butter = createRunState("butter");
   const komi = createRunState("komi");
-  assert.equal(ROOM_COUNT, 7);
+  assert.equal(ROOM_COUNT, 10);
   assert.equal(butter.characterId, "butter");
   assert.equal(komi.characterId, "komi");
   assert.equal(butter.projectileSpeed > 0, true);
@@ -27,6 +31,54 @@ test("버터와 코미는 서로 다른 평타 능력치로 시작한다", () =>
   assert.equal(komi.maxHp > butter.maxHp, true);
   assert.equal(CHARACTERS.butter.attack, "새총");
   assert.equal(CHARACTERS.komi.attack, "베개 휘두르기");
+  assert.equal(butter.keys, 1);
+  assert.equal(butter.bombs, 1);
+});
+
+test("층은 시작방 1개, 보스방, 잠긴 보물방, 숨겨진 비밀방을 자동 생성한다", () => {
+  const floor = generateFloor(() => 0.37);
+  assert.equal(floor.rooms.length, ROOM_COUNT + 1);
+  assert.equal(floor.rooms.filter((room) => room.type === "start").length, 1);
+  assert.equal(floor.rooms.filter((room) => room.type === "boss").length, 1);
+  assert.equal(floor.rooms.filter((room) => room.type === "treasure").length, 1);
+  assert.equal(floor.rooms.filter((room) => room.type === "secret").length, 1);
+  const treasure = floor.rooms.find((room) => room.type === "treasure");
+  const secret = floor.rooms.find((room) => room.type === "secret");
+  assert.equal(treasure.unlocked, false);
+  assert.equal(secret.revealed, false);
+});
+
+test("비밀방을 제외한 자동 생성 방은 시작방에서 모두 연결된다", () => {
+  const floor = generateFloor(() => 0.61);
+  const visited = new Set([floor.startId]);
+  const queue = [floor.rooms.find((room) => room.id === floor.startId)];
+  while (queue.length) {
+    const room = queue.shift();
+    for (const direction of CARDINAL_DIRECTIONS) {
+      const adjacent = getAdjacentRoom(floor, room, direction.id);
+      if (!adjacent || visited.has(adjacent.id)) continue;
+      visited.add(adjacent.id);
+      queue.push(adjacent);
+    }
+  }
+  const visibleRoomIds = floor.rooms.filter((room) => room.type !== "secret").map((room) => room.id);
+  visibleRoomIds.forEach((id) => assert.equal(visited.has(id), true));
+});
+
+test("비밀방은 폭탄으로 벽을 열기 전까지 연결되지 않는다", () => {
+  const floor = generateFloor(() => 0.23);
+  const secret = floor.rooms.find((room) => room.type === "secret");
+  const neighbor = floor.rooms.find((room) => (
+    room.type !== "secret" &&
+    Math.abs(room.x - secret.x) + Math.abs(room.y - secret.y) === 1
+  ));
+  const direction = CARDINAL_DIRECTIONS.find((entry) => (
+    neighbor.x + entry.dx === secret.x && neighbor.y + entry.dy === secret.y
+  ));
+  assert.equal(getAdjacentRoom(floor, neighbor, direction.id), null);
+  const revealed = revealSecretAt(floor, neighbor, direction.id);
+  assert.equal(revealed.revealed, true);
+  assert.equal(getAdjacentRoom(revealed.floor, neighbor, direction.id).type, "secret");
 });
 
 test("아이템 선택지는 중복 없이 세 개를 제공한다", () => {
