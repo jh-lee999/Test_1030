@@ -14,7 +14,7 @@ import {
   revealSecretAt,
   rollItems,
   upperPower
-} from "./survivor-engine.js?v=18";
+} from "./survivor-engine.js?v=19";
 
 const LOGICAL = { width: 800, height: 1450 };
 const WALL = 58;
@@ -25,13 +25,29 @@ const canvas = document.querySelector("#game-canvas");
 const stage = document.querySelector("#game-stage");
 const ctx = canvas.getContext("2d");
 const $ = (selector) => document.querySelector(selector);
-const iconMarkup = (id) => "<svg class=\"ui-icon\" aria-hidden=\"true\"><use href=\"./assets/ui-icons.svg?v=18#" + id + "\"></use></svg>";
+const iconMarkup = (id) => "<svg class=\"ui-icon\" aria-hidden=\"true\"><use href=\"./assets/ui-icons.svg?v=19#" + id + "\"></use></svg>";
 
 const heroAtlas = new Image();
 let heroArtReady = false;
 heroAtlas.decoding = "async";
 heroAtlas.addEventListener("load", () => { heroArtReady = true; });
-heroAtlas.src = "./assets/trickcal-heroes.webp?v=18";
+heroAtlas.src = "./assets/trickcal-heroes.webp?v=19";
+
+const butterActionAtlases = {
+  side: new Image(),
+  down: new Image(),
+  up: new Image()
+};
+let butterActionPartsLoaded = 0;
+for (const [direction, filename] of [
+  ["side", "butter-actions.webp"],
+  ["down", "butter-actions-down.webp"],
+  ["up", "butter-actions-up.webp"]
+]) {
+  butterActionAtlases[direction].decoding = "async";
+  butterActionAtlases[direction].addEventListener("load", () => { butterActionPartsLoaded += 1; });
+  butterActionAtlases[direction].src = "./assets/" + filename + "?v=19";
+}
 
 const ENEMY_TYPES = {
   jelly: { hp: 34, speed: 78, radius: 25, damage: 9, color: "#b984cd", accent: "#f2d6ff" },
@@ -70,6 +86,7 @@ let hurtTimer = 0;
 let attackKick = 0;
 let abilityPulse = 0;
 let footstepTimer = 0;
+let butterAction = null;
 let elapsed = 0;
 let lastTime = performance.now();
 let viewWidth = 390;
@@ -106,6 +123,7 @@ function resetGame(characterId = selectedCharacter) {
   projectiles = [];
   boulders = [];
   placedBombs = [];
+  butterAction = null;
   pickups = [];
   enemyShots = [];
   slashes = [];
@@ -503,15 +521,31 @@ function updatePlayerAttack(dt) {
   attackTimer -= dt;
   const aim = getAim();
   if (!aim.firing || attackTimer > 0 || sleepTimer > 0) return;
+  if (run.characterId === "butter" && butterAction) return;
   player.facingX = aim.x;
   player.facingY = aim.y;
 
-  if (run.characterId === "butter") fireSlingshot(aim.x, aim.y);
+  if (run.characterId === "butter") beginButterAttack(aim.x, aim.y);
   else swingPillow(aim.x, aim.y);
   attackTimer = run.attackCooldown;
 }
 
-function fireSlingshot(dx, dy) {
+function beginButterAttack(dx, dy) {
+  const power = lowerPower(run);
+  const lowProc = Math.random() < power.chance;
+  butterAction = {
+    type: lowProc ? "low" : "normal",
+    time: 0,
+    duration: lowProc ? 0.56 : Math.max(0.29, Math.min(0.44, run.attackCooldown * 0.9)),
+    dx,
+    dy,
+    fired: false,
+    lowProc
+  };
+}
+
+function releaseButterShot(action) {
+  const { dx, dy } = action;
   const angle = Math.atan2(dy, dx);
   attackKick = 1;
   projectiles.push({
@@ -529,8 +563,8 @@ function fireSlingshot(dx, dy) {
     dead: false
   });
 
-  const power = lowerPower(run);
-  if (Math.random() < power.chance) {
+  if (action.lowProc) {
+    const power = lowerPower(run);
     const offset = angle + (Math.random() - 0.5) * 0.16;
     projectiles.push({
       x: player.x + Math.cos(offset) * 28,
@@ -552,6 +586,38 @@ function fireSlingshot(dx, dy) {
     playTone(430, 0.055, "triangle", 0.018);
   }
   emitParticles(player.x + dx * 25, player.y + dy * 25, "#f6c34f", 4, 55);
+}
+
+function updateButterAction(dt) {
+  if (!butterAction || run.characterId !== "butter") return;
+  butterAction.time += dt;
+  const progress = butterAction.time / butterAction.duration;
+  const releasePoint = butterAction.type === "high" ? 0.68 : butterAction.type === "low" ? 0.5 : 0.55;
+  if (!butterAction.fired && progress >= releasePoint) {
+    butterAction.fired = true;
+    if (butterAction.type === "high") releaseButterHigh(butterAction);
+    else releaseButterShot(butterAction);
+  }
+  if (progress >= 1) butterAction = null;
+}
+
+function releaseButterHigh(action) {
+  const power = action.power;
+  const angle = Math.atan2(action.dy, action.dx);
+  boulders.push({
+    x: player.x + Math.cos(angle) * 60,
+    y: player.y + Math.sin(angle) * 60,
+    vx: Math.cos(angle) * 390,
+    vy: Math.sin(angle) * 390,
+    radius: power.radius,
+    damage: power.damage,
+    life: power.duration,
+    spin: 0,
+    hitCooldowns: new Map()
+  });
+  screenShake = 12;
+  emitParticles(player.x + action.dx * 55, player.y + action.dy * 55, "#c89658", 28, 180);
+  playTone(92, 0.3, "sawtooth", 0.04);
 }
 
 function swingPillow(dx, dy) {
@@ -643,22 +709,23 @@ function activateUpper() {
   abilityPulse = 1;
   if (run.characterId === "butter") {
     const angle = currentAimAngle();
-    boulders.push({
-      x: player.x + Math.cos(angle) * 60,
-      y: player.y + Math.sin(angle) * 60,
-      vx: Math.cos(angle) * 390,
-      vy: Math.sin(angle) * 390,
-      radius: power.radius,
-      damage: power.damage,
-      life: power.duration,
-      spin: 0,
-      hitCooldowns: new Map()
-    });
-    invulnerableTimer = Math.max(invulnerableTimer, power.duration);
+    const duration = 0.86;
+    butterAction = {
+      type: "high",
+      time: 0,
+      duration,
+      dx: Math.cos(angle),
+      dy: Math.sin(angle),
+      power,
+      fired: false,
+      lowProc: false
+    };
+    player.facingX = Math.cos(angle);
+    player.facingY = Math.sin(angle);
+    invulnerableTimer = Math.max(invulnerableTimer, power.duration + duration);
     upperCooldown = 20;
-    showToast("왕새총 발사! 짱돌이 굴러가는 동안 무적");
-    screenShake = 12;
-    playTone(92, 0.3, "sawtooth", 0.04);
+    showToast("새쭁! 쓔튜라이크! 장전 중에도 무적");
+    playTone(180, 0.2, "square", 0.025);
   } else {
     giantTimer = power.duration;
     upperCooldown = 22;
@@ -1045,6 +1112,7 @@ function update(dt) {
   hurtTimer = Math.max(0, hurtTimer - dt);
 
   movePlayer(dt);
+  updateButterAction(dt);
   updatePlayerAttack(dt);
   updateProjectiles(dt);
   updateBoulders(dt);
@@ -1257,11 +1325,17 @@ function drawHero() {
     ctx.translate(-player.facingX * attackKick * 10, -player.facingY * attackKick * 10);
     ctx.rotate(stride * 0.022 + player.facingX * attackKick * 0.045);
     ctx.scale(1 + Math.abs(stride) * 0.012 + breathe, 1 - Math.abs(stride) * 0.008 - breathe);
-    if (player.facingX < -0.08) ctx.scale(-1, 1);
+    const facingDirection = getButterFacingDirection();
+    const shouldFlip = run.characterId === "butter"
+      ? facingDirection === "side" && player.facingX < 0
+      : player.facingX < -0.08;
+    if (shouldFlip) ctx.scale(-1, 1);
   }
 
   if (hurtTimer > 0 && Math.floor(hurtTimer * 18) % 2 === 0) ctx.globalAlpha = 0.42;
-  if (heroArtReady && heroAtlas.naturalWidth) {
+  if (run.characterId === "butter" && butterActionPartsLoaded >= 3) {
+    drawButterDirectionalSprite(size);
+  } else if (heroArtReady && heroAtlas.naturalWidth) {
     const half = heroAtlas.naturalWidth / 2;
     const sourceX = run.characterId === "butter" ? 0 : half;
     ctx.drawImage(heroAtlas, sourceX, 0, half, heroAtlas.naturalHeight, -size / 2, -size / 2, size, size);
@@ -1280,6 +1354,35 @@ function drawHero() {
     ctx.font = "900 15px Arial";
     ctx.fillText("z", player.x + 65, player.y - 75 - Math.sin(elapsed * 3 + 1) * 6);
   }
+}
+
+function getButterFacingDirection() {
+  if (Math.abs(player.facingX) > Math.abs(player.facingY) * 0.82) return "side";
+  return player.facingY < 0 ? "up" : "down";
+}
+
+function drawButterDirectionalSprite(baseSize) {
+  const direction = getButterFacingDirection();
+  const atlas = butterActionAtlases[direction];
+  const rows = { normal: 0, low: 1, high: 2 };
+  const type = butterAction?.type || "normal";
+  const row = rows[type] ?? 0;
+  const progress = butterAction ? clamp(butterAction.time / butterAction.duration, 0, 0.999) : 0;
+  const frame = butterAction ? Math.min(5, Math.floor(progress * 6)) : 0;
+  const cellWidth = atlas.naturalWidth / 6;
+  const cellHeight = atlas.naturalHeight / 3;
+  const drawSize = baseSize * (type === "high" ? 1.82 : 1.34);
+  ctx.drawImage(
+    atlas,
+    frame * cellWidth,
+    row * cellHeight,
+    cellWidth,
+    cellHeight,
+    -drawSize / 2,
+    -drawSize * 0.68,
+    drawSize,
+    drawSize
+  );
 }
 
 function drawEnemies() {
