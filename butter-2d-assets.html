@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>버터 · 고정 원본과 2D 에셋</title><link rel="icon" href="data:,">
+  <style>
+    :root{font:16px/1.7 system-ui,sans-serif;color:#60463d;background:#faf4e9;color-scheme:light}*{box-sizing:border-box}body{max-width:1060px;margin:auto;padding:30px 20px 60px}h1{font-size:clamp(26px,5vw,38px);line-height:1.3}h2{font-size:22px;margin:30px 0 12px}p{max-width:78ch}a{color:#87522b;text-underline-offset:4px}.tag{font-size:13px;background:#efddb4;padding:5px 12px;border-radius:20px}.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}figure{margin:0;background:#fffcf7;border:1px solid #ddcdbb;border-radius:16px;overflow:hidden}figcaption{text-align:center;padding:12px;border-top:1px solid #eadfd3;font-size:14px}.master{height:430px;width:100%;object-fit:contain;display:block}.stage{min-height:430px;display:flex;align-items:center;justify-content:center;background:conic-gradient(#f4ece0 25%,#fffaf2 0 50%,#f4ece0 0 75%,#fffaf2 0) 0 0/24px 24px}.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}button,select{font:inherit;color:inherit;background:#fffaf1;border:1px solid #d4bea5;padding:7px 13px;border-radius:18px;cursor:pointer}button[aria-pressed=true],button:hover{background:#f3d99c}button:focus-visible,select:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #ad7741;outline-offset:3px}.small{font-size:14px;color:#88715f}.notice{background:#f0e4d2;padding:14px 18px;border-radius:12px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card-stage{min-height:185px;display:flex;align-items:center;justify-content:center}details{margin-top:26px}summary{cursor:pointer}code{overflow-wrap:anywhere;font-size:13px}.downloads{display:flex;gap:12px 20px;flex-wrap:wrap}canvas{display:block;max-width:100%;height:auto}.full-sheet{max-width:100%;height:auto;background:#fffaf2}ul{padding-left:24px}@media(max-width:700px){body{padding:20px 12px 40px}.two{grid-template-columns:1fr}.master{height:350px}.stage{min-height:340px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card-stage{min-height:175px}}
+  </style>
+  <script type="module" src="./butter-2d-assets.js?v=32"></script>
+</head>
+<body>
+  <span class="tag">승인 원본 고정 · 새 에셋은 비교용 후보</span>
+  <h1>이 그림을 기준으로 계속 만들기</h1>
+  <p>왼쪽은 네가 좋다고 했던 2D 원본이고, 오른쪽은 그 이미지를 직접 참조한 새 정지 에셋이야. 원본은 그대로 보존하고, 새 후보는 별도 버전으로 관리해.</p>
+  <section class="two" aria-label="승인 원본과 2D 후보 비교">
+    <figure><img class="master" src="./assets/butter-2d-study.png" width="1199" height="1312" alt="승인한 버터 2D 원본. 큰 보라·하늘색 눈, 긴 베이지 머리, 흰 반팔과 노란 앞치마, 분홍 반바지"><figcaption>고정 원본 · 승인한 시안 28</figcaption></figure>
+    <div><figure><div class="stage"><canvas id="preview" width="160" height="160" role="img" aria-label="선택한 방향의 버터 정지 에셋 후보"></canvas></div><figcaption>새 후보 32 · <span id="direction-label">아래 · 정면</span></figcaption></figure></div>
+  </section>
+  <div class="controls" role="group" aria-label="에셋 방향"><button data-direction="down" aria-pressed="true">아래</button><button data-direction="left" aria-pressed="false">왼쪽</button><button data-direction="up" aria-pressed="false">위</button><button data-direction="right" aria-pressed="false">오른쪽</button></div>
+  <div class="controls"><label for="size">표시 크기</label><select id="size"><option value="96">96px · 게임 크기</option><option value="160">160px</option><option value="256" selected>256px · 확대</option></select><label><input id="guides" type="checkbox"> 발 기준점 보기</label></div>
+  <p id="status" class="small" role="status">에셋을 불러오는 중…</p>
+  <h2>같은 크기로 본 네 방향</h2><section id="directions" class="grid" aria-label="네 방향 정지 에셋"></section>
+  <p class="notice">이번 후보는 정지 모습 네 장이야. 원본과 비교해 얼굴·옆머리·채색·측면 소품을 확인하는 단계이며, 걷기·사격 애니메이션이나 기존 게임은 아직 교체하지 않았어.</p>
+  <h2>다음 작업에도 유지할 기준</h2>
+  <ul><li>승인 PNG를 작업마다 직접 열고, 생성 도구의 참조 이미지로 넣기.</li><li>긴 옆머리, 흰 반팔과 노란 앞치마, 분홍 반바지, 중앙 꼬리, 물리적으로 같은 오른손 새총 유지하기.</li><li>원본을 덮어쓰지 않고 새 버전과 나란히 비교하기.</li></ul>
+  <p class="small">저장소의 작업 규칙과 기준 문서에 남겼어. 파일 검사는 원본 변경과 잘림을 잡고, 실제 닮은 정도는 원본과 후보를 보고 확인해.</p>
+  <p class="downloads"><a href="./assets/butter-2d32/directions.png" download>4방향 투명 PNG</a><a href="./assets/butter-2d32/directions.json" download>프레임 좌표·발 기준점</a><a href="./docs/art/BUTTER_CANON.md">고정 특징·수정 이력</a><a href="./AGENTS.md">다음 작업용 규칙</a><a href="./?v=chibi25">게임</a></p>
+  <details><summary>원본 식별 정보</summary><p><code id="source-path"></code></p><p><code id="source-hash"></code></p><p class="small">승인 PNG의 내용이 바뀌면 저장소 검사에서 알려줘.</p></details>
+  <details><summary>새 후보 PNG 전체 보기</summary><img class="full-sheet" src="./assets/butter-2d32/directions.png" width="1254" height="1254" alt="아래·왼쪽·위·오른쪽 순서의 투명 배경 2D 시트"></details>
+  <details><summary>이전 3D 작업 보관</summary><a href="./butter-aligned-study.html?v=aligned31">기준 시트와 이전 3D 모델</a></details>
+</body>
+</html>

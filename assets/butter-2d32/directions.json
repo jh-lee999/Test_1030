@@ -1,0 +1,26 @@
+{
+  "version": 32,
+  "status": "unapproved-static-directions",
+  "gameApplied": false,
+  "sourceMaster": "assets/butter-2d-study.png",
+  "sourceMasterSHA256": "178bdd03ec6291f465371f7dabc5590e0c6bb39949b776b15f6e2b397c306fd6",
+  "image": "assets/butter-2d32/directions.png",
+  "imageSHA256": "9ab37594275cc8330f77025fd7038c05577b91e01f9553ace299eb92ab227279",
+  "imageSize": [1254, 1254],
+  "logicalSize": [160, 160],
+  "footAnchor": [80, 148],
+  "sourceScale": 0.236983842010772,
+  "animation": null,
+  "frames": {
+    "down": {"rect":[0,0,627,627],"sourceFoot":[346,582],"contentBounds":[165,33,538,582],"mirrored":false},
+    "left": {"rect":[627,0,627,627],"sourceFoot":[258,585],"contentBounds":[127,33,457,585],"mirrored":false},
+    "up": {"rect":[0,627,627,627],"sourceFoot":[353,588],"contentBounds":[160,31,549,588],"mirrored":false},
+    "right": {"rect":[627,627,627,627],"sourceFoot":[327,588],"contentBounds":[120,32,459,588],"mirrored":false}
+  },
+  "notes": [
+    "All four directions are separately drawn. No horizontal mirroring.",
+    "One shared scale preserves relative size. Source foot anchors align the soles without deforming the art.",
+    "Content bounds were measured from alpha-connected components of at least 64 pixels; the PNG is stored unchanged.",
+    "Static idle artwork only. Side-view prop occlusion, palette and likeness still need user review."
+  ]
+}

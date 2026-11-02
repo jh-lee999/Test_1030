@@ -19,6 +19,7 @@
     "pack:legacy-motion": "node tools/pack-butter-motion.mjs",
     "pack:chibi": "node tools/pack-butter-chibi.mjs",
     "check:sprites": "node tools/check-butter-sprites.mjs",
+    "check:butter-canon": "node tools/check-butter-canon.mjs",
     "test": "node --test"
   }
 }

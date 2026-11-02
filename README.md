@@ -2,6 +2,12 @@
 
 버터와 코미 중 한 명을 선택해 셰이디의 뒤틀린 아공간을 돌파하는 모바일 우선 방 탐험 액션 로그라이트입니다.
 
+## 버터 외형 작업의 고정 기준
+
+버터 에셋 작업은 루트 [AGENTS.md](AGENTS.md)와 [외형 기준 문서](docs/art/BUTTER_CANON.md)를 먼저 읽고, 승인 원본 `assets/butter-2d-study.png`를 직접 열어 시작합니다. 원본은 체크섬으로 고정하며 새 후보가 자동으로 기준을 대체하지 않습니다. 아래의 기존 게임·3D 구현 기록은 승인된 외형을 의미하지 않습니다.
+
+[새 2D 에셋 비교](butter-2d-assets.html)에는 원본과 별도로 제작한 아래·왼쪽·위·오른쪽 정지 후보 4장이 있습니다. 투명 PNG와 프레임 JSON을 제공하며 동일 배율과 발 기준점을 사용합니다. 현재 게임에는 적용하지 않았고 걷기·사격 프레임은 없습니다. `npm run check:butter-canon`으로 원본·후보 파일 식별, 좌표, 투명 여백과 표시 영역 잘림을 확인하며 배포에서도 실행합니다. 그림체와 손·소품의 실제 모양은 별도로 눈으로 비교해야 합니다.
+
 ## 현재 구현
 
 - 매 판 구조가 달라지는 자동 생성 던전 지도
@@ -48,15 +54,15 @@ blender --background assets/models/butter.blend --python-exit-code 1 --python to
 
 `tools/build_butter_model.py`가 실제 메시·리그·재질·동작과 네 방향 렌더를 만듭니다. `assets/butter-model.json`은 128px 셀 좌표 및 손·새총 연결 정보를 담습니다. 프레임을 개별 확대/잘라내기 하지 않아 카메라 기준점이 유지됩니다. 생성 중간 PNG는 `build/`에 두고 배포하지 않습니다. 렌더에는 CPU 환경에서 수십 분이 걸릴 수 있습니다.
 
-## 검토 중인 2D 그림체 시안
+## 승인한 2D 그림체 원본
 
 [model-study.html](model-study.html)은 원래 버터의 얼굴과 복장을 참고해 새로 그린 2D 시안을 보여줍니다. 공개 참고 자료는 [Triple3T/trickcaltool](https://github.com/Triple3T/trickcaltool)의 `public/charas/Butter.png`와 `public/skills/Icon_GraduateSKill_Butter.png`이며, 기존 `trickcal-heroes.webp`의 왼쪽 버터도 복장 참고로 사용했습니다. 결과는 `assets/butter-2d-study.png`의 투명 배경 이미지입니다. 게임 모델·시트·애니메이션은 아직 교체하지 않았습니다.
 
 이전 3D 시안과 비교 이미지는 페이지의 접힌 영역에 보관합니다.
 
-### 기준 자료에 맞춘 3D 외형 시안 (31)
+### 보관: 기준 자료에 맞춘 3D 외형 시안 (31)
 
-[현재 검토 페이지](butter-aligned-study.html)는 승인 2D를 바탕으로 만든 방향별 시트와 새 모델을 함께 보여줍니다. [자료 정합 문서](docs/butter-modeling31/README.md)에 출처 우선순위, 높이 기준, 복장 구조, 추정과 충돌 처리 내역을 기록했습니다. `spec.json`은 모델 생성기와 웹 비교 화면에서 함께 읽습니다. 정면 렌더와 도안을 같은 좌표·배율로 겹쳐 볼 수 있습니다.
+[이전 3D 검토 페이지](butter-aligned-study.html)는 승인 2D를 바탕으로 만든 방향별 시트와 모델을 함께 보여줍니다. [자료 정합 문서](docs/butter-modeling31/README.md)에 당시의 높이 기준, 복장 구조, 추정과 충돌 처리 내역을 기록했습니다. `spec.json`은 모델 생성기와 웹 비교 화면에서 함께 읽습니다. 정면 렌더와 도안을 같은 좌표·배율로 겹쳐 볼 수 있습니다. 이 3D 외형은 승인 기준으로 사용하지 않습니다.
 
 `npm run render:aligned-model`로 `assets/models/butter-aligned31.blend`, `.glb`, `assets/butter-aligned31/`를 재생성합니다. Blender 원본에는 기준 시트와 설명도 포함합니다. 외형 검토용이며 게임과 애니메이션은 교체하지 않았습니다.
 

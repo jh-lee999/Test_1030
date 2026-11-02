@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "character": "Butter",
+  "approvedMaster": {
+    "path": "assets/butter-2d-study.png",
+    "sha256": "178bdd03ec6291f465371f7dabc5590e0c6bb39949b776b15f6e2b397c306fd6",
+    "width": 1199,
+    "height": 1312,
+    "status": "user-approved-look-study28"
+  },
+  "supplementalReference": {
+    "path": "docs/butter-modeling31/turnaround.png",
+    "status": "inferred-construction-not-approved-master"
+  },
+  "activeCandidate": {
+    "manifest": "assets/butter-2d32/directions.json",
+    "status": "unapproved-static-directions",
+    "gameApplied": false
+  },
+  "anatomy": {"holdingHand":"right","drawingHand":"left","pouchHip":"left","tailRoot":"posterior-pelvis-midline"},
+  "requiredDirections": ["down","left","up","right"],
+  "excludedVisualSources": ["3D models and renders from versions 26 through 31"],
+  "revisionPolicy": "Preserve the approved master; save candidates under new paths. Explicit user approval is needed to promote a new master."
+}
