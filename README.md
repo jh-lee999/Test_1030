@@ -26,12 +26,27 @@
 - 캐릭터 호흡·보행 체중 이동·발먼지·평타 반동·피격 플래시
 - 적 스쿼시 모션, 투사체 잔상, 문 맥동, 방 전환 애니메이션
 - 큰 머리·짧은 몸통·작은 발로 단순화한 버터의 네 방향 스프라이트
-- 완성된 전신 네 장으로 재생하는 보행과 이동 중에도 이어지는 사격
-- 같은 데포르메 비율의 정지·사격·고학년 모습, 투명 여백과 공통 발 기준점
+- Blender에서 제작한 실제 메시·뼈대와 정지·걷기·새총·이동사격·고학년 애니메이션
+- 12단계 보행과 8단계 사격을 독립 조합한 네 방향 전신 500프레임
+- 새총을 잡는 손과 줄을 당기는 손 고정, 좌우 반전 없는 네 방향 촬영
+- 짧은 발의 번갈아 접지, 머리·귀·꼬리의 작은 후속 움직임
 
 스프라이트 전체 프레임은 sprite-preview.html에서 확인할 수 있습니다. npm run check:sprites로 실제 이미지의 경계와 발 기준점을 검사합니다(개발 도구: Node.js, ImageMagick).
 
-현재 보행·사격 모션은 motion-preview.html에서 비교할 수 있습니다. npm run pack:motion으로 데포르메 전신 21프레임을 재생성합니다. 그림을 늘이거나 다리 조각을 돌리는 변형 없이 프레임을 그대로 재생하며, 평타·저학년을 사용해도 보행은 유지됩니다.
+현재 보행·사격·고학년 모션은 [motion-preview.html](motion-preview.html)에서 비교할 수 있습니다. [Blender 원본](assets/models/butter.blend)을 열면 같은 모델의 메시, 재질, 24개 뼈, 개별 동작과 동기화된 전체 타임라인을 수정할 수 있습니다. 게임은 이 모델을 미리 렌더한 WebP 한 장만 읽으므로 Blender나 3D 라이브러리 설치 없이 실행됩니다. 코미는 기존 스프라이트를 유지합니다.
+
+## 모델과 애니메이션 재생성
+
+Blender 4.3(제작·검증 버전 4.3.2), Node.js와 ImageMagick이 필요합니다. 게임 실행 자체에는 필요하지 않습니다.
+
+```sh
+npm run render:animations
+npm run pack:model
+npm run check:sprites
+blender --background assets/models/butter.blend --python-exit-code 1 --python tools/check-butter-model.py
+```
+
+`tools/build_butter_model.py`가 실제 메시·리그·재질·동작과 네 방향 렌더를 만듭니다. `assets/butter-model.json`은 128px 셀 좌표 및 손·새총 연결 정보를 담습니다. 프레임을 개별 확대/잘라내기 하지 않아 카메라 기준점이 유지됩니다. 생성 중간 PNG는 `build/`에 두고 배포하지 않습니다. 렌더에는 CPU 환경에서 수십 분이 걸릴 수 있습니다.
 
 키보드는 WASD로 이동하고 방향키로 공격합니다. Q는 저학년 액티브, E는 고학년 액티브, R은 폭탄 설치입니다. 버터의 저학년 능력은 패시브로 자동 발동합니다.
 

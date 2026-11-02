@@ -1,13 +1,15 @@
 {
   "name": "shady-pocket-space-escape",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "private": true,
   "type": "module",
   "scripts": {
     "start": "python3 -m http.server 4173",
-    "render:animations": "blender --background --python tools/render_animated_sprites.py",
+    "render:animations": "LP_NUM_THREADS=4 blender --threads 4 --background --factory-startup --python-exit-code 1 --python tools/build_butter_model.py -- --render",
+    "render:model-preview": "LP_NUM_THREADS=4 blender --threads 4 --background --factory-startup --python-exit-code 1 --python tools/build_butter_model.py -- --preview",
+    "pack:model": "node tools/pack-butter-model.mjs",
     "pack:sprites": "node tools/pack-butter-sprites.mjs",
-    "pack:motion": "node tools/pack-butter-chibi.mjs",
+    "pack:motion": "node tools/pack-butter-model.mjs",
     "pack:legacy-motion": "node tools/pack-butter-motion.mjs",
     "pack:chibi": "node tools/pack-butter-chibi.mjs",
     "check:sprites": "node tools/check-butter-sprites.mjs",

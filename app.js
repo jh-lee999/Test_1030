@@ -15,7 +15,7 @@ import {
   rollItems,
   upperPower
 } from "./survivor-engine.js?v=23";
-import { advanceButterGait, drawButterMotion } from "./butter-motion.js?v=25";
+import { advanceButterGait, drawButterMotion, butterMuzzleOffset } from "./butter-motion.js?v=26";
 
 const LOGICAL = { width: 800, height: 1450 };
 const WALL = 58;
@@ -39,7 +39,7 @@ let butterMotionPartsLoaded = 0;
 for (const image of Object.values(butterMotionImages)) {
   image.decoding = "async";
   image.addEventListener("load", () => { butterMotionPartsLoaded += 1; });
-  image.src = "./assets/butter-chibi.webp?v=25";
+  image.src = "./assets/butter-model.webp?v=26";
 }
 let butterGait = { phase: 0, amount: 0, dx: 0, dy: -1 };
 
@@ -556,13 +556,19 @@ function beginButterAttack(dx, dy) {
   };
 }
 
+function butterAttackOrigin(action) {
+  const offset = butterMuzzleOffset({size:112,facingX:action.dx,facingY:action.dy,gait:butterGait,action});
+  return {x:player.x+offset.x,y:player.y+offset.y};
+}
+
 function releaseButterShot(action) {
   const { dx, dy } = action;
+  const origin = butterAttackOrigin(action);
   const angle = Math.atan2(dy, dx);
   attackKick = 1;
   projectiles.push({
-    x: player.x + dx * 30,
-    y: player.y + dy * 30,
+    x: origin.x,
+    y: origin.y,
     vx: dx * run.projectileSpeed,
     vy: dy * run.projectileSpeed,
     radius: 10,
@@ -579,8 +585,8 @@ function releaseButterShot(action) {
     const power = lowerPower(run);
     const offset = angle + (Math.random() - 0.5) * 0.16;
     projectiles.push({
-      x: player.x + Math.cos(offset) * 28,
-      y: player.y + Math.sin(offset) * 28,
+      x: origin.x,
+      y: origin.y,
       vx: Math.cos(offset) * run.projectileSpeed * 0.82,
       vy: Math.sin(offset) * run.projectileSpeed * 0.82,
       radius: 12,
@@ -597,7 +603,7 @@ function releaseButterShot(action) {
   } else {
     playTone(430, 0.055, "triangle", 0.018);
   }
-  emitParticles(player.x + dx * 25, player.y + dy * 25, "#f6c34f", 4, 55);
+  emitParticles(origin.x, origin.y, "#f6c34f", 4, 55);
 }
 
 function updateButterAction(dt) {
@@ -615,10 +621,11 @@ function updateButterAction(dt) {
 
 function releaseButterHigh(action) {
   const power = action.power;
+  const origin = butterAttackOrigin(action);
   const angle = Math.atan2(action.dy, action.dx);
   boulders.push({
-    x: player.x + Math.cos(angle) * 60,
-    y: player.y + Math.sin(angle) * 60,
+    x: origin.x,
+    y: origin.y,
     vx: Math.cos(angle) * 390,
     vy: Math.sin(angle) * 390,
     radius: power.radius,
@@ -628,7 +635,7 @@ function releaseButterHigh(action) {
     hitCooldowns: new Map()
   });
   screenShake = 12;
-  emitParticles(player.x + action.dx * 55, player.y + action.dy * 55, "#c89658", 28, 180);
+  emitParticles(origin.x, origin.y, "#c89658", 28, 180);
   playTone(92, 0.3, "sawtooth", 0.04);
 }
 

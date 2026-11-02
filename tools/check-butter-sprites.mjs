@@ -3,6 +3,8 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { BUTTER_SPRITE_LAYOUT, butterFrameRect } from "../sprite-layout.js";
+import {BUTTER_MUZZLES} from "../assets/butter-model-anchors.js";
+import {BUTTER_MODEL_LAYOUT} from "../butter-motion.js";
 
 const assets = new URL("../assets/", import.meta.url);
 const manifest = JSON.parse(readFileSync(new URL("butter-sprites.json", assets), "utf8"));
@@ -89,3 +91,58 @@ for(const row of [0,2])for(const frame of [1,3]){
     `chibi/${row}/${frame}: contact artwork does not alternate feet`);
 }
 console.log("Front/back contact artwork: opposite feet verified in the actual pixels");
+
+// Current game atlas: one physical Blender model, independently sampled gait
+// and attack phases, true four-view capture. Nothing may touch a cell boundary.
+const model=JSON.parse(readFileSync(new URL("butter-model.json",assets),"utf8"));
+for(const key of ["cell","columns","rows","viewStride"])assert.equal(model[key],BUTTER_MODEL_LAYOUT[key]);
+assert.deepEqual(model.anchor,[BUTTER_MODEL_LAYOUT.anchorX,BUTTER_MODEL_LAYOUT.anchorY]);
+const modelFile=fileURLToPath(new URL(model.file,assets));
+const modelWidth=model.cell*model.columns,modelHeight=model.cell*model.rows;
+assert.equal(execFileSync("identify",["-format","%w %h",modelFile],{encoding:"utf8"}),`${modelWidth} ${modelHeight}`);
+assert.equal(model.frames.length,500);
+assert.equal(BUTTER_MUZZLES.length,512,"Missing generated camera-space muzzle anchors");
+assert.deepEqual(model.views,["down","left","right","up"]);
+assert.equal(model.holdingHand,"hand.R");assert.equal(model.drawingHand,"hand.L");
+assert.equal(model.weaponBone,"slingshot.R");
+const modelRGBA=execFileSync("convert",[modelFile,"-depth","8","rgba:-"],{maxBuffer:40e6});
+const poseByKey=new Map(),indices=new Set();
+for(const frame of model.frames){
+  const layout=model.clips[frame.clip];
+  assert.deepEqual(BUTTER_MUZZLES[frame.index],frame.muzzle);
+  assert.ok(frame.muzzle.every(Number.isFinite));
+  assert.equal(frame.index,model.views.indexOf(frame.view)*model.viewStride+layout.offset+frame.gait*layout.attackFrames+frame.attack);
+  assert.ok(!indices.has(frame.index));indices.add(frame.index);
+  const key=`${frame.clip}/${frame.gait}/${frame.attack}`;
+  const pose={rightHand:frame.rightHand,leftHand:frame.leftHand,bandEnds:frame.bandEnds};
+  if(poseByKey.has(key))assert.deepEqual(pose,poseByKey.get(key),`${key}: camera view changed the physical hands`);
+  else poseByKey.set(key,pose);
+  const sx=frame.index%model.columns*model.cell,sy=Math.floor(frame.index/model.columns)*model.cell;
+  let visible=0;
+  for(let y=0;y<model.cell;y++)for(let x=0;x<model.cell;x++){
+    if(modelRGBA[((sy+y)*modelWidth+sx+x)*4+3]<4)continue;
+    visible++;
+    assert.ok(x>=model.padding&&y>=model.padding&&x<model.cell-model.padding&&y<model.cell-model.padding,
+      `model/${frame.index}: visible pixel at cell boundary ${x},${y}`);
+  }
+  assert.ok(visible>2000,`model/${frame.index}: incomplete silhouette`);
+}
+// Different attack phases of the SAME gait must visibly animate the arms while
+// leaving feet unchanged. Compare the actual exported pixels, not just indices.
+function region(a,b,top,bottom){
+  let different=0;
+  for(let y=top;y<bottom;y++)for(let x=0;x<128;x++){
+    const ai=((Math.floor(a/16)*128+y)*modelWidth+(a%16)*128+x)*4;
+    const bi=((Math.floor(b/16)*128+y)*modelWidth+(b%16)*128+x)*4;
+    // WebP may discard RGB under alpha=0; invisible colors aren't movement.
+    if(modelRGBA[ai+3]<4&&modelRGBA[bi+3]<4)continue;
+    if(!modelRGBA.subarray(ai,ai+4).equals(modelRGBA.subarray(bi,bi+4)))different++;
+  }
+  return different;
+}
+for(const [vi,view] of model.views.entries()){
+  const a=vi*128+21+3*8+2,b=vi*128+21+3*8+5;
+  assert.ok(region(a,b,35,90)>10,`${view}: moving-shot hand animation is missing`);
+  assert.equal(region(a,b,102,120),0,`${view}: a shot restarted the feet`);
+}
+console.log("500 Blender frames: unclipped silhouettes, fixed physical hands, independent moving-shot arms/feet verified");

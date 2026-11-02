@@ -2,27 +2,28 @@
 <html lang="ko">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>버터 데포르메 이동·사격 모션</title>
+<title>버터 3D 리그 애니메이션</title>
 <style>
   body { background:#272637; color:#fff0dc; margin:24px; font:16px system-ui; }
-  main { display:grid; grid-template-columns:repeat(4,minmax(120px,1fr)); gap:12px; }
+  main { display:grid; grid-template-columns:repeat(5,minmax(120px,1fr)); gap:12px; }
   figure { margin:0; border:1px solid #827480; border-radius:10px; overflow:hidden; }
   canvas { display:block; width:100%; background:#e4d4bd; }
   figcaption { padding:8px; text-align:center; } button { padding:8px 16px; margin-bottom:16px; }
   @media(max-width:700px) { main{grid-template-columns:repeat(2,minmax(120px,1fr));} }
 </style>
-<h1>버터 데포르메 이동·사격 모션</h1>
-<p>정지 / 걷기 / 정지 사격 / 이동 사격</p>
+<h1>버터 · Blender 리그 애니메이션</h1>
+<p>네 방향 실촬영 · 보행과 사격 독립 재생 · 같은 손에 고정된 새총</p>
+<p><a href="./assets/models/butter.blend" download style="color:#ffe592">Blender 원본 다운로드</a> · <a href="./sprite-preview.html?v=26" style="color:#ffe592">프레임 검사</a></p>
 <button id="toggle">일시 정지</button>
 <main></main>
 <script type="module">
-import { drawButterMotion, BUTTER_STRIDE_DISTANCE } from "./butter-motion.js?v=25";
+import { drawButterMotion, BUTTER_STRIDE_DISTANCE } from "./butter-motion.js?v=26";
 const atlas = new Image();
-atlas.src = "./assets/butter-chibi.webp?v=25";
+atlas.src = "./assets/butter-model.webp?v=26";
 await atlas.decode();
 const cases = [];
 for (const [name, x, y] of [["정면",0,1],["왼쪽",-1,0],["오른쪽",1,0],["후면",0,-1]]) {
-  for (const [title, moving, firing] of [["정지",false,false],["걷기",true,false],["정지 사격",false,true],["이동 사격",true,true]]) {
+  for (const [title, moving, firing] of [["정지",false,false],["걷기",true,false],["정지 사격",false,true],["이동 사격",true,true],["고학년",false,"high"]]) {
     const figure = document.createElement("figure"), canvas = document.createElement("canvas"), caption = document.createElement("figcaption");
     canvas.width = 320; canvas.height = 340;
     caption.textContent = name + " · " + title;
@@ -39,7 +40,8 @@ function draw(now) {
     context.clearRect(0,0,320,340); context.save(); context.translate(160,240);
     context.fillStyle="#b6a69a"; context.beginPath(); context.ellipse(0,170*.28,170*.34,170*.1,0,0,Math.PI*2); context.fill();
     const progress=(elapsed%0.46)/0.46;
-    drawButterMotion(context,{atlas},{size:170,facingX:c.x,facingY:c.y,gait:{phase:elapsed*235/BUTTER_STRIDE_DISTANCE*Math.PI*2,amount:c.moving?1:0,dx:c.x,dy:c.y},action:c.firing?{type:"normal",time:progress,duration:1}:null,recoil:c.firing?Math.max(0,1-Math.abs(progress-.6)*12):0});
+    const high=c.firing==="high";
+    drawButterMotion(context,{atlas},{size:170,facingX:c.x,facingY:c.y,gait:{phase:elapsed*235/BUTTER_STRIDE_DISTANCE*Math.PI*2,amount:c.moving?1:0,dx:c.x,dy:c.y},action:c.firing?{type:high?"high":"normal",time:high?(elapsed%1.2)/1.2:progress,duration:1}:null});
     context.restore();
   }
   requestAnimationFrame(draw);
