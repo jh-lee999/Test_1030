@@ -1,13 +1,15 @@
 {
   "name": "shady-pocket-space-escape",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "private": true,
   "type": "module",
   "scripts": {
     "start": "python3 -m http.server 4173",
     "render:animations": "blender --background --python tools/render_animated_sprites.py",
     "pack:sprites": "node tools/pack-butter-sprites.mjs",
-    "pack:motion": "node tools/pack-butter-motion.mjs",
+    "pack:motion": "node tools/pack-butter-chibi.mjs",
+    "pack:legacy-motion": "node tools/pack-butter-motion.mjs",
+    "pack:chibi": "node tools/pack-butter-chibi.mjs",
     "check:sprites": "node tools/check-butter-sprites.mjs",
     "test": "node --test"
   }

@@ -1,56 +1,40 @@
 <!doctype html>
 <html lang="ko">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>버터 스프라이트 검사</title>
-  <style>
-    body { margin: 24px; background: #252536; color: #f6e7d0; font: 15px system-ui; }
-    h1 { font-size: 24px; } h2 { margin-top: 30px; }
-    section { display: grid; grid-template-columns: repeat(6, minmax(100px, 1fr)); gap: 8px; }
-    figure { margin: 0; background: #3b3b50; border: 1px solid #62617a; border-radius: 8px; overflow: hidden; }
-    canvas { display: block; width: 100%; background: repeating-conic-gradient(#dfd1c8 0% 25%, #cbbaa9 0% 50%) 0 / 24px 24px; }
-    figcaption { padding: 5px; text-align: center; font-size: 12px; }
-    a { color: #ffe592; }
-    @media(max-width: 700px) { body { margin: 10px; } section { grid-template-columns: repeat(3, minmax(80px, 1fr)); } }
-  </style>
-  <h1>버터 전체 프레임</h1>
-  <p><a href="./motion-preview.html?v=23">현재 연속 보행·이동 사격 모션 보기</a></p>
-  <p>게임과 같은 렌더 함수로 표시한 72프레임. 빨간 선은 각 프레임의 경계, 파란 선은 발 기준점이다.</p>
-  <p><a href="./?v=sprite22">게임으로 돌아가기</a></p>
-  <main id="frames"></main>
-  <script type="module">
-    import { drawButterFrame, BUTTER_SPRITE_LAYOUT } from "./sprite-layout.js?v=23";
-    const atlases = [
-      ["butter-walk.webp", "걷기", ["정면", "측면", "후면"]],
-      ["butter-actions.webp", "측면 공격", ["평타", "저학년", "고학년"]],
-      ["butter-actions-down.webp", "정면 공격", ["평타", "저학년", "고학년"]],
-      ["butter-actions-up.webp", "후면 공격", ["평타", "저학년", "고학년"]]
-    ];
-    for (const [file, title, names] of atlases) {
-      const image = new Image();
-      image.src = "./assets/" + file + "?v=23";
-      await image.decode();
-      const heading = document.createElement("h2");
-      heading.textContent = title;
-      const section = document.createElement("section");
-      document.querySelector("main").append(heading, section);
-      for (let row = 0; row < 3; row++) for (let frame = 0; frame < 6; frame++) {
-        const figure = document.createElement("figure");
-        const canvas = document.createElement("canvas");
-        canvas.width = canvas.height = BUTTER_SPRITE_LAYOUT.cell;
-        const context = canvas.getContext("2d");
-        context.translate(160, 0);
-        drawButterFrame(context, image, row, frame, 320, 280);
-        context.setTransform(1, 0, 0, 1, 0, 0);
-        context.strokeStyle = "#b75656";
-        context.strokeRect(0.5, 0.5, 319, 319);
-        context.strokeStyle = "#4b93b1";
-        context.beginPath(); context.moveTo(0, 280.5); context.lineTo(320, 280.5); context.stroke();
-        const caption = document.createElement("figcaption");
-        caption.textContent = names[row] + " · " + (frame + 1);
-        figure.append(canvas, caption); section.append(figure);
-      }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>버터 데포르메 전신 프레임</title>
+<style>
+  body { margin:24px; background:#252536; color:#f6e7d0; font:15px system-ui; }
+  h1 {font-size:24px;} h2 {margin-top:30px;}
+  section {display:grid;grid-template-columns:repeat(7,minmax(80px,1fr));gap:8px;}
+  figure {margin:0;background:#3b3b50;border:1px solid #62617a;border-radius:8px;overflow:hidden;}
+  canvas {display:block;width:100%;background:repeating-conic-gradient(#dfd1c8 0% 25%,#cbbaa9 0% 50%) 0 / 24px 24px;}
+  figcaption {padding:6px;text-align:center;font-size:12px;}
+  a {color:#ffe592;}
+  @media(max-width:700px){body{margin:12px;}section{grid-template-columns:repeat(3,minmax(80px,1fr));}}
+</style>
+<h1>버터 데포르메 전신 21프레임</h1>
+<p><a href="./motion-preview.html?v=25">움직임 비교</a> · <a href="./?v=chibi25">게임으로 돌아가기</a></p>
+<p>정지, 보행 네 자세, 정지 사격, 고학년. 오른쪽은 왼쪽 원본을 반전한다.</p>
+<main></main>
+<script type="module">
+  import {drawButterMotion,BUTTER_CHIBI_LAYOUT} from "./butter-motion.js?v=25";
+  const atlas=new Image();atlas.src="./assets/butter-chibi.webp?v=25";await atlas.decode();
+  const names=["정지","한발 접지","통과","반대발 접지","반대 통과","사격","고학년"];
+  for(const [title,x,y] of [["정면",0,1],["왼쪽", -1,0],["후면",0,-1]]){
+    const heading=document.createElement("h2");heading.textContent=title;
+    const section=document.createElement("section");document.querySelector("main").append(heading,section);
+    for(let frame=0;frame<7;frame++){
+      const figure=document.createElement("figure"),canvas=document.createElement("canvas"),caption=document.createElement("figcaption");
+      canvas.width=canvas.height=BUTTER_CHIBI_LAYOUT.cell;
+      const context=canvas.getContext("2d"),size=160/1.42;
+      context.translate(80,136-size*.28);
+      const moving=frame>=1&&frame<=4;
+      const action=frame===5?{type:"normal",time:.4,duration:1}:frame===6?{type:"high",time:.4,duration:1}:null;
+      drawButterMotion(context,{atlas},{size,facingX:x,facingY:y,gait:{phase:moving?(frame-1)*Math.PI/2:0,amount:moving?1:0,dx:x,dy:y},action});
+      caption.textContent=names[frame];figure.append(canvas,caption);section.append(figure);
     }
-    document.body.dataset.ready = "true";
-  </script>
+  }
+  document.body.dataset.ready="true";
+</script>
 </html>

@@ -57,3 +57,35 @@ for (const [part, layout] of Object.entries({ upper: motion.body, legs: motion.l
   }
 }
 console.log(`${layers} motion layers: complete bodies and independent boots, transparent gutters verified`);
+
+const chibi=JSON.parse(readFileSync(new URL("butter-chibi.json",assets),"utf8"));
+const chibiFile=fileURLToPath(new URL(chibi.file,assets));
+const chibiWidth=chibi.cell*chibi.columns,chibiHeight=chibi.cell*chibi.rows;
+assert.equal(execFileSync("identify",["-format","%w %h",chibiFile],{encoding:"utf8"}),`${chibiWidth} ${chibiHeight}`);
+const chibiAlpha=execFileSync("convert",[chibiFile,"-alpha","extract","-depth","8","gray:-"],{maxBuffer:3e6});
+assert.equal(chibi.frames.length,21);
+for(const frame of chibi.frames){
+  let visible=0,bottom=0;
+  for(let y=0;y<chibi.cell;y++)for(let x=0;x<chibi.cell;x++){
+    if(!chibiAlpha[(frame.row*chibi.cell+y)*chibiWidth+frame.frame*chibi.cell+x])continue;
+    visible++;bottom=Math.max(bottom,y);
+    assert.ok(x>=chibi.padding&&y>=chibi.padding&&x<chibi.cell-chibi.padding&&y<chibi.cell-chibi.padding,
+      `chibi/${frame.row}/${frame.frame}: sprite touches frame boundary`);
+  }
+  assert.ok(visible>5000,"Incomplete chibi silhouette");
+  assert.ok(bottom>=chibi.anchor[1]-3&&bottom<=chibi.anchor[1],"Incorrect chibi foot baseline");
+}
+console.log("21 complete chibi poses: transparent gutters and foot baselines verified");
+
+// Check the artwork itself, not just the playback indices: the lower foot must
+// actually switch sides in the front/back contact drawings.
+for(const row of [0,2])for(const frame of [1,3]){
+  const lowest=[0,0];
+  for(let y=119;y<137;y++)for(let x=64;x<96;x++){
+    if(chibiAlpha[(row*160+y)*chibiWidth+frame*160+x]<128)continue;
+    const foot=x<80?0:1;lowest[foot]=Math.max(lowest[foot],y);
+  }
+  assert.ok(frame===1?lowest[0]>lowest[1]:lowest[1]>lowest[0],
+    `chibi/${row}/${frame}: contact artwork does not alternate feet`);
+}
+console.log("Front/back contact artwork: opposite feet verified in the actual pixels");

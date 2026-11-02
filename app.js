@@ -15,8 +15,7 @@ import {
   rollItems,
   upperPower
 } from "./survivor-engine.js?v=23";
-import { drawButterFrame } from "./sprite-layout.js?v=23";
-import { advanceButterGait, drawButterMotion } from "./butter-motion.js?v=24";
+import { advanceButterGait, drawButterMotion } from "./butter-motion.js?v=25";
 
 const LOGICAL = { width: 800, height: 1450 };
 const WALL = 58;
@@ -35,34 +34,12 @@ heroAtlas.decoding = "async";
 heroAtlas.addEventListener("load", () => { heroArtReady = true; });
 heroAtlas.src = "./assets/trickcal-heroes.webp?v=23";
 
-const butterActionAtlases = {
-  side: new Image(),
-  down: new Image(),
-  up: new Image()
-};
-let butterActionPartsLoaded = 0;
-for (const [direction, filename] of [
-  ["side", "butter-actions.webp"],
-  ["down", "butter-actions-down.webp"],
-  ["up", "butter-actions-up.webp"]
-]) {
-  butterActionAtlases[direction].decoding = "async";
-  butterActionAtlases[direction].addEventListener("load", () => { butterActionPartsLoaded += 1; });
-  butterActionAtlases[direction].src = "./assets/" + filename + "?v=23";
-}
-
-const butterWalkAtlas = new Image();
-let butterWalkReady = false;
-butterWalkAtlas.decoding = "async";
-butterWalkAtlas.addEventListener("load", () => { butterWalkReady = true; });
-butterWalkAtlas.src = "./assets/butter-walk.webp?v=23";
-
-const butterMotionImages = { upper: new Image(), legs: new Image() };
+const butterMotionImages = { atlas: new Image() };
 let butterMotionPartsLoaded = 0;
-for (const [part, image] of Object.entries(butterMotionImages)) {
+for (const image of Object.values(butterMotionImages)) {
   image.decoding = "async";
   image.addEventListener("load", () => { butterMotionPartsLoaded += 1; });
-  image.src = "./assets/butter-motion-" + part + ".webp?v=23";
+  image.src = "./assets/butter-chibi.webp?v=25";
 }
 let butterGait = { phase: 0, amount: 0, dx: 0, dy: -1 };
 
@@ -1320,10 +1297,9 @@ function drawDoorIcon(destination, locked) {
 function drawHero() {
   const giant = giantTimer > 0 ? upperPower(run).scale : 1;
   const size = (run.characterId === "butter" ? 112 : 118) * giant;
-  const butterRig = run.characterId === "butter" && butterMotionPartsLoaded === 2 && butterAction?.type !== "high";
-  const butterWalking = run.characterId === "butter" && player.moving && !butterAction && butterWalkReady;
-  const stride = player.moving && sleepTimer <= 0 && !butterWalking ? Math.sin(player.phase) : 0;
-  const breathe = sleepTimer <= 0 && !butterWalking ? Math.sin(elapsed * 2.5) * 0.006 : 0;
+  const butterSpriteReady = run.characterId === "butter" && butterMotionPartsLoaded === 1;
+  const stride = player.moving && sleepTimer <= 0 ? Math.sin(player.phase) : 0;
+  const breathe = sleepTimer <= 0 ? Math.sin(elapsed * 2.5) * 0.006 : 0;
   ctx.save();
   ctx.translate(player.x, player.y);
 
@@ -1358,24 +1334,16 @@ function drawHero() {
   if (sleepTimer > 0) {
     ctx.rotate(-Math.PI / 2);
     ctx.translate(-8, 0);
-  } else if (!butterRig) {
+  } else if (!butterSpriteReady) {
     ctx.translate(-player.facingX * attackKick * 10, -player.facingY * attackKick * 10);
     ctx.rotate(stride * 0.022 + player.facingX * attackKick * 0.045);
     ctx.scale(1 + Math.abs(stride) * 0.012 + breathe, 1 - Math.abs(stride) * 0.008 - breathe);
-    const facingDirection = getButterFacingDirection();
-    const shouldFlip = run.characterId === "butter"
-      ? facingDirection === "side" && (butterWalking ? player.facingX > 0 : player.facingX < 0)
-      : player.facingX < -0.08;
-    if (shouldFlip) ctx.scale(-1, 1);
+    if (player.facingX < -0.08) ctx.scale(-1, 1);
   }
 
   if (hurtTimer > 0 && Math.floor(hurtTimer * 18) % 2 === 0) ctx.globalAlpha = 0.42;
-  if (butterRig) {
+  if (butterSpriteReady) {
     drawButterMotion(ctx, butterMotionImages, { size, facingX: player.facingX, facingY: player.facingY, gait: butterGait, action: butterAction, recoil: attackKick });
-  } else if (butterWalking) {
-    drawButterWalkSprite(size);
-  } else if (run.characterId === "butter" && butterActionPartsLoaded >= 3) {
-    drawButterDirectionalSprite(size);
   } else if (heroArtReady && heroAtlas.naturalWidth) {
     const half = heroAtlas.naturalWidth / 2;
     const sourceX = run.characterId === "butter" ? 0 : half;
@@ -1395,30 +1363,6 @@ function drawHero() {
     ctx.font = "900 15px Arial";
     ctx.fillText("z", player.x + 65, player.y - 75 - Math.sin(elapsed * 3 + 1) * 6);
   }
-}
-
-function getButterFacingDirection() {
-  if (Math.abs(player.facingX) > Math.abs(player.facingY) * 0.82) return "side";
-  return player.facingY < 0 ? "up" : "down";
-}
-
-function drawButterWalkSprite(baseSize) {
-  const direction = getButterFacingDirection();
-  const rows = { down: 0, side: 1, up: 2 };
-  const row = rows[direction] ?? 0;
-  const frame = Math.floor(player.phase * 0.9) % 6;
-  drawButterFrame(ctx, butterWalkAtlas, row, frame, baseSize * 1.55, baseSize * 0.28);
-}
-
-function drawButterDirectionalSprite(baseSize) {
-  const direction = getButterFacingDirection();
-  const atlas = butterActionAtlases[direction];
-  const rows = { normal: 0, low: 1, high: 2 };
-  const type = butterAction?.type || "normal";
-  const row = rows[type] ?? 0;
-  const progress = butterAction ? clamp(butterAction.time / butterAction.duration, 0, 0.999) : 0;
-  const frame = butterAction ? Math.min(5, Math.floor(progress * 6)) : 0;
-  drawButterFrame(ctx, atlas, row, frame, baseSize * (type === "high" ? 2.05 : 1.55), baseSize * 0.28);
 }
 
 function drawEnemies() {
