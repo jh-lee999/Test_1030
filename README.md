@@ -48,9 +48,11 @@ blender --background assets/models/butter.blend --python-exit-code 1 --python to
 
 `tools/build_butter_model.py`가 실제 메시·리그·재질·동작과 네 방향 렌더를 만듭니다. `assets/butter-model.json`은 128px 셀 좌표 및 손·새총 연결 정보를 담습니다. 프레임을 개별 확대/잘라내기 하지 않아 카메라 기준점이 유지됩니다. 생성 중간 PNG는 `build/`에 두고 배포하지 않습니다. 렌더에는 CPU 환경에서 수십 분이 걸릴 수 있습니다.
 
-## 검토 중인 모델 수정 시안
+## 검토 중인 2D 그림체 시안
 
-[model-study.html](model-study.html)은 기존/수정 정면 비교, 네 방향 정지 모습과 새총 준비 자세를 보여줍니다. 눈을 얇은 일러스트형으로 바꾸고, 이어지는 머리 실루엣과 짧은 몸·손발, 몸 가까이 든 새총을 사용합니다. 게임 모델과 시트를 교체하지 않은 별도 시안입니다.
+[model-study.html](model-study.html)은 원래 버터의 얼굴과 복장을 참고해 새로 그린 2D 시안을 보여줍니다. 공개 참고 자료는 [Triple3T/trickcaltool](https://github.com/Triple3T/trickcaltool)의 `public/charas/Butter.png`와 `public/skills/Icon_GraduateSKill_Butter.png`이며, 기존 `trickcal-heroes.webp`의 왼쪽 버터도 복장 참고로 사용했습니다. 결과는 `assets/butter-2d-study.png`의 투명 배경 이미지입니다. 게임 모델·시트·애니메이션은 아직 교체하지 않았습니다.
+
+이전 3D 시안과 비교 이미지는 페이지의 접힌 영역에 보관합니다.
 
 `npm run render:model-study`로 `assets/models/butter-study.blend`와 `assets/butter-study/`의 여섯 이미지를 재생성합니다. 원본에는 짧아진 체형에 맞춘 네이티브 애니메이션도 보존합니다. 검증은 `blender --background assets/models/butter-study.blend --python-exit-code 1 --python tools/check-butter-study.py`로 실행합니다.
 

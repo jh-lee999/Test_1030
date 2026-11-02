@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>버터 · 모델 수정 시안</title>
+  <title>버터 · 2D 그림체 시안</title>
   <style>
     :root{font:16px/1.6 system-ui,sans-serif;color:#60463d;background:#faf4e9;color-scheme:light}
     *{box-sizing:border-box}body{max-width:1000px;margin:auto;padding:28px 20px 60px}
@@ -16,13 +16,21 @@
     img{display:block;width:100%;height:auto;background:radial-gradient(ellipse 13% 3% at 50% 87%,#e1cdbb 98%,transparent 100%)}
     figcaption{padding:11px 14px;border-top:1px solid #eee0cf;font-weight:600;text-align:center}
     .muted{color:#917c70;font-size:14px}.notice{padding:14px 18px;background:#f4ead9;border-radius:12px}
+    .hero{max-width:560px;margin:20px auto}.hero img{background:none}
+    details{margin-top:28px}summary{cursor:pointer;padding:12px 16px;background:#f4ead9;border-radius:12px;font-weight:600}
     @media(max-width:650px){body{padding:20px 12px 40px}.angles{grid-template-columns:repeat(2,minmax(0,1fr))}.comparison{gap:8px}figcaption{font-size:14px;padding:10px 6px}}
   </style>
 </head>
 <body>
-  <span class="tag">모델 수정 시안 · 게임에는 아직 미적용</span>
-  <h1>덩어리감은 줄이고, 버터답게.</h1>
-  <p>납작한 얼굴과 눈 · 이어지는 머리카락 · 짧은 몸통과 손발 · 몸 가까이에 든 새총</p>
+  <span class="tag">2D 그림체 시안 · 게임에는 아직 미적용</span>
+  <h1>버터 · 원화 기준 2D 시안</h1>
+  <p>보랏빛·하늘색 눈, 둥근 분홍 볼, 말린 앞머리와 처진 귀를 기준으로 다시 그렸어.</p>
+  <figure class="hero"><img id="butter-2d" src="./assets/butter-2d-study.png?v=study28" alt="원화의 큰 눈과 둥근 볼, 긴 머리와 처진 귀, 흰 반팔과 노란 앞치마, 분홍 반바지와 줄무늬 양말을 반영한 버터 2D 시안" width="1199" height="1312" fetchpriority="high"><figcaption>2D 그림체·비율 확인용 시안</figcaption></figure>
+  <p class="notice">지금은 캐릭터 모습만 확인하는 단계야. 기존 게임·스프라이트·애니메이션은 바꾸지 않았어.</p>
+  <p><a href="./assets/butter-2d-study.png" download="butter-2d-study.png">투명 배경 PNG 다운로드</a> · <a href="./?v=rig26">게임으로 돌아가기</a></p>
+  <details>
+  <summary>이전 3D 시안 보기 · 보관</summary>
+  <h2>이전 모델 비교</h2>
   <section class="comparison" aria-label="기존 모델과 수정 시안 비교">
     <figure><img src="./assets/butter-study/before.png?v=study27" alt="기존 모델 정면, 같은 해상도로 촬영" width="384" height="384"><figcaption>기존 모델</figcaption></figure>
     <figure><img src="./assets/butter-study/front.png?v=study27" alt="큰 머리와 짧은 몸으로 다시 만든 버터 정면" width="384" height="384"><figcaption>수정 시안</figcaption></figure>
@@ -39,10 +47,10 @@
     <figure><img src="./assets/butter-study/front-ready.png?v=study27" alt="몸 가까이 새총을 잡은 정면 자세" width="384" height="384"><figcaption>정면 · 준비 자세</figcaption></figure>
     <figure><img src="./assets/butter-study/left-ready.png?v=study27" alt="새총 줄을 당기는 왼쪽 자세" width="384" height="384"><figcaption>왼쪽 · 준비 자세</figcaption></figure>
   </section>
-  <p class="notice">먼저 얼굴과 비율을 확인하는 단계야. 기존 게임 모델·스프라이트는 바꾸지 않았어.</p>
-  <p><a href="./assets/models/butter-study.blend" download>수정 시안 Blender 원본</a> · <a href="./?v=rig26">게임으로 돌아가기</a></p>
+  <p><a href="./assets/models/butter-study.blend" download>이전 Blender 시안 원본</a></p>
+  </details>
   <script type="module">
-    await Promise.all([...document.images].map(img=>img.decode()));document.body.dataset.ready="true";
+    await document.querySelector("#butter-2d").decode();document.body.dataset.ready="true";
   </script>
 </body>
 </html>
