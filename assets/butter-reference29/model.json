@@ -1,0 +1,211 @@
+{
+  "source": "../butter-2d-study.png",
+  "sourceSHA256": "178bdd03ec6291f465371f7dabc5590e0c6bb39949b776b15f6e2b397c306fd6",
+  "backReference": "back-art.png",
+  "model": "../models/butter-reference29.blend",
+  "glb": "../models/butter-reference29.glb",
+  "stage": "appearance-study-not-game-replacement",
+  "animations": false,
+  "bones": 24,
+  "volumes": [
+    {
+      "name": "Flowing_BackHair_Volume",
+      "depth": 0.6883790865540504
+    },
+    {
+      "name": "Left_Flowing_Lock_Volume",
+      "depth": 0.539962500333786
+    },
+    {
+      "name": "Right_Flowing_Locks_Volume",
+      "depth": 0.5393097698688507
+    },
+    {
+      "name": "Crown_Hair_Volume",
+      "depth": 0.7096668481826782
+    },
+    {
+      "name": "Curled_Forelock_R_Volume",
+      "depth": 0.3383454233407974
+    },
+    {
+      "name": "Curled_Forelock_Center_Volume",
+      "depth": 0.3998161405324936
+    },
+    {
+      "name": "Curled_Forelock_L_Volume",
+      "depth": 0.5399514064192772
+    },
+    {
+      "name": "Curled_Ahoge_Volume",
+      "depth": 0.22595740109682083
+    },
+    {
+      "name": "Painted_Cheek_Face_Volume",
+      "depth": 0.8473245799541473
+    },
+    {
+      "name": "Floppy_Ear_R_Volume",
+      "depth": 0.36592645198106766
+    },
+    {
+      "name": "Floppy_Ear_L_Volume",
+      "depth": 0.36968977749347687
+    },
+    {
+      "name": "Head_Ribbon_Volume",
+      "depth": 0.059206604957580566
+    },
+    {
+      "name": "Ear_Ribbon_L_Volume",
+      "depth": 0.04990658164024353
+    },
+    {
+      "name": "White_Tee_Volume",
+      "depth": 0.5207616090774536
+    },
+    {
+      "name": "Yellow_Apron_Volume",
+      "depth": 0.23889722675085068
+    },
+    {
+      "name": "Yellow_Back_Waist_Volume",
+      "depth": 0.17583117634058
+    },
+    {
+      "name": "Chest_Ribbon_Volume",
+      "depth": 0.05483269691467285
+    },
+    {
+      "name": "Collar_Bell_Volume",
+      "depth": 0.18429933488368988
+    },
+    {
+      "name": "Pink_Shorts_Volume",
+      "depth": 0.4705888330936432
+    },
+    {
+      "name": "Dog_Face_Pouch_Volume",
+      "depth": 0.26008930802345276
+    },
+    {
+      "name": "Sleeve_R_Volume",
+      "depth": 0.3130591809749603
+    },
+    {
+      "name": "Forearm_R_Volume",
+      "depth": 0.25641714222729206
+    },
+    {
+      "name": "Hand_R_Volume",
+      "depth": 0.26220278441905975
+    },
+    {
+      "name": "Sleeve_L_Volume",
+      "depth": 0.2630263939499855
+    },
+    {
+      "name": "Forearm_L_Volume",
+      "depth": 0.2644108980894089
+    },
+    {
+      "name": "Hand_L_Volume",
+      "depth": 0.20782148838043213
+    },
+    {
+      "name": "Stocking_R_Volume",
+      "depth": 0.2927645295858383
+    },
+    {
+      "name": "Stocking_L_Volume",
+      "depth": 0.2948286235332489
+    },
+    {
+      "name": "Cream_Frill_R_Volume",
+      "depth": 0.28317688405513763
+    },
+    {
+      "name": "Cream_Frill_L_Volume",
+      "depth": 0.2832286208868027
+    },
+    {
+      "name": "Center_Rooted_Tail_Volume",
+      "depth": 0.478583499789238
+    },
+    {
+      "name": "Slingshot_Ribbon_Volume",
+      "depth": 0.04411876201629639
+    }
+  ],
+  "paintedSurfaces": [
+    "Flowing_BackHair_Paint",
+    "Flowing_BackHair_BackPaint",
+    "Flowing_BackHair_SidePaint",
+    "Left_Flowing_Lock_Paint",
+    "Left_Flowing_Lock_SidePaint",
+    "Right_Flowing_Locks_Paint",
+    "Right_Flowing_Locks_SidePaint",
+    "Crown_Hair_Paint",
+    "Crown_Hair_SidePaint",
+    "Curled_Forelock_R_Paint",
+    "Curled_Forelock_R_SidePaint",
+    "Curled_Forelock_Center_Paint",
+    "Curled_Forelock_Center_SidePaint",
+    "Curled_Forelock_L_Paint",
+    "Curled_Forelock_L_SidePaint",
+    "Curled_Ahoge_Paint",
+    "Curled_Ahoge_SidePaint",
+    "Painted_Cheek_Face_Paint",
+    "Floppy_Ear_R_Paint",
+    "Floppy_Ear_R_BackPaint",
+    "Floppy_Ear_R_SidePaint",
+    "Floppy_Ear_L_Paint",
+    "Floppy_Ear_L_BackPaint",
+    "Floppy_Ear_L_SidePaint",
+    "Head_Ribbon_Paint",
+    "Ear_Ribbon_L_Paint",
+    "White_Tee_Paint",
+    "White_Tee_BackPaint",
+    "Yellow_Apron_Paint",
+    "Yellow_Back_Waist_BackPaint",
+    "Chest_Ribbon_Paint",
+    "Collar_Bell_Paint",
+    "Pink_Shorts_Paint",
+    "Pink_Shorts_BackPaint",
+    "Dog_Face_Pouch_Paint",
+    "Dog_Face_Pouch_BackPaint",
+    "Dog_Face_Pouch_SidePaint",
+    "Sleeve_R_Paint",
+    "Sleeve_R_BackPaint",
+    "Forearm_R_Paint",
+    "Forearm_R_BackPaint",
+    "Hand_R_Paint",
+    "Hand_R_BackPaint",
+    "Sleeve_L_Paint",
+    "Sleeve_L_BackPaint",
+    "Forearm_L_Paint",
+    "Forearm_L_BackPaint",
+    "Hand_L_Paint",
+    "Hand_L_BackPaint",
+    "Stocking_R_Paint",
+    "Stocking_R_BackPaint",
+    "Stocking_L_Paint",
+    "Stocking_L_BackPaint",
+    "Cream_Frill_R_Paint",
+    "Cream_Frill_R_BackPaint",
+    "Cream_Frill_L_Paint",
+    "Cream_Frill_L_BackPaint",
+    "Center_Rooted_Tail_Paint",
+    "Center_Rooted_Tail_BackPaint",
+    "Center_Rooted_Tail_SidePaint",
+    "Slingshot_Ribbon_Paint"
+  ],
+  "views": [
+    "front",
+    "left",
+    "right",
+    "back",
+    "game",
+    "side"
+  ]
+}

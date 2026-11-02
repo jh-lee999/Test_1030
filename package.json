@@ -8,6 +8,8 @@
     "render:animations": "LP_NUM_THREADS=4 blender --threads 4 --background --factory-startup --python-exit-code 1 --python tools/build_butter_model.py -- --render",
     "render:model-preview": "LP_NUM_THREADS=4 blender --threads 4 --background --factory-startup --python-exit-code 1 --python tools/build_butter_model.py -- --preview",
     "render:model-study": "LP_NUM_THREADS=4 blender --threads 4 --background --factory-startup --python-exit-code 1 --python tools/build_butter_study.py",
+    "render:reference-model": "LP_NUM_THREADS=4 blender --threads 4 --background --factory-startup --python-exit-code 1 --python tools/build_butter_reference.py",
+    "check:reference-model": "blender --background assets/models/butter-reference29.blend --python-exit-code 1 --python tools/check-butter-reference.py",
     "pack:model": "node tools/pack-butter-model.mjs",
     "pack:sprites": "node tools/pack-butter-sprites.mjs",
     "pack:motion": "node tools/pack-butter-model.mjs",
