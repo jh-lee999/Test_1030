@@ -1,60 +1,116 @@
-import {BUTTER_MUZZLES} from "./assets/butter-model-anchors.js?v=26";
+import { BUTTER_2D_LAYOUT, BUTTER_2D_VIEWS } from './assets/butter-2d33/rig.js?v=33';
+export { BUTTER_2D_LAYOUT, BUTTER_2D_VIEWS };
 const TAU = Math.PI * 2;
 export const BUTTER_STRIDE_DISTANCE = 120;
-export const BUTTER_MODEL_LAYOUT = Object.freeze({
-  cell:128, columns:16, rows:32, anchorX:64, anchorY:108, viewStride:128,
-  gaitFrames:12, attackFrames:8
-});
-const VIEWS = ["down", "left", "right", "up"];
-const CLIPS = Object.freeze({ idle:0, walk:1, shoot:13, walkShoot:21, high:117 });
+const cache = new WeakMap();
+const clamp = (n, a = 0, b = 1) => Math.max(a, Math.min(b, n));
 
 export function advanceButterGait(gait, distance, dx, dy, dt) {
-  const moving = distance > 0.001;
-  if (moving) {
+  if (distance > .001) {
     gait.phase = (gait.phase + distance / BUTTER_STRIDE_DISTANCE * TAU) % TAU;
-    gait.dx = dx;
-    gait.dy = dy;
+    gait.dx = dx; gait.dy = dy;
   }
-  gait.amount += ((moving ? 1 : 0) - gait.amount) * (1 - Math.exp(-dt * 18));
-  if (gait.amount < 0.002) gait.amount = 0;
+  gait.amount += ((distance > .001 ? 1 : 0) - gait.amount) * (1 - Math.exp(-dt * 18));
+  if (gait.amount < .002) gait.amount = 0;
 }
 
-// Real armature renders for every gait/attack combination. Never mirror the
-// holding hand, restart the feet on a shot, or deform pixels at runtime.
 export function butterSpriteState({ facingX, facingY, gait, action }) {
-  const side = Math.abs(facingX) > Math.abs(facingY) * 0.82;
-  const view = side ? facingX < 0 ? "left" : "right" : facingY < 0 ? "up" : "down";
-  const moving = gait.amount > 0.2 && action?.type !== "high";
-  const forward = gait.dx * facingX + gait.dy * facingY;
-  const phase = forward < -0.25 ? -gait.phase : gait.phase;
+  const x = action?.dx ?? facingX, y = action?.dy ?? facingY;
+  const side = Math.abs(x) > Math.abs(y) * .82;
+  const view = side ? x < 0 ? 'left' : 'right' : y < 0 ? 'up' : 'down';
+  const phase = gait.phase * (gait.dx * x + gait.dy * y < -.25 ? -1 : 1);
   const cycle = ((phase % TAU) + TAU) % TAU / TAU;
-  const walkFrame = moving ? Math.min(11, Math.floor(cycle * 12)) : 0;
-  let progress = action ? Math.max(0, Math.min(1, action.time / Math.max(.001, action.duration))) : 0;
-  // Low-grade gameplay releases at .50, the normal rig animation at .55.
-  if (action?.type === "low") progress = progress < .5 ? progress / .5 * .55 : .55 + (progress - .5) / .5 * .45;
-  const attackFrame = action ? Math.min(7, Math.floor(progress * 8)) : 0;
-  const clip = action?.type === "high" ? "high" : action ? moving ? "walkShoot" : "shoot" : moving ? "walk" : "idle";
-  const local = CLIPS[clip] + (clip === "walkShoot" ? walkFrame * 8 + attackFrame : clip === "walk" ? walkFrame : action ? attackFrame : 0);
-  const index = VIEWS.indexOf(view) * BUTTER_MODEL_LAYOUT.viewStride + local;
-  return { view, clip, walkFrame, attackFrame, index, flip:false,
-    sx:index % 16 * 128, sy:Math.floor(index / 16) * 128 };
+  const amount = action?.type === 'high' ? 0 : clamp(gait.amount);
+  const progress = action ? clamp(action.time / Math.max(.001, action.duration)) : 0;
+  const release = action?.type === 'high' ? .68 : action?.type === 'low' ? .5 : .55;
+  const pull = action ? progress < release ? Math.sin(progress / release * Math.PI / 2)
+    : Math.cos(clamp((progress - release) / .17) * Math.PI / 2) : 0;
+  const kick = action ? Math.sin(clamp((progress - release) / (1 - release)) * Math.PI) : 0;
+  const moving = amount > .002;
+  return {
+    view, flip: false, phase, amount, progress, release, pull, kick,
+    walkFrame: moving ? Math.floor(cycle * 12) : 0,
+    attackFrame: action ? Math.min(7, Math.floor(progress * 8)) : 0,
+    clip: action?.type === 'high' ? 'high' : action ? moving ? 'walkShoot' : 'shoot' : moving ? 'walk' : 'idle',
+    weaponAngle: (pull * .035 - kick * .055) * (view === 'up' ? -1 : 1),
+  };
 }
 
-export function drawButterMotion(context, images, state) {
-  const { sx, sy } = butterSpriteState(state);
-  const { cell, anchorX, anchorY } = BUTTER_MODEL_LAYOUT;
-  const size = state.size * 1.42;
-  context.drawImage(
-    images.atlas,
-    sx, sy, cell, cell,
-    -anchorX / cell * size, state.size * 0.28 - anchorY / cell * size,
-    size, size
-  );
+// Alternate the feet, with one planted on the original baseline at all times.
+// The head/body never bobs, stretches or changes shape.
+export function butterBootTransforms(pose) {
+  const side = pose.view === 'left' || pose.view === 'right';
+  return [0, Math.PI].map(offset => {
+    const wave = Math.sin(pose.phase + offset) * pose.amount;
+    return { x: side ? wave * 4 : wave * 1.5, y: -Math.max(0, wave) * 9 };
+  });
+}
+
+function polygon(path, points) {
+  points.forEach(([x, y], i) => i ? path.lineTo(x, y) : path.moveTo(x, y)); path.closePath();
+}
+
+export function prepareButterMotion(atlas) {
+  if (cache.has(atlas)) return cache.get(atlas);
+  const parts = {};
+  for (const [view, rig] of Object.entries(BUTTER_2D_VIEWS)) {
+    const body = new Path2D(); body.rect(0, 0, 627, 627);
+    const boots = rig.boots.map(([x, y, w, h], i) => {
+      const points = rig.bootMasks?.[i] ?? [[x,y],[x+w,y],[x+w,y+h],[x,y+h]];
+      const part = new Path2D(); polygon(part, points);
+      polygon(body, points.map(([px,py]) => [px,Math.max(y+8,py)]));
+      return part;
+    });
+    const firingBody = new Path2D(body); polygon(firingBody, rig.weapon.polygon);
+    const weapon = new Path2D(); polygon(weapon, rig.weapon.polygon);
+    parts[view] = { body, firingBody, boots, weapon };
+  }
+  cache.set(atlas, parts);
+  return parts;
+}
+
+export function butterSourceTransform(size, view) {
+  const scale = BUTTER_2D_LAYOUT.sourceScale * size / 112;
+  const [fx, fy] = BUTTER_2D_VIEWS[view].foot;
+  return { scale, x: -fx * scale, y: size * .28 - fy * scale };
+}
+
+function rotatePoint([x, y], [px, py], angle) {
+  const c = Math.cos(angle), s = Math.sin(angle);
+  return [px + (x - px) * c - (y - py) * s, py + (x - px) * s + (y - py) * c];
 }
 
 export function butterMuzzleOffset(state) {
-  const {index}=butterSpriteState(state);
-  const [x,y]=BUTTER_MUZZLES[index]??[64,108];
-  const {cell,anchorX,anchorY}=BUTTER_MODEL_LAYOUT,size=state.size*1.42;
-  return {x:(x-anchorX)/cell*size,y:state.size*.28+(y-anchorY)/cell*size};
+  const pose = butterSpriteState(state), rig = BUTTER_2D_VIEWS[pose.view];
+  const [mx, my] = rotatePoint(rig.muzzle, rig.weapon.pivot, pose.weaponAngle);
+  const t = butterSourceTransform(state.size, pose.view);
+  return { x: t.x + mx * t.scale, y: t.y + my * t.scale };
+}
+
+export function drawButterMotion(ctx, images, state) {
+  const pose = butterSpriteState(state), rig = BUTTER_2D_VIEWS[pose.view];
+  const t = butterSourceTransform(state.size, pose.view);
+  ctx.save();
+  ctx.translate(t.x, t.y); ctx.scale(t.scale, t.scale); // ONE positive uniform scale.
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  if (pose.clip === 'idle' || state.reference) {
+    ctx.drawImage(images.atlas, ...rig.rect, 0, 0, 627, 627);
+  } else {
+    const parts = prepareButterMotion(images.atlas)[pose.view];
+    const feet = butterBootTransforms(pose);
+    // Draw directly from the source image, not an intermediate raster surface:
+    // image/canvas downsampling differs in browsers and can alter face pixels.
+    const source = () => ctx.drawImage(images.atlas, ...rig.rect, 0, 0, 627, 627);
+    for (const i of rig.bootOrder ?? [0, 1]) {
+      ctx.save(); ctx.translate(feet[i].x, feet[i].y); ctx.clip(parts.boots[i]); source(); ctx.restore();
+    }
+    const firing = Math.abs(pose.weaponAngle) > 1e-8;
+    ctx.save(); ctx.clip(firing ? parts.firingBody : parts.body, 'evenodd'); source(); ctx.restore();
+    if (firing) {
+      const [px, py] = rig.weapon.pivot;
+      ctx.save(); ctx.translate(px, py); ctx.rotate(pose.weaponAngle); ctx.translate(-px, -py);
+      ctx.clip(parts.weapon); source(); ctx.restore();
+    }
+  }
+  ctx.restore();
 }

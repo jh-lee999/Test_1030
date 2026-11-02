@@ -609,7 +609,22 @@ button:focus-visible {
 }
 
 .butter-art {
-  background-position: 0 center;
+  position: relative;
+  background-image: none;
+}
+
+.butter-art > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.portrait:not(.komi) {
+  background-image: url("./assets/butter-2d32/directions.png");
+  background-size: 450% auto;
+  background-position: 20.5% 13.8%;
 }
 
 .komi-art {
@@ -1277,6 +1292,10 @@ button:focus-visible {
 
 .character-card.selected .character-art {
   animation: selected-breathe 2.4s ease-in-out infinite;
+}
+
+.character-card.selected .butter-art {
+  animation: none;
 }
 
 @keyframes room-transition {

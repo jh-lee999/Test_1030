@@ -13,7 +13,7 @@ async function json(path) {
 
 try {
   const canon = await json('./docs/art/butter-canon.json');
-  const meta = await json(`./${canon.activeCandidate.manifest}`);
+  const meta = await json(`./${canon.approvedDirections.manifest}`);
   const atlas = new Image();
   atlas.src = `./${meta.image}`;
   await atlas.decode();
@@ -70,7 +70,7 @@ try {
   document.querySelector('#source-path').textContent = canon.approvedMaster.path;
   document.querySelector('#source-hash').textContent = canon.approvedMaster.sha256;
   update();
-  status.textContent = '4방향 정지 시안 · 같은 배율과 발 기준점으로 표시 중';
+  status.textContent = '승인한 4방향 템플릿 · PNG 변경 없이 v33 게임에 적용됨';
   document.body.dataset.ready = 'true';
 } catch (error) {
   status.textContent = '미리보기를 불러오지 못했어. 아래 원본 PNG 링크로 확인하거나 새로고침해줘.';

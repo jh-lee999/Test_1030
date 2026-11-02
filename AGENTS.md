@@ -21,9 +21,13 @@ outfit, handedness, or the rendering of those assets:
    repeated regenerations, or call static direction switching a walk animation.
 
 The 3D studies in versions 26–31 were criticized by the user and are **not**
-approved visual references. The current direction is to explore 2D assets from
-the approved drawing. Existing game assets and archived studies are preserved;
-the candidate preview does not imply a game replacement was requested.
+approved visual references. The user approved the v32 four-direction sheet as
+the fixed sprite template and requested integration. The v33 game uses that
+UNCHANGED PNG through `butter-motion.js` and `assets/butter-2d33/rig.js`.
+New animations remain reviewable candidates: do not regenerate the face/body
+to add motion. The small cutouts are not full new two-handed/skill poses.
+`butter-2d-motion.html` compares the source and the actual game renderer.
+Existing 3D assets and their archived renderer are preserved, not used in-game.
 
 Carry forward explicit user corrections in `BUTTER_CANON.md`. If the user changes
 an approved rule or approves a new master, update the record and checksum together

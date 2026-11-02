@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "character": "Butter",
   "approvedMaster": {
     "path": "assets/butter-2d-study.png",
@@ -12,10 +12,18 @@
     "path": "docs/butter-modeling31/turnaround.png",
     "status": "inferred-construction-not-approved-master"
   },
-  "activeCandidate": {
+  "approvedDirections": {
     "manifest": "assets/butter-2d32/directions.json",
-    "status": "unapproved-static-directions",
-    "gameApplied": false
+    "status": "user-approved-direction-template",
+    "gameApplied": true
+  },
+  "activeAnimation": {
+    "rig": "assets/butter-2d33/rig.js",
+    "renderer": "butter-motion.js",
+    "preview": "butter-2d-motion.html",
+    "status": "integrated-limited-cutout-candidate",
+    "method": "unchanged-source-pixels; uniform-scale; rigid-boots-and-holding-hand-only",
+    "limitations": ["No newly drawn left-hand pull pose", "No new giant-slingshot pose", "Tail remains at approved source pose"]
   },
   "anatomy": {"holdingHand":"right","drawingHand":"left","pouchHip":"left","tailRoot":"posterior-pelvis-midline"},
   "requiredDirections": ["down","left","up","right"],

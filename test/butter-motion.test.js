@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {advanceButterGait,butterSpriteState,drawButterMotion,butterMuzzleOffset,BUTTER_STRIDE_DISTANCE,BUTTER_MODEL_LAYOUT} from "../butter-motion.js";
+// Regression coverage for the archived v26 renderer, not the live game.
+import {advanceButterGait,butterSpriteState,drawButterMotion,butterMuzzleOffset,BUTTER_STRIDE_DISTANCE,BUTTER_MODEL_LAYOUT} from "../butter-motion-blender26.js";
 import {BUTTER_MUZZLES} from "../assets/butter-model-anchors.js";
 
 const state=(phase=0,amount=1,action=null,facingX=0,facingY=1)=>({

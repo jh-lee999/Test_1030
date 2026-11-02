@@ -15,7 +15,7 @@ import {
   rollItems,
   upperPower
 } from "./survivor-engine.js?v=23";
-import { advanceButterGait, drawButterMotion, butterMuzzleOffset } from "./butter-motion.js?v=26";
+import { advanceButterGait, drawButterMotion, butterMuzzleOffset, prepareButterMotion, BUTTER_2D_LAYOUT } from "./butter-motion.js?v=33";
 
 const LOGICAL = { width: 800, height: 1450 };
 const WALL = 58;
@@ -38,8 +38,8 @@ const butterMotionImages = { atlas: new Image() };
 let butterMotionPartsLoaded = 0;
 for (const image of Object.values(butterMotionImages)) {
   image.decoding = "async";
-  image.addEventListener("load", () => { butterMotionPartsLoaded += 1; });
-  image.src = "./assets/butter-model.webp?v=26";
+  image.addEventListener("load", () => { prepareButterMotion(image); butterMotionPartsLoaded += 1; });
+  image.src = BUTTER_2D_LAYOUT.image;
 }
 let butterGait = { phase: 0, amount: 0, dx: 0, dy: -1 };
 
@@ -1341,7 +1341,7 @@ function drawHero() {
   if (sleepTimer > 0) {
     ctx.rotate(-Math.PI / 2);
     ctx.translate(-8, 0);
-  } else if (!butterSpriteReady) {
+  } else if (run.characterId !== "butter") {
     ctx.translate(-player.facingX * attackKick * 10, -player.facingY * attackKick * 10);
     ctx.rotate(stride * 0.022 + player.facingX * attackKick * 0.045);
     ctx.scale(1 + Math.abs(stride) * 0.012 + breathe, 1 - Math.abs(stride) * 0.008 - breathe);
@@ -1351,7 +1351,7 @@ function drawHero() {
   if (hurtTimer > 0 && Math.floor(hurtTimer * 18) % 2 === 0) ctx.globalAlpha = 0.42;
   if (butterSpriteReady) {
     drawButterMotion(ctx, butterMotionImages, { size, facingX: player.facingX, facingY: player.facingY, gait: butterGait, action: butterAction, recoil: attackKick });
-  } else if (heroArtReady && heroAtlas.naturalWidth) {
+  } else if (run.characterId !== "butter" && heroArtReady && heroAtlas.naturalWidth) {
     const half = heroAtlas.naturalWidth / 2;
     const sourceX = run.characterId === "butter" ? 0 : half;
     ctx.drawImage(heroAtlas, sourceX, 0, half, heroAtlas.naturalHeight, -size / 2, -size / 2, size, size);

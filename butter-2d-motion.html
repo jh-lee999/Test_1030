@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>버터 · 고정 원화 스프라이트</title><link rel="icon" href="data:,">
+  <style>
+    :root{font:16px/1.7 system-ui,sans-serif;color:#60463d;background:#faf4e9;color-scheme:light}*{box-sizing:border-box}body{max-width:1160px;margin:auto;padding:32px 20px 60px}h1{font-size:clamp(26px,5vw,38px);line-height:1.3}h2{font-size:19px;margin:0}p{max-width:80ch}a{color:#87522b;text-underline-offset:4px}.tag{font-size:13px;background:#efddb4;padding:5px 12px;border-radius:20px}.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:14px 0}button,select{font:inherit;color:inherit;background:#fffaf1;border:1px solid #d4bea5;padding:7px 13px;border-radius:16px;cursor:pointer}button:focus-visible,select:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #ad7741;outline-offset:3px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}article{border:1px solid #ddcdbb;border-radius:16px;background:#fffcf7;overflow:hidden;text-align:center}article h2{padding:12px}figure{margin:0;padding:12px 4px;border-top:1px solid #eadfd3}figcaption{font-size:13px;color:#88715f}canvas{display:block;margin:auto;max-width:100%;height:auto;background:conic-gradient(#f4ece0 25%,#fffaf2 0 50%,#f4ece0 0 75%,#fffaf2 0) 0 0/20px 20px}.notice{background:#f0e4d2;padding:14px 18px;border-radius:12px}.small{font-size:14px;color:#88715f}nav{display:flex;flex-wrap:wrap;gap:20px}input[type=range]{width:180px}#timeline{font-variant-numeric:tabular-nums}@media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}body{padding:20px 12px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+  </style>
+  <script type="module" src="./butter-2d-motion-preview.js?v=33"></script>
+</head>
+<body>
+  <span class="tag">v33 · 승인한 v32 픽셀에서 직접 재생</span>
+  <h1>그림은 그대로, 동작만 분리</h1>
+  <p>윗줄은 승인한 정지 원본, 아랫줄은 게임과 같은 렌더러야. 얼굴·머리·몸통은 고정하고 발과 새총을 든 손만 작은 범위로 움직여. 좌우 반전·찌그러뜨리기·색 보정은 사용하지 않아.</p>
+  <nav><a href="./?v=canon33">게임에서 보기</a><a href="./butter-2d-assets.html?v=canon33">원본 시안 비교</a><a href="./assets/butter-2d32/directions.png" download>고정 원본 PNG</a></nav>
+  <div class="controls">
+    <label>동작 <select id="motion"><option value="walkShoot">이동 + 평타</option><option value="idle">정지</option><option value="walk">보행</option><option value="shoot">평타</option><option value="low">이동 + 저학년</option><option value="high">고학년 반동</option></select></label>
+    <label>크기 <select id="size"><option value="96">96px</option><option value="160" selected>160px</option><option value="256">256px</option></select></label>
+    <button id="play" type="button" aria-pressed="true">일시 정지</button>
+    <label><input id="guides" type="checkbox"> 발·발사점 표시</label>
+  </div>
+  <div class="controls"><label for="phase">한 주기 살펴보기</label><input id="phase" type="range" min="0" max="1" step="0.005" value="0"><output id="timeline">0%</output></div>
+  <section id="views" class="grid" aria-label="4방향 원본과 동작 비교"></section>
+  <p id="status" class="small" role="status">고정 에셋을 불러오는 중…</p>
+  <p class="notice">현재는 원본을 보존한 작은 발걸음·쥔 손 반동이야. 왼손으로 줄을 크게 당기는 장전 자세와 왕새총 전용 자세는 아직 새로 그리지 않았어. 그 동작을 추가할 때도 이 원본의 얼굴·복장·색은 유지해야 해.</p>
+</body>
+</html>

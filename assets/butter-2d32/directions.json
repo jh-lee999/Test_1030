@@ -1,7 +1,7 @@
 {
   "version": 32,
-  "status": "unapproved-static-directions",
-  "gameApplied": false,
+  "status": "user-approved-direction-template",
+  "gameApplied": true,
   "sourceMaster": "assets/butter-2d-study.png",
   "sourceMasterSHA256": "178bdd03ec6291f465371f7dabc5590e0c6bb39949b776b15f6e2b397c306fd6",
   "image": "assets/butter-2d32/directions.png",
@@ -21,6 +21,6 @@
     "All four directions are separately drawn. No horizontal mirroring.",
     "One shared scale preserves relative size. Source foot anchors align the soles without deforming the art.",
     "Content bounds were measured from alpha-connected components of at least 64 pixels; the PNG is stored unchanged.",
-    "Static idle artwork only. Side-view prop occlusion, palette and likeness still need user review."
+    "User approved this sheet as the fixed sprite template. PNG pixels unchanged. Source remains static; runtime cutout animation is defined separately in assets/butter-2d33/rig.js."
   ]
 }

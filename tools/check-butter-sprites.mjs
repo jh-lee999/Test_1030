@@ -4,7 +4,8 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { BUTTER_SPRITE_LAYOUT, butterFrameRect } from "../sprite-layout.js";
 import {BUTTER_MUZZLES} from "../assets/butter-model-anchors.js";
-import {BUTTER_MODEL_LAYOUT} from "../butter-motion.js";
+// Archived v26 atlas. check:butter-canon and motion tests cover live v33 art.
+const BUTTER_MODEL_LAYOUT = {cell:128,columns:16,rows:32,anchorX:64,anchorY:108,viewStride:128};
 
 const assets = new URL("../assets/", import.meta.url);
 const manifest = JSON.parse(readFileSync(new URL("butter-sprites.json", assets), "utf8"));
@@ -92,7 +93,7 @@ for(const row of [0,2])for(const frame of [1,3]){
 }
 console.log("Front/back contact artwork: opposite feet verified in the actual pixels");
 
-// Current game atlas: one physical Blender model, independently sampled gait
+// Archived v26 atlas: one physical Blender model, independently sampled gait
 // and attack phases, true four-view capture. Nothing may touch a cell boundary.
 const model=JSON.parse(readFileSync(new URL("butter-model.json",assets),"utf8"));
 for(const key of ["cell","columns","rows","viewStride"])assert.equal(model[key],BUTTER_MODEL_LAYOUT[key]);

@@ -7,10 +7,10 @@
     <meta name="description" content="셰이디의 뒤틀린 아공간에서 탈출하는 방 탐험 액션 로그라이트" />
     <link rel="manifest" href="./manifest.webmanifest?v=23" />
     <link rel="icon" href="./icon.svg?v=23" type="image/svg+xml" />
-    <link rel="preload" href="./assets/butter-model.webp?v=26" as="image" type="image/webp" fetchpriority="high" />
+    <link rel="preload" href="./assets/butter-2d32/directions.png" as="image" type="image/png" fetchpriority="high" />
     <link rel="preload" href="./assets/trickcal-heroes.webp?v=23" as="image" type="image/webp" />
     <link rel="preload" href="./assets/ui-icons.svg?v=23" as="image" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css?v=23" />
+    <link rel="stylesheet" href="./styles.css?v=33" />
     <title>셰이디의 아공간 탈출</title>
   </head>
   <body>
@@ -84,7 +84,7 @@
           <p class="intro">자동 생성된 아공간을 자유롭게 탐색하고<br />열쇠와 폭탄으로 숨은 방을 찾으세요.</p>
           <div class="character-select" id="character-select">
             <button class="character-card selected" data-character="butter">
-              <span class="character-art butter-art"></span>
+              <span class="character-art butter-art"><svg viewBox="0 0 627 627" aria-hidden="true"><image href="./assets/butter-2d32/directions.png" width="1254" height="1254" /></svg></span>
               <span class="character-copy"><small>원거리</small><strong>버터</strong><b>새총 · 유도탄 · 왕짱돌</b></span>
             </button>
             <button class="character-card" data-character="komi">
@@ -140,6 +140,6 @@
         caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key)))).catch(() => {});
       }
     </script>
-    <script type="module" src="./app.js?v=26"></script>
+    <script type="module" src="./app.js?v=33"></script>
   </body>
 </html>
