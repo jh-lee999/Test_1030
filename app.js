@@ -14,7 +14,7 @@ import {
   revealSecretAt,
   rollItems,
   upperPower
-} from "./survivor-engine.js?v=19";
+} from "./survivor-engine.js?v=20";
 
 const LOGICAL = { width: 800, height: 1450 };
 const WALL = 58;
@@ -25,13 +25,13 @@ const canvas = document.querySelector("#game-canvas");
 const stage = document.querySelector("#game-stage");
 const ctx = canvas.getContext("2d");
 const $ = (selector) => document.querySelector(selector);
-const iconMarkup = (id) => "<svg class=\"ui-icon\" aria-hidden=\"true\"><use href=\"./assets/ui-icons.svg?v=19#" + id + "\"></use></svg>";
+const iconMarkup = (id) => "<svg class=\"ui-icon\" aria-hidden=\"true\"><use href=\"./assets/ui-icons.svg?v=20#" + id + "\"></use></svg>";
 
 const heroAtlas = new Image();
 let heroArtReady = false;
 heroAtlas.decoding = "async";
 heroAtlas.addEventListener("load", () => { heroArtReady = true; });
-heroAtlas.src = "./assets/trickcal-heroes.webp?v=19";
+heroAtlas.src = "./assets/trickcal-heroes.webp?v=20";
 
 const butterActionAtlases = {
   side: new Image(),
@@ -46,7 +46,7 @@ for (const [direction, filename] of [
 ]) {
   butterActionAtlases[direction].decoding = "async";
   butterActionAtlases[direction].addEventListener("load", () => { butterActionPartsLoaded += 1; });
-  butterActionAtlases[direction].src = "./assets/" + filename + "?v=19";
+  butterActionAtlases[direction].src = "./assets/" + filename + "?v=20";
 }
 
 const ENEMY_TYPES = {
