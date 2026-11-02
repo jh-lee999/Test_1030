@@ -54,11 +54,13 @@ blender --background assets/models/butter.blend --python-exit-code 1 --python to
 
 이전 3D 시안과 비교 이미지는 페이지의 접힌 영역에 보관합니다.
 
-### 승인된 2D 시안 기반 3D 모델
+### CC0 캐릭터 베이스로 다시 만든 3D 외형 시안
 
-[butter-3d-study.html](butter-3d-study.html)은 같은 얼굴 그림을 곡면 UV로 사용한 실제 3D 모델을 보여줍니다. 얼굴·앞머리·옆머리·뒷머리·옷·손발을 닫힌 입체 메시로 만들고 24개 뼈에 연결했습니다. 뒷면 그림은 재질 참고용으로 별도 제작했으며, 정면 PNG는 바꾸지 않았습니다. Blender 원본에는 그림 두 장이 내장되고 GLB도 외부 재질 파일 없이 열립니다. 현재는 외형·리그 검토 단계로, 새 모델의 애니메이션이나 게임 에셋은 교체하지 않았습니다.
+[butter-3d-study.html](butter-3d-study.html)은 Kay Lousberg의 KayKit Adventurers(CC0) 캐릭터 베이스를 수정한 실제 3D 모델을 보여줍니다. 베이스 몸·팔다리의 메시와 웨이트를 사용하고 비율을 바꿨습니다. 머리는 둥글게 재구성하고, 머리카락·귀·복장·꼬리·새총은 별도 입체 메시로 만들었습니다. 원화 전체를 부풀려 붙이던 ref29 방식은 사용하지 않습니다. [정확한 출처·수정 내역·라이선스](assets/vendor/kaykit-base30/README.md)를 함께 보관합니다.
 
-재생성은 `npm run render:reference-model`, 네이티브 메시·UV·본·GLB 검사는 `npm run check:reference-model`입니다. 웹 회전 뷰어는 로컬에 보관한 Apache-2.0 `@google/model-viewer` 4.1.0을 사용하며 라이선스는 `assets/vendor/model-viewer.LICENSE`에 있습니다. WebGL을 사용할 수 없을 때는 Blender 촬영 이미지를 볼 수 있습니다.
+기준 2D 그림은 변경하지 않았으며 눈·입·볼의 그림만 머리 UV에 베이크했습니다. 옷과 머리카락은 원화 텍스처를 사용하지 않습니다. `assets/models/butter-base30.blend`와 `.glb`에 얼굴 아틀라스가 내장됩니다. 외형·리그 검토용이며 새로운 걷기·사격 애니메이션과 게임 에셋은 아직 교체하지 않았습니다. 원래 베이스의 애니메이션을 완성된 버터 애니메이션으로 제공하지 않습니다.
+
+재생성은 `npm run render:base-model`, 네이티브 메시·UV·본·GLB 검사는 `npm run check:base-model`입니다(Blender 4.3). 이전 ref29 파일과 `render:reference-model` / `check:reference-model` 명령은 비교용으로 보존합니다. 웹 회전 뷰어는 로컬에 보관한 Apache-2.0 `@google/model-viewer` 4.1.0을 사용하며 라이선스는 `assets/vendor/model-viewer.LICENSE`에 있습니다. WebGL을 사용할 수 없을 때는 Blender 촬영 이미지를 볼 수 있습니다.
 
 `npm run render:model-study`로 `assets/models/butter-study.blend`와 `assets/butter-study/`의 여섯 이미지를 재생성합니다. 원본에는 짧아진 체형에 맞춘 네이티브 애니메이션도 보존합니다. 검증은 `blender --background assets/models/butter-study.blend --python-exit-code 1 --python tools/check-butter-study.py`로 실행합니다.
 

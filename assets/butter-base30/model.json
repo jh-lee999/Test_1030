@@ -1,0 +1,26 @@
+{
+  "stage": "appearance-review-not-live-game",
+  "source": "KayKit Adventurers Character Pack, Kay Lousberg, CC0",
+  "sourceCommit": "672074b73ba276876a19e8816ecdc5241817ab47",
+  "baseSHA256": "cefc311a0e10c7858b6141f5ada7e33268727564fb8ac1347aab97d000669cc6",
+  "approvedArtSHA256": "178bdd03ec6291f465371f7dabc5590e0c6bb39949b776b15f6e2b397c306fd6",
+  "faceAtlas": "face-atlas.png",
+  "bones": 46,
+  "baseMeshes": [
+    "Base_ArmLeft",
+    "Base_ArmRight",
+    "Base_Body",
+    "Base_Head",
+    "Base_LegLeft",
+    "Base_LegRight"
+  ],
+  "noArtworkProjectionMeshes": true,
+  "views": [
+    "front",
+    "left",
+    "right",
+    "back",
+    "side",
+    "game"
+  ]
+}
