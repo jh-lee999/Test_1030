@@ -16,7 +16,7 @@
 <button id="toggle">일시 정지</button>
 <main></main>
 <script type="module">
-import { drawButterMotion } from "./butter-motion.js?v=23";
+import { drawButterMotion, BUTTER_STRIDE_DISTANCE } from "./butter-motion.js?v=24";
 const upper = new Image(), legs = new Image();
 upper.src = "./assets/butter-motion-upper.webp?v=23";
 legs.src = "./assets/butter-motion-legs.webp?v=23";
@@ -38,9 +38,9 @@ function draw(now) {
   for(const c of cases) {
     const context=c.context;
     context.clearRect(0,0,320,340); context.save(); context.translate(160,240);
-    context.fillStyle="#b6a69a"; context.beginPath(); context.ellipse(0,31,35,10,0,0,Math.PI*2); context.fill();
+    context.fillStyle="#b6a69a"; context.beginPath(); context.ellipse(0,170*.28,170*.34,170*.1,0,0,Math.PI*2); context.fill();
     const progress=(elapsed%0.46)/0.46;
-    drawButterMotion(context,{upper,legs},{size:170,facingX:c.x,facingY:c.y,gait:{phase:elapsed*235/145*Math.PI*2,amount:c.moving?1:0,dx:c.x,dy:c.y},action:c.firing?{type:"normal",time:progress,duration:1}:null,recoil:c.firing?Math.max(0,1-Math.abs(progress-.6)*12):0});
+    drawButterMotion(context,{upper,legs},{size:170,facingX:c.x,facingY:c.y,gait:{phase:elapsed*235/BUTTER_STRIDE_DISTANCE*Math.PI*2,amount:c.moving?1:0,dx:c.x,dy:c.y},action:c.firing?{type:"normal",time:progress,duration:1}:null,recoil:c.firing?Math.max(0,1-Math.abs(progress-.6)*12):0});
     context.restore();
   }
   requestAnimationFrame(draw);

@@ -16,7 +16,7 @@ import {
   upperPower
 } from "./survivor-engine.js?v=23";
 import { drawButterFrame } from "./sprite-layout.js?v=23";
-import { advanceButterGait, drawButterMotion } from "./butter-motion.js?v=23";
+import { advanceButterGait, drawButterMotion } from "./butter-motion.js?v=24";
 
 const LOGICAL = { width: 800, height: 1450 };
 const WALL = 58;
@@ -473,12 +473,19 @@ function movePlayer(dt) {
       player.facingY = movement.y / length;
     }
     const speed = run.moveSpeed * (giantTimer > 0 ? 0.88 : 1);
+    const oldStep = Math.floor(butterGait.phase / Math.PI);
     if (run.characterId === "butter") advanceButterGait(butterGait, speed * length * dt, movement.x / length, movement.y / length, dt);
     player.x += movement.x * speed * dt;
     player.y += movement.y * speed * dt;
     footstepTimer -= dt;
-    if (footstepTimer <= 0) {
-      emitFootstep(player.x - movement.x * 16, player.y - movement.y * 16 + player.radius * 0.65, movement.x, movement.y);
+    const butterStep = run.characterId === "butter" && oldStep !== Math.floor(butterGait.phase / Math.PI);
+    if (butterStep || (run.characterId !== "butter" && footstepTimer <= 0)) {
+      if (butterStep) {
+        const side = Math.floor(butterGait.phase / Math.PI) % 2 === 0 ? -1 : 1;
+        emitFootstep(player.x - movement.x * 14 - movement.y * side * 7, player.y - movement.y * 8 + player.radius, movement.x, movement.y);
+      } else {
+        emitFootstep(player.x - movement.x * 16, player.y - movement.y * 16 + player.radius * 0.65, movement.x, movement.y);
+      }
       footstepTimer = 0.18;
     }
   }
