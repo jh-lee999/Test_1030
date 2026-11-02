@@ -48,6 +48,12 @@ blender --background assets/models/butter.blend --python-exit-code 1 --python to
 
 `tools/build_butter_model.py`가 실제 메시·리그·재질·동작과 네 방향 렌더를 만듭니다. `assets/butter-model.json`은 128px 셀 좌표 및 손·새총 연결 정보를 담습니다. 프레임을 개별 확대/잘라내기 하지 않아 카메라 기준점이 유지됩니다. 생성 중간 PNG는 `build/`에 두고 배포하지 않습니다. 렌더에는 CPU 환경에서 수십 분이 걸릴 수 있습니다.
 
+## 검토 중인 모델 수정 시안
+
+[model-study.html](model-study.html)은 기존/수정 정면 비교, 네 방향 정지 모습과 새총 준비 자세를 보여줍니다. 눈을 얇은 일러스트형으로 바꾸고, 이어지는 머리 실루엣과 짧은 몸·손발, 몸 가까이 든 새총을 사용합니다. 게임 모델과 시트를 교체하지 않은 별도 시안입니다.
+
+`npm run render:model-study`로 `assets/models/butter-study.blend`와 `assets/butter-study/`의 여섯 이미지를 재생성합니다. 원본에는 짧아진 체형에 맞춘 네이티브 애니메이션도 보존합니다. 검증은 `blender --background assets/models/butter-study.blend --python-exit-code 1 --python tools/check-butter-study.py`로 실행합니다.
+
 키보드는 WASD로 이동하고 방향키로 공격합니다. Q는 저학년 액티브, E는 고학년 액티브, R은 폭탄 설치입니다. 버터의 저학년 능력은 패시브로 자동 발동합니다.
 
 ## 실행

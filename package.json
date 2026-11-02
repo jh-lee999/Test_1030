@@ -7,6 +7,7 @@
     "start": "python3 -m http.server 4173",
     "render:animations": "LP_NUM_THREADS=4 blender --threads 4 --background --factory-startup --python-exit-code 1 --python tools/build_butter_model.py -- --render",
     "render:model-preview": "LP_NUM_THREADS=4 blender --threads 4 --background --factory-startup --python-exit-code 1 --python tools/build_butter_model.py -- --preview",
+    "render:model-study": "LP_NUM_THREADS=4 blender --threads 4 --background --factory-startup --python-exit-code 1 --python tools/build_butter_study.py",
     "pack:model": "node tools/pack-butter-model.mjs",
     "pack:sprites": "node tools/pack-butter-sprites.mjs",
     "pack:motion": "node tools/pack-butter-model.mjs",
