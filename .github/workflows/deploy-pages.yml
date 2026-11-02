@@ -20,10 +20,20 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install sprite inspection tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes imagemagick
 
       - name: Check game and sprite frame bounds
         run: |
