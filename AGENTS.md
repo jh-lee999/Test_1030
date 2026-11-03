@@ -1,5 +1,24 @@
 # Project instructions
 
+## v45 core combat and pacing
+
+User clarified: everything feels dull because holding forward attack clears the
+game. Prioritize positioning and actual enemy pressure, not extra menus/stats.
+WORLD_VERSION=45: 4–6 main combat platforms, 1 event platform, preserving physics
+and 3-act progression. Ordinary fire has a 620px base path budget (speed/range
+items scale it); initial homing acquisition respects remaining range. Ricochet
+still has the approved level-scaled finite bounce budget and A-B-A revisits.
+Both teams' bullets stop at platform bodies; boulders keep their existing floor
+bounce physics. A projectile already inside a platform may exit it (source
+muzzle overlap), but cannot enter other cover. Roaming drone/rusher knockback
+uses room bounds: NEVER clamp them back to their original home platform.
+Dash through a real attack grants one 3s counter charge per dash, spent by the
+next normal attack to fire a 150%-damage low shot. Existing immunity and empty
+dashes do not grant this. Counter is not permanent/inventory progression.
+Short hit pauses affect enemies only; player inputs and clocks remain live.
+Synthesized audio is user-gesture unlocked and optional; never affects RNG.
+Run combat45 tests plus the existing world/build/chain/drone/art/browser checks.
+
 ## v44 drone correction
 
 platformer-drone.js owns drone behavior: finite detection, a horizontal distance

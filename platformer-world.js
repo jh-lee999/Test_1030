@@ -1,7 +1,7 @@
 import {PHYSICS,approach,landBody} from './platformer-physics.js?v=38';
 import {ENEMY_TYPES,ENCOUNTERS} from './platformer-enemies.js?v=43';
 
-export const WORLD_VERSION=43,ROOMS_PER_ACT=7,STAGES=21,FLOOR=634;
+export const WORLD_VERSION=45,ROOMS_PER_ACT=7,STAGES=21,FLOOR=634;
 export const ACTS=[
   {name:'뒤틀린 숲',biomes:['grove','canopy'],boss:'숲길의 문지기',rule:'근접 돌진 · 발판을 오가며 거리 확보',color:'#b7d287'},
   {name:'잊힌 회랑',biomes:['ruins'],boss:'회랑의 저격수',rule:'교차사격 · 예고된 마력 지대 피하기',color:'#9dbce5'},
@@ -105,7 +105,7 @@ function buildRoom(node,attempt=0,simple=false){
   const first=add(0,FLOOR,480,true),main=[first];
   if(boss){first.w=integer(rng,1850,2250);main.push(first);add(360,530,240);add(first.w-650,530,250);add(430,430,220);}
   else{
-    const count=event?3:integer(rng,...profile.length);
+    const count=event?1:integer(rng,4,6);
     for(let i=0;i<count;i++){
       const previous=main.at(-1),rise=simple?0:choose(rng,[-90,-70,-40,0,40,70,90]),y=event?FLOOR:clamp(previous.y+rise,profile.minY,profile.maxY),gap=simple?45:y<previous.y?integer(rng,35,65):integer(rng,45,100);
       main.push(add(previous.x+previous.w+gap,y,event?integer(rng,220,300):integer(rng,...profile.width),node.biome!=='canopy'&&rng()>.3));

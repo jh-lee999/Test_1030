@@ -25,7 +25,7 @@ Object.assign(ITEMS,{
   magic_ink:{name:'반짝 마법 잉크',icon:'book-high',rarity:'rare',tags:['scholar','ember'],description:'스킬 피해 +25%p',effects:{skillDamage:.25}},
   hourglass:{name:'수업 종료 모래시계',icon:'clock',rarity:'rare',tags:['scholar','wind'],description:'스킬 재사용 대기시간 -10%p',effects:{cooldownReduction:.1}},
   magnet_bag:{name:'자석 달린 가방',icon:'move',rarity:'common',tags:['guardian','ricochet'],description:'아이템 획득 반경 +40px',effects:{pickupRadius:40}},
-  long_gloves:{name:'멀리 쏘는 장갑',icon:'projectile',rarity:'common',tags:['ricochet','scholar'],description:'탄환 지속시간 +25%p',effects:{projectileLife:.25}},
+  long_gloves:{name:'멀리 쏘는 장갑',icon:'projectile',rarity:'common',tags:['ricochet','scholar'],description:'탄환 사거리 +25%p',effects:{projectileLife:.25}},
   firecracker:{name:'축제의 폭죽',icon:'attack',rarity:'rare',tags:['ember','hunter'],description:'적중 시 화상 +공격력 20%/초',effects:{burnPower:.2}},
   elastic_badge:{name:'말썽쟁이 탄성 배지',icon:'book-low',rarity:'epic',tags:['ricochet','scholar'],description:'저학년 발동 확률 +8%p, 추가 도약 +1',effects:{lowerChance:.08,chainBonus:1}},
 });
@@ -53,6 +53,7 @@ export function rebuildStats(current){
   if(counts.wind>=2)s.dashMultiplier=.8;if(counts.wind>=4)s.dashDamage=1.4;
   s.attackCooldown=Math.max(.08,s.attackCooldown);s.critChance=clamp(s.critChance,0,.8);s.cooldownReduction=clamp(s.cooldownReduction,0,.65);s.lifeSteal=clamp(s.lifeSteal,0,.15);s.armor=clamp(s.armor,0,200);s.pierce=Math.min(6,s.pierce);s.extraProjectiles=Math.min(6,s.extraProjectiles);
   s.damageReduction=s.armor/(100+s.armor);s.skillCooldown=13*(1-s.cooldownReduction);s.dashCooldown=.7*s.dashMultiplier;s.projectileLifetime=2.4*s.projectileLife;s.inscriptions=counts;
+  s.projectileRange=620*s.projectileLife*s.projectileSpeed/base.projectileSpeed;
   s.hp=clamp(current.hp??s.maxHp,0,s.maxHp);s.itemsTaken=Object.values(s.inventory).reduce((sum,n)=>sum+n,0);return s;
 }
 export function createBuildState(){return rebuildStats(createRunState('butter'));}
@@ -86,7 +87,7 @@ export function rewardChoices(random,stats,room,exclude=[]){
   return [...guaranteed,...rollBuildItems(random,stats,room.index,3-guaranteed.length,[...exclude,...guaranteed])];
 }
 export function statRows(s){const low=lowerPower(s),high=upperPower(s),f=n=>Number(n.toFixed(2)).toString(),pct=n=>`${f(n*100)}%`;return[
-  ['damage','공격력',f(s.damage)],['attackSpeed','공격 속도',`${f(1/s.attackCooldown)}회/초`],['maxHp','최대 체력',f(s.maxHp)],['moveSpeed','이동 속도',`${f(s.moveSpeed*1.4)}px/s`],['projectileSpeed','탄환 속도',`${f(s.projectileSpeed*1.55)}px/s`],['range','탄환 지속',`${f(s.projectileLifetime)}초`],
+  ['damage','공격력',f(s.damage)],['attackSpeed','공격 속도',`${f(1/s.attackCooldown)}회/초`],['maxHp','최대 체력',f(s.maxHp)],['moveSpeed','이동 속도',`${f(s.moveSpeed*1.4)}px/s`],['projectileSpeed','탄환 속도',`${f(s.projectileSpeed*1.55)}px/s`],['range','유효 사거리',`${f(s.projectileRange)}px`],
   ['critChance','치명타 확률',pct(s.critChance)],['critDamage','치명타 피해',pct(s.critDamage)],['pierce','평타 추가 관통',`${s.pierce}명`],['projectiles','평타 탄환 수',`${1+s.extraProjectiles}발`],['skillDamage','스킬 피해',pct(s.skillDamage)],['skillCooldown','왕새총 쿨타임',`${f(s.skillCooldown)}초`],
   ['armor','방어 / 피해 감소',`${s.armor} / ${pct(s.damageReduction)}`],['shield','방 입장 보호막',f(s.shieldMax)],['lifeSteal','직접 피해 흡혈',pct(s.lifeSteal)],['killHeal','처치 시 회복',f(s.killHeal)],['pickup','획득 반경',`${f(s.pickupRadius)}px`],['dash','대시 쿨타임',`${f(s.dashCooldown)}초`],
   ['lower','저학년',`Lv.${s.lowerGrade}`],['lowerChance','추적탄 발동',pct(low.chance)],['chain','추가 도약',`${low.bounces}회`],['lowDamage','추적탄 피해',f(low.damage)],['upper','고학년',`Lv.${s.upperGrade}`],['highDamage','왕짱돌 피해',f(high.damage)],['highDuration','왕짱돌 지속',`${f(high.duration)}초`],['burn','화상 / 초',f(s.damage*s.burnPower)],

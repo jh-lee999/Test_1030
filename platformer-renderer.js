@@ -1,5 +1,5 @@
-import {VIEW,FLOOR,HERO_SIZE,STAGES,heroPose,clamp} from './platformer-engine.js?v=44';
-import {BIOMES,ROOM_TYPES,ACTS} from './platformer-world.js?v=43';
+import {VIEW,FLOOR,HERO_SIZE,STAGES,heroPose,clamp} from './platformer-engine.js?v=45';
+import {BIOMES,ROOM_TYPES,ACTS} from './platformer-world.js?v=45';
 import {drawButterMotion,selectButterFrame} from './butter-original-motion.js';
 import {STAGE_ART} from './platformer-art.js?v=43';
 const TAU=Math.PI*2;
@@ -114,6 +114,7 @@ export function renderGame(ctx,g,images,{started=true,reducedMotion=false}={}){
   if(ground){const scale=clamp(1-(ground.y-p.y)/500,.3,1);ellipse(ctx,p.x,ground.y+2,29*scale,6*scale,'#1c281b55');}
   if(p.skillTime>0){ctx.strokeStyle='#ffeab599';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(p.x,p.y-50,55,64,0,0,TAU);ctx.stroke();}
   if(p.shield>0){ctx.strokeStyle='#b3eafa99';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(p.x,p.y-42,43,54,0,0,TAU);ctx.stroke();}
+  if(p.counterCharge>0){ctx.strokeStyle='#c2f6ff';ctx.lineWidth=3;ctx.beginPath();ctx.arc(p.x,p.y-43,51,-Math.PI/2,-Math.PI/2+TAU*p.counterCharge/3);ctx.stroke();text(ctx,'반격',p.x,p.y-106,13,'#d8fbff');}
   const pose=heroPose(p);ctx.save();ctx.translate(p.x,p.y-HERO_SIZE*.28);if(p.facing>0)ctx.scale(-1,1);
   if(p.invulnerable>0&&Math.floor(time*14)%2===0)ctx.globalAlpha=.45;
   if(p.dash>0){ctx.save();ctx.globalAlpha=.2;ctx.translate(p.facing>0?40:-40,0);drawButterMotion(ctx,images.butter,pose);ctx.restore();}

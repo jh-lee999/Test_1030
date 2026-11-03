@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {updateDrone} from '../platformer-drone.js';
-import {createGame,tick} from '../platformer-engine.js';
+import {createGame,tick,hitEnemy} from '../platformer-engine.js';
 function scene(x=600,playerX=300){
   const e={id:1,x,y:634,h:75,home:{y:634},facing:-1,cooldown:0,timer:0,mode:'idle',attackId:0},p={x:playerX,y:634,grounded:true},shots=[];
   const g={player:p,room:{width:2200,cleared:false}};
@@ -33,4 +33,11 @@ test('crowding and crossing use bounded acceleration; edge drones can still atta
 test('the reported seed no longer sends its first drone to the spawn from outside detection range',()=>{
   const g=createGame('1793682210169'),d=g.room.enemies.find(e=>e.type==='drone'),x=d.x;g.player.invulnerable=999;
   for(let n=0;n<960;n++)tick(g,{});assert.equal(d.x,x);assert.equal(d.attackId,0);
+});
+test('hitting roaming enemies outside their original platform never teleports them home',()=>{
+  const g=createGame('1793682210169');for(const type of ['drone','rusher']){
+    const e=g.room.enemies.find(e=>e.type===type);assert.ok(e);e.hp=100;e.x=600;e.home={x:1100,w:200,y:634};
+    hitEnemy(g,e,10,8);assert.equal(e.x,608);assert.equal(e.hp,90);
+    hitEnemy(g,e,10,-8);assert.equal(e.x,600);
+  }
 });

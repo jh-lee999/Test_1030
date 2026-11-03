@@ -1,9 +1,9 @@
-import {createBuildState,applyBuildItem,removeBuildItem,rewardChoices,lowerPower,upperPower,ITEMS,itemChanges,LOWER_CHAIN_RANGE} from './platformer-build.js?v=43';
+import {createBuildState,applyBuildItem,removeBuildItem,rewardChoices,lowerPower,upperPower,ITEMS,itemChanges,LOWER_CHAIN_RANGE} from './platformer-build.js?v=45';
 import {CONTRACTS,HEAL_PRICE,BAG_PRICE,createEconomy,createMarket,marketStock,offerPrice,salePrice,shopRerollCost,rollSealedBag} from './platformer-economy.js?v=43';
 import {advanceButterGait,butterMuzzleOffset,butterReleasePoint} from './butter-original-motion.js';
 import {PHYSICS,approach,landBody} from './platformer-physics.js?v=38';
 import {updateDrone} from './platformer-drone.js?v=44';
-import {FLOOR,STAGES,BIOMES,generateWorld,generateRoom,seedNumber,seededRandom} from './platformer-world.js?v=43';
+import {FLOOR,STAGES,BIOMES,generateWorld,generateRoom,seedNumber,seededRandom} from './platformer-world.js?v=45';
 export {FLOOR,STAGES,seededRandom,landBody};
 
 export const VIEW={width:1280,height:720},HERO_SIZE=92;
@@ -25,31 +25,42 @@ export function createGame(seed=Date.now()){
   const game={seed:root,seedLabel,random,rewardRandom,shopRandom,world,currentNodeId:world.startId,rooms:{[world.startId]:room},stats,room,phase:'playing',time:0,elapsed:0,coins:0,shotsFired:0,lowerProcs:0,buildRevision:0,lastPickup:'',projectiles:[],effects:[],boulders:[],camera:0,cameraY:0,shake:0,hitStop:0,previous:{},choices:[],notice:'',noticeTime:0,roomIntro:3};
   game.player={x:150,y:FLOOR,vx:0,vy:0,w:32,h:78,facing:1,grounded:true,jumps:0,coyote:.1,jumpBuffer:0,dash:0,dashCooldown:0,dashHits:[],shield:0,lowerDryShots:0,invulnerable:0,skillTime:0,skillCooldown:0,attackCooldown:0,action:null,gait:{phase:0,amount:0,clock:0}};
   game.checkpoint={...room.spawn};
-  game.economy=createEconomy();game.contract=null;game.lastTransaction='';
+  game.economy=createEconomy();game.contract=null;game.lastTransaction='';game.soundEvents=[];
   return game;
 }
 export function notifyGame(g,text){g.notice=text;g.noticeTime=2.6;}
+function sound(g,type){g.soundEvents??=[];if(g.soundEvents.length<32)g.soundEvents.push(type);}
 function effect(g,type,x,y,extra={}){g.effects.push({type,x,y,time:0,duration:type==='text'?.7:.32,...extra});}
 export function hitEnemy(g,e,damage,force=0,{critical=false,direct=true,guardBreak=false}={}){
   if(e.type==='guard'&&e.mode!=='attack'&&force*e.facing<0&&direct&&!guardBreak){damage*=.25;effect(g,'text',e.x,e.y-e.h-20,{text:'방어',color:'#a4e5ff'});force*=.15;}
-  if(e.hp<=0)return;const dealt=Math.min(e.hp,damage);e.hp=Math.max(0,e.hp-damage);e.flash=.12;e.x=clamp(e.x+force,e.home.x+e.w/2,e.home.x+e.home.w-e.w/2);
+  if(e.hp<=0)return;const dealt=Math.min(e.hp,damage);e.hp=Math.max(0,e.hp-damage);e.flash=.12;
+  const roaming=e.type==='drone'||e.type==='rusher';
+  e.x=roaming?clamp(e.x+force,e.w/2,g.room.width-e.w/2):clamp(e.x+force,e.home.x+e.w/2,e.home.x+e.home.w-e.w/2);
+  if(direct){e.hitPause=Math.max(e.hitPause||0,critical?.065:.025);sound(g,critical?'critical':'hit');}
   effect(g,'hit',e.x,e.y-e.h*.55);effect(g,'text',e.x,e.y-e.h,{text:String(Math.round(damage))+(critical?'!':''),color:critical?'#ffce66':direct?'#fff3b4':'#ffa995'});
   if(direct&&g.stats.lifeSteal>0)g.stats.hp=Math.min(g.stats.maxHp,g.stats.hp+dealt*g.stats.lifeSteal);
   if(direct&&g.stats.burnPower>0){e.burnTime=2;e.burnDPS=g.stats.damage*g.stats.burnPower;e.burnTick=e.burnTick??.5;}
   if(!e.hp){
-    e.mode='die';e.death=0;g.stats.kills++;g.coins+=e.type==='ghost'?15:2;g.shake=Math.max(g.shake,.13);g.stats.hp=Math.min(g.stats.maxHp,g.stats.hp+g.stats.killHeal);
+    e.mode='die';e.death=0;g.stats.kills++;g.coins+=e.type==='ghost'?15:2;g.shake=Math.max(g.shake,.13);g.stats.hp=Math.min(g.stats.maxHp,g.stats.hp+g.stats.killHeal);sound(g,'kill');
     if(g.stats.killExplosion>0){effect(g,'burst',e.x,e.y-e.h*.5,{color:'#ffbb86',duration:.5});for(const other of g.room.enemies)if(other.hp>0&&Math.hypot(other.x-e.x,(other.y-other.h*.5)-(e.y-e.h*.5))<100)hitEnemy(g,other,g.stats.damage*g.stats.killExplosion,0,{direct:false});}
   }
 }
-export function hurtPlayer(g,damage,dir=1){
-  const p=g.player;if(p.invulnerable>0||p.dash>0||p.skillTime>0||g.phase!=='playing')return false;
+export function hurtPlayer(g,damage,dir=1,{evadable=true}={}){
+  const p=g.player;if(g.phase!=='playing')return false;
+  if(p.invulnerable>0||p.skillTime>0)return false;
+  if(p.dash>0){
+    if(!evadable)return false;
+    if(!p.dashEvaded){p.dashEvaded=true;p.counterCharge=3;g.perfectDodges=(g.perfectDodges||0)+1;sound(g,'evade');effect(g,'burst',p.x,p.y-40,{color:'#b2efff'});notifyGame(g,'정밀 회피! 다음 사격은 강화 추적탄 · 피해 150%');}return false;
+  }
   const frenzy=g.contract?.status==='active'&&g.contract.nodeId===g.currentNodeId&&g.contract.id==='frenzy';
   const reduced=damage*(frenzy?1.2:1)*(1-g.stats.damageReduction),absorbed=Math.min(p.shield,reduced),loss=reduced-absorbed;p.shield-=absorbed;
   g.stats.hp=Math.max(0,g.stats.hp-loss);g.room.hpDamage=(g.room.hpDamage||0)+loss;p.invulnerable=.9;p.vx=dir*250;g.shake=.2;effect(g,'hit',p.x,p.y-45,{color:absorbed?'#b7e9fa':'#ff9395'});
+  sound(g,absorbed?'shield':'hurt');
   if(g.stats.hp===0){g.phase='dead';settleContract(g,true);}return true;
 }
 function fire(g,action){
   const p=g.player,m=heroMuzzle(p);g.shotsFired++;
+  sound(g,action.type==='high'?'boulder':action.counter?'counter':'shot');
   if(action.type==='high'){
     const power=upperPower(g.stats);for(let i=0;i<power.count;i++){const critical=g.random()<g.stats.critChance;g.boulders.push({x:m.x,y:Math.min(m.y,FLOOR-48),vx:p.facing*(i?-1:1)*660,vy:-160,r:power.radius,life:power.duration,damage:power.damage*(i?.65:1)*(critical?g.stats.critDamage:1),critical,hits:{},angle:0});}g.shake=.18;effect(g,'burst',m.x,m.y);return;
   }
@@ -57,14 +68,14 @@ function fire(g,action){
   p.lowerDryShots=low?0:p.lowerDryShots+1;if(low)g.lowerProcs++;
   const count=1+g.stats.extraProjectiles+(low?power.extraProjectiles:0);
   for(let i=0;i<count;i++){
-    const angle=i===0?0:Math.ceil(i/2)*.11*(i%2?1:-1),critical=g.random()<g.stats.critChance,damage=(low?power.damage:g.stats.damage)*(i?.55:1)*(critical?g.stats.critDamage:1);
-    g.projectiles.push({owner:'player',x:m.x,y:m.y,vx:p.facing*Math.cos(angle)*speed,vy:Math.sin(angle)*speed,speed,r:low?9:6,life:g.stats.projectileLifetime,damage,critical,homing:low,homingStrength:power.homing,bounces:low?power.bounces:0,chainRange:power.chainRange,pierce:low?0:g.stats.pierce,hitIds:[]});
+    const angle=i===0?0:Math.ceil(i/2)*.11*(i%2?1:-1),critical=g.random()<g.stats.critChance,damage=(low?power.damage:g.stats.damage)*(i?.55:1)*(critical?g.stats.critDamage:1)*(action.counter?1.5:1);
+    g.projectiles.push({owner:'player',x:m.x,y:m.y,vx:p.facing*Math.cos(angle)*speed,vy:Math.sin(angle)*speed,speed,r:low?9:6,life:g.stats.projectileLifetime,rangeRemaining:g.stats.projectileRange,damage,critical,homing:low,homingStrength:power.homing,bounces:low?power.bounces:0,chainRange:power.chainRange,pierce:low?0:g.stats.pierce,hitIds:[]});
   }
   effect(g,'shot',m.x,m.y,{dir:p.facing,color:low?'#b9eeff':'#fff3bb'});
 }
 function updatePlayer(g,input,pressed,dt){
   const p=g.player,wasGrounded=p.grounded,oldX=p.x;
-  for(const key of ['dashCooldown','invulnerable','skillTime','skillCooldown','attackCooldown','jumpBuffer','coyote'])p[key]=Math.max(0,p[key]-dt);
+  for(const key of ['dashCooldown','invulnerable','skillTime','skillCooldown','attackCooldown','jumpBuffer','coyote','counterCharge'])p[key]=Math.max(0,(p[key]||0)-dt);
   if(p.grounded)p.coyote=.1;
   if(pressed.jump)p.jumpBuffer=.13;
   if(p.jumpBuffer>0&&(p.coyote>0||p.jumps<2)){
@@ -75,20 +86,20 @@ function updatePlayer(g,input,pressed,dt){
   if(!input.jump&&(g.previous.jump||input.jumpReleased)&&p.vy< -260)p.vy=-260;
   const axis=(input.right?1:0)-(input.left?1:0);
   if(axis&&p.dash<=0)p.facing=axis;
-  if(pressed.dash&&p.dashCooldown<=0){p.dash=.17;p.dashCooldown=g.stats.dashCooldown;p.dashFacing=p.facing;p.dashHits=[];effect(g,'dash',p.x,p.y-40,{duration:.25,dir:p.facing});}
+  if(pressed.dash&&p.dashCooldown<=0){p.dash=.17;p.dashCooldown=g.stats.dashCooldown;p.dashFacing=p.facing;p.dashHits=[];p.dashEvaded=false;sound(g,'dash');effect(g,'dash',p.x,p.y-40,{duration:.25,dir:p.facing});}
   if(pressed.skill&&p.skillCooldown<=0){
     p.skillCooldown=g.stats.skillCooldown;p.skillTime=1.1;p.action={type:'high',time:0,duration:1,fired:false};
     notifyGame(g,'왕새총! 시전 1.1초 무적 · 왕짱돌은 방패를 관통해요');
   }
   if((input.attack||input.attackPressed)&&p.attackCooldown<=0&&!p.action){
-    const power=lowerPower(g.stats),low=p.lowerDryShots+1>=power.pity||g.random()<power.chance;p.action={type:low?'low':'normal',time:0,duration:Math.min(.42,g.stats.attackCooldown*.82),fired:false};p.attackCooldown=g.stats.attackCooldown;
+    const power=lowerPower(g.stats),counter=p.counterCharge>0,low=counter||p.lowerDryShots+1>=power.pity||g.random()<power.chance;p.action={type:low?'low':'normal',counter,time:0,duration:Math.min(.42,g.stats.attackCooldown*.82),fired:false};p.attackCooldown=g.stats.attackCooldown;if(counter)p.counterCharge=0;
   }
   if(p.dash>0){p.dash=Math.max(0,p.dash-dt);p.vx=p.dashFacing*850;p.vy=0;}
   else{p.vx=approach(p.vx,axis*g.stats.moveSpeed*1.4,dt*(axis?PHYSICS.acceleration:PHYSICS.braking));p.vy=Math.min(PHYSICS.maxFall,p.vy+PHYSICS.gravity*dt);}
   p.x=clamp(p.x+p.vx*dt,22,g.room.width-22);landBody(p,g.room.platforms,dt);
   if(p.dash>0&&g.stats.dashDamage>0)for(const e of g.room.enemies)if(e.hp>0&&!p.dashHits.includes(e.id)&&segmentHitsBody(oldX,p.y-40,p.x,p.y-40,e,18)){p.dashHits.push(e.id);hitEnemy(g,e,g.stats.damage*g.stats.dashDamage,p.facing*15,{guardBreak:true});}
   if(p.grounded){const floor=g.room.platforms.find(q=>q.id===p.platformId);if(floor)g.checkpoint={x:clamp(p.x,floor.x+40,floor.x+floor.w-40),y:floor.y,platformId:floor.id};}
-  if(p.y>FLOOR+240){hurtPlayer(g,8);Object.assign(p,{x:g.checkpoint.x,y:g.checkpoint.y,vx:0,vy:0,jumps:0,grounded:true,dash:0,action:null,invulnerable:1});notifyGame(g,'발을 헛디뎠어! 마지막 발판으로 돌아왔어.');}
+  if(p.y>FLOOR+240){hurtPlayer(g,8,1,{evadable:false});Object.assign(p,{x:g.checkpoint.x,y:g.checkpoint.y,vx:0,vy:0,jumps:0,grounded:true,dash:0,action:null,invulnerable:1});notifyGame(g,'발을 헛디뎠어! 마지막 발판으로 돌아왔어.');}
   if(!wasGrounded&&p.grounded)effect(g,'land',p.x,p.y,{duration:.25});
   advanceButterGait(p.gait,Math.abs(p.x-oldX),p.x-oldX,0,dt);
   if(p.action){const a=p.action;a.time+=dt;if(!a.fired&&a.time/a.duration>=butterReleasePoint(a.type)){a.fired=true;fire(g,a);}if(a.time>=a.duration)p.action=null;}
@@ -97,6 +108,7 @@ function updateEnemies(g,dt){
   const p=g.player;
   for(const e of g.room.enemies){
     e.clock+=dt;e.flash=Math.max(0,e.flash-dt);if(e.hp<=0){e.death+=dt;continue;}
+    if(e.hitPause>0){e.hitPause=Math.max(0,e.hitPause-dt);continue;}
     if(e.burnTime>0){e.burnTime=Math.max(0,e.burnTime-dt);e.burnTick-=dt;if(e.burnTick<=0){e.burnTick+=.5;hitEnemy(g,e,e.burnDPS*.5,0,{direct:false});if(e.hp<=0)continue;}}
     e.cooldown=Math.max(0,e.cooldown-dt);const dx=p.x-e.x,dy=p.y-e.y;
     if(e.type!=='drone'&&(e.type!=='guard'||(e.mode!=='attack'&&!(e.turnCooldown>0)))){e.facing=dx>=0?1:-1;if(e.type==='guard')e.turnCooldown=.8;}
@@ -225,7 +237,7 @@ function updateProjectiles(g,dt){
   for(const b of g.projectiles){
     b.life-=dt;b.hitDelay=Math.max(0,(b.hitDelay||0)-dt);const oldX=b.x,oldY=b.y;let destination;
     if(b.homing){
-      const target=g.room.enemies.find(e=>e.id===b.targetId&&e.hp>0&&e.id!==b.lastHitId)||nearestChainTarget(g,b,b.chainOrigin||b,b.chainOrigin?(b.chainRange??LOWER_CHAIN_RANGE):Infinity);
+      const target=g.room.enemies.find(e=>e.id===b.targetId&&e.hp>0&&e.id!==b.lastHitId)||nearestChainTarget(g,b,b.chainOrigin||b,b.chainOrigin?(b.chainRange??LOWER_CHAIN_RANGE):(b.rangeRemaining??Infinity));
       if(target){
         const angle=Math.atan2(target.y-target.h*.5-b.y,target.x-b.x),speed=b.speed||Math.hypot(b.vx,b.vy);
         if(b.chainOrigin&&b.targetId!==target.id)b.life=Math.max(b.life,distanceTo(b,target)/Math.max(1,speed)+b.hitDelay+.1);
@@ -240,6 +252,16 @@ function updateProjectiles(g,dt){
       const dx=destination.x-b.x,dy=destination.y-b.y,distance=Math.hypot(dx,dy),travel=Math.min(distance,Math.hypot(b.vx,b.vy)*dt);
       if(distance>0){b.x+=dx/distance*travel;b.y+=dy/distance*travel;}
     }else{b.x+=b.vx*dt;b.y+=b.vy*dt;}
+    if(b.owner==='player'&&!b.chainOrigin&&Number.isFinite(b.rangeRemaining)){
+      const distance=Math.hypot(b.x-oldX,b.y-oldY);
+      if(distance>b.rangeRemaining&&distance>0){const ratio=b.rangeRemaining/distance;b.x=oldX+(b.x-oldX)*ratio;b.y=oldY+(b.y-oldY)*ratio;}
+      b.rangeRemaining=Math.max(0,b.rangeRemaining-distance);
+    }
+    const terrain=g.room.platforms.map(platform=>{
+      const depth=platform.ground?FLOOR+180-platform.y:32;
+      return segmentBodyEntry(oldX,oldY,b.x,b.y,{x:platform.x+platform.w/2,y:platform.y+depth,h:depth-6,w:platform.w});
+    }).filter(t=>t!==null&&t>1e-7).sort((a,c)=>a-c)[0];
+    if(terrain!==undefined){b.x=oldX+(b.x-oldX)*terrain;b.y=oldY+(b.y-oldY)*terrain;}
     if(b.owner==='player'&&b.hitDelay<=0){
       const contacts=g.room.enemies.filter(e=>e.hp>0&&(b.homing?e.id!==b.lastHitId:!b.hitIds.includes(e.id))).map(e=>({e,at:segmentBodyEntry(oldX,oldY,b.x,b.y,e,b.r)})).filter(c=>c.at!==null).sort((a,c)=>a.at-c.at);
       for(const {e,at}of contacts){
@@ -250,6 +272,8 @@ function updateProjectiles(g,dt){
         break;
       }
     }else if(b.owner==='enemy'&&segmentHitsBody(oldX,oldY,b.x,b.y,p,b.r)){hurtPlayer(g,b.damage,Math.sign(b.vx));b.life=0;}
+    if(terrain!==undefined){b.life=0;effect(g,'hit',b.x,b.y,{color:'#c7b998'});}
+    if(b.owner==='player'&&!b.chainOrigin&&b.rangeRemaining===0)b.life=0;
     if(b.x<0||b.x>g.room.width||b.y< -100||b.y>FLOOR+40)b.life=0;
   }
   g.projectiles=g.projectiles.filter(b=>b.life>0);
@@ -346,7 +370,7 @@ export function chooseRoute(g,id){
   if(g.phase!=='route')return false;const node=routeOptions(g).find(n=>n.id===id);if(!node)return false;
   const room=g.rooms[id]??generateRoom(node);g.rooms[id]=room;g.room=room;g.currentNodeId=id;node.visited=true;
   activateContract(g);
-  Object.assign(g.player,{x:room.spawn.x,y:room.spawn.y,vx:0,vy:0,action:null,grounded:true,jumps:0,coyote:.1,jumpBuffer:0,dash:0,dashHits:[],shield:g.stats.shieldMax,skillTime:0,invulnerable:1});
+  Object.assign(g.player,{x:room.spawn.x,y:room.spawn.y,vx:0,vy:0,action:null,grounded:true,jumps:0,coyote:.1,jumpBuffer:0,dash:0,dashHits:[],shield:g.stats.shieldMax,skillTime:0,counterCharge:0,invulnerable:1});
   g.checkpoint={...room.spawn};g.projectiles=[];g.boulders=[];g.effects=[];g.camera=0;g.cameraY=0;g.roomIntro=2.6;g.phase='playing';g.previous={};g.noticeTime=0;return true;
 }
 function offerReward(g){

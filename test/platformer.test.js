@@ -37,7 +37,7 @@ test('mirroring transforms the whole-pose muzzle exactly; air fire keeps origina
   p.grounded=false;p.vy=-300;assert.equal(selectButterFrame(heroPose(p)).key,'walkShoot');const rise=heroPose(p).gait.phase;p.vy=300;assert.notEqual(heroPose(p).gait.phase,rise);
 });
 test('held attack repeats, moving fire animates, release occurs after windup',()=>{
-  const g=safe();g.random=()=>.9;tick(g,{attack:true,right:true});assert.equal(g.projectiles.length,0);step(g,26,{attack:true,right:true});assert.ok(g.projectiles.length>0);assert.equal(selectButterFrame(heroPose(g.player)).key,'walkShoot');step(g,90,{attack:true,right:true});assert.ok(g.projectiles.length>=2);
+  const g=safe();g.random=()=>.9;tick(g,{attack:true,right:true});assert.equal(g.projectiles.length,0);step(g,26,{attack:true,right:true});assert.ok(g.projectiles.length>0);assert.equal(selectButterFrame(heroPose(g.player)).key,'walkShoot');step(g,90,{attack:true,right:true});assert.ok(g.shotsFired>=2);
 });
 test('fast projectiles sweep the full body and do not tunnel through at high speed',()=>{
   const body={x:100,y:200,w:30,h:80};assert.equal(segmentHitsBody(0,130,200,130,body,4),true);assert.equal(segmentHitsBody(0,80,200,80,body,4),false);

@@ -1,11 +1,13 @@
-import {createGame,tick,chooseReward,enterNextRoom,chooseRoute,routeOptions,interactRoom,chooseGoldReward,cashReward,grantItem,rerollReward,rewardRerollCost,canOpenShop,openShop,buyShopItem,rerollShop,sellShopItem,buyShopHealing,buySealedBag,acceptContract,notifyGame,STAGES} from './platformer-engine.js?v=44';
-import {renderGame} from './platformer-renderer.js?v=44';
-import {BIOMES,ROOM_TYPES,ACTS,ROOMS_PER_ACT} from './platformer-world.js?v=43';
+import {createGame,tick,chooseReward,enterNextRoom,chooseRoute,routeOptions,interactRoom,chooseGoldReward,cashReward,grantItem,rerollReward,rewardRerollCost,canOpenShop,openShop,buyShopItem,rerollShop,sellShopItem,buyShopHealing,buySealedBag,acceptContract,notifyGame,STAGES} from './platformer-engine.js?v=45';
+import {renderGame} from './platformer-renderer.js?v=45';
+import {BIOMES,ROOM_TYPES,ACTS,ROOMS_PER_ACT} from './platformer-world.js?v=45';
 import {CONTRACTS,HEAL_PRICE,BAG_PRICE,basePrice,offerPrice,salePrice,shopRerollCost,contractLabel} from './platformer-economy.js?v=43';
 import {BUTTER_ORIGINAL,BUTTER_POSTER} from './butter-original-motion.js';
 import {STAGE_ART} from './platformer-art.js?v=43';
-import {ITEMS,INSCRIPTIONS,RARITIES,statRows,itemChanges,gradeSources,lowerPower,upperPower,applyBuildItem,removeBuildItem} from './platformer-build.js?v=43';
+import {createGameAudio} from './platformer-audio.js?v=45';
+import {ITEMS,INSCRIPTIONS,RARITIES,statRows,itemChanges,gradeSources,lowerPower,upperPower,applyBuildItem,removeBuildItem} from './platformer-build.js?v=45';
 const $=id=>document.getElementById(id),canvas=$('game-canvas'),ctx=canvas.getContext('2d');
+const gameAudio=createGameAudio();
 let game=createGame(),started=false,ready=false,last=0,accumulator=0,shownPhase='',shownRoom=-1,buildReturnPhase='playing';
 let shopTab='goods',sellSelection=null;
 const urlSeed=new URLSearchParams(location.search).get('seed');if(urlSeed)$('seed-input').value=urlSeed.slice(0,48);
@@ -14,9 +16,9 @@ const bindings={KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right',Spa
 function input(){const value={};for(const key of keys){const action=bindings[key]||key;value[action]=true;}for(const action of touch.values())value[action]=true;for(const action of pending)value[action+'Pressed']=true;value.jumpReleased=pending.has('jumpRelease');return value;}
 function clearInput(){keys.clear();touch.clear();pending.clear();document.querySelectorAll('[data-control]').forEach(b=>b.classList.remove('pressed'));if(game)game.previous={};}
 function focusGame(){canvas.focus({preventScroll:true});}
-function start(seed=$('seed-input').value.trim()||Date.now()){if(!ready)return;clearInput();game=createGame(seed);shopTab='goods';sellSelection=null;started=true;shownPhase='';shownRoom=-1;accumulator=0;const url=new URL(location.href);url.searchParams.set('seed',game.seedLabel);history.replaceState(null,'',url);syncUI();focusGame();}
+function start(seed=$('seed-input').value.trim()||Date.now()){if(!ready)return;gameAudio.unlock();clearInput();game=createGame(seed);shopTab='goods';sellSelection=null;started=true;shownPhase='';shownRoom=-1;accumulator=0;const url=new URL(location.href);url.searchParams.set('seed',game.seedLabel);history.replaceState(null,'',url);syncUI();focusGame();}
 function pause(){if(!started||game.phase!=='playing')return;game.phase='paused';clearInput();syncUI();$('resume-button').focus({preventScroll:true});}
-function resume(){if(game.phase!=='paused')return;game.phase='playing';clearInput();syncUI();focusGame();}
+function resume(){if(game.phase!=='paused')return;gameAudio.unlock();game.phase='playing';clearInput();syncUI();focusGame();}
 $('start-button').addEventListener('click',()=>start());$('pause-button').addEventListener('click',pause);$('resume-button').addEventListener('click',resume);
 document.querySelectorAll('.restart').forEach(b=>b.addEventListener('click',()=>{$('seed-input').value='';start();}));
 document.querySelectorAll('.replay').forEach(b=>b.addEventListener('click',()=>start(game.seedLabel)));
@@ -36,6 +38,7 @@ $('shop-bag').addEventListener('click',()=>{if(buySealedBag(game))drawShop();});
 $('sell-cancel').addEventListener('click',()=>{sellSelection=null;drawShop();});
 $('sell-confirm').addEventListener('click',()=>{if(sellShopItem(game,sellSelection)){sellSelection=null;drawShop();}});
 $('touch-toggle').addEventListener('click',()=>{const show=document.body.classList.toggle('show-touch');$('touch-toggle').setAttribute('aria-pressed',String(show));});
+$('sound-toggle').addEventListener('click',()=>{const enabled=gameAudio.toggle();$('sound-toggle').setAttribute('aria-pressed',String(enabled));$('sound-toggle').textContent=enabled?'소리 켬':'소리 끔';});
 window.addEventListener('keydown',e=>{
   if(['KeyM','KeyI','KeyB','Escape'].includes(e.code)&&started){e.preventDefault();if(e.repeat)return;if(e.code==='KeyM')toggleMap();else if(e.code==='KeyI')toggleBuild();else if(e.code==='KeyB')shop();else if(['build','shop'].includes(game.phase))closeBuild();else game.phase==='map'?toggleMap():game.phase==='paused'?resume():pause();return;}
   if(bindings[e.code]&&started&&game.phase==='playing'&&!(e.target instanceof HTMLButtonElement)){e.preventDefault();keys.add(e.code);if(!e.repeat)pending.add(bindings[e.code]);}
@@ -57,7 +60,7 @@ function syncUI(){
   $('low-label').textContent=`${Math.round(lowerPower(game.stats).chance*100)}% · ${game.lowerProcs}회 발동`;
   $('build-button').disabled=!['playing','build','reward','shop'].includes(game.phase);
   $('enemy-count').textContent=game.room.rewardTaken?'출구 개방':game.room.shrine?`${ROOM_TYPES[game.room.type].name} · F로 이용`:`남은 적 ${game.room.enemies.filter(e=>e.hp>0).length}`;
-  $('dash-label').textContent=game.player.dashCooldown>0?`${game.player.dashCooldown.toFixed(1)}s`:'준비';
+  $('dash-label').textContent=game.player.counterCharge>0?'반격 준비!':game.player.dashCooldown>0?`${game.player.dashCooldown.toFixed(1)}s`:'준비';
   $('skill-label').textContent=game.player.skillTime>0?'무적':game.player.skillCooldown>0?`${Math.ceil(game.player.skillCooldown)}s`:'준비';
   $('toast').textContent=game.noticeTime>0?game.notice:'';
   $('contract-hud').hidden=!started||!game.contract;$('contract-hud').textContent=contractLabel(game);$('contract-hud').dataset.status=game.contract?.status||'';
@@ -142,7 +145,7 @@ function frame(ms){
   const dt=Math.min(.1,(ms-(last||ms))/1000);last=ms;
   if(started&&game.phase==='playing'){accumulator+=dt;while(accumulator>=1/120){tick(game,input(),1/120);pending.clear();accumulator-=1/120;if(game.phase!=='playing'){accumulator=0;break;}}}
   else{accumulator=0;if(!started&&!reduced.matches){game.time+=dt;game.player.gait.clock+=dt;}}
-  renderGame(ctx,game,images,{started,reducedMotion:reduced.matches});syncUI();requestAnimationFrame(frame);
+  gameAudio.play((game.soundEvents||[]).splice(0));renderGame(ctx,game,images,{started,reducedMotion:reduced.matches});syncUI();requestAnimationFrame(frame);
 }
 function loadImage(src,target,key){return new Promise(resolve=>{const image=new Image();let done=false;const finish=ok=>{if(done)return;done=true;clearTimeout(timeout);if(ok)target[key]=image;resolve(ok);};const timeout=setTimeout(()=>finish(false),12000);image.onload=()=>finish(true);image.onerror=()=>finish(false);image.src=src;});}
 async function boot(){

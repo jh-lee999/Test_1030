@@ -1,4 +1,5 @@
 :root{color-scheme:dark;--cream:#fff1d2;--gold:#f6cc78;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#202820;color:var(--cream)}
+@media(max-width:540px){.masthead nav>a{display:none!important}}
 .act-track{display:flex;gap:10px;margin:12px 0;flex-wrap:wrap}.act-track span{border:1px solid #adb69b44;border-radius:6px;padding:8px 12px;font-size:11px;color:#a9b89e}.act-track .active{background:#d5dca520;color:#ffe1a4;border-color:#e3c78a}.journey small{letter-spacing:0!important}.world-panel{max-height:100%;overflow:auto}.act-track+.world-map{margin-top:8px}
 .map-node small{max-width:100%;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:540px),(max-height:500px){#map-screen{position:fixed;z-index:20;background:#1c2b20f5;padding:14px}.world-panel{max-height:calc(100dvh - 28px)}#map-screen .world-map{height:210px!important}#map-screen .map-node{min-height:38px}}
