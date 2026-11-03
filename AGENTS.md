@@ -22,11 +22,14 @@ outfit, handedness, or the rendering of those assets:
 
 The 3D studies in versions 26–31 were criticized by the user and are **not**
 approved visual references. The user approved the v32 four-direction sheet as
-the fixed sprite template and requested integration. The v33 game uses that
+the fixed sprite template and requested integration. The v34 game uses that
 UNCHANGED PNG through `butter-motion.js` and `assets/butter-2d33/rig.js`.
 New animations remain reviewable candidates: do not regenerate the face/body
 to add motion. The small cutouts are not full new two-handed/skill poses.
 `butter-2d-motion.html` compares the source and the actual game renderer.
+The user rejected v33's barely visible motion. v34 amplitude/timing lives in
+`assets/butter-2d34/motion.js`. Check visible foot travel at 96px AND real preview
+playback (including reduced-motion opt-in), not only sampled frame differences.
 Existing 3D assets and their archived renderer are preserved, not used in-game.
 
 Carry forward explicit user corrections in `BUTTER_CANON.md`. If the user changes

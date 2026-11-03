@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {advanceButterGait,butterSpriteState,butterBootTransforms,butterSourceTransform,butterMuzzleOffset,drawButterMotion,BUTTER_STRIDE_DISTANCE,BUTTER_2D_LAYOUT,BUTTER_2D_VIEWS} from '../butter-motion.js';
+import {advanceButterGait,butterSpriteState,butterBootTransforms,butterSourceTransform,butterMuzzleOffset,drawButterMotion,BUTTER_STRIDE_DISTANCE,BUTTER_2D_LAYOUT,BUTTER_2D_VIEWS,BUTTER_MOTION} from '../butter-motion.js';
 const axes={down:[0,1],left:[-1,0],up:[0,-1],right:[1,0]};
 const state=(view='down',phase=0,amount=1,action=null)=>({size:112,facingX:axes[view][0],facingY:axes[view][1],gait:{phase,amount,dx:axes[view][0],dy:axes[view][1]},action});
 
@@ -34,11 +34,17 @@ test('both boots alternate, one planted foot remains, and all motion fades to ze
   for(const view of Object.keys(axes)){
     const a=butterBootTransforms(butterSpriteState(state(view,Math.PI/2)));
     const b=butterBootTransforms(butterSpriteState(state(view,Math.PI*1.5)));
-    assert.ok(a[0].y< -8);assert.ok(Math.abs(a[1].y)<1e-10);
-    assert.ok(Math.abs(b[0].y)<1e-10);assert.ok(b[1].y< -8);
-    for(let i=0;i<2;i++)for(const axis of ['x','y'])assert.ok(Math.abs(a[i][axis]-b[1-i][axis])<1e-10);
+    assert.equal(a[0].lift,BUTTER_MOTION.bootLift);assert.equal(a[1].lift,0);
+    assert.equal(b[0].lift,0);assert.equal(b[1].lift,BUTTER_MOTION.bootLift);
+    for(let i=0;i<2;i++)for(const axis of ['x','angle','lift'])assert.ok(Math.abs(a[i][axis]-b[1-i][axis])<1e-10);
+    for(const foot of [...a,...b]){
+      const baseline=BUTTER_2D_VIEWS[view].foot[1];
+      const sole=foot.pivot[1]+(baseline-foot.sourcePivot[1])*Math.cos(foot.angle)+foot.y;
+      assert.ok(Math.abs(sole-(baseline-foot.lift))<1e-10,'support foot must stay grounded');
+    }
+    assert.ok(a[0].lift*BUTTER_2D_LAYOUT.sourceScale*96/160>=4,'motion must be visible at 96px, not a 1px twitch');
     const stopped=butterBootTransforms(butterSpriteState(state(view,Math.PI/2,0)));
-    assert.ok(stopped.every(p=>Math.abs(p.x)+Math.abs(p.y)===0));
+    assert.ok(stopped.every(p=>Math.abs(p.x)+Math.abs(p.y)+Math.abs(p.angle)===0));
   }
 });
 
@@ -62,7 +68,16 @@ test('the face is outside ALL cutouts; body size cannot change with an action',(
   }
   for(const type of ['normal','low','high'])for(let n=0;n<=100;n++){
     const pose=butterSpriteState(state('up',n,1,{type,time:n/100,duration:1}));
-    assert.ok(Math.abs(pose.weaponAngle)<.09);
+    assert.ok(Math.abs(pose.weaponAngle)<.22);
+  }
+});
+
+test('side-view rear boots use a complete source boot instead of exposing an occluded toe',()=>{
+  for(const [view,rear,source]of [['left',0,1],['right',1,0]]){
+    const walking=butterBootTransforms(butterSpriteState(state(view,Math.PI/2)));
+    assert.equal(walking[rear].sourceIndex,source);
+    const still=butterBootTransforms(butterSpriteState(state(view,0,0)));
+    assert.equal(still[rear].sourceIndex,rear,'idle stays identical to the original artwork');
   }
 });
 

@@ -10,9 +10,9 @@ try {
   await page.goto(`${root}/butter-2d-motion.html`);
   await page.waitForSelector('body[data-ready="true"]');
   const result=await page.evaluate(async()=>{
-    const m=await import('./butter-motion.js?v=33'),image=new Image();image.src=m.BUTTER_2D_LAYOUT.image;await image.decode();
+    const m=await import('./butter-motion.js?v=34'),image=new Image();image.src=m.BUTTER_2D_LAYOUT.image;await image.decode();
     const axes={down:[0,1],left:[-1,0],up:[0,-1],right:[1,0]},canvas=document.createElement('canvas');
-    const ctx=canvas.getContext('2d',{willReadFrequently:true});let checked=0,headMaxDelta=0,minGutter=Infinity;
+    const ctx=canvas.getContext('2d',{willReadFrequently:true});let checked=0,headMaxDelta=0,minGutter=Infinity;const motionPixels={};
     const draw=(state,size)=>{
       canvas.width=canvas.height=size;ctx.translate(size/2,(148-112*.28)*size/160);ctx.scale(size/160,size/160);
       m.drawButterMotion(ctx,{atlas:image},state);return ctx.getImageData(0,0,size,size).data;
@@ -48,11 +48,38 @@ try {
       if(!differences(a,b,size,headBottom,bootTop))throw Error(`${view}: hand recoil missing`);
       if(differences(a,b,size,bootTop,size))throw Error(`${view}: attack reset boots`);
       const c=draw({...base,gait:{...gait,phase:Math.PI*1.5},action:{type:'normal',time:.3,duration:1}},size);
-      if(!differences(a,c,size,bootTop,size))throw Error(`${view}: actual feet do not alternate`);
+      const footDifference=differences(a,c,size,bootTop,size);
+      motionPixels[`${view}/${size}`]=footDifference;
+      if(footDifference<(size===96?40:100))throw Error(`${view}: motion is too small to read (${footDifference} pixels)`);
     }
-    return {checked,headChangedPixels:headMaxDelta,minGutter};
+    return {checked,headChangedPixels:headMaxDelta,minGutter,motionPixels};
   });
   console.log('Pixel comparison:',JSON.stringify(result));
+  // Test the REAL requestAnimationFrame loop as well as sampled poses. A paused
+  // or broken preview must not pass just because the renderer can draw frames.
+  const live='canvas[data-view="down"][data-reference="false"]';
+  assert.equal(await page.locator('body').getAttribute('data-playing'),'true');
+  const liveBefore=await page.locator(live).evaluate(c=>c.toDataURL());
+  await page.waitForTimeout(190);
+  assert.notEqual(await page.locator(live).evaluate(c=>c.toDataURL()),liveBefore,'live preview is not moving');
+  await page.locator('#play').click();
+  const pausedPhase=await page.locator('#phase').inputValue();await page.waitForTimeout(180);
+  assert.equal(await page.locator('#phase').inputValue(),pausedPhase,'pause must freeze the preview');
+  await page.locator('#step').click();
+  assert.notEqual(await page.locator('#phase').inputValue(),pausedPhase,'frame stepping must change the pose');
+  await page.locator('#show-source').check();assert.equal(await page.locator('.reference:visible').count(),4);
+  await page.locator('#show-source').uncheck();assert.equal(await page.locator('.reference:visible').count(),0);
+  await page.locator('#play').click();
+  const reduced=await browser.newPage({reducedMotion:'reduce',viewport:{width:390,height:844}});
+  reduced.on('pageerror',e=>errors.push(String(e)));
+  await reduced.goto(`${root}/butter-2d-motion.html`);await reduced.waitForSelector('body[data-ready="true"]');
+  assert.equal(await reduced.locator('body').getAttribute('data-playing'),'false');
+  assert.equal(await reduced.locator('#reduced-notice').isVisible(),true,'explain why autoplay is off');
+  await reduced.locator('#enable-motion').click();
+  assert.equal(await reduced.locator('body').getAttribute('data-playing'),'true');
+  const reducedBefore=await reduced.locator(live).evaluate(c=>c.toDataURL());await reduced.waitForTimeout(190);
+  assert.notEqual(await reduced.locator(live).evaluate(c=>c.toDataURL()),reducedBefore,'explicit play must work with reduced motion');
+  await reduced.close();
   for(const mode of ['idle','walk','shoot','walkShoot','low','high'])await page.locator('#motion').selectOption(mode);
   await page.setViewportSize({width:320,height:740});
   await page.locator('#size').selectOption('256');
@@ -70,5 +97,5 @@ try {
   await page.waitForFunction(()=>document.querySelector('#start-screen').classList.contains('hidden'));
   await page.keyboard.press('ArrowRight');await page.keyboard.press('q');
   assert.deepEqual(errors,[],'browser runtime errors');
-  console.log(JSON.stringify({...result,previewControls:'passed',mobile:'passed',butterAndKomiStart:'passed',runtimeErrors:errors},null,2));
+  console.log(JSON.stringify({...result,livePlayback:'passed',reducedMotionOptIn:'passed',previewControls:'passed',mobile:'passed',butterAndKomiStart:'passed',runtimeErrors:errors},null,2));
 } finally { await browser.close(); }

@@ -1,5 +1,7 @@
 import { BUTTER_2D_LAYOUT, BUTTER_2D_VIEWS } from './assets/butter-2d33/rig.js?v=33';
+import { BUTTER_MOTION, BUTTER_WALK_BOOTS } from './assets/butter-2d34/motion.js?v=34';
 export { BUTTER_2D_LAYOUT, BUTTER_2D_VIEWS };
+export { BUTTER_MOTION };
 const TAU = Math.PI * 2;
 export const BUTTER_STRIDE_DISTANCE = 120;
 const cache = new WeakMap();
@@ -32,7 +34,7 @@ export function butterSpriteState({ facingX, facingY, gait, action }) {
     walkFrame: moving ? Math.floor(cycle * 12) : 0,
     attackFrame: action ? Math.min(7, Math.floor(progress * 8)) : 0,
     clip: action?.type === 'high' ? 'high' : action ? moving ? 'walkShoot' : 'shoot' : moving ? 'walk' : 'idle',
-    weaponAngle: (pull * .035 - kick * .055) * (view === 'up' ? -1 : 1),
+    weaponAngle: (pull * BUTTER_MOTION.windup - kick * BUTTER_MOTION.recoil) * (view === 'up' ? -1 : 1),
   };
 }
 
@@ -40,9 +42,21 @@ export function butterSpriteState({ facingX, facingY, gait, action }) {
 // The head/body never bobs, stretches or changes shape.
 export function butterBootTransforms(pose) {
   const side = pose.view === 'left' || pose.view === 'right';
-  return [0, Math.PI].map(offset => {
+  const rig = BUTTER_2D_VIEWS[pose.view];
+  return [0, Math.PI].map((offset, i) => {
     const wave = Math.sin(pose.phase + offset) * pose.amount;
-    return { x: side ? wave * 4 : wave * 1.5, y: -Math.max(0, wave) * 9 };
+    const [x, y, w] = rig.boots[i];
+    const reusable = pose.amount > .002 && BUTTER_WALK_BOOTS[pose.view]?.rear === i ? BUTTER_WALK_BOOTS[pose.view] : null;
+    const pivot = reusable?.pivot ?? [x + w / 2, y + 5];
+    const sourceIndex = reusable?.source ?? i;
+    const [sx, sy, sw] = rig.boots[sourceIndex];
+    const sourcePivot = [sx + sw / 2, sy + 5];
+    const angle = wave * (side ? BUTTER_MOTION.sideSwing : BUTTER_MOTION.frontSwing) * (pose.view === 'right' ? -1 : 1);
+    const lift = Math.max(0, wave) * BUTTER_MOTION.bootLift;
+    // Swing around the cuff, not sideways out of the knee. Compensate the
+    // rotation's vertical shortening so the supporting foot stays grounded.
+    const ground = (rig.foot[1] - pivot[1]) * (1 - Math.cos(angle));
+    return { x: 0, y: ground - lift, angle, pivot, lift, sourceIndex, sourcePivot };
   });
 }
 
@@ -102,7 +116,10 @@ export function drawButterMotion(ctx, images, state) {
     // image/canvas downsampling differs in browsers and can alter face pixels.
     const source = () => ctx.drawImage(images.atlas, ...rig.rect, 0, 0, 627, 627);
     for (const i of rig.bootOrder ?? [0, 1]) {
-      ctx.save(); ctx.translate(feet[i].x, feet[i].y); ctx.clip(parts.boots[i]); source(); ctx.restore();
+      const foot = feet[i];
+      ctx.save(); ctx.translate(foot.x, foot.y);
+      ctx.translate(...foot.pivot); ctx.rotate(foot.angle); ctx.translate(-foot.sourcePivot[0], -foot.sourcePivot[1]);
+      ctx.clip(parts.boots[foot.sourceIndex]); source(); ctx.restore();
     }
     const firing = Math.abs(pose.weaponAngle) > 1e-8;
     ctx.save(); ctx.clip(firing ? parts.firingBody : parts.body, 'evenodd'); source(); ctx.restore();

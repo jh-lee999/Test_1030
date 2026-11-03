@@ -19,10 +19,11 @@
   },
   "activeAnimation": {
     "rig": "assets/butter-2d33/rig.js",
+    "motion": "assets/butter-2d34/motion.js",
     "renderer": "butter-motion.js",
     "preview": "butter-2d-motion.html",
     "status": "integrated-limited-cutout-candidate",
-    "method": "unchanged-source-pixels; uniform-scale; rigid-boots-and-holding-hand-only",
+    "method": "unchanged-source-pixels; uniform-scale; readable-rigid-boot-stride; complete-source-boot-reuse-for-occluded-rear-foot; independent-holding-hand-recoil",
     "limitations": ["No newly drawn left-hand pull pose", "No new giant-slingshot pose", "Tail remains at approved source pose"]
   },
   "anatomy": {"holdingHand":"right","drawingHand":"left","pouchHip":"left","tailRoot":"posterior-pelvis-midline"},

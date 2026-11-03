@@ -15,7 +15,7 @@ import {
   rollItems,
   upperPower
 } from "./survivor-engine.js?v=23";
-import { advanceButterGait, drawButterMotion, butterMuzzleOffset, prepareButterMotion, BUTTER_2D_LAYOUT } from "./butter-motion.js?v=33";
+import { advanceButterGait, drawButterMotion, butterMuzzleOffset, prepareButterMotion, BUTTER_2D_LAYOUT } from "./butter-motion.js?v=34";
 
 const LOGICAL = { width: 800, height: 1450 };
 const WALL = 58;
