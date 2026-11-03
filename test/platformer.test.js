@@ -8,7 +8,7 @@ function safe(){const g=createGame(37),floor={id:'flat',x:0,y:FLOOR,w:g.room.wid
 function step(g,n,input={}){for(let i=0;i<n;i++)tick(g,input,1/120);}
 test('seeded platform layouts are repeatable, varied and have open grounded exits',()=>{
   assert.deepEqual(makeRoom(0,seededRandom(7)),makeRoom(0,seededRandom(7)));
-  const variants=new Set();for(let seed=0;seed<20;seed++){const r=makeRoom(0,seededRandom(seed));variants.add(JSON.stringify(r.platforms));assert.ok(r.platforms[0].w<r.width);assert.ok(r.exit.x<r.width);assert.ok(r.enemies.length>=1);assert.equal(r.navigation.valid,true);}
+  const variants=new Set();for(let seed=0;seed<20;seed++){const r=makeRoom(0,seededRandom(seed));variants.add(JSON.stringify(r.platforms));assert.equal(r.platforms[0].w,r.width);assert.ok(r.platforms.some(p=>p.optional));assert.ok(r.exit.x<r.width);assert.ok(r.enemies.length>=1);assert.equal(r.navigation.valid,true);}
   assert.ok(variants.size>10);assert.equal(makeRoom(STAGES-1,seededRandom(1)).enemies[0].type,'ghost');
 });
 test('jump, release height cut, double jump, no third jump, landing reset',()=>{

@@ -25,7 +25,7 @@
       <div id="toast" class="toast" role="status" aria-live="polite"></div>
       <div id="contract-hud" class="contract-hud" hidden></div>
       <div id="start-screen" class="overlay start-screen">
-        <div class="start-copy"><span class="eyebrow">TRICKCAL FAN GAME · BUILD YOUR RUN</span><h1>어떤 새총으로<br><em>탈출할까?</em></h1><p>한 판에 한 가지 전투 방식. 정예에서 각성하고,<br>내 빌드에 필요한 보상을 골라 보스를 돌파하자.</p><div id="path-picker" class="path-picker" aria-label="이번 판의 전투 방식"></div><p id="path-promise" class="path-promise"></p><div class="seed-entry"><label for="seed-input">맵 시드</label><input id="seed-input" maxlength="48" placeholder="비워 두면 새로운 맵" autocomplete="off" spellcheck="false"></div><button id="start-button" class="primary" disabled>에셋 준비 중…</button><small id="load-status" role="status">원작 모션을 불러오고 있어요.</small><div class="start-tags"><span>광전사 · 방패병 · 주술사 · 드론</span><span>선택형 전투 계약</span><span>28종 아이템 · 6종 각인</span></div></div>
+        <div class="start-copy"><span class="eyebrow">TRICKCAL FAN GAME · BUILD YOUR RUN</span><h1>어떤 새총으로<br><em>탈출할까?</em></h1><p>노란 공격 예고를 피하고, 초록 빈틈에 반격.<br>연결된 전장에서 적의 포위망을 돌파하자.</p><div id="path-picker" class="path-picker" aria-label="이번 판의 전투 방식"></div><p id="path-promise" class="path-promise"></p><div class="seed-entry"><label for="seed-input">맵 시드</label><input id="seed-input" maxlength="48" placeholder="비워 두면 새로운 맵" autocomplete="off" spellcheck="false"></div><button id="start-button" class="primary" disabled>에셋 준비 중…</button><small id="load-status" role="status">원작 모션을 불러오고 있어요.</small><div class="start-tags"><span>광전사 · 방패병 · 주술사 · 드론</span><span>선택형 전투 계약</span><span>28종 아이템 · 6종 각인</span></div></div>
         <div class="start-art" aria-hidden="true"><div class="halo"></div><img src="./assets/butter-original36/poster.png" alt=""><span>BUTTER<br><small>새총을 든 말랑이</small></span></div>
       </div>
       <div id="pause-screen" class="overlay modal" hidden><div class="panel"><span class="eyebrow">TAKE A BREATH</span><h2>잠깐 쉬어 가자</h2><p>A D 이동 · Space 2단 점프<br>J 공격 (차지형은 떼서 발사) · Shift 대시 · E 왕새총<br>F / ↓ 상호작용 · M 지도 · I 가방 · B 상점<br>대시로 실제 공격 회피 → 다음 사격 강화 추적탄</p><button id="resume-button" class="primary">계속하기</button><button class="replay secondary">같은 시드로 재도전</button><button class="restart secondary">새 맵으로 시작</button></div></div>
@@ -61,6 +61,6 @@
   <script>
     if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then(rs=>Promise.all(rs.map(r=>r.unregister()))).catch(()=>{});
   </script>
-  <script type="module" src="./platformer.js?v=46"></script>
+  <script type="module" src="./platformer.js?v=47"></script>
 </body>
 </html>

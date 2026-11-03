@@ -1,5 +1,26 @@
 # Project instructions
 
+## v47 combat spaces and committed attacks (supersedes v45/46 geometry)
+
+The user rejected v46 as boring. Do not equate extra build choices, tests or a
+bot win with fun. The reported barrage seed is 1793686699326: formerly holding
+J for20s killed2 enemies at full HP on isolated platforms. WORLD_VERSION=47:
+combat/elite rooms now have a1450..1940px connected floor and four randomized
+optional-ledge arrangements. At least4 enemies share the floor; mixed rosters,
+safe spawns, reachable raised support enemies and the existing21-depth DAG stay.
+Events/bosses keep their earlier geometry; player physics and art are unchanged.
+`platformer-threats.js` owns shared windups, attack reservations and committed
+aim. Arena tells start on screen, >=.28s apart, max2 concurrent windups. Do not
+cancel an already-started tell when the player leaves. Melee facing and archer
+aim lock when their tell starts; front-only melee must miss a player behind.
+Rusher exposes after landing, fan/guard/archer after release, drone in recovery.
+An exposed primary hit deals150% damage; skills do not get this bonus. Keep the
+green label/guard shield and actual window consistent. Drone detection/flight
+lane/locked muzzle rules remain. Initial first-room drones start outside780px.
+Run encounters47 unit/browser plus ALL previous checks. The new browser separates
+the real-input skirmish from its explicit guard fixture; neither proves fun.
+See docs/encounters47.md. Preserve the unrelated untracked chibi release source.
+
 ## v46 coherent run paths
 
 Product runs select one immutable ricochet/barrage/boulder path before starting.

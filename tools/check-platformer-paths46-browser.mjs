@@ -30,7 +30,7 @@ try{
     console.log(JSON.stringify({style,frames}));
   }
   // UI-only fixture: verify irreversible reward choice and the following item screen.
-  await page.evaluate(()=>{const g=window.__platformer37.game;g.phase='playing';g.room.type='elite';g.room.enemies.forEach(e=>e.hp=0);});
+  await page.evaluate(()=>{const api=window.__platformer37;api.start('UI-AWAKENING');const g=api.game;g.phase='playing';g.room.type='elite';g.room.enemies.forEach(e=>e.hp=0);});
   await page.waitForSelector('[data-awakening="echo"]');assert.equal(await page.locator('#reward-gold').isVisible(),false);assert.equal(await page.locator('#reward-reroll').isVisible(),false);
   await page.screenshot({path:'/tmp/paths46-awakening.png'});await page.locator('[data-awakening="echo"]').click();assert.equal(await page.evaluate(()=>window.__platformer37.game.stats.awakening),'echo');
   await page.keyboard.press('i');assert.match(await page.locator('#build-path').innerText(),/왕짱돌/);await page.keyboard.press('i');

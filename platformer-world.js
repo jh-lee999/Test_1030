@@ -1,7 +1,7 @@
 import {PHYSICS,approach,landBody} from './platformer-physics.js?v=38';
 import {ENEMY_TYPES,ENCOUNTERS} from './platformer-enemies.js?v=43';
 
-export const WORLD_VERSION=45,ROOMS_PER_ACT=7,STAGES=21,FLOOR=634;
+export const WORLD_VERSION=47,ROOMS_PER_ACT=7,STAGES=21,FLOOR=634;
 export const ACTS=[
   {name:'뒤틀린 숲',biomes:['grove','canopy'],boss:'숲길의 문지기',rule:'근접 돌진 · 발판을 오가며 거리 확보',color:'#b7d287'},
   {name:'잊힌 회랑',biomes:['ruins'],boss:'회랑의 저격수',rule:'교차사격 · 예고된 마력 지대 피하기',color:'#9dbce5'},
@@ -103,7 +103,20 @@ function buildRoom(node,attempt=0,simple=false){
   const rng=seededRandom(`${node.seed}:layout:${attempt}`),profile=BIOMES[node.biome],event=['rest','treasure','shop'].includes(node.type),boss=node.type==='boss';
   const platforms=[],add=(x,y,w,ground=false,optional=false)=>{const p={id:`p${platforms.length}`,x:Math.round(x),y:Math.round(y),w:Math.round(w),ground,optional,material:profile.material};platforms.push(p);return p;};
   const first=add(0,FLOOR,480,true),main=[first];
+  const arena=!event&&!boss?{layout:integer(rng,0,3)}:null;
   if(boss){first.w=integer(rng,1850,2250);main.push(first);add(360,530,240);add(first.w-650,530,250);add(430,430,220);}
+  else if(arena){
+    // A connected fighting floor, not a procession of isolated shooting islands.
+    first.w=integer(rng,1450,1940);
+    const count=simple?2:integer(rng,2,4);
+    for(let i=0;i<count;i++){
+      const x=360+i*(first.w-650)/count+integer(rng,-20,25),y=FLOOR-integer(rng,92,106),w=integer(rng,180,260);
+      const ledge=add(x,y,w,false,true);
+      if(!simple&&(arena.layout===1||arena.layout===3&&i%2===0||arena.layout===2&&i===1))add(x+20,y-integer(rng,92,105),Math.max(150,w-30),false,true);
+      // The floor is the primary route. Every raised ledge remains optional.
+      if(arena.layout===0&&i===0)ledge.w+=60;
+    }
+  }
   else{
     const count=event?1:integer(rng,4,6);
     for(let i=0;i<count;i++){
@@ -121,15 +134,24 @@ function buildRoom(node,attempt=0,simple=false){
   const addEnemy=(type,p,offset=0)=>{const elite=node.type==='elite',profile=ENEMY_TYPES[type],hp=Math.round((profile.hp+node.depth*4)*(elite?1.35:1)),w=profile.w;
     enemies.push({id:enemies.length,type,x:clamp(p.x+p.w*(.4+rng()*.2)+offset,p.x+w/2+12,p.x+p.w-w/2-12),y:p.y,home:p,hp,maxHp:hp,h:profile.h,w,facing:-1,vx:0,clock:rng()*4,mode:'idle',timer:0,cooldown:.65+rng()*.7,flash:0,death:0,attackId:0});};
   if(boss){addEnemy(act===0?'fan':act===1?'archer':'ghost',first);const e=enemies[0];Object.assign(e,{x:width*.72,boss:true,hp:[360,720,1400][act],maxHp:[360,720,1400][act],h:act===2?148:126,w:act===2?126:72});}
-  else if(!event){let group=0;for(const p of main.slice(1,-1)){if(group<4||rng()<.8){addEnemy(encounter.roster[group%encounter.roster.length],p);if(node.type==='elite'&&group%2===1)addEnemy(group%3?'drone':'caster',p,50);}group++;}for(const p of platforms.filter(p=>p.optional))if(rng()<.65)addEnemy(rng()<.5?'caster':'archer',p);}
+  else if(arena){
+    const roster=encounter.roster.slice(0,4),front=550;
+    for(let i=0;i<roster.length;i++){addEnemy(roster[i],first);enemies.at(-1).x=front+i*(width-front-220)/roster.length+integer(rng,-20,20);if(roster[i]==='drone'&&local===0)enemies.at(-1).x=Math.max(enemies.at(-1).x,spawn.x+820);}
+    const supports=platforms.filter(p=>p.optional&&p.x+p.w*.5>520);
+    const count=node.type==='elite'?3:act===0?1:2;
+    for(let i=0;i<count;i++){const p=supports[(i+arena.layout)%supports.length]||first;addEnemy(i%2?'archer':'caster',p);}
+    if(node.type==='elite'){addEnemy('rusher',first);enemies.at(-1).x=width-300;}
+  }
   for(const e of enemies){e.act=act;e.veteran=!boss&&(node.type==='elite'||act===2);}
-  const hazards=!event&&act>0?main.slice(1,-1).filter((p,i)=>i%2===0).map(p=>({x:p.x+p.w*.5,y:p.y,w:Math.min(125,p.w*.55),period:act===1?4.5:3.6,offset:rng()*2,clock:0})):[];
+  if(arena)for(const e of enemies)e.cooldown=1.2+(e.id%3)*.28;
+  const hazardFloors=arena?[{x:width*.43,y:FLOOR,w:210},{x:width*.72,y:FLOOR,w:210}]:main.slice(1,-1).filter((p,i)=>i%2===0);
+  const hazards=!event&&act>0?hazardFloors.map(p=>({x:p.x+p.w*.5,y:p.y,w:Math.min(125,p.w*.55),period:act===1?4.5:3.6,offset:rng()*2,clock:0})):[];
   if(!boss)for(const p of platforms.slice(1,-1))if(rng()<.6||p.optional)pickups.push({x:p.x+30,y:p.y-26,platformId:p.id,kind:rng()<.16?'heart':'coin',taken:false});
   const shrinePlatform=main[Math.floor(main.length/2)],shrine=['rest','treasure'].includes(node.type)?{kind:node.type,x:shrinePlatform.x+shrinePlatform.w/2,y:shrinePlatform.y,platformId:shrinePlatform.id,used:false}:null;
   const merchantPlatform=node.type==='shop'?shrinePlatform:local===0?last:null;
   const merchant=merchantPlatform?{x:node.type==='shop'?merchantPlatform.x+merchantPlatform.w/2:exit.x-145,y:merchantPlatform.y,platformId:merchantPlatform.id}:null;
   const decorations=platforms.map(p=>({kind:profile.prop,x:p.x+Math.min(p.w-25,integer(rng,25,90)),y:p.y,variant:integer(rng,0,3)}));
-  return{nodeId:node.id,index:node.depth,act,local,encounter:event||boss?null:encounter,marks:[],rewardKind:node.rewardKind||'item',hazards,type:node.type,biome:node.biome,seed:node.seed,width,platforms,spawn,enemies,pickups,exit,shrine,merchant,decorations,cleared:event,rewardTaken:node.type==='shop',background:profile.background,title:`${ACTS[act].name} · ${boss?ACTS[act].boss:event?ROOM_TYPES[node.type].name:encounter.name}`,generation:{attempt,fallback:simple}};
+  return{nodeId:node.id,index:node.depth,act,local,arena,encounter:event||boss?null:encounter,marks:[],rewardKind:node.rewardKind||'item',hazards,type:node.type,biome:node.biome,seed:node.seed,width,platforms,spawn,enemies,pickups,exit,shrine,merchant,decorations,cleared:event,rewardTaken:node.type==='shop',background:profile.background,title:`${ACTS[act].name} · ${boss?ACTS[act].boss:event?ROOM_TYPES[node.type].name:encounter.name}`,generation:{attempt,fallback:simple}};
 }
 export function generateRoom(node){
   for(let attempt=0;attempt<8;attempt++){const room=buildRoom(node,attempt),validation=validateRoom(room);if(validation.valid){room.navigation=validation;return room;}}

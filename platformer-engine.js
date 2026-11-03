@@ -3,8 +3,9 @@ import {PATHS,AWAKENINGS,skillCost,isStyle} from './platformer-paths.js?v=46';
 import {CONTRACTS,HEAL_PRICE,BAG_PRICE,createEconomy,createMarket,marketStock,offerPrice,salePrice,shopRerollCost,rollSealedBag} from './platformer-economy.js?v=46';
 import {advanceButterGait,butterMuzzleOffset,butterReleasePoint} from './butter-original-motion.js';
 import {PHYSICS,approach,landBody} from './platformer-physics.js?v=38';
-import {updateDrone} from './platformer-drone.js?v=44';
-import {FLOOR,STAGES,BIOMES,generateWorld,generateRoom,seedNumber,seededRandom} from './platformer-world.js?v=45';
+import {updateDrone} from './platformer-drone.js?v=47';
+import {reserveEnemyAttack,lockEnemyAttack,exposeEnemy} from './platformer-threats.js?v=47';
+import {FLOOR,STAGES,BIOMES,generateWorld,generateRoom,seedNumber,seededRandom} from './platformer-world.js?v=47';
 export {FLOOR,STAGES,seededRandom,landBody};
 
 export const VIEW={width:1280,height:720},HERO_SIZE=92;
@@ -23,7 +24,7 @@ export function makeRoom(index,random){
 }
 export function createGame(seed=Date.now(),style=null){
   const seedLabel=String(seed).trim().slice(0,48)||'0',root=seedNumber(seedLabel),random=seededRandom(`${root}:combat`),rewardRandom=seededRandom(`${root}:loot`),shopRandom=seededRandom(`${root}:shop`),stats=createBuildState(style),world=generateWorld(root),room=generateRoom(world.nodes[0]);
-  const game={seed:root,seedLabel,random,rewardRandom,shopRandom,world,currentNodeId:world.startId,rooms:{[world.startId]:room},stats,room,phase:'playing',time:0,elapsed:0,coins:0,shotsFired:0,lowerProcs:0,buildRevision:0,lastPickup:'',projectiles:[],effects:[],boulders:[],camera:0,cameraY:0,shake:0,hitStop:0,previous:{},choices:[],notice:'',noticeTime:0,roomIntro:3};
+  const game={seed:root,seedLabel,random,rewardRandom,shopRandom,world,currentNodeId:world.startId,rooms:{[world.startId]:room},stats,room,phase:'playing',time:0,elapsed:0,coins:0,shotsFired:0,lowerProcs:0,buildRevision:0,lastPickup:'',projectiles:[],effects:[],boulders:[],camera:0,cameraY:0,shake:0,hitStop:0,previous:{},choices:[],notice:'',noticeTime:0,roomIntro:1.4};
   game.player={x:150,y:FLOOR,vx:0,vy:0,w:32,h:78,facing:1,grounded:true,jumps:0,coyote:.1,jumpBuffer:0,dash:0,dashCooldown:0,dashHits:[],shield:0,lowerDryShots:0,invulnerable:0,skillTime:0,skillCooldown:0,attackCooldown:0,action:null,gait:{phase:0,amount:0,clock:0}};
   game.checkpoint={...room.spawn};
   Object.assign(game.player,{focus:isStyle(stats)?25:0,heat:0,overheated:false,charging:false,chargeTime:0,lastFire:-10});
@@ -34,7 +35,9 @@ export function notifyGame(g,text){g.notice=text;g.noticeTime=2.6;}
 function sound(g,type){g.soundEvents??=[];if(g.soundEvents.length<32)g.soundEvents.push(type);}
 function effect(g,type,x,y,extra={}){g.effects.push({type,x,y,time:0,duration:type==='text'?.7:.32,...extra});}
 export function hitEnemy(g,e,damage,force=0,{critical=false,direct=true,guardBreak=false,skill=false,focusGain=4}={}){
-  if(e.type==='guard'&&e.mode!=='attack'&&force*e.facing<0&&direct&&!guardBreak){damage*=.25;effect(g,'text',e.x,e.y-e.h-20,{text:'방어',color:'#a4e5ff'});force*=.15;}
+  const exposed=e.exposedUntil>g.time;
+  if(exposed&&direct&&!skill){damage*=1.5;effect(g,'text',e.x,e.y-e.h-24,{text:'빈틈!',color:'#b9efba'});}
+  if(e.type==='guard'&&e.mode!=='attack'&&!exposed&&force*e.facing<0&&direct&&!guardBreak){damage*=.25;effect(g,'text',e.x,e.y-e.h-20,{text:'방어',color:'#a4e5ff'});force*=.15;}
   if(e.hp<=0)return;const dealt=Math.min(e.hp,damage);e.hp=Math.max(0,e.hp-damage);e.flash=.12;
   const roaming=e.type==='drone'||e.type==='rusher';
   e.x=roaming?clamp(e.x+force,e.w/2,g.room.width-e.w/2):clamp(e.x+force,e.home.x+e.w/2,e.home.x+e.home.w-e.w/2);
@@ -129,16 +132,18 @@ function updateEnemies(g,dt){
     if(e.hitPause>0){e.hitPause=Math.max(0,e.hitPause-dt);continue;}
     if(e.burnTime>0){e.burnTime=Math.max(0,e.burnTime-dt);e.burnTick-=dt;if(e.burnTick<=0){e.burnTick+=.5;hitEnemy(g,e,e.burnDPS*.5,0,{direct:false});if(e.hp<=0)continue;}}
     e.cooldown=Math.max(0,e.cooldown-dt);const dx=p.x-e.x,dy=p.y-e.y;
-    if(e.type!=='drone'&&(e.type!=='guard'||(e.mode!=='attack'&&!(e.turnCooldown>0)))){e.facing=dx>=0?1:-1;if(e.type==='guard')e.turnCooldown=.8;}
+    if(e.mode==='attack'&&e.attackFacing)e.facing=e.attackFacing;
+    else if(e.type!=='drone'&&(e.type!=='guard'||(e.mode!=='attack'&&!(e.turnCooldown>0)))){e.facing=dx>=0?1:-1;if(e.type==='guard')e.turnCooldown=.8;}
     e.turnCooldown=Math.max(0,(e.turnCooldown||0)-dt);
     if(e.boss){updateGuardian(g,e,dx,dy,dt);continue;}
     if(['rusher','guard','caster','drone'].includes(e.type)){updateSpecialEnemy(g,e,dx,dy,dt);continue;}
     if(e.mode==='attack'){
       const before=e.timer;e.timer+=dt;const windup=e.type==='ghost'?.75:e.type==='archer'?.55:.46;
       if(before<windup&&e.timer>=windup){
-        if(e.type==='fan'){if(Math.abs(dx)<98&&Math.abs(dy)<70)hurtPlayer(g,10,e.facing);effect(g,'slash',e.x+e.facing*40,e.y-45,{dir:e.facing});}
+        exposeEnemy(g,e);
+        if(e.type==='fan'){if(Math.abs(dx)<98&&Math.abs(dy)<70&&dx*e.facing>=-p.w/2)hurtPlayer(g,10,e.facing);effect(g,'slash',e.x+e.facing*40,e.y-45,{dir:e.facing});}
         else{
-          const count=e.type==='ghost'?7:e.veteran?3:1,speed=e.type==='ghost'?270:290,angle=Math.atan2(p.y-42-(e.y-e.h*.6),dx);
+          const count=e.type==='ghost'?7:e.veteran?3:1,speed=e.type==='ghost'?270:290,angle=e.aimAngle??Math.atan2(p.y-42-(e.y-e.h*.6),dx);
           for(let i=0;i<count;i++){const a=angle+(i-(count-1)/2)*.18;g.projectiles.push({owner:'enemy',x:e.x+e.facing*25,y:e.y-e.h*.6,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,r:e.type==='ghost'?11:8,life:4,damage:e.type==='ghost'?12:8});}
           if(e.type==='ghost'){g.shake=.1;effect(g,'burst',e.x,e.y-50,{color:'#dfb8ff'});}
         }
@@ -147,7 +152,7 @@ function updateEnemies(g,dt){
       continue;
     }
     const range=e.type==='ghost'?950:e.type==='archer'?650:85;
-    if(Math.abs(dx)<range&&Math.abs(dy)<(e.type==='fan'?80:420)&&e.cooldown===0){e.mode='attack';e.timer=0;e.attackId++;continue;}
+    if(Math.abs(dx)<range&&Math.abs(dy)<(e.type==='fan'?80:420)&&e.cooldown===0&&reserveEnemyAttack(g,e)){lockEnemyAttack(g,e);continue;}
     const chasing=(e.type==='fan'&&Math.abs(dx)<800&&Math.abs(dx)>60)||(e.type==='ghost'&&Math.abs(dx)>480);
     e.vx=chasing?e.facing*(e.type==='ghost'?68:110+(e.act===0?20:0)+(e.veteran?35:0)):0;
     const old=e.x;e.x=clamp(e.x+e.vx*dt,e.home.x+e.w/2+12,e.home.x+e.home.w-e.w/2-12);e.mode=Math.abs(e.x-old)>.01?'walk':'idle';
@@ -157,7 +162,7 @@ function updateEnemies(g,dt){
 function enemyShot(g,e,angle,speed=280){g.projectiles.push({owner:'enemy',x:e.x,y:e.y-e.h*.55,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,r:9,life:5,damage:10+(e.act||0)*2});}
 function updateSpecialEnemy(g,e,dx,dy,dt){
   const p=g.player;
-  if(e.type==='drone'){updateDrone(g,e,dt,enemyShot);return;}
+  if(e.type==='drone'){updateDrone(g,e,dt,enemyShot,()=>reserveEnemyAttack(g,e));return;}
   if(e.type==='rusher'&&e.mode==='attack'&&e.timer>=.55&&e.chargeFacing)e.facing=e.chargeFacing;
   if(e.mode==='attack'){
     const old=e.timer;e.timer+=dt;
@@ -167,16 +172,17 @@ function updateSpecialEnemy(g,e,dx,dy,dt){
         const oldX=e.x;e.x=clamp(e.x+e.vx*dt,25,g.room.width-25);e.vy=Math.min(900,(e.vy||0)+PHYSICS.gravity*dt);landBody(e,g.room.platforms,dt);
         if(e.grounded)e.home=g.room.platforms.find(v=>v.id===e.platformId)||e.home;
         if(segmentHitsBody(oldX,e.y-45,e.x,e.y-45,p,24))hurtPlayer(g,16+(e.act||0)*2,e.chargeFacing);
+        if(e.grounded&&!e.exposureGranted){e.exposureGranted=true;e.vx=0;exposeEnemy(g,e,.65);}
       }
       if(e.y>FLOOR+220){e.x=e.home.x+e.home.w/2;e.y=e.home.y;e.vy=0;}
-    }else if(e.type==='guard'&&old<.65&&e.timer>=.65){if(Math.abs(dx)<130&&Math.abs(dy)<90)hurtPlayer(g,18,e.facing);effect(g,'slash',e.x+e.facing*55,e.y-35,{dir:e.facing});}
+    }else if(e.type==='guard'&&old<.65&&e.timer>=.65){if(Math.abs(dx)<130&&Math.abs(dy)<90&&dx*e.facing>=-p.w/2)hurtPlayer(g,18,e.facing);effect(g,'slash',e.x+e.facing*55,e.y-35,{dir:e.facing});exposeEnemy(g,e);}
     const recovery=e.type==='rusher'?1.7:e.type==='caster'?1.15:1.05;
     if(e.timer>=recovery){e.mode='idle';e.timer=0;e.cooldown=e.type==='caster'?1.6:e.type==='rusher'?.8:.8;}
     return;
   }
   const range=e.type==='rusher'?650:e.type==='guard'?115:e.type==='caster'?1000:780;
-  if(Math.abs(dx)<range&&Math.abs(dy)<(e.type==='guard'?100:380)&&e.cooldown<=0){
-    e.mode='attack';e.timer=0;e.attackId++;e.aimAngle=Math.atan2(p.y-40-(e.y-e.h*.55),dx);
+  if(Math.abs(dx)<range&&Math.abs(dy)<(e.type==='guard'?100:380)&&e.cooldown<=0&&reserveEnemyAttack(g,e)){
+    lockEnemyAttack(g,e);
     if(e.type==='caster'){g.room.marks??=[];g.room.marks.push({owner:e.id,x:p.x,y:p.y,time:0,delay:1,r:70,damage:15+(e.act||0)*2});}
     return;
   }
@@ -396,7 +402,7 @@ export function chooseRoute(g,id){
   const room=g.rooms[id]??generateRoom(node);g.rooms[id]=room;g.room=room;g.currentNodeId=id;node.visited=true;
   activateContract(g);
   Object.assign(g.player,{x:room.spawn.x,y:room.spawn.y,vx:0,vy:0,action:null,charging:false,chargeTime:0,grounded:true,jumps:0,coyote:.1,jumpBuffer:0,dash:0,dashHits:[],shield:g.stats.shieldMax,skillTime:0,counterCharge:0,invulnerable:1});
-  g.checkpoint={...room.spawn};g.projectiles=[];g.boulders=[];g.effects=[];g.camera=0;g.cameraY=0;g.roomIntro=2.6;g.phase='playing';g.previous={};g.noticeTime=0;return true;
+  g.checkpoint={...room.spawn};g.projectiles=[];g.boulders=[];g.effects=[];g.camera=0;g.cameraY=0;g.roomIntro=1.4;g.phase='playing';g.previous={};g.noticeTime=0;return true;
 }
 function offerReward(g){
   if(isStyle(g.stats)&&!g.stats.awakening&&['elite','boss'].includes(g.room.type)){g.rewardMode='awakening';g.choices=Object.keys(AWAKENINGS);}

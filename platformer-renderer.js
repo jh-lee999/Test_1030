@@ -1,7 +1,8 @@
-import {VIEW,FLOOR,HERO_SIZE,STAGES,heroPose,clamp} from './platformer-engine.js?v=46';
-import {BIOMES,ROOM_TYPES,ACTS} from './platformer-world.js?v=45';
+import {VIEW,FLOOR,HERO_SIZE,STAGES,heroPose,clamp} from './platformer-engine.js?v=47';
+import {BIOMES,ROOM_TYPES,ACTS} from './platformer-world.js?v=47';
 import {drawButterMotion,selectButterFrame} from './butter-original-motion.js';
 import {STAGE_ART} from './platformer-art.js?v=43';
+import {attackWindup} from './platformer-threats.js?v=47';
 const TAU=Math.PI*2;
 function ellipse(ctx,x,y,rx,ry,color){ctx.fillStyle=color;ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,TAU);ctx.fill();}
 function text(ctx,value,x,y,size=16,color='#fff1cd',align='center'){ctx.fillStyle=color;ctx.font=`700 ${size}px system-ui,sans-serif`;ctx.textAlign=align;ctx.fillText(value,x,y);}
@@ -22,7 +23,7 @@ function roomOverview(ctx,g){
   if(g.room.merchant)ellipse(ctx,mapX(g.room.merchant.x),mapY(g.room.merchant.y)-7,4,4,'#ffd27b');
   ellipse(ctx,mapX(g.room.exit.x),mapY(g.room.exit.y)-4,3,3,'#cfc1ef');ellipse(ctx,mapX(g.player.x),mapY(g.player.y)-4,3,3,'#ffed9d');
 }
-function monster(ctx,e,images){
+function monster(ctx,e,images,time=0){
   const source=STAGE_ART.monsters[e.type],key=e.hp<=0?'die':e.mode==='attack'?'attack':e.mode==='walk'?'walk':'idle';
   let clip=source.clips[key],image=images.monsters[e.type][key];
   const phase=key==='die'?clamp(e.death/clip.duration,0,1):key==='attack'?clamp(e.timer/(e.type==='ghost'?1.17:e.type==='archer'?.97:.88),0,1):(e.clock/clip.duration)%1;
@@ -37,19 +38,22 @@ function monster(ctx,e,images){
   if(image?.naturalWidth)ctx.drawImage(image,frame%clip.columns*clip.width,Math.floor(frame/clip.columns)*clip.height,clip.width,clip.height,-clip.origin[0]*scale,-clip.origin[1]*scale,clip.width*scale,clip.height*scale);
   else{ellipse(ctx,0,-35,25,35,'#ac9cb8');text(ctx,'?',0,-27,24);}
   ctx.restore();
-  if(e.hp>0&&['rusher','guard','caster','drone'].includes(e.type)){
-    const label={rusher:'도약 돌진',guard:e.mode==='attack'?'방패 빈틈':'정면 방어',caster:'바닥 저주',drone:e.droneState==='aim'?'조준 고정':e.droneState==='recover'?'사격 후 빈틈':'거리 확보'}[e.type];
-    rounded(ctx,e.x-35,e.y-e.h-43,70,19,4,'#202b28dd');text(ctx,label,e.x,e.y-e.h-29,10,e.type==='guard'?'#a5e1f3':'#ffd5a7');
-    if(e.type==='guard'&&e.mode!=='attack'){ctx.strokeStyle='#a5e1f3';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(e.x+e.facing*34,e.y-72);ctx.lineTo(e.x+e.facing*38,e.y-22);ctx.stroke();}
+  const exposed=e.exposedUntil>time;
+  if(e.hp>0&&(exposed||['rusher','guard','caster','drone'].includes(e.type))){
+    const label=exposed?'반격 기회 ×1.5':{rusher:'도약 돌진',guard:e.mode==='attack'?'방패 빈틈':'정면 방어',caster:'바닥 저주',drone:e.droneState==='aim'?'조준 고정':'거리 확보'}[e.type];
+    rounded(ctx,e.x-45,e.y-e.h-43,90,19,4,'#202b28dd');text(ctx,label,e.x,e.y-e.h-29,10,exposed?'#bbefb6':e.type==='guard'?'#a5e1f3':'#ffd5a7');
+    if(e.type==='guard'&&e.mode!=='attack'&&!exposed){ctx.strokeStyle='#a5e1f3';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(e.x+e.facing*34,e.y-72);ctx.lineTo(e.x+e.facing*38,e.y-22);ctx.stroke();}
   }
   if(e.hp>0&&e.burnTime>0){for(let i=0;i<3;i++){const rise=(e.clock*24+i*13)%40;ellipse(ctx,e.x-14+i*14,e.y-15-rise,3,6,'#ffc080bb');}}
   if(e.hp>0&&e.hp<e.maxHp&&e.type!=='ghost'&&!e.boss){rounded(ctx,e.x-24,e.y-e.h-22,48,5,2,'#1c2924bb');rounded(ctx,e.x-24,e.y-e.h-22,48*e.hp/e.maxHp,5,2,'#f3afa1');}
   if(e.mode==='attack'&&e.hp>0){
-    const release=e.boss?(e.windup??.95):e.type==='rusher'?.55:e.type==='guard'?.65:e.type==='caster'?1:e.type==='drone'?.7:e.type==='ghost'?.75:e.type==='archer'?.55:.46;
+    const release=attackWindup(e);
     if(e.timer<release){const amount=e.timer/release;ctx.strokeStyle='#ffbd83';ctx.lineWidth=3;ctx.beginPath();ctx.arc(e.x,e.y-e.h-10,10, -Math.PI/2,-Math.PI/2+TAU*amount);ctx.stroke();text(ctx,'!',e.x,e.y-e.h-5,13,'#ffe3a1');
       if(e.type==='fan'){ctx.fillStyle='#fa895343';ctx.fillRect(e.facing>0?e.x:e.x-95,e.y-5,95,5);}
       if(e.type==='rusher'){ctx.save();ctx.setLineDash([6,6]);ctx.strokeStyle='#ffbf83';ctx.beginPath();ctx.moveTo(e.x,e.y-12);ctx.quadraticCurveTo(e.x+e.facing*140,e.y-150,e.x+e.facing*280,e.y);ctx.stroke();ctx.restore();}
       if(e.type==='drone'&&e.aimAngle!==undefined){ctx.save();ctx.setLineDash([5,7]);ctx.strokeStyle='#ffacb688';ctx.beginPath();ctx.moveTo(e.x,e.y-e.h*.55);ctx.lineTo(e.x+Math.cos(e.aimAngle)*360,e.y-e.h*.55+Math.sin(e.aimAngle)*360);ctx.stroke();ctx.restore();}
+      if(e.type==='archer'&&e.aimAngle!==undefined){const x=e.x+e.facing*25,y=e.y-e.h*.6;ctx.save();ctx.setLineDash([9,6]);ctx.strokeStyle='#ffbf89bb';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.cos(e.aimAngle)*650,y+Math.sin(e.aimAngle)*650);ctx.stroke();ctx.restore();}
+      if(e.type==='guard'){ctx.fillStyle='#f0a87544';ctx.fillRect(e.facing>0?e.x:e.x-130,e.y-10,130,10);}
     }
   }
 }
@@ -108,7 +112,7 @@ export function renderGame(ctx,g,images,{started=true,reducedMotion=false}={}){
   ctx.save();ctx.translate(exit.x,exit.y);ctx.fillStyle='#263d30';ctx.beginPath();ctx.roundRect(-44,-148,88,148,[44,44,2,2]);ctx.fill();ctx.lineWidth=7;ctx.strokeStyle=open?'#e5d891':'#6e8667';ctx.stroke();
   if(open){const aura=ctx.createRadialGradient(0,-75,5,0,-75,90);aura.addColorStop(0,'#fff6b1bb');aura.addColorStop(1,'#b3e19000');ctx.fillStyle=aura;ctx.fillRect(-85,-165,170,170);text(ctx,'F / ↓',0,-65,16);text(ctx,room.index===STAGES-1?'탈출':room.type==='boss'?'다음 지역':'경로 선택',0,-40,13);}
   else{text(ctx,'봉인',0,-65,16,'#a9bb99');text(ctx,room.shrine?'쉼터 / 보물 이용':'적을 모두 처치',0,-40,11,'#a9bb99');}ctx.restore();
-  for(const e of room.enemies)if(e.x>g.camera-220&&e.x<g.camera+W+220)monster(ctx,e,images);
+  for(const e of room.enemies)if(e.x>g.camera-220&&e.x<g.camera+W+220)monster(ctx,e,images,g.time);
   for(const b of g.boulders){ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.angle);ctx.shadowColor='#ffdf92';ctx.shadowBlur=18;ctx.fillStyle='#9c8060';ctx.strokeStyle='#493e31';ctx.lineWidth=5;ctx.beginPath();for(let i=0;i<9;i++){const angle=i/9*TAU,r=b.r*(.94+.08*Math.sin(i*8));if(!i)ctx.moveTo(Math.cos(angle)*r,Math.sin(angle)*r);else ctx.lineTo(Math.cos(angle)*r,Math.sin(angle)*r);}ctx.closePath();ctx.fill();ctx.stroke();ctx.shadowBlur=0;ctx.strokeStyle='#c2a77d';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-b.r*.5,-b.r*.4);ctx.lineTo(b.r*.05,-b.r*.65);ctx.lineTo(b.r*.5,-b.r*.2);ctx.stroke();ctx.restore();}
   const ground=room.platforms.filter(q=>p.x>=q.x&&p.x<=q.x+q.w&&q.y>=p.y).sort((a,b)=>a.y-b.y)[0];
   if(ground){const scale=clamp(1-(ground.y-p.y)/500,.3,1);ellipse(ctx,p.x,ground.y+2,29*scale,6*scale,'#1c281b55');}

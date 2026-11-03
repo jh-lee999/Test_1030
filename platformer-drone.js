@@ -2,7 +2,7 @@ import {approach} from './platformer-physics.js?v=38';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 export const DRONE={wakeRange:780,loseRange:1150,minRange:180,maxRange:340,windup:.7,recovery:.45};
 
-export function updateDrone(g,e,dt,shoot){
+export function updateDrone(g,e,dt,shoot,reserve=()=>true){
   const p=g.player,dx=p.x-e.x;
   if(g.room.cleared)return;
   // A distant drone doesn't cross the entire room before the player sees it.
@@ -16,7 +16,7 @@ export function updateDrone(g,e,dt,shoot){
     e.vx=e.vy=0;const before=e.timer;e.timer+=dt;
     if(before<DRONE.windup&&e.timer>=DRONE.windup){
       for(const spread of [-.12,.12])shoot(g,e,e.aimAngle+spread,340);
-      e.droneState='recover';
+      e.droneState='recover';e.exposedUntil=g.time+DRONE.recovery;
     }
     if(e.timer>=DRONE.windup+DRONE.recovery){e.mode='idle';e.timer=0;e.cooldown=1.1;e.droneState='reposition';}
     return;
@@ -34,7 +34,7 @@ export function updateDrone(g,e,dt,shoot){
   e.x=clamp(e.x+e.vx*dt,30,g.room.width-30);e.y=clamp(e.y+e.vy*dt,200,634);
   e.mode=Math.abs(e.vx)>12||Math.abs(e.vy)>12?'walk':'idle';e.droneState=e.mode==='walk'?'approach':'hold';
   const aimY=p.y-40,muzzleY=e.y-e.h*.55;
-  if(distance<480&&Math.abs(aimY-muzzleY)<160&&e.cooldown<=0&&Math.abs(e.vx)<35&&Math.abs(e.vy)<25){
+  if(distance<480&&Math.abs(aimY-muzzleY)<160&&e.cooldown<=0&&Math.abs(e.vx)<35&&Math.abs(e.vy)<25&&reserve()){
     e.mode='attack';e.droneState='aim';e.timer=0;e.attackId++;e.vx=e.vy=0;
     e.aimTarget={x:p.x,y:aimY};e.aimAngle=Math.atan2(aimY-muzzleY,p.x-e.x);
   }

@@ -42,6 +42,7 @@ jobs:
           node --check platformer-engine.js
           node --check platformer-build.js
           node --check platformer-paths.js
+          node --check platformer-threats.js
           node --check platformer-economy.js
           node --check platformer-enemies.js
           node --check platformer-drone.js
