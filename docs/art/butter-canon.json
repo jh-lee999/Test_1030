@@ -1,5 +1,15 @@
 {
-  "version": 5,
+  "version": 6,
+  "pinballDecision48": {
+    "date": "2026-11-03",
+    "genre": "Small slingshot pinball roguelike prototype",
+    "choice": "일단 수정해보자",
+    "entry": "bonk.js",
+    "renderer": "bonk-renderer.js",
+    "archive": "side-scroll47.html",
+    "art": "Unchanged original single-view whole poses; a separate procedural table launcher displays aim",
+    "anchor": {"x":150,"y":875,"size":78}
+  },
   "platformerDecision37": {
     "date": "2026-11-03",
     "genre": "Skul-like side-scrolling platform action, not belt-scroll",

@@ -4,7 +4,7 @@ const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTA
 const root=process.argv[2]||'http://127.0.0.1:4186',errors=[];
 try{
   const page=await browser.newPage({viewport:{width:1440,height:1000}});page.on('pageerror',e=>errors.push(e.message));
-  await page.goto(root+'/?test=1&path=classic&seed=1793682210169');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start-button').click();
+  await page.goto(root+'/side-scroll47.html?test=1&path=classic&seed=1793682210169');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start-button').click();
   const get=()=>page.evaluate(()=>{const g=window.__platformer37.game,e=g.room.enemies.find(e=>e.type==='drone');return{x:e.x,y:e.y,mode:e.mode,timer:e.timer,facing:e.facing,angle:e.aimAngle,active:e.droneActive,attack:e.attackId,playerX:g.player.x};});
   const spawn=await get();await page.evaluate(()=>{const a=window.__platformer37,g=a.game;g.player.invulnerable=999;for(let n=0;n<960;n++)a.tick(g,{});});assert.equal((await get()).x,spawn.x);assert.equal((await get()).attack,0);
   await page.keyboard.down('d');await page.waitForFunction(()=>window.__platformer37.game.player.x>350);await page.keyboard.up('d');

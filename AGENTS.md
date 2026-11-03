@@ -1,5 +1,35 @@
 # Project instructions
 
+## ACTIVE v48: slingshot pinball prototype (user-approved genre change)
+
+The user explicitly accepted the proposed small Butter pinball roguelike after
+rejecting repeated side-scroller improvements. `index.html` now loads bonk.js,
+bonk-engine.js and bonk-renderer.js. The unchanged side-scroller entry is archived
+at side-scroll47.html; all platformer browser checks now target that URL. Earlier
+side-scroller campaign/physics/build requirements below still protect the archive,
+not a demand to force21 rooms or real-time platform movement into the new game.
+
+Current scope: three seeded encounters then one ghost boss,3 normal monster roles,
+8 stackable run upgrades and2 explicit fusion goals. No meta growth. Aiming is
+free; one committed volley resolves before ONE enemy turn. No damage during aim.
+Excess XP queues every level choice; all choices finish before enemy/next phase.
+Walls, round bumpers and enemies use shared reflection equations with <=1/240s
+physics substeps. Low chains use finite level-scaled hops, clear target on impact,
+allow A-B-A and exclude only the immediate victim. All balls expire by6s; recall
+still pays the normal enemy turn. First returning ball sets the next launcher X.
+Split children never split again (64 ball cap). Explosions pay kill XP once.
+King is earned on hits, costs100 at firing, pierces enemies/pegs and scales with
+upper upgrades. Fusion conditions/effects are in bonk-engine.js, not UI-only claims.
+
+Keep original Butter/monster files and the one original camera view unchanged.
+The procedural table launcher shows aim; do not fabricate a rear/up-facing rig.
+HERO_PRESENTATION uses one uniform scale/anchor for idle/shoot/high; full source
+cells must fit. First queue release follows butterReleasePoint. Do not fake
+moving source hands or auto-fit frames. Canon and source bounds still apply.
+Run bonk48 tests/browser plus ALL archived required checks. The aiming solver is
+full-information diagnostic automation, NOT a human playtest or proof of fun.
+See docs/bonk48.md. Preserve the unrelated untracked chibi release WebP.
+
 ## v47 combat spaces and committed attacks (supersedes v45/46 geometry)
 
 The user rejected v46 as boring. Do not equate extra build choices, tests or a

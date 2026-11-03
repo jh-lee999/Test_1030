@@ -4,7 +4,7 @@ const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTA
 const root=process.argv[2]||'http://127.0.0.1:4186',errors=[];
 try{
   const page=await browser.newPage({viewport:{width:1440,height:1000}});page.on('pageerror',e=>errors.push(e.message));
-  await page.goto(root+'/?test=1&path=barrage&seed=1793686699326');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start-button').click();
+  await page.goto(root+'/side-scroll47.html?test=1&path=barrage&seed=1793686699326');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start-button').click();
   const initial=await page.evaluate(()=>{const g=window.__platformer37.game;return {version:g.world.version,width:g.room.width,floor:g.room.platforms[0].w,arena:g.room.arena};});assert.equal(initial.version,47);assert.equal(initial.width,initial.floor);
   // Real keyboard skirmish, without editing position, HP, enemies or resources.
   const frames=[];await page.keyboard.down('d');await page.keyboard.down('j');await page.waitForTimeout(850);await page.keyboard.up('d');

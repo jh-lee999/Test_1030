@@ -4,7 +4,7 @@ const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTA
 const root=process.argv[2]||'http://127.0.0.1:4186',errors=[],external=[];
 const phase=(page,name)=>page.waitForSelector(`body[data-phase="${name}"]`);
 const watch=page=>{page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(!r.url().startsWith(root)&&!r.url().startsWith('data:'))external.push(r.url());});};
-async function ready(page){watch(page);await page.goto(root+'/?test=1&path=classic&seed=MARKET-41');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start-button').click();await phase(page,'playing');}
+async function ready(page){watch(page);await page.goto(root+'/side-scroll47.html?test=1&path=classic&seed=MARKET-41');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start-button').click();await phase(page,'playing');}
 async function merchant(page){await page.evaluate(()=>{const a=window.__platformer37,g=a.game;g.room.enemies.forEach(e=>e.hp=0);g.room.cleared=g.room.rewardTaken=true;Object.assign(g.player,{x:g.room.merchant.x,y:g.room.merchant.y,vx:0,vy:0,grounded:true});g.coins=200;g.stats.hp=20;g.room.shop={stock:[{id:'lower_book',sold:false,sale:true},{id:'lower_book',sold:false},{id:'lower_book',sold:false}],rerolls:0};});}
 try{
   const page=await browser.newPage({viewport:{width:1440,height:1000}});await ready(page);
