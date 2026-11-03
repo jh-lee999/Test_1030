@@ -38,7 +38,7 @@ $('shop-bag').addEventListener('click',()=>{if(buySealedBag(game))drawShop();});
 $('sell-cancel').addEventListener('click',()=>{sellSelection=null;drawShop();});
 $('sell-confirm').addEventListener('click',()=>{if(sellShopItem(game,sellSelection)){sellSelection=null;drawShop();}});
 $('touch-toggle').addEventListener('click',()=>{const show=document.body.classList.toggle('show-touch');$('touch-toggle').setAttribute('aria-pressed',String(show));});
-$('sound-toggle').addEventListener('click',()=>{const enabled=gameAudio.toggle();$('sound-toggle').setAttribute('aria-pressed',String(enabled));$('sound-toggle').textContent=enabled?'소리 켬':'소리 끔';});
+$('sound-toggle').addEventListener('click',()=>{const enabled=gameAudio.toggle();$('sound-toggle').setAttribute('aria-pressed',String(enabled));$('sound-toggle').textContent=enabled?'소리 켬':'소리 끔';if(started&&game.phase==='playing')focusGame();});
 window.addEventListener('keydown',e=>{
   if(['KeyM','KeyI','KeyB','Escape'].includes(e.code)&&started){e.preventDefault();if(e.repeat)return;if(e.code==='KeyM')toggleMap();else if(e.code==='KeyI')toggleBuild();else if(e.code==='KeyB')shop();else if(['build','shop'].includes(game.phase))closeBuild();else game.phase==='map'?toggleMap():game.phase==='paused'?resume():pause();return;}
   if(bindings[e.code]&&started&&game.phase==='playing'&&!(e.target instanceof HTMLButtonElement)){e.preventDefault();keys.add(e.code);if(!e.repeat)pending.add(bindings[e.code]);}
