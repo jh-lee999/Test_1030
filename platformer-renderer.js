@@ -1,4 +1,4 @@
-import {VIEW,FLOOR,HERO_SIZE,STAGES,heroPose,clamp} from './platformer-engine.js?v=45';
+import {VIEW,FLOOR,HERO_SIZE,STAGES,heroPose,clamp} from './platformer-engine.js?v=46';
 import {BIOMES,ROOM_TYPES,ACTS} from './platformer-world.js?v=45';
 import {drawButterMotion,selectButterFrame} from './butter-original-motion.js';
 import {STAGE_ART} from './platformer-art.js?v=43';
@@ -115,11 +115,13 @@ export function renderGame(ctx,g,images,{started=true,reducedMotion=false}={}){
   if(p.skillTime>0){ctx.strokeStyle='#ffeab599';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(p.x,p.y-50,55,64,0,0,TAU);ctx.stroke();}
   if(p.shield>0){ctx.strokeStyle='#b3eafa99';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(p.x,p.y-42,43,54,0,0,TAU);ctx.stroke();}
   if(p.counterCharge>0){ctx.strokeStyle='#c2f6ff';ctx.lineWidth=3;ctx.beginPath();ctx.arc(p.x,p.y-43,51,-Math.PI/2,-Math.PI/2+TAU*p.counterCharge/3);ctx.stroke();text(ctx,'반격',p.x,p.y-106,13,'#d8fbff');}
+  if(p.charging){const charge=clamp(p.chargeTime/.9,0,1);ctx.strokeStyle=charge>=1?'#fff0a6':'#f1cd8b';ctx.lineWidth=4;ctx.beginPath();ctx.arc(p.x,p.y-44,44,-Math.PI/2,-Math.PI/2+TAU*charge);ctx.stroke();text(ctx,charge>=1?'완충! 놓아서 발사':'충전',p.x,p.y-101,12,'#ffe7a9');}
+  if(g.stats.style==='barrage'&&p.heat>30){rounded(ctx,p.x-25,p.y-110,50,5,2,'#252923');rounded(ctx,p.x-25,p.y-110,50*p.heat/100,5,2,p.overheated?'#ff8f88':p.heat>=60?'#ff964f':'#f3bf80');}
   const pose=heroPose(p);ctx.save();ctx.translate(p.x,p.y-HERO_SIZE*.28);if(p.facing>0)ctx.scale(-1,1);
   if(p.invulnerable>0&&Math.floor(time*14)%2===0)ctx.globalAlpha=.45;
   if(p.dash>0){ctx.save();ctx.globalAlpha=.2;ctx.translate(p.facing>0?40:-40,0);drawButterMotion(ctx,images.butter,pose);ctx.restore();}
   if(!drawButterMotion(ctx,images.butter,pose)){ellipse(ctx,0,-25,23,36,'#ecd18e');text(ctx,'버터',0,-20,13,'#52422c');}ctx.restore();
-  for(const b of g.projectiles){const angle=Math.atan2(b.vy,b.vx);ctx.save();ctx.translate(b.x,b.y);ctx.rotate(angle);ctx.strokeStyle=b.owner==='enemy'?'#c6a4e9aa':b.homing?'#b7edffbb':'#ffe8a6bb';ctx.lineWidth=b.r;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-b.r*3,0);ctx.lineTo(0,0);ctx.stroke();ellipse(ctx,0,0,b.r,b.r,b.owner==='enemy'?'#dabcf6':b.homing?'#e1faff':'#b29b78');ellipse(ctx,-2,-2,b.r*.4,b.r*.4,'#fff5da');ctx.restore();}
+  for(const b of g.projectiles){const angle=Math.atan2(b.vy,b.vx);ctx.save();ctx.translate(b.x,b.y);ctx.rotate(angle);ctx.strokeStyle=b.owner==='enemy'?'#c6a4e9aa':b.hot?'#ffb971ee':b.homing?'#b7edffbb':'#ffe8a6bb';ctx.lineWidth=b.r;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-b.r*3,0);ctx.lineTo(0,0);ctx.stroke();ellipse(ctx,0,0,b.r,b.r,b.owner==='enemy'?'#dabcf6':b.hot?'#ffc287':b.homing?'#e1faff':'#b29b78');ellipse(ctx,-2,-2,b.r*.4,b.r*.4,'#fff5da');ctx.restore();}
   for(const e of g.effects){const f=e.time/e.duration;ctx.save();ctx.globalAlpha=1-f;ctx.translate(e.x,e.y);
     if(e.type==='text')text(ctx,e.text,0,-f*35,20,e.color);
     else if(e.type==='hit'||e.type==='burst'){ctx.strokeStyle=e.color||'#fff1c2';ctx.lineWidth=3;const count=e.type==='burst'?12:6;for(let i=0;i<count;i++){const a=i/count*TAU,r=(e.type==='burst'?65:28)*f;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.4,Math.sin(a)*r*.4);ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r);ctx.stroke();}}

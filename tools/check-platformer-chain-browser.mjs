@@ -4,7 +4,7 @@ const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTA
 const root=process.argv[2]||'http://127.0.0.1:4186',errors=[];
 try{
   const page=await browser.newPage({viewport:{width:1440,height:1000}});page.on('pageerror',e=>errors.push(e.message));
-  await page.goto(root+'/?test=1&seed=chain40');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start-button').click();
+  await page.goto(root+'/?test=1&path=classic&seed=chain40');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start-button').click();
   await page.evaluate(()=>{
     const a=window.__platformer37,g=a.game,floor={id:'flat',x:0,y:634,w:4000,ground:true},e=g.room.enemies[0];
     g.room.width=4000;g.room.platforms=[floor];g.room.pickups=[];g.room.cleared=true;g.room.rewardTaken=true;g.roomIntro=0;g.camera=0;

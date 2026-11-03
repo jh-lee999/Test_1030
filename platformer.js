@@ -1,25 +1,34 @@
-import {createGame,tick,chooseReward,enterNextRoom,chooseRoute,routeOptions,interactRoom,chooseGoldReward,cashReward,grantItem,rerollReward,rewardRerollCost,canOpenShop,openShop,buyShopItem,rerollShop,sellShopItem,buyShopHealing,buySealedBag,acceptContract,notifyGame,STAGES} from './platformer-engine.js?v=45';
-import {renderGame} from './platformer-renderer.js?v=45';
+import {createGame,tick,chooseReward,enterNextRoom,chooseRoute,routeOptions,interactRoom,chooseGoldReward,cashReward,grantItem,rerollReward,rewardRerollCost,canOpenShop,openShop,buyShopItem,rerollShop,sellShopItem,buyShopHealing,buySealedBag,acceptContract,notifyGame,STAGES} from './platformer-engine.js?v=46';
+import {renderGame} from './platformer-renderer.js?v=46';
 import {BIOMES,ROOM_TYPES,ACTS,ROOMS_PER_ACT} from './platformer-world.js?v=45';
-import {CONTRACTS,HEAL_PRICE,BAG_PRICE,basePrice,offerPrice,salePrice,shopRerollCost,contractLabel} from './platformer-economy.js?v=43';
+import {CONTRACTS,HEAL_PRICE,BAG_PRICE,basePrice,offerPrice,salePrice,shopRerollCost,contractLabel} from './platformer-economy.js?v=46';
 import {BUTTER_ORIGINAL,BUTTER_POSTER} from './butter-original-motion.js';
 import {STAGE_ART} from './platformer-art.js?v=43';
-import {createGameAudio} from './platformer-audio.js?v=45';
-import {ITEMS,INSCRIPTIONS,RARITIES,statRows,itemChanges,gradeSources,lowerPower,upperPower,applyBuildItem,removeBuildItem} from './platformer-build.js?v=45';
+import {createGameAudio} from './platformer-audio.js?v=46';
+import {PATHS,AWAKENINGS,skillCost,isStyle} from './platformer-paths.js?v=46';
+import {ITEMS,INSCRIPTIONS,RARITIES,statRows,itemChanges,gradeSources,lowerPower,upperPower,applyBuildItem,removeBuildItem} from './platformer-build.js?v=46';
 const $=id=>document.getElementById(id),canvas=$('game-canvas'),ctx=canvas.getContext('2d');
 const gameAudio=createGameAudio();
 let game=createGame(),started=false,ready=false,last=0,accumulator=0,shownPhase='',shownRoom=-1,buildReturnPhase='playing';
 let shopTab='goods',sellSelection=null;
+const pathParams=new URLSearchParams(location.search),classicFixture=pathParams.get('test')==='1'&&pathParams.get('path')==='classic';
+let selectedPath=Object.hasOwn(PATHS,pathParams.get('path'))?pathParams.get('path'):'ricochet';
 const urlSeed=new URLSearchParams(location.search).get('seed');if(urlSeed)$('seed-input').value=urlSeed.slice(0,48);
 const keys=new Set(),touch=new Map(),pending=new Set(),images={butter:{},monsters:Object.fromEntries(Object.keys(STAGE_ART.monsters).map(k=>[k,{}])),backgrounds:{}},reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const bindings={KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right',Space:'jump',KeyW:'jump',ArrowUp:'jump',KeyJ:'attack',KeyX:'attack',ShiftLeft:'dash',ShiftRight:'dash',KeyK:'dash',KeyE:'skill',KeyF:'interact',ArrowDown:'interact',KeyS:'interact'};
 function input(){const value={};for(const key of keys){const action=bindings[key]||key;value[action]=true;}for(const action of touch.values())value[action]=true;for(const action of pending)value[action+'Pressed']=true;value.jumpReleased=pending.has('jumpRelease');return value;}
-function clearInput(){keys.clear();touch.clear();pending.clear();document.querySelectorAll('[data-control]').forEach(b=>b.classList.remove('pressed'));if(game)game.previous={};}
+function clearInput(){keys.clear();touch.clear();pending.clear();document.querySelectorAll('[data-control]').forEach(b=>b.classList.remove('pressed'));if(game){game.previous={};game.player.charging=false;game.player.chargeTime=0;}}
 function focusGame(){canvas.focus({preventScroll:true});}
-function start(seed=$('seed-input').value.trim()||Date.now()){if(!ready)return;gameAudio.unlock();clearInput();game=createGame(seed);shopTab='goods';sellSelection=null;started=true;shownPhase='';shownRoom=-1;accumulator=0;const url=new URL(location.href);url.searchParams.set('seed',game.seedLabel);history.replaceState(null,'',url);syncUI();focusGame();}
+function start(seed=$('seed-input').value.trim()||Date.now()){if(!ready)return;gameAudio.unlock();clearInput();game=createGame(seed,classicFixture?null:selectedPath);shopTab='goods';sellSelection=null;started=true;shownPhase='';shownRoom=-1;accumulator=0;const url=new URL(location.href);url.searchParams.set('seed',game.seedLabel);url.searchParams.set('path',classicFixture?'classic':selectedPath);history.replaceState(null,'',url);syncUI();focusGame();}
 function pause(){if(!started||game.phase!=='playing')return;game.phase='paused';clearInput();syncUI();$('resume-button').focus({preventScroll:true});}
 function resume(){if(game.phase!=='paused')return;gameAudio.unlock();game.phase='playing';clearInput();syncUI();focusGame();}
 $('start-button').addEventListener('click',()=>start());$('pause-button').addEventListener('click',pause);$('resume-button').addEventListener('click',resume);
+$('change-path').addEventListener('click',()=>{clearInput();started=false;game=createGame();shownPhase='';shownRoom=-1;syncUI();$('path-picker').querySelector('[aria-pressed="true"]').focus({preventScroll:true});});
+function drawPathPicker(){
+  $('path-picker').replaceChildren(...Object.entries(PATHS).map(([id,path])=>{const button=document.createElement('button');button.type='button';button.dataset.path=id;button.setAttribute('aria-pressed',String(selectedPath===id));button.style.setProperty('--path-color',path.color);button.innerHTML=`<b>${path.name}</b><strong>${path.input}</strong><span>${path.strength}</span><small>${path.weakness}</small>`;button.addEventListener('click',()=>{selectedPath=id;drawPathPicker();});return button;}));
+  $('path-promise').textContent=PATHS[selectedPath].skillText+' · 집중은 전투로 충전';
+  if(ready&&document.body.dataset.assetFailures==='0')$('load-status').textContent='준비 완료 · '+PATHS[selectedPath].input;
+}drawPathPicker();
 document.querySelectorAll('.restart').forEach(b=>b.addEventListener('click',()=>{$('seed-input').value='';start();}));
 document.querySelectorAll('.replay').forEach(b=>b.addEventListener('click',()=>start(game.seedLabel)));
 function toggleMap(){if(!started)return;if(game.phase==='map'){game.phase='playing';syncUI();focusGame();}else if(game.phase==='playing'){game.phase='map';clearInput();syncUI();$('map-close').focus({preventScroll:true});}}
@@ -51,6 +60,12 @@ for(const event of ['pointerup','pointercancel','lostpointercapture'])window.add
 for(const button of document.querySelectorAll('[data-control]'))button.addEventListener('pointerdown',e=>{if(!started||game.phase!=='playing')return;e.preventDefault();button.setPointerCapture(e.pointerId);touch.set(e.pointerId,button.dataset.control);pending.add(button.dataset.control);button.classList.add('pressed');});
 function syncUI(){
   $('start-screen').hidden=started;$('hud').hidden=!started;$('skill-hud').hidden=!started;
+  const style=PATHS[game.stats.style];$('path-hud').hidden=!started||!style;
+  if(style){
+    $('path-name').textContent=style.name;$('path-mechanic').textContent=game.stats.style==='barrage'?`${game.player.overheated?'과열! 냉각 중':game.player.heat>=60?'강화 구간!':'열'} ${Math.round(game.player.heat)}%`:game.stats.style==='boulder'?`충전 ${Math.round(game.player.chargeTime/.9*100)}% · J 떼서 발사`:`다음 확정 추적탄까지 ${3-((game.basicShots||0)%3)}발`;
+    $('focus-fill').style.width=game.player.focus+'%';$('focus-text').textContent=`집중 ${Math.floor(game.player.focus)} / ${skillCost(game.stats)} · E ${style.skill}`;
+    $('awakening-label').textContent=game.stats.awakening?AWAKENINGS[game.stats.awakening].name:'정예 / 첫 보스 → 각성 선택';
+  }
   $('pause-screen').hidden=game.phase!=='paused';$('reward-screen').hidden=game.phase!=='reward';$('end-screen').hidden=!['dead','won'].includes(game.phase);
   $('map-screen').hidden=!['map','route'].includes(game.phase);
   $('build-screen').hidden=game.phase!=='build';$('shop-screen').hidden=game.phase!=='shop';
@@ -61,7 +76,7 @@ function syncUI(){
   $('build-button').disabled=!['playing','build','reward','shop'].includes(game.phase);
   $('enemy-count').textContent=game.room.rewardTaken?'출구 개방':game.room.shrine?`${ROOM_TYPES[game.room.type].name} · F로 이용`:`남은 적 ${game.room.enemies.filter(e=>e.hp>0).length}`;
   $('dash-label').textContent=game.player.counterCharge>0?'반격 준비!':game.player.dashCooldown>0?`${game.player.dashCooldown.toFixed(1)}s`:'준비';
-  $('skill-label').textContent=game.player.skillTime>0?'무적':game.player.skillCooldown>0?`${Math.ceil(game.player.skillCooldown)}s`:'준비';
+  $('skill-name').textContent=style?style.skill:'왕새총';$('skill-label').textContent=game.player.skillTime>0?'무적':game.player.skillCooldown>0?`${Math.ceil(game.player.skillCooldown)}s`:style&&game.player.focus<skillCost(game.stats)?`집중 ${Math.floor(game.player.focus)}/${skillCost(game.stats)}`:'준비';
   $('toast').textContent=game.noticeTime>0?game.notice:'';
   $('contract-hud').hidden=!started||!game.contract;$('contract-hud').textContent=contractLabel(game);$('contract-hud').dataset.status=game.contract?.status||'';
   if(shownRoom!==game.room.index){shownRoom=game.room.index;$('room-label').textContent=`${game.room.act+1}막 · ${ACTS[game.room.act].name} ${game.room.local+1}/7`;$('route').replaceChildren(...Array.from({length:ROOMS_PER_ACT},(_,i)=>{const dot=document.createElement('i');dot.className='route-dot '+(i===game.room.local?'active':i<game.room.local?'done':'');return dot;}));}
@@ -70,7 +85,7 @@ function syncUI(){
     if(game.phase==='reward'){clearInput();drawRewards();$('reward-cards').firstElementChild?.focus({preventScroll:true});}
     if(game.phase==='build'){clearInput();drawBuild();}
     if(game.phase==='shop'){clearInput();sellSelection=null;drawShop();$('shop-close').focus({preventScroll:true});}
-    if(game.phase==='dead'||game.phase==='won'){clearInput();const won=game.phase==='won';$('end-kicker').textContent=won?'ESCAPED!':'ONE MORE TRY';$('end-title').textContent=won?'버터, 탈출 성공!':'조금만 더 가면 되는데…';$('end-summary').textContent=`${game.room.index+1}구역 · ${game.stats.kills}마리 처치 · 보유 아이템 ${game.stats.itemsTaken}개 · ${Math.floor(game.elapsed/60)}분 ${Math.floor(game.elapsed%60)}초`;$('end-economy').textContent=`상점 ${game.economy.visitedShops.length}곳 · 상품 구매 ${game.economy.purchases}개 / 판매 ${game.economy.sales}개 · 상점 지출 ${game.economy.coinsSpent} G · 계약 성공 ${game.economy.contractsWon} / 실패 ${game.economy.contractsLost}`;$('end-screen').querySelector('button').focus({preventScroll:true});}
+    if(game.phase==='dead'||game.phase==='won'){clearInput();const won=game.phase==='won';$('end-kicker').textContent=won?'ESCAPED!':'ONE MORE TRY';$('end-title').textContent=won?'버터, 탈출 성공!':'조금만 더 가면 되는데…';$('end-summary').textContent=`${game.room.index+1}구역 · ${game.stats.kills}마리 처치 · 보유 아이템 ${game.stats.itemsTaken}개 · ${Math.floor(game.elapsed/60)}분 ${Math.floor(game.elapsed%60)}초`;$('end-economy').textContent=`상점 ${game.economy.visitedShops.length}곳 · 상품 구매 ${game.economy.purchases}개 / 판매 ${game.economy.sales}개 · 상점 지출 ${game.economy.coinsSpent} G · 계약 성공 ${game.economy.contractsWon} / 실패 ${game.economy.contractsLost}${PATHS[game.stats.style]?` · ${PATHS[game.stats.style].name} / ${AWAKENINGS[game.stats.awakening]?.name||'각성 없음'} · 왕새총 ${game.skillCasts||0}회`: ''} `;$('end-screen').querySelector('button').focus({preventScroll:true});}
   }
   canvas.dataset.x=game.player.x.toFixed(2);canvas.dataset.y=game.player.y.toFixed(2);canvas.dataset.facing=game.player.facing;canvas.dataset.butterRenderer='original36-mirrored37';
 }
@@ -84,8 +99,14 @@ function itemCard(id,onSelect,{price=null,sold=false}={}){
   button.addEventListener('click',onSelect);return button;
 }
 function drawRewards(){
+  if(game.rewardMode==='awakening'){
+    $('reward-title').textContent='이번 판을 바꿀 각성';$('reward-info').textContent='하나를 얻으면 다른 두 개는 포기해요. 강점과 대가를 보고 이번 판의 전투를 정하세요.';
+    $('reward-cards').replaceChildren(...game.choices.map(id=>{const def=AWAKENINGS[id],button=document.createElement('button');button.className='reward-card';button.dataset.awakening=id;button.style.setProperty('--rarity',def.color);button.innerHTML=`<small>각성 · 이번 판 하나만 선택</small><svg aria-hidden="true"><use href="./assets/ui-icons.svg#${def.icon}"></use></svg><b>${def.name}</b><span>${def.description}</span><strong class="awakening-cost">${def.cost}</strong>`;button.addEventListener('click',()=>{if(chooseReward(game,id)){clearInput();syncUI();focusGame();}});return button;}));
+    $('reward-gold').hidden=true;$('reward-reroll').hidden=true;$('reward-coins').textContent='각성은 바꿀 수 없어요 · 가방 I로 현재 빌드 확인';return;
+  }
+  $('reward-title').textContent='버터의 가방에 뭘 넣을까?';$('reward-reroll').hidden=false;
   $('reward-cards').replaceChildren(...game.choices.map(id=>itemCard(id,()=>{if(chooseReward(game,id)){clearInput();syncUI();focusGame();}})));
-  $('reward-info').textContent=game.room.cleanBonus?'체력 손실 없이 클리어! +8 G · 왕새총 쿨타임 3초 회복':'같은 아이템도 누적돼요. 학년 아이템은 항상 한 종류 이상 등장해요.';
+  $('reward-info').textContent=game.room.cleanBonus?`체력 손실 없이 클리어! +8 G · ${isStyle(game.stats)?'집중 +12':'왕새총 쿨타임 3초 회복'}`:'같은 아이템도 누적돼요. 학년 아이템은 항상 한 종류 이상 등장해요.';
   if(game.room.contractResult)$('reward-info').textContent+=' · '+game.room.contractResult;
   $('reward-gold').hidden=['boss','treasure'].includes(game.room.type);$('reward-gold').textContent=`아이템 대신 ${cashReward(game)} G`;
   if(game.room.type==='boss')$('reward-info').textContent=`지역 보스 격파! 영웅 아이템 하나 선택 · ${game.room.act<2?'다음 지역으로 계속':'마지막 출구로 탈출'}`;
@@ -93,9 +114,11 @@ function drawRewards(){
 }
 function drawBuild(){
   const s=game.stats,low=lowerPower(s),high=upperPower(s);
+  $('build-path').textContent=PATHS[s.style]?`${PATHS[s.style].name} · ${PATHS[s.style].input} · ${s.awakening?AWAKENINGS[s.awakening].name+' / '+AWAKENINGS[s.awakening].cost:'정예 또는 첫 보스에서 각성 선택'}`:'기본 전투 규칙';
   $('build-count').textContent=`이번 여정 · 아이템 ${s.itemsTaken}개 / ${Object.keys(s.inventory).length}종 · ${game.coins} G`;
   $('build-last').textContent=game.lastPickup||'보상과 상점에서 같은 아이템을 다시 얻어도 효과가 쌓여요.';
   $('grade-details').innerHTML=`<article><small>자동 발동 · 저학년</small><h3>추적 새총 <b>Lv.${s.lowerGrade}</b></h3><p>${gradeSources(s,'lowerGrade')}</p><strong>발동 ${(low.chance*100).toFixed(1)}% · 추가 튕김 ${low.bounces}회</strong><p>학년 ${s.lowerGrade} + 보너스 ${s.chainBonus} = ${low.bounces}회 · 탄환당 최대 ${low.bounces+1}회 적중<br>피해 ${low.damage.toFixed(1)} · 유도 성능 ${low.homing.toFixed(1)}<br>최대 ${low.pity}회 사격마다 발동 보장 · 발동 누적 ${game.lowerProcs}회<br>${low.chainRange}px 안의 적 사이에서 A → B → A 재타격 가능.<br>다른 적을 거쳐야 돌아와요. 혼자 남은 적에게는 재반사하지 않아요.</p><div class="milestones"><span class="${s.lowerGrade>=3?'active':''}">Lv.3 추적탄 +1발</span><span class="${s.lowerGrade>=5?'active':''}">Lv.5 추적탄 총 +2발</span></div></article><article><small>E · 고학년</small><h3>왕새총 <b>Lv.${s.upperGrade}</b></h3><p>${gradeSources(s,'upperGrade')}</p><strong>피해 ${high.damage.toFixed(1)} · ${high.duration.toFixed(1)}초 지속</strong><p>재사용 ${s.skillCooldown.toFixed(2)}초 · 반경 ${high.radius}px<br>추가 탄환은 55%, 반대편 왕짱돌은 65% 피해.<br>시전 1.1초만 무적 · 왕짱돌로 방패 관통.<br>방 이동 시 짱돌과 무적은 종료돼요.</p><div class="milestones"><span class="${s.upperGrade>=3?'active':''}">Lv.3 반대 방향 왕짱돌 +1</span><span class="active">매 레벨 피해 · 크기 · 지속 증가</span></div></article>`;
+  if(PATHS[s.style])$('grade-details').lastElementChild.innerHTML=`<small>E · 고학년 Lv.${s.upperGrade}</small><h3>${PATHS[s.style].skill}</h3><strong>${PATHS[s.style].skillText}</strong><p>${gradeSources(s,'upperGrade')}<br>집중 ${skillCost(s)} 필요 · 평타 적중 +${s.style==='boulder'?'4~12':s.style==='barrage'?'4~6':'4'} / 처치 +5 / 정밀 회피 +14<br>무피격 클리어 +12 · 시간 경과로는 차지 않아요.<br>시전 1.1초 무적 · 재시전 간격 ${s.skillCooldown.toFixed(2)}초<br>고학년은 실제 스킬 피해를 강화해요.<br>${PATHS[s.style].weakness}</p>`;
   $('stat-grid').innerHTML=statRows(s).map(([id,label,value])=>`<div data-stat="${id}"><span>${label}</span><b>${value}</b></div>`).join('');
   $('inscriptions').innerHTML=Object.entries(INSCRIPTIONS).map(([id,v])=>{const n=s.inscriptions[id];return `<article style="--tag-color:${v.color}"><h4>${v.name} <b>${n}</b></h4><p class="${n>=2?'active':''}">② ${v.two}</p><p class="${n>=4?'active':''}">④ ${v.four}</p></article>`;}).join('');
   $('inventory').innerHTML=Object.entries(s.inventory).map(([id,n])=>`<div data-owned="${id}"><svg aria-hidden="true"><use href="./assets/ui-icons.svg#${ITEMS[id].icon}"></use></svg><span><b>${ITEMS[id].name} <em>×${n}</em></b><small>${ITEMS[id].tags.map(t=>INSCRIPTIONS[t].name).join(' · ')}</small></span></div>`).join('')||'<p>아직 가방이 비어 있어요.</p>';
@@ -139,7 +162,7 @@ function drawWorldMap(){
   const positions=new Map(nodes.map(n=>{const layer=world.nodes.filter(v=>v.depth===n.depth);return[n.id,{x:6+n.local/(ROOMS_PER_ACT-1)*88,y:layer.length===1?50:18+n.lane/(layer.length-1)*64}];}));
   const map=$('world-map');map.replaceChildren();const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 1000 300');svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-hidden','true');
   for(const node of nodes)for(const id of node.next){if(!positions.has(id))continue;const a=positions.get(node.id),b=positions.get(id),line=document.createElementNS(svg.namespaceURI,'line');for(const [key,value]of Object.entries({x1:a.x*10,y1:a.y*3,x2:b.x*10,y2:b.y*3}))line.setAttribute(key,value);line.setAttribute('class',node.id===game.currentNodeId&&available.has(id)?'available-edge':node.completed&&world.nodes.find(n=>n.id===id).visited?'visited-edge':'');svg.append(line);}map.append(svg);
-  for(const node of nodes){const pos=positions.get(node.id),type=ROOM_TYPES[node.type],button=document.createElement('button');button.className='map-node'+(node.visited?' visited':'')+(node.id===game.currentNodeId?' current':'')+(available.has(node.id)?' available':'');button.style.left=`${pos.x}%`;button.style.top=`${pos.y}%`;button.style.setProperty('--node-color',type.color);button.disabled=!available.has(node.id);button.dataset.node=node.id;button.setAttribute('aria-label',`${node.depth+1}단계 ${type.name}, ${BIOMES[node.biome].name}, ${type.reward}`);button.title=`${BIOMES[node.biome].name} · ${type.reward}`;button.innerHTML=`<b>${type.symbol} ${type.name}</b><small>${node.type==='boss'?ACTS[node.act].boss:node.rewardKind==='gold'?'자금 보상 ↑':BIOMES[node.biome].name}</small>`;button.addEventListener('click',()=>{if(chooseRoute(game,node.id)){clearInput();syncUI();focusGame();}});map.append(button);}
+  for(const node of nodes){const pos=positions.get(node.id),type=ROOM_TYPES[node.type],button=document.createElement('button');button.className='map-node'+(node.visited?' visited':'')+(node.id===game.currentNodeId?' current':'')+(available.has(node.id)?' available':'');button.style.left=`${pos.x}%`;button.style.top=`${pos.y}%`;button.style.setProperty('--node-color',type.color);button.disabled=!available.has(node.id);button.dataset.node=node.id;button.setAttribute('aria-label',`${node.depth+1}단계 ${type.name}, ${BIOMES[node.biome].name}, ${type.reward}`);button.title=`${BIOMES[node.biome].name} · ${type.reward}`;button.innerHTML=`<b>${type.symbol} ${type.name}</b><small>${isStyle(game.stats)&&!game.stats.awakening&&['elite','boss'].includes(node.type)?'각성 3택1':node.type==='boss'?ACTS[node.act].boss:node.rewardKind==='gold'?'자금 보상 ↑':BIOMES[node.biome].name}</small>`;button.addEventListener('click',()=>{if(chooseRoute(game,node.id)){clearInput();syncUI();focusGame();}});map.append(button);}
 }
 function frame(ms){
   const dt=Math.min(.1,(ms-(last||ms))/1000);last=ms;
@@ -153,7 +176,7 @@ async function boot(){
   add(BUTTER_POSTER,images.butter,'poster');for(const [key,c]of Object.entries(BUTTER_ORIGINAL.clips))add(c.image,images.butter,key);
   for(const [key,m]of Object.entries(STAGE_ART.monsters)){for(const [clip,c]of Object.entries(m.clips))add(c.image,images.monsters[key],clip);add(m.clips.idle.image.replace('-idle.webp','-poster.png'),images.monsters[key],'poster');}
   for(const [key,b]of Object.entries(STAGE_ART.backgrounds))add(b.image,images.backgrounds,key);
-  const results=await Promise.all(tasks.map(t=>t())),failed=results.filter(x=>!x).length;ready=true;document.body.dataset.ready='true';$('start-button').disabled=false;$('start-button').textContent='아공간으로 출발 →';$('load-status').textContent=failed?`${failed}개 이미지를 불러오지 못했어요. 기본 표시로 플레이할 수 있어요.`:'준비 완료 · 새총은 공격 버튼을 누르고 있으면 계속 발사해요.';
+  const results=await Promise.all(tasks.map(t=>t())),failed=results.filter(x=>!x).length;ready=true;document.body.dataset.ready='true';document.body.dataset.assetFailures=String(failed);$('start-button').disabled=false;$('start-button').textContent='아공간으로 출발 →';$('load-status').textContent=failed?`${failed}개 이미지를 불러오지 못했어요. 기본 표시로 플레이할 수 있어요.`:'준비 완료 · '+PATHS[selectedPath].input;
 }
 requestAnimationFrame(frame);boot().catch(error=>{$('load-status').textContent='준비 중 오류가 났어요. 새로고침해 주세요.';console.error(error);});
 // Only the explicit local test URL exposes fixtures; normal play has no debug UI.

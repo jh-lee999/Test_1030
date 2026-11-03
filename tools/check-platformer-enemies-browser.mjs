@@ -4,7 +4,7 @@ const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTA
 const root=process.argv[2]||'http://127.0.0.1:4186',errors=[];
 try{
   const page=await browser.newPage({viewport:{width:1440,height:1000}});page.on('pageerror',e=>errors.push(e.message));
-  await page.goto(root+'/?test=1&seed=ENEMIES-43');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start-button').click();
+  await page.goto(root+'/?test=1&path=classic&seed=ENEMIES-43');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start-button').click();
   const loaded=await page.evaluate(()=>Object.fromEntries(['rusher','guard','caster','drone'].map(t=>[t,Object.keys(window.__platformer37.images.monsters[t])])));
   for(const clips of Object.values(loaded))assert.deepEqual(clips.sort(),['attack','die','idle','poster','walk']);
   const results=await page.evaluate(async()=>{
@@ -20,7 +20,7 @@ try{
   await page.screenshot({path:'/tmp/enemies43-lineup.png',style:'#pause-screen{visibility:hidden}'});
   await page.keyboard.press('i'); // paused stays paused; no hidden shortcut advances combat
   assert.equal(await page.evaluate(()=>window.__platformer37.game.phase),'paused');
-  const mobile=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});mobile.on('pageerror',e=>errors.push(e.message));await mobile.goto(root+'/?test=1&seed=43');await mobile.waitForSelector('body[data-ready="true"]');await mobile.locator('#start-button').tap();
+  const mobile=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});mobile.on('pageerror',e=>errors.push(e.message));await mobile.goto(root+'/?test=1&path=classic&seed=43');await mobile.waitForSelector('body[data-ready="true"]');await mobile.locator('#start-button').tap();
   assert.equal(await mobile.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await mobile.screenshot({path:'/tmp/enemies43-mobile.png'});
   assert.deepEqual(errors,[]);console.log(JSON.stringify({newArtLoaded:loaded,frontShieldProjectileTest:results.guardedHP,visibleCurse:true,mixedEnemyLineup:results.types,mobileStart:true,errors},null,2));
 }finally{await browser.close();}

@@ -1,4 +1,4 @@
-import {ITEMS,RARITIES,rollBuildItems} from './platformer-build.js?v=45';
+import {ITEMS,RARITIES,rollBuildItems} from './platformer-build.js?v=46';
 
 export const CONTRACTS={
   frenzy:{name:'위험 수당',description:'다음 전투: 적 체력 +35%, 받는 피해 +20%. 클리어하면 24 G.',coins:24},

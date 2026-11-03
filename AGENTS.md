@@ -1,5 +1,27 @@
 # Project instructions
 
+## v46 coherent run paths
+
+Product runs select one immutable ricochet/barrage/boulder path before starting.
+`platformer-paths.js` owns definitions. Keep style and awakening outside inventory
+and preserve them through rebuildStats, sales and room transitions. No meta growth.
+Focus is earned only by combat: primary hit +4 (charged +4..12), kill +5,
+real perfect evade +14, clean clear +12. It never refills with time. E costs
+ceil((awakening overload ? 45 : 60) * (1 - cooldownReduction*.5)); minimum cast
+interval 1.8*(1-CDR). Skill/echo hits cannot generate hit focus or predator healing.
+Barrage: +18 heat per release, locked at 100 until <=30. After .18s, cooling is
+35/s while held and 85/s while released. Heat60+ releases gain x1.35 damage and
++2 hit focus (orange shots); keep this visible risk/reward, not only a penalty.
+Boulder charges while held, fires ONLY
+on release; charge must retain lower-grade proc/pity/counter rules. Cancelling
+input in menus discards the charge. First elite/boss gives one irreversible
+awakening instead of an item. Block its reroll/cash alternative.
+World stays v45; physics and source art unchanged. Neutral engine default is
+kept for old regression fixtures ONLY (`?test=1&path=classic`), not a product path.
+Run paths46 tests/browser as well as ALL earlier required checks. The input-only
+pilot is a diagnostic, not proof of fun or a claim of human playtesting. Report
+its limits and inspect the actual keyboard/touch playback. See docs/paths46.md.
+
 ## v45 core combat and pacing
 
 User clarified: everything feels dull because holding forward attack clears the

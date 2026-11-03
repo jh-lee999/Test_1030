@@ -1,6 +1,7 @@
 // v39 run build. Inventory counts are the source of truth; derived stats are
 // rebuilt from base values so acquisitions cannot overwrite earlier upgrades.
 import {ITEMS as LEGACY_ITEMS,createRunState} from './survivor-engine.js';
+import {PATHS,skillCost} from './platformer-paths.js?v=46';
 
 export const INSCRIPTIONS={
   hunter:{name:'명사수',color:'#efca83',two:'치명타 확률 +10%p',four:'치명타 피해 +50%p'},
@@ -51,12 +52,17 @@ export function rebuildStats(current){
   if(counts.ember>=2)s.burnPower+=.15;if(counts.ember>=4)s.killExplosion=.8;
   if(counts.guardian>=2)s.shieldMax+=18;if(counts.guardian>=4){s.armor+=25;s.killHeal+=2;}
   if(counts.wind>=2)s.dashMultiplier=.8;if(counts.wind>=4)s.dashDamage=1.4;
+  const path=PATHS[s.style];if(path){s.damage*=path.damage;s.attackCooldown*=path.interval;}
+  if(s.awakening==='echo')s.maxHp=Math.round(s.maxHp*.85);
+  if(s.awakening==='overload')s.damage*=1.25;
   s.attackCooldown=Math.max(.08,s.attackCooldown);s.critChance=clamp(s.critChance,0,.8);s.cooldownReduction=clamp(s.cooldownReduction,0,.65);s.lifeSteal=clamp(s.lifeSteal,0,.15);s.armor=clamp(s.armor,0,200);s.pierce=Math.min(6,s.pierce);s.extraProjectiles=Math.min(6,s.extraProjectiles);
   s.damageReduction=s.armor/(100+s.armor);s.skillCooldown=13*(1-s.cooldownReduction);s.dashCooldown=.7*s.dashMultiplier;s.projectileLifetime=2.4*s.projectileLife;s.inscriptions=counts;
   s.projectileRange=620*s.projectileLife*s.projectileSpeed/base.projectileSpeed;
+  if(path){s.projectileRange*=path.range;s.skillCooldown=1.8*(1-s.cooldownReduction);}
+  if(s.awakening==='predator')s.projectileRange*=.75;
   s.hp=clamp(current.hp??s.maxHp,0,s.maxHp);s.itemsTaken=Object.values(s.inventory).reduce((sum,n)=>sum+n,0);return s;
 }
-export function createBuildState(){return rebuildStats(createRunState('butter'));}
+export function createBuildState(style=null){return rebuildStats({...createRunState('butter'),style:Object.hasOwn(PATHS,style)?style:null,awakening:null});}
 export function applyBuildItem(current,id){
   if(!ITEMS[id])return clone(current);
   const inventory={...current.inventory,[id]:(current.inventory[id]||0)+1},next=rebuildStats({...current,inventory});
@@ -74,7 +80,7 @@ export function upperPower(s){return{duration:4.5+s.upperGrade*.8,damage:s.damag
 export function rollBuildItems(random,stats,depth=0,count=3,exclude=[]){
   const pool=Object.keys(ITEMS).filter(id=>!exclude.includes(id)),result=[];
   while(result.length<count&&pool.length){
-    const weights=pool.map(id=>{const item=ITEMS[id],rarity={common:5,rare:2.5+depth*.15,epic:.7+depth*.18}[item.rarity],match=item.tags.some(t=>(stats.inscriptions?.[t]||0)>0)?1.4:1;return rarity*match;});
+    const weights=pool.map(id=>{const item=ITEMS[id],rarity={common:5,rare:2.5+depth*.15,epic:.7+depth*.18}[item.rarity],match=item.tags.some(t=>(stats.inscriptions?.[t]||0)>0)?1.4:1,pathMatch=item.tags.some(t=>PATHS[stats.style]?.tags.includes(t))?1.5:1;return rarity*match*pathMatch;});
     let pick=random()*weights.reduce((a,b)=>a+b,0),index=weights.length-1;for(let i=0;i<weights.length;i++){pick-=weights[i];if(pick<0){index=i;break;}}result.push(pool.splice(index,1)[0]);
   }return result;
 }
@@ -83,15 +89,16 @@ export function rewardChoices(random,stats,room,exclude=[]){
     const pool=Object.keys(ITEMS).filter(id=>ITEMS[id].rarity==='epic'),result=[];
     while(result.length<3&&pool.length)result.push(pool.splice(Math.floor(random()*pool.length),1)[0]);return result;
   }
-  const grade=random()<.5?'lower_book':'upper_book',guaranteed=room.type==='elite'?['lower_book','upper_book']:[grade];
+  const roll=random(),grade=stats.style==='ricochet'?'lower_book':stats.style==='boulder'?'upper_book':roll<.5?'lower_book':'upper_book',guaranteed=room.type==='elite'?['lower_book','upper_book']:[grade];
   return [...guaranteed,...rollBuildItems(random,stats,room.index,3-guaranteed.length,[...exclude,...guaranteed])];
 }
-export function statRows(s){const low=lowerPower(s),high=upperPower(s),f=n=>Number(n.toFixed(2)).toString(),pct=n=>`${f(n*100)}%`;return[
+export function statRows(s){const low=lowerPower(s),high=upperPower(s),f=n=>Number(n.toFixed(2)).toString(),pct=n=>`${f(n*100)}%`,styled=Boolean(PATHS[s.style]),orb=s.style==='ricochet'||s.style==='barrage',highScale=s.style==='ricochet'?.75:s.style==='barrage'?.42:s.style==='boulder'?1.3:1;return[
   ['damage','공격력',f(s.damage)],['attackSpeed','공격 속도',`${f(1/s.attackCooldown)}회/초`],['maxHp','최대 체력',f(s.maxHp)],['moveSpeed','이동 속도',`${f(s.moveSpeed*1.4)}px/s`],['projectileSpeed','탄환 속도',`${f(s.projectileSpeed*1.55)}px/s`],['range','유효 사거리',`${f(s.projectileRange)}px`],
-  ['critChance','치명타 확률',pct(s.critChance)],['critDamage','치명타 피해',pct(s.critDamage)],['pierce','평타 추가 관통',`${s.pierce}명`],['projectiles','평타 탄환 수',`${1+s.extraProjectiles}발`],['skillDamage','스킬 피해',pct(s.skillDamage)],['skillCooldown','왕새총 쿨타임',`${f(s.skillCooldown)}초`],
+  ['critChance','치명타 확률',pct(s.critChance)],['critDamage','치명타 피해',pct(s.critDamage)],['pierce','평타 추가 관통',`${s.pierce}명`],['projectiles','평타 탄환 수',`${1+s.extraProjectiles}발`],['skillDamage','스킬 피해',pct(s.skillDamage)],['skillCooldown',styled?'왕새총 최소 간격':'왕새총 쿨타임',`${f(s.skillCooldown)}초`],
   ['armor','방어 / 피해 감소',`${s.armor} / ${pct(s.damageReduction)}`],['shield','방 입장 보호막',f(s.shieldMax)],['lifeSteal','직접 피해 흡혈',pct(s.lifeSteal)],['killHeal','처치 시 회복',f(s.killHeal)],['pickup','획득 반경',`${f(s.pickupRadius)}px`],['dash','대시 쿨타임',`${f(s.dashCooldown)}초`],
-  ['lower','저학년',`Lv.${s.lowerGrade}`],['lowerChance','추적탄 발동',pct(low.chance)],['chain','추가 도약',`${low.bounces}회`],['lowDamage','추적탄 피해',f(low.damage)],['upper','고학년',`Lv.${s.upperGrade}`],['highDamage','왕짱돌 피해',f(high.damage)],['highDuration','왕짱돌 지속',`${f(high.duration)}초`],['burn','화상 / 초',f(s.damage*s.burnPower)],
-  ['lowCount','추적탄 수',`${1+s.extraProjectiles+low.extraProjectiles}발`],['highCount','왕짱돌 수',`${high.count}개`],['dashDamage','대시 접촉 피해',f(s.damage*s.dashDamage)],['explosion','처치 폭발 피해',f(s.damage*s.killExplosion)],['cooldownReduction','스킬 쿨감',pct(s.cooldownReduction)],
+  ['lower','저학년',`Lv.${s.lowerGrade}`],['lowerChance','추적탄 발동',pct(low.chance)],['chain','추가 도약',`${low.bounces}회`],['lowDamage','추적탄 피해',f(low.damage)],['upper','고학년',`Lv.${s.upperGrade}`],['highDamage',orb?'왕새총 탄환 피해':'왕짱돌 피해',f(high.damage*highScale)],['highDuration',orb?'스킬 탄환 최대 지속':'왕짱돌 지속',`${f(orb?3:high.duration)}초`],['burn','화상 / 초',f(s.damage*s.burnPower)],
+  ['lowCount','추적탄 수',`${1+s.extraProjectiles+low.extraProjectiles}발`],['highCount',orb?'왕새총 탄환 수':'왕짱돌 수',`${s.style==='ricochet'?3:s.style==='barrage'?8:high.count}개`],['dashDamage','대시 접촉 피해',f(s.damage*s.dashDamage)],['explosion','처치 폭발 피해',f(s.damage*s.killExplosion)],['cooldownReduction','스킬 쿨감',pct(s.cooldownReduction)],
+  ...(styled?[['focusCost','왕새총 집중 소모',String(skillCost(s))]]:[]),
 ];}
 export function itemChanges(s,id){
   const before=statRows(s),after=statRows(applyBuildItem(s,id)),rowForEffect={lowerGrade:'lower',upperGrade:'upper',shieldMax:'shield',extraProjectiles:'projectiles',projectileLife:'range',pickupRadius:'pickup',burnPower:'burn',lowerChance:'lowerChance',chainBonus:'chain'},primary=Object.keys(ITEMS[id]?.effects||{}).map(key=>rowForEffect[key]||key);
