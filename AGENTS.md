@@ -1,5 +1,21 @@
 # Project instructions
 
+## Active v43 enemy variety and difficulty
+
+Use platformer-art.js to merge immutable v37 art with the four original v43
+monster atlases. Keep source hashes and constant clip origins. Do not bake over
+old art. Original caster/guard/rusher/drone roles are fan-game adaptations.
+platformer-enemies.js owns enemy profiles and mixed encounter rosters. Every
+combat room guarantees >=3 different types; elites add support enemies.
+Rusher crosses platform edges with shared landBody; drone tracks outside home;
+guard turns at intervals and blocks 75% frontal damage outside attacks. Behind,
+attack windows, burns, boulders and damage-enabled dashes are counters. Caster
+locks a visible 1s mark that dies with its owner; menus freeze marks.
+High-skill immunity is now ONLY 1.1s of casting (supersedes older full-duration
+immunity statements); boulder duration/scaling are unchanged. Keep UI accurate.
+Run enemies43 tests/browser, required old checks and new sprite gutter checks.
+WORLD_VERSION=43. New runs regenerate mixed formations; same-run stats persist.
+
 ## Active v42 campaign (supersedes v41 single-act topology)
 
 WORLD_VERSION 42 has 3 acts, 7 route depths each (STAGES=21). Bosses at 6/13

@@ -1,8 +1,8 @@
-import {createBuildState,applyBuildItem,removeBuildItem,rewardChoices,lowerPower,upperPower,ITEMS,itemChanges,LOWER_CHAIN_RANGE} from './platformer-build.js?v=42';
-import {CONTRACTS,HEAL_PRICE,BAG_PRICE,createEconomy,createMarket,marketStock,offerPrice,salePrice,shopRerollCost,rollSealedBag} from './platformer-economy.js?v=42';
+import {createBuildState,applyBuildItem,removeBuildItem,rewardChoices,lowerPower,upperPower,ITEMS,itemChanges,LOWER_CHAIN_RANGE} from './platformer-build.js?v=43';
+import {CONTRACTS,HEAL_PRICE,BAG_PRICE,createEconomy,createMarket,marketStock,offerPrice,salePrice,shopRerollCost,rollSealedBag} from './platformer-economy.js?v=43';
 import {advanceButterGait,butterMuzzleOffset,butterReleasePoint} from './butter-original-motion.js';
 import {PHYSICS,approach,landBody} from './platformer-physics.js?v=38';
-import {FLOOR,STAGES,BIOMES,generateWorld,generateRoom,seedNumber,seededRandom} from './platformer-world.js?v=42';
+import {FLOOR,STAGES,BIOMES,generateWorld,generateRoom,seedNumber,seededRandom} from './platformer-world.js?v=43';
 export {FLOOR,STAGES,seededRandom,landBody};
 
 export const VIEW={width:1280,height:720},HERO_SIZE=92;
@@ -29,7 +29,8 @@ export function createGame(seed=Date.now()){
 }
 export function notifyGame(g,text){g.notice=text;g.noticeTime=2.6;}
 function effect(g,type,x,y,extra={}){g.effects.push({type,x,y,time:0,duration:type==='text'?.7:.32,...extra});}
-export function hitEnemy(g,e,damage,force=0,{critical=false,direct=true}={}){
+export function hitEnemy(g,e,damage,force=0,{critical=false,direct=true,guardBreak=false}={}){
+  if(e.type==='guard'&&e.mode!=='attack'&&force*e.facing<0&&direct&&!guardBreak){damage*=.25;effect(g,'text',e.x,e.y-e.h-20,{text:'방어',color:'#a4e5ff'});force*=.15;}
   if(e.hp<=0)return;const dealt=Math.min(e.hp,damage);e.hp=Math.max(0,e.hp-damage);e.flash=.12;e.x=clamp(e.x+force,e.home.x+e.w/2,e.home.x+e.home.w-e.w/2);
   effect(g,'hit',e.x,e.y-e.h*.55);effect(g,'text',e.x,e.y-e.h,{text:String(Math.round(damage))+(critical?'!':''),color:critical?'#ffce66':direct?'#fff3b4':'#ffa995'});
   if(direct&&g.stats.lifeSteal>0)g.stats.hp=Math.min(g.stats.maxHp,g.stats.hp+dealt*g.stats.lifeSteal);
@@ -75,8 +76,8 @@ function updatePlayer(g,input,pressed,dt){
   if(axis&&p.dash<=0)p.facing=axis;
   if(pressed.dash&&p.dashCooldown<=0){p.dash=.17;p.dashCooldown=g.stats.dashCooldown;p.dashFacing=p.facing;p.dashHits=[];effect(g,'dash',p.x,p.y-40,{duration:.25,dir:p.facing});}
   if(pressed.skill&&p.skillCooldown<=0){
-    p.skillCooldown=g.stats.skillCooldown;p.skillTime=upperPower(g.stats).duration+1;p.action={type:'high',time:0,duration:1,fired:false};
-    notifyGame(g,'왕새총! 짱돌이 구르는 동안 무적');
+    p.skillCooldown=g.stats.skillCooldown;p.skillTime=1.1;p.action={type:'high',time:0,duration:1,fired:false};
+    notifyGame(g,'왕새총! 시전 1.1초 무적 · 왕짱돌은 방패를 관통해요');
   }
   if((input.attack||input.attackPressed)&&p.attackCooldown<=0&&!p.action){
     const power=lowerPower(g.stats),low=p.lowerDryShots+1>=power.pity||g.random()<power.chance;p.action={type:low?'low':'normal',time:0,duration:Math.min(.42,g.stats.attackCooldown*.82),fired:false};p.attackCooldown=g.stats.attackCooldown;
@@ -84,7 +85,7 @@ function updatePlayer(g,input,pressed,dt){
   if(p.dash>0){p.dash=Math.max(0,p.dash-dt);p.vx=p.dashFacing*850;p.vy=0;}
   else{p.vx=approach(p.vx,axis*g.stats.moveSpeed*1.4,dt*(axis?PHYSICS.acceleration:PHYSICS.braking));p.vy=Math.min(PHYSICS.maxFall,p.vy+PHYSICS.gravity*dt);}
   p.x=clamp(p.x+p.vx*dt,22,g.room.width-22);landBody(p,g.room.platforms,dt);
-  if(p.dash>0&&g.stats.dashDamage>0)for(const e of g.room.enemies)if(e.hp>0&&!p.dashHits.includes(e.id)&&segmentHitsBody(oldX,p.y-40,p.x,p.y-40,e,18)){p.dashHits.push(e.id);hitEnemy(g,e,g.stats.damage*g.stats.dashDamage,p.facing*15);}
+  if(p.dash>0&&g.stats.dashDamage>0)for(const e of g.room.enemies)if(e.hp>0&&!p.dashHits.includes(e.id)&&segmentHitsBody(oldX,p.y-40,p.x,p.y-40,e,18)){p.dashHits.push(e.id);hitEnemy(g,e,g.stats.damage*g.stats.dashDamage,p.facing*15,{guardBreak:true});}
   if(p.grounded){const floor=g.room.platforms.find(q=>q.id===p.platformId);if(floor)g.checkpoint={x:clamp(p.x,floor.x+40,floor.x+floor.w-40),y:floor.y,platformId:floor.id};}
   if(p.y>FLOOR+240){hurtPlayer(g,8);Object.assign(p,{x:g.checkpoint.x,y:g.checkpoint.y,vx:0,vy:0,jumps:0,grounded:true,dash:0,action:null,invulnerable:1});notifyGame(g,'발을 헛디뎠어! 마지막 발판으로 돌아왔어.');}
   if(!wasGrounded&&p.grounded)effect(g,'land',p.x,p.y,{duration:.25});
@@ -96,8 +97,11 @@ function updateEnemies(g,dt){
   for(const e of g.room.enemies){
     e.clock+=dt;e.flash=Math.max(0,e.flash-dt);if(e.hp<=0){e.death+=dt;continue;}
     if(e.burnTime>0){e.burnTime=Math.max(0,e.burnTime-dt);e.burnTick-=dt;if(e.burnTick<=0){e.burnTick+=.5;hitEnemy(g,e,e.burnDPS*.5,0,{direct:false});if(e.hp<=0)continue;}}
-    e.cooldown=Math.max(0,e.cooldown-dt);const dx=p.x-e.x,dy=p.y-e.y;e.facing=dx>=0?1:-1;
+    e.cooldown=Math.max(0,e.cooldown-dt);const dx=p.x-e.x,dy=p.y-e.y;
+    if(e.type!=='guard'||(e.mode!=='attack'&&!(e.turnCooldown>0))){e.facing=dx>=0?1:-1;if(e.type==='guard')e.turnCooldown=.8;}
+    e.turnCooldown=Math.max(0,(e.turnCooldown||0)-dt);
     if(e.boss){updateGuardian(g,e,dx,dy,dt);continue;}
+    if(['rusher','guard','caster','drone'].includes(e.type)){updateSpecialEnemy(g,e,dx,dy,dt);continue;}
     if(e.mode==='attack'){
       const before=e.timer;e.timer+=dt;const windup=e.type==='ghost'?.75:e.type==='archer'?.55:.46;
       if(before<windup&&e.timer>=windup){
@@ -120,6 +124,46 @@ function updateEnemies(g,dt){
   }
 }
 function enemyShot(g,e,angle,speed=280){g.projectiles.push({owner:'enemy',x:e.x,y:e.y-e.h*.55,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,r:9,life:5,damage:10+(e.act||0)*2});}
+function updateSpecialEnemy(g,e,dx,dy,dt){
+  const p=g.player;
+  if(e.type==='rusher'&&e.mode==='attack'&&e.timer>=.55&&e.chargeFacing)e.facing=e.chargeFacing;
+  if(e.type==='drone'){
+    const desiredY=p.y-100+Math.sin(e.clock*2+e.id)*25;
+    e.x=clamp(e.x+clamp(p.x-e.facing*240-e.x,-160*dt,160*dt),30,g.room.width-30);e.y+=clamp(desiredY-e.y,-110*dt,110*dt);
+  }
+  if(e.mode==='attack'){
+    const old=e.timer;e.timer+=dt;
+    if(e.type==='rusher'){
+      if(old<.55&&e.timer>=.55){e.chargeFacing=e.facing;e.vx=e.facing*440;e.vy=-390;e.grounded=false;}
+      if(e.timer>=.55&&(!e.grounded||e.timer<1.25)){
+        const oldX=e.x;e.x=clamp(e.x+e.vx*dt,25,g.room.width-25);e.vy=Math.min(900,(e.vy||0)+PHYSICS.gravity*dt);landBody(e,g.room.platforms,dt);
+        if(e.grounded)e.home=g.room.platforms.find(v=>v.id===e.platformId)||e.home;
+        if(segmentHitsBody(oldX,e.y-45,e.x,e.y-45,p,24))hurtPlayer(g,16+(e.act||0)*2,e.chargeFacing);
+      }
+      if(e.y>FLOOR+220){e.x=e.home.x+e.home.w/2;e.y=e.home.y;e.vy=0;}
+    }else if(e.type==='guard'&&old<.65&&e.timer>=.65){if(Math.abs(dx)<130&&Math.abs(dy)<90)hurtPlayer(g,18,e.facing);effect(g,'slash',e.x+e.facing*55,e.y-35,{dir:e.facing});}
+    else if(e.type==='drone'&&old<.7&&e.timer>=.7){const aim=e.aimAngle;for(const spread of [-.12,.12])enemyShot(g,e,aim+spread,340);}
+    const recovery=e.type==='rusher'?1.7:e.type==='caster'?1.15:1.05;
+    if(e.timer>=recovery){e.mode='idle';e.timer=0;e.cooldown=e.type==='caster'?1.6:e.type==='rusher'?.8:.8;}
+    return;
+  }
+  const range=e.type==='rusher'?650:e.type==='guard'?115:e.type==='caster'?1000:780;
+  if(Math.abs(dx)<range&&Math.abs(dy)<(e.type==='guard'?100:380)&&e.cooldown<=0){
+    e.mode='attack';e.timer=0;e.attackId++;e.aimAngle=Math.atan2(p.y-40-(e.y-e.h*.55),dx);
+    if(e.type==='caster'){g.room.marks??=[];g.room.marks.push({owner:e.id,x:p.x,y:p.y,time:0,delay:1,r:70,damage:15+(e.act||0)*2});}
+    return;
+  }
+  if(e.type!=='drone'){
+    const moving=e.type==='guard'?Math.abs(dx)>90&&Math.abs(dx)<900:e.type==='rusher'?Math.abs(dx)>350:false;
+    const old=e.x;if(moving)e.x=clamp(e.x+e.facing*(e.type==='guard'?85:165)*dt,e.home.x+e.w/2+10,e.home.x+e.home.w-e.w/2-10);e.mode=old===e.x?'idle':'walk';
+  }else e.mode='walk';
+}
+function updateMarks(g,dt){
+  for(const m of g.room.marks||[]){
+    if(g.room.cleared||!g.room.enemies.some(e=>e.id===m.owner&&e.hp>0)){m.done=true;continue;}
+    m.time+=dt;if(m.time>=m.delay){if(Math.abs(g.player.x-m.x)<m.r&&Math.abs(g.player.y-m.y)<40)hurtPlayer(g,m.damage);effect(g,'burst',m.x,m.y-25,{color:'#e1a6ff'});m.done=true;}
+  }g.room.marks=(g.room.marks||[]).filter(m=>!m.done);
+}
 function updateGuardian(g,e,dx,dy,dt){
   const enraged=e.hp<e.maxHp*.5,windup=e.windup??(enraged?.65:.95);
   if(e.mode==='attack'){
@@ -218,7 +262,7 @@ function updateProjectiles(g,dt){
     const floor=g.room.platforms.filter(p=>b.x+b.r>p.x&&b.x-b.r<p.x+p.w&&previousBottom<=p.y+.5&&b.y+b.r>=p.y).sort((a,c)=>a.y-c.y)[0];
     if(b.vy>0&&floor){b.y=floor.y-b.r;b.vy=-Math.max(160,Math.abs(b.vy)*.6);}
     if(b.y>FLOOR+180)b.life=0;
-    for(const e of g.room.enemies)if(e.hp>0&&Math.hypot(clamp(b.x,e.x-e.w/2,e.x+e.w/2)-b.x,clamp(b.y,e.y-e.h,e.y)-b.y)<=b.r&&(b.hits[e.id]===undefined||g.time-b.hits[e.id]>.32)){b.hits[e.id]=g.time;hitEnemy(g,e,b.damage,Math.sign(b.vx)*20,{critical:b.critical});}
+    for(const e of g.room.enemies)if(e.hp>0&&Math.hypot(clamp(b.x,e.x-e.w/2,e.x+e.w/2)-b.x,clamp(b.y,e.y-e.h,e.y)-b.y)<=b.r&&(b.hits[e.id]===undefined||g.time-b.hits[e.id]>.32)){b.hits[e.id]=g.time;hitEnemy(g,e,b.damage,Math.sign(b.vx)*20,{critical:b.critical,guardBreak:true});}
   }
   g.boulders=g.boulders.filter(b=>b.life>0);
 }
@@ -331,7 +375,7 @@ export function tick(g,input={},dt=1/120){
   dt=clamp(dt,0,1/30);g.time+=dt;g.elapsed+=dt;
   if(g.contract?.status==='active'&&g.contract.nodeId===g.currentNodeId&&!g.room.cleared)g.contract.elapsed+=dt;
   const pressed={};for(const key of ['jump','dash','skill','interact'])pressed[key]=Boolean(input[key+'Pressed']||(input[key]&&!g.previous[key]));
-  updatePlayer(g,input,pressed,dt);updateEnemies(g,dt);updateProjectiles(g,dt);updateHazards(g,dt);
+  updatePlayer(g,input,pressed,dt);updateEnemies(g,dt);updateProjectiles(g,dt);updateHazards(g,dt);updateMarks(g,dt);
   for(const item of g.room.pickups)if(!item.taken&&Math.hypot(g.player.x-item.x,g.player.y-30-item.y)<g.stats.pickupRadius){item.taken=true;if(item.kind==='heart'){g.stats.hp=Math.min(g.stats.maxHp,g.stats.hp+15);effect(g,'text',item.x,item.y,{text:'+15 HP',color:'#ffb6be'});}else{g.coins+=5;effect(g,'text',item.x,item.y,{text:'+5',color:'#ffe09b'});}}
   for(const e of g.effects)e.time+=dt;g.effects=g.effects.filter(e=>e.time<e.duration);
   g.noticeTime=Math.max(0,g.noticeTime-dt);g.roomIntro=Math.max(0,g.roomIntro-dt);g.shake=Math.max(0,g.shake-dt);

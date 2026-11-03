@@ -1,0 +1,310 @@
+{
+  "version": 43,
+  "source": "https://viewer.dclnslde.com/",
+  "monsters": {
+    "rusher": {
+      "id": "monsters/furrywarriorcloserange",
+      "name": "수인 광전사",
+      "skin": "Skin_Gloomy",
+      "clips": {
+        "idle": {
+          "key": "idle",
+          "name": "Idle",
+          "count": 32,
+          "loop": true,
+          "duration": 1.3333333730697632,
+          "width": 144,
+          "height": 192,
+          "origin": [
+            93.23809814453125,
+            160.19439697265625
+          ],
+          "rows": 4,
+          "columns": 8,
+          "bodyHeight": 145.63241777420043,
+          "image": "./assets/trickcal-enemies43/rusher-idle.webp"
+        },
+        "walk": {
+          "key": "walk",
+          "name": "Move",
+          "count": 24,
+          "loop": true,
+          "duration": 0.6666666865348816,
+          "width": 192,
+          "height": 192,
+          "origin": [
+            112.7902587890625,
+            170.77995605468752
+          ],
+          "rows": 3,
+          "columns": 8,
+          "bodyHeight": 159.84753761291506,
+          "image": "./assets/trickcal-enemies43/rusher-walk.webp"
+        },
+        "attack": {
+          "key": "attack",
+          "name": "Attack1_1_Gloomy",
+          "count": 32,
+          "loop": false,
+          "duration": 1.1666667461395264,
+          "width": 240,
+          "height": 208,
+          "origin": [
+            125.28668212890625,
+            173.26274414062502
+          ],
+          "rows": 4,
+          "columns": 8,
+          "bodyHeight": 173.54930267333987,
+          "image": "./assets/trickcal-enemies43/rusher-attack.webp"
+        },
+        "die": {
+          "key": "die",
+          "name": "Die",
+          "count": 24,
+          "loop": false,
+          "duration": 1.8666667938232422,
+          "width": 336,
+          "height": 304,
+          "origin": [
+            103.78670654296876,
+            255.11782226562502
+          ],
+          "rows": 3,
+          "columns": 8,
+          "bodyHeight": 265.9460113525391,
+          "image": "./assets/trickcal-enemies43/rusher-die.webp"
+        }
+      },
+      "gameScale": 0.686660302207216
+    },
+    "guard": {
+      "id": "monsters/crayontanker",
+      "name": "막을레용",
+      "skin": "Skin_Gloomy",
+      "clips": {
+        "idle": {
+          "key": "idle",
+          "name": "Idle",
+          "count": 32,
+          "loop": true,
+          "duration": 1.3333333730697632,
+          "width": 176,
+          "height": 176,
+          "origin": [
+            81.77648315429688,
+            143.82388916015626
+          ],
+          "rows": 4,
+          "columns": 8,
+          "bodyHeight": 129.4638801574707,
+          "image": "./assets/trickcal-enemies43/guard-idle.webp"
+        },
+        "walk": {
+          "key": "walk",
+          "name": "Move",
+          "count": 24,
+          "loop": true,
+          "duration": 1.2000000476837158,
+          "width": 192,
+          "height": 176,
+          "origin": [
+            88.84075317382813,
+            145.533447265625
+          ],
+          "rows": 3,
+          "columns": 8,
+          "bodyHeight": 133.5259449005127,
+          "image": "./assets/trickcal-enemies43/guard-walk.webp"
+        },
+        "attack": {
+          "key": "attack",
+          "name": "Attack1_1_Gloomy",
+          "count": 32,
+          "loop": false,
+          "duration": 1.2000000476837158,
+          "width": 192,
+          "height": 192,
+          "origin": [
+            95.22093505859375,
+            169.149169921875
+          ],
+          "rows": 4,
+          "columns": 8,
+          "bodyHeight": 154.78917961120607,
+          "image": "./assets/trickcal-enemies43/guard-attack.webp"
+        },
+        "die": {
+          "key": "die",
+          "name": "Die",
+          "count": 24,
+          "loop": false,
+          "duration": 2,
+          "width": 384,
+          "height": 368,
+          "origin": [
+            97.56902465820313,
+            324.1390380859375
+          ],
+          "rows": 3,
+          "columns": 8,
+          "bodyHeight": 324.61252441406253,
+          "image": "./assets/trickcal-enemies43/guard-die.webp"
+        }
+      },
+      "gameScale": 0.7724162127565394
+    },
+    "caster": {
+      "id": "monsters/crayonwizard",
+      "name": "지원할레용",
+      "skin": "Skin_Gloomy",
+      "clips": {
+        "idle": {
+          "key": "idle",
+          "name": "Idle",
+          "count": 32,
+          "loop": true,
+          "duration": 6.6666669845581055,
+          "width": 160,
+          "height": 192,
+          "origin": [
+            95.25563354492188,
+            171.61563720703126
+          ],
+          "rows": 4,
+          "columns": 8,
+          "bodyHeight": 157.5807863235474,
+          "image": "./assets/trickcal-enemies43/caster-idle.webp"
+        },
+        "walk": {
+          "key": "walk",
+          "name": "Move",
+          "count": 24,
+          "loop": true,
+          "duration": 0.6666666865348816,
+          "width": 144,
+          "height": 224,
+          "origin": [
+            89.43860473632813,
+            192.903662109375
+          ],
+          "rows": 3,
+          "columns": 8,
+          "bodyHeight": 179.59021663665771,
+          "image": "./assets/trickcal-enemies43/caster-walk.webp"
+        },
+        "attack": {
+          "key": "attack",
+          "name": "Attack1_1_Gloomy",
+          "count": 32,
+          "loop": false,
+          "duration": 1.100000023841858,
+          "width": 208,
+          "height": 208,
+          "origin": [
+            137.18193359375,
+            182.4522705078125
+          ],
+          "rows": 4,
+          "columns": 8,
+          "bodyHeight": 168.3520746231079,
+          "image": "./assets/trickcal-enemies43/caster-attack.webp"
+        },
+        "die": {
+          "key": "die",
+          "name": "Die",
+          "count": 24,
+          "loop": false,
+          "duration": 2.700000047683716,
+          "width": 352,
+          "height": 256,
+          "origin": [
+            94.67297973632813,
+            220.12283935546876
+          ],
+          "rows": 3,
+          "columns": 8,
+          "bodyHeight": 220.76492004394532,
+          "image": "./assets/trickcal-enemies43/caster-die.webp"
+        }
+      },
+      "gameScale": 0.6345951326494742
+    },
+    "drone": {
+      "id": "monsters/drones",
+      "name": "드론 S형",
+      "skin": "Skin_Gloomy",
+      "clips": {
+        "idle": {
+          "key": "idle",
+          "name": "Idle",
+          "count": 32,
+          "loop": true,
+          "duration": 1.0666667222976685,
+          "width": 176,
+          "height": 128,
+          "origin": [
+            78.59492797851563,
+            168.39715576171875
+          ],
+          "rows": 4,
+          "columns": 8,
+          "bodyHeight": 91.19067993164063,
+          "image": "./assets/trickcal-enemies43/drone-idle.webp"
+        },
+        "walk": {
+          "key": "walk",
+          "name": "Move",
+          "count": 24,
+          "loop": true,
+          "duration": 0.8000000715255737,
+          "width": 192,
+          "height": 128,
+          "origin": [
+            85.19470825195313,
+            171.84766845703126
+          ],
+          "rows": 3,
+          "columns": 8,
+          "bodyHeight": 93.00270385742188,
+          "image": "./assets/trickcal-enemies43/drone-walk.webp"
+        },
+        "attack": {
+          "key": "attack",
+          "name": "Attack1_1_Gloomy",
+          "count": 32,
+          "loop": false,
+          "duration": 1.2000000476837158,
+          "width": 192,
+          "height": 144,
+          "origin": [
+            84.39272460937501,
+            169.80449218750002
+          ],
+          "rows": 4,
+          "columns": 8,
+          "bodyHeight": 96.93276367187501,
+          "image": "./assets/trickcal-enemies43/drone-attack.webp"
+        },
+        "die": {
+          "key": "die",
+          "name": "Die",
+          "count": 24,
+          "loop": false,
+          "duration": 2,
+          "width": 240,
+          "height": 224,
+          "origin": [
+            96.50502929687501,
+            180.90218505859377
+          ],
+          "rows": 3,
+          "columns": 8,
+          "bodyHeight": 176.00712356567385,
+          "image": "./assets/trickcal-enemies43/drone-die.webp"
+        }
+      },
+      "gameScale": 1.09660329405333
+    }
+  }
+}

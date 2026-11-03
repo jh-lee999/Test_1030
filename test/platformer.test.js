@@ -46,7 +46,7 @@ test('fast projectiles sweep the full body and do not tunnel through at high spe
 test('dash has a cooldown, fixed facing, damage immunity, no repeated key auto-dash',()=>{
   const g=safe(),hp=g.stats.hp;tick(g,{dash:true,right:true});assert.ok(g.player.dash>0);assert.equal(hurtPlayer(g,30),false);assert.equal(g.stats.hp,hp);tick(g,{dash:true,left:true});assert.equal(g.player.facing,1);step(g,100,{dash:true});assert.equal(g.player.dash,0);assert.equal(g.player.dashCooldown,0);tick(g,{});tick(g,{dash:true});assert.ok(g.player.dash>0);
 });
-test('high skill produces bouncing piercing boulder and grants duration immunity',()=>{
+test('high skill produces bouncing piercing boulder and grants casting immunity',()=>{
   const g=safe();tick(g,{skill:true});assert.equal(g.boulders.length,0);assert.equal(hurtPlayer(g,50),false);step(g,85);assert.equal(g.boulders.length,1);
   const b=g.boulders[0];b.x=g.room.width-b.r-1;b.vx=660;tick(g,{});assert.ok(b.vx<0);const e=g.room.enemies[0];e.x=b.x;e.y=FLOOR;e.hp=500;e.maxHp=500;tick(g,{});assert.ok(e.hp<500);assert.equal(g.boulders.length,1);
   const stronger=applyItem(g.stats,'upper_book');assert.ok(upperPower(stronger).damage>upperPower(g.stats).damage);assert.ok(upperPower(stronger).duration>upperPower(g.stats).duration);

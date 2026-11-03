@@ -1,6 +1,7 @@
 import {PHYSICS,approach,landBody} from './platformer-physics.js?v=38';
+import {ENEMY_TYPES,ENCOUNTERS} from './platformer-enemies.js?v=43';
 
-export const WORLD_VERSION=42,ROOMS_PER_ACT=7,STAGES=21,FLOOR=634;
+export const WORLD_VERSION=43,ROOMS_PER_ACT=7,STAGES=21,FLOOR=634;
 export const ACTS=[
   {name:'뒤틀린 숲',biomes:['grove','canopy'],boss:'숲길의 문지기',rule:'근접 돌진 · 발판을 오가며 거리 확보',color:'#b7d287'},
   {name:'잊힌 회랑',biomes:['ruins'],boss:'회랑의 저격수',rule:'교차사격 · 예고된 마력 지대 피하기',color:'#9dbce5'},
@@ -116,11 +117,11 @@ function buildRoom(node,attempt=0,simple=false){
     }
   }
   const last=main.at(-1),width=last.x+last.w,spawn={x:150,y:first.y,platformId:first.id},exit={x:width-110,y:last.y,platformId:last.id};
-  const enemies=[],pickups=[];
-  const addEnemy=(type,p)=>{const elite=node.type==='elite',hp=Math.round((type==='ghost'?460+node.depth*12:type==='archer'?34+node.depth*5:42+node.depth*6)*(elite?1.45:1)),w=type==='ghost'?126:44;
-    enemies.push({id:enemies.length,type,x:p.x+p.w*(.4+rng()*.2),y:p.y,home:p,hp,maxHp:hp,h:type==='ghost'?148:94,w,facing:-1,vx:0,clock:rng()*4,mode:'idle',timer:0,cooldown:1+rng(),flash:0,death:0,attackId:0});};
+  const enemies=[],pickups=[],encounter=ENCOUNTERS[(act+(local===2?2:local===4?1:0))%ENCOUNTERS.length];
+  const addEnemy=(type,p,offset=0)=>{const elite=node.type==='elite',profile=ENEMY_TYPES[type],hp=Math.round((profile.hp+node.depth*4)*(elite?1.35:1)),w=profile.w;
+    enemies.push({id:enemies.length,type,x:clamp(p.x+p.w*(.4+rng()*.2)+offset,p.x+w/2+12,p.x+p.w-w/2-12),y:p.y,home:p,hp,maxHp:hp,h:profile.h,w,facing:-1,vx:0,clock:rng()*4,mode:'idle',timer:0,cooldown:.65+rng()*.7,flash:0,death:0,attackId:0});};
   if(boss){addEnemy(act===0?'fan':act===1?'archer':'ghost',first);const e=enemies[0];Object.assign(e,{x:width*.72,boss:true,hp:[360,720,1400][act],maxHp:[360,720,1400][act],h:act===2?148:126,w:act===2?126:72});}
-  else if(!event){for(const p of main.slice(1,-1))if(rng()<.76)addEnemy(rng()<[.2,.72,.45][act]?'archer':'fan',p);for(const p of platforms.filter(p=>p.optional))if(rng()<.55)addEnemy('archer',p);if(!enemies.length)addEnemy('fan',main[1]);}
+  else if(!event){let group=0;for(const p of main.slice(1,-1)){if(group<4||rng()<.8){addEnemy(encounter.roster[group%encounter.roster.length],p);if(node.type==='elite'&&group%2===1)addEnemy(group%3?'drone':'caster',p,50);}group++;}for(const p of platforms.filter(p=>p.optional))if(rng()<.65)addEnemy(rng()<.5?'caster':'archer',p);}
   for(const e of enemies){e.act=act;e.veteran=!boss&&(node.type==='elite'||act===2);}
   const hazards=!event&&act>0?main.slice(1,-1).filter((p,i)=>i%2===0).map(p=>({x:p.x+p.w*.5,y:p.y,w:Math.min(125,p.w*.55),period:act===1?4.5:3.6,offset:rng()*2,clock:0})):[];
   if(!boss)for(const p of platforms.slice(1,-1))if(rng()<.6||p.optional)pickups.push({x:p.x+30,y:p.y-26,platformId:p.id,kind:rng()<.16?'heart':'coin',taken:false});
@@ -128,7 +129,7 @@ function buildRoom(node,attempt=0,simple=false){
   const merchantPlatform=node.type==='shop'?shrinePlatform:local===0?last:null;
   const merchant=merchantPlatform?{x:node.type==='shop'?merchantPlatform.x+merchantPlatform.w/2:exit.x-145,y:merchantPlatform.y,platformId:merchantPlatform.id}:null;
   const decorations=platforms.map(p=>({kind:profile.prop,x:p.x+Math.min(p.w-25,integer(rng,25,90)),y:p.y,variant:integer(rng,0,3)}));
-  return{nodeId:node.id,index:node.depth,act,local,rewardKind:node.rewardKind||'item',hazards,type:node.type,biome:node.biome,seed:node.seed,width,platforms,spawn,enemies,pickups,exit,shrine,merchant,decorations,cleared:event,rewardTaken:node.type==='shop',background:profile.background,title:`${ACTS[act].name} · ${boss?ACTS[act].boss:ROOM_TYPES[node.type].name}`,generation:{attempt,fallback:simple}};
+  return{nodeId:node.id,index:node.depth,act,local,encounter:event||boss?null:encounter,marks:[],rewardKind:node.rewardKind||'item',hazards,type:node.type,biome:node.biome,seed:node.seed,width,platforms,spawn,enemies,pickups,exit,shrine,merchant,decorations,cleared:event,rewardTaken:node.type==='shop',background:profile.background,title:`${ACTS[act].name} · ${boss?ACTS[act].boss:event?ROOM_TYPES[node.type].name:encounter.name}`,generation:{attempt,fallback:simple}};
 }
 export function generateRoom(node){
   for(let attempt=0;attempt<8;attempt++){const room=buildRoom(node,attempt),validation=validateRoom(room);if(validation.valid){room.navigation=validation;return room;}}

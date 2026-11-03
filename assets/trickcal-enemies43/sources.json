@@ -1,0 +1,62 @@
+[
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/furrywarriorcloserange/FurryWarriorCloseRange.skel",
+    "bytes": 291899,
+    "sha256": "be56107d933cd457d0f23afb990422f5c87835e503b807d2c6dffaa35074d8a0"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/furrywarriorcloserange/FurryWarriorCloseRange.atlas",
+    "bytes": 4245,
+    "sha256": "e624cbd927894f5f5e2f00d8266af6400747599a8ba83240d26cb8ba36000970"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/furrywarriorcloserange/FurryWarriorCloseRange.png",
+    "bytes": 463805,
+    "sha256": "d482c2b3f8bf9ea3176bf6db8411af52d01b5c0b5ed6fb2ecdd6917a46bb0418"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/crayontanker/CrayonTanker.atlas",
+    "bytes": 3508,
+    "sha256": "da383173aea0f62b7a8a220e8c02028b20fb4d175bf5f3c5e6542b573a80f8dd"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/crayontanker/CrayonTanker.skel",
+    "bytes": 206867,
+    "sha256": "ea6cdd0e561130af5be22e7b071819fbedb1ca7d2a13739c790b4619c638f767"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/crayontanker/CrayonTanker.png",
+    "bytes": 316255,
+    "sha256": "42ee0450a327d7c294c260440f66736688c33ac32c6ed8afb8577f76c2f4f76c"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/crayonwizard/CrayonWizard.atlas",
+    "bytes": 5013,
+    "sha256": "a8d4ec76181be53d11391985b36146d5c5f2631e6a3b4a2b58c465a1c1eb339e"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/crayonwizard/CrayonWizard.png",
+    "bytes": 255632,
+    "sha256": "7c28e978e8a988257e699b72124e976887cd0b7eea60a979df0abeb004ee9c7b"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/crayonwizard/CrayonWizard.skel",
+    "bytes": 308551,
+    "sha256": "9a864b57c22d685e387ae3983ed6794f173b8d420ea6b7978338b85fff4fe5ec"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/drones/DroneS.atlas",
+    "bytes": 2957,
+    "sha256": "3974a22149ec6fb95c6e3322953d9294eeb3d97a830cc6a9778431fe119e99b9"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/drones/DroneS.skel",
+    "bytes": 409976,
+    "sha256": "9f44ccb38b91e2354eb38fcac3068b3bdbbe50dada7dbdb606aac371d443e246"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/drones/DroneS.png",
+    "bytes": 245535,
+    "sha256": "2be3408f9a5f5c1215f8ea7fb67d76b1d2e3604c87973fa0271ea5ab5f9ecfed"
+  }
+]

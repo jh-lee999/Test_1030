@@ -1,15 +1,15 @@
-import {createGame,tick,chooseReward,enterNextRoom,chooseRoute,routeOptions,interactRoom,chooseGoldReward,cashReward,grantItem,rerollReward,rewardRerollCost,canOpenShop,openShop,buyShopItem,rerollShop,sellShopItem,buyShopHealing,buySealedBag,acceptContract,notifyGame,STAGES} from './platformer-engine.js?v=42';
-import {renderGame} from './platformer-renderer.js?v=42';
-import {BIOMES,ROOM_TYPES,ACTS,ROOMS_PER_ACT} from './platformer-world.js?v=42';
-import {CONTRACTS,HEAL_PRICE,BAG_PRICE,basePrice,offerPrice,salePrice,shopRerollCost,contractLabel} from './platformer-economy.js?v=42';
+import {createGame,tick,chooseReward,enterNextRoom,chooseRoute,routeOptions,interactRoom,chooseGoldReward,cashReward,grantItem,rerollReward,rewardRerollCost,canOpenShop,openShop,buyShopItem,rerollShop,sellShopItem,buyShopHealing,buySealedBag,acceptContract,notifyGame,STAGES} from './platformer-engine.js?v=43';
+import {renderGame} from './platformer-renderer.js?v=43';
+import {BIOMES,ROOM_TYPES,ACTS,ROOMS_PER_ACT} from './platformer-world.js?v=43';
+import {CONTRACTS,HEAL_PRICE,BAG_PRICE,basePrice,offerPrice,salePrice,shopRerollCost,contractLabel} from './platformer-economy.js?v=43';
 import {BUTTER_ORIGINAL,BUTTER_POSTER} from './butter-original-motion.js';
-import {STAGE_ART} from './assets/trickcal-stage37/atlas.js';
-import {ITEMS,INSCRIPTIONS,RARITIES,statRows,itemChanges,gradeSources,lowerPower,upperPower,applyBuildItem,removeBuildItem} from './platformer-build.js?v=42';
+import {STAGE_ART} from './platformer-art.js?v=43';
+import {ITEMS,INSCRIPTIONS,RARITIES,statRows,itemChanges,gradeSources,lowerPower,upperPower,applyBuildItem,removeBuildItem} from './platformer-build.js?v=43';
 const $=id=>document.getElementById(id),canvas=$('game-canvas'),ctx=canvas.getContext('2d');
 let game=createGame(),started=false,ready=false,last=0,accumulator=0,shownPhase='',shownRoom=-1,buildReturnPhase='playing';
 let shopTab='goods',sellSelection=null;
 const urlSeed=new URLSearchParams(location.search).get('seed');if(urlSeed)$('seed-input').value=urlSeed.slice(0,48);
-const keys=new Set(),touch=new Map(),pending=new Set(),images={butter:{},monsters:{fan:{},archer:{},ghost:{}},backgrounds:{}},reduced=matchMedia('(prefers-reduced-motion: reduce)');
+const keys=new Set(),touch=new Map(),pending=new Set(),images={butter:{},monsters:Object.fromEntries(Object.keys(STAGE_ART.monsters).map(k=>[k,{}])),backgrounds:{}},reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const bindings={KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right',Space:'jump',KeyW:'jump',ArrowUp:'jump',KeyJ:'attack',KeyX:'attack',ShiftLeft:'dash',ShiftRight:'dash',KeyK:'dash',KeyE:'skill',KeyF:'interact',ArrowDown:'interact',KeyS:'interact'};
 function input(){const value={};for(const key of keys){const action=bindings[key]||key;value[action]=true;}for(const action of touch.values())value[action]=true;for(const action of pending)value[action+'Pressed']=true;value.jumpReleased=pending.has('jumpRelease');return value;}
 function clearInput(){keys.clear();touch.clear();pending.clear();document.querySelectorAll('[data-control]').forEach(b=>b.classList.remove('pressed'));if(game)game.previous={};}
@@ -92,7 +92,7 @@ function drawBuild(){
   const s=game.stats,low=lowerPower(s),high=upperPower(s);
   $('build-count').textContent=`이번 여정 · 아이템 ${s.itemsTaken}개 / ${Object.keys(s.inventory).length}종 · ${game.coins} G`;
   $('build-last').textContent=game.lastPickup||'보상과 상점에서 같은 아이템을 다시 얻어도 효과가 쌓여요.';
-  $('grade-details').innerHTML=`<article><small>자동 발동 · 저학년</small><h3>추적 새총 <b>Lv.${s.lowerGrade}</b></h3><p>${gradeSources(s,'lowerGrade')}</p><strong>발동 ${(low.chance*100).toFixed(1)}% · 추가 튕김 ${low.bounces}회</strong><p>학년 ${s.lowerGrade} + 보너스 ${s.chainBonus} = ${low.bounces}회 · 탄환당 최대 ${low.bounces+1}회 적중<br>피해 ${low.damage.toFixed(1)} · 유도 성능 ${low.homing.toFixed(1)}<br>최대 ${low.pity}회 사격마다 발동 보장 · 발동 누적 ${game.lowerProcs}회<br>${low.chainRange}px 안의 적 사이에서 A → B → A 재타격 가능.<br>다른 적을 거쳐야 돌아와요. 혼자 남은 적에게는 재반사하지 않아요.</p><div class="milestones"><span class="${s.lowerGrade>=3?'active':''}">Lv.3 추적탄 +1발</span><span class="${s.lowerGrade>=5?'active':''}">Lv.5 추적탄 총 +2발</span></div></article><article><small>E · 고학년</small><h3>왕새총 <b>Lv.${s.upperGrade}</b></h3><p>${gradeSources(s,'upperGrade')}</p><strong>피해 ${high.damage.toFixed(1)} · ${high.duration.toFixed(1)}초 지속</strong><p>재사용 ${s.skillCooldown.toFixed(2)}초 · 반경 ${high.radius}px<br>추가 탄환은 55%, 반대편 왕짱돌은 65% 피해.<br>왕새총 사용 중 무적, 방 이동 시 종료돼요.</p><div class="milestones"><span class="${s.upperGrade>=3?'active':''}">Lv.3 반대 방향 왕짱돌 +1</span><span class="active">매 레벨 피해 · 크기 · 지속 증가</span></div></article>`;
+  $('grade-details').innerHTML=`<article><small>자동 발동 · 저학년</small><h3>추적 새총 <b>Lv.${s.lowerGrade}</b></h3><p>${gradeSources(s,'lowerGrade')}</p><strong>발동 ${(low.chance*100).toFixed(1)}% · 추가 튕김 ${low.bounces}회</strong><p>학년 ${s.lowerGrade} + 보너스 ${s.chainBonus} = ${low.bounces}회 · 탄환당 최대 ${low.bounces+1}회 적중<br>피해 ${low.damage.toFixed(1)} · 유도 성능 ${low.homing.toFixed(1)}<br>최대 ${low.pity}회 사격마다 발동 보장 · 발동 누적 ${game.lowerProcs}회<br>${low.chainRange}px 안의 적 사이에서 A → B → A 재타격 가능.<br>다른 적을 거쳐야 돌아와요. 혼자 남은 적에게는 재반사하지 않아요.</p><div class="milestones"><span class="${s.lowerGrade>=3?'active':''}">Lv.3 추적탄 +1발</span><span class="${s.lowerGrade>=5?'active':''}">Lv.5 추적탄 총 +2발</span></div></article><article><small>E · 고학년</small><h3>왕새총 <b>Lv.${s.upperGrade}</b></h3><p>${gradeSources(s,'upperGrade')}</p><strong>피해 ${high.damage.toFixed(1)} · ${high.duration.toFixed(1)}초 지속</strong><p>재사용 ${s.skillCooldown.toFixed(2)}초 · 반경 ${high.radius}px<br>추가 탄환은 55%, 반대편 왕짱돌은 65% 피해.<br>시전 1.1초만 무적 · 왕짱돌로 방패 관통.<br>방 이동 시 짱돌과 무적은 종료돼요.</p><div class="milestones"><span class="${s.upperGrade>=3?'active':''}">Lv.3 반대 방향 왕짱돌 +1</span><span class="active">매 레벨 피해 · 크기 · 지속 증가</span></div></article>`;
   $('stat-grid').innerHTML=statRows(s).map(([id,label,value])=>`<div data-stat="${id}"><span>${label}</span><b>${value}</b></div>`).join('');
   $('inscriptions').innerHTML=Object.entries(INSCRIPTIONS).map(([id,v])=>{const n=s.inscriptions[id];return `<article style="--tag-color:${v.color}"><h4>${v.name} <b>${n}</b></h4><p class="${n>=2?'active':''}">② ${v.two}</p><p class="${n>=4?'active':''}">④ ${v.four}</p></article>`;}).join('');
   $('inventory').innerHTML=Object.entries(s.inventory).map(([id,n])=>`<div data-owned="${id}"><svg aria-hidden="true"><use href="./assets/ui-icons.svg#${ITEMS[id].icon}"></use></svg><span><b>${ITEMS[id].name} <em>×${n}</em></b><small>${ITEMS[id].tags.map(t=>INSCRIPTIONS[t].name).join(' · ')}</small></span></div>`).join('')||'<p>아직 가방이 비어 있어요.</p>';
@@ -148,7 +148,7 @@ function loadImage(src,target,key){return new Promise(resolve=>{const image=new 
 async function boot(){
   let completed=0;const tasks=[];const add=(src,target,key)=>tasks.push(()=>loadImage(src,target,key).then(ok=>{completed++;$('load-status').textContent=`원작 에셋 ${completed} / ${tasks.length}`;return ok;}));
   add(BUTTER_POSTER,images.butter,'poster');for(const [key,c]of Object.entries(BUTTER_ORIGINAL.clips))add(c.image,images.butter,key);
-  for(const [key,m]of Object.entries(STAGE_ART.monsters)){for(const [clip,c]of Object.entries(m.clips))add(c.image,images.monsters[key],clip);add(`./assets/trickcal-stage37/${key}-poster.png`,images.monsters[key],'poster');}
+  for(const [key,m]of Object.entries(STAGE_ART.monsters)){for(const [clip,c]of Object.entries(m.clips))add(c.image,images.monsters[key],clip);add(m.clips.idle.image.replace('-idle.webp','-poster.png'),images.monsters[key],'poster');}
   for(const [key,b]of Object.entries(STAGE_ART.backgrounds))add(b.image,images.backgrounds,key);
   const results=await Promise.all(tasks.map(t=>t())),failed=results.filter(x=>!x).length;ready=true;document.body.dataset.ready='true';$('start-button').disabled=false;$('start-button').textContent='아공간으로 출발 →';$('load-status').textContent=failed?`${failed}개 이미지를 불러오지 못했어요. 기본 표시로 플레이할 수 있어요.`:'준비 완료 · 새총은 공격 버튼을 누르고 있으면 계속 발사해요.';
 }
