@@ -1,4 +1,4 @@
-import {VIEW,FLOOR,HERO_SIZE,heroPose,clamp} from './platformer-engine.js?v=38';
+import {VIEW,FLOOR,HERO_SIZE,heroPose,clamp} from './platformer-engine.js?v=39';
 import {BIOMES,ROOM_TYPES} from './platformer-world.js?v=38';
 import {drawButterMotion,selectButterFrame} from './butter-original-motion.js';
 import {STAGE_ART} from './assets/trickcal-stage37/atlas.js';
@@ -36,6 +36,7 @@ function monster(ctx,e,images){
   if(image?.naturalWidth)ctx.drawImage(image,frame%clip.columns*clip.width,Math.floor(frame/clip.columns)*clip.height,clip.width,clip.height,-clip.origin[0]*scale,-clip.origin[1]*scale,clip.width*scale,clip.height*scale);
   else{ellipse(ctx,0,-35,25,35,'#ac9cb8');text(ctx,'?',0,-27,24);}
   ctx.restore();
+  if(e.hp>0&&e.burnTime>0){for(let i=0;i<3;i++){const rise=(e.clock*24+i*13)%40;ellipse(ctx,e.x-14+i*14,e.y-15-rise,3,6,'#ffc080bb');}}
   if(e.hp>0&&e.hp<e.maxHp&&e.type!=='ghost'){rounded(ctx,e.x-24,e.y-e.h-22,48,5,2,'#1c2924bb');rounded(ctx,e.x-24,e.y-e.h-22,48*e.hp/e.maxHp,5,2,'#f3afa1');}
   if(e.mode==='attack'&&e.hp>0){
     const release=e.type==='ghost'?.75:e.type==='archer'?.55:.46;
@@ -79,6 +80,7 @@ export function renderGame(ctx,g,images,{started=true,reducedMotion=false}={}){
   const ground=room.platforms.filter(q=>p.x>=q.x&&p.x<=q.x+q.w&&q.y>=p.y).sort((a,b)=>a.y-b.y)[0];
   if(ground){const scale=clamp(1-(ground.y-p.y)/500,.3,1);ellipse(ctx,p.x,ground.y+2,29*scale,6*scale,'#1c281b55');}
   if(p.skillTime>0){ctx.strokeStyle='#ffeab599';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(p.x,p.y-50,55,64,0,0,TAU);ctx.stroke();}
+  if(p.shield>0){ctx.strokeStyle='#b3eafa99';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(p.x,p.y-42,43,54,0,0,TAU);ctx.stroke();}
   const pose=heroPose(p);ctx.save();ctx.translate(p.x,p.y-HERO_SIZE*.28);if(p.facing>0)ctx.scale(-1,1);
   if(p.invulnerable>0&&Math.floor(time*14)%2===0)ctx.globalAlpha=.45;
   if(p.dash>0){ctx.save();ctx.globalAlpha=.2;ctx.translate(p.facing>0?40:-40,0);drawButterMotion(ctx,images.butter,pose);ctx.restore();}
@@ -88,6 +90,7 @@ export function renderGame(ctx,g,images,{started=true,reducedMotion=false}={}){
     if(e.type==='text')text(ctx,e.text,0,-f*35,20,e.color);
     else if(e.type==='hit'||e.type==='burst'){ctx.strokeStyle=e.color||'#fff1c2';ctx.lineWidth=3;const count=e.type==='burst'?12:6;for(let i=0;i<count;i++){const a=i/count*TAU,r=(e.type==='burst'?65:28)*f;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.4,Math.sin(a)*r*.4);ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r);ctx.stroke();}}
     else if(e.type==='jump'||e.type==='land'){ctx.strokeStyle='#efedc0';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(0,0,15+f*30,5+f*4,0,0,TAU);ctx.stroke();}
+    else if(e.type==='chain'){ctx.strokeStyle='#b1e6fa';ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,0,10+f*34,0,TAU);ctx.stroke();}
     else if(e.type==='shot'){ellipse(ctx,e.dir*5,0,12*(1-f),5*(1-f),e.color);}
     else if(e.type==='slash'){ctx.strokeStyle='#f8ccae';ctx.lineWidth=6;ctx.beginPath();ctx.arc(0,0,35,-1,1);ctx.stroke();}
     else if(e.type==='dash'){ctx.strokeStyle='#ffefbb';ctx.lineWidth=2;for(let i=0;i<4;i++){ctx.beginPath();ctx.moveTo(-e.dir*f*70,-15+i*10);ctx.lineTo(-e.dir*(f*70+35),-15+i*10);ctx.stroke();}}ctx.restore();

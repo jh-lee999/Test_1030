@@ -1,5 +1,21 @@
 # Project instructions
 
+## Active v39 build rules
+
+The user clarified that accumulation means **within the same run**, not permanent
+meta-progression. `platformer-build.js` owns the side-scroller's 28 items, derived
+stats and six 2/4 inscriptions. Inventory counts are the source of truth; rebuild
+from base stats on acquisition, never overwrite earlier stacks. Duplicate copies
+count for inscriptions; apply each threshold bonus once. Use engine `grantItem`
+for acquisitions so current cooldowns/shield stay consistent. Do not migrate the
+archived top-down engine's rules. Shop, loot, combat and map RNG stay separate.
+See `docs/build39.md` for formulas, caps and which Skul-inspired features are NOT
+implemented. Keep low-grade level bonuses connected to real projectile behavior,
+not only descriptions. Changes must pass the build/combat39 unit tests and
+`tools/check-platformer-build-browser.mjs` in addition to the existing checks.
+I opens build/inventory; B opens the shop only after room/event completion. These
+panels freeze combat. Fresh runs reset items; room transitions preserve them.
+
 ## Butter artwork: persistent source of truth
 
 **Latest genre / mirroring decision, 2026-11-03:** the user requested a Skul-like

@@ -1,4 +1,4 @@
-import {createRunState,applyItem,rollItems,lowerPower,upperPower} from './survivor-engine.js';
+import {createBuildState,applyBuildItem,rewardChoices,rollBuildItems,lowerPower,upperPower,ITEMS,RARITIES,itemChanges} from './platformer-build.js?v=39';
 import {advanceButterGait,butterMuzzleOffset,butterReleasePoint} from './butter-original-motion.js';
 import {PHYSICS,approach,landBody} from './platformer-physics.js?v=38';
 import {FLOOR,STAGES,BIOMES,generateWorld,generateRoom,seedNumber,seededRandom} from './platformer-world.js?v=38';
@@ -18,31 +18,42 @@ export function makeRoom(index,random){
   return generateRoom({id:`standalone:${index}`,depth:index,seed,biome:Object.keys(BIOMES)[seed%4],type:index===STAGES-1?'boss':'combat'});
 }
 export function createGame(seed=Date.now()){
-  const seedLabel=String(seed).trim().slice(0,48)||'0',root=seedNumber(seedLabel),random=seededRandom(`${root}:combat`),rewardRandom=seededRandom(`${root}:loot`),stats=createRunState('butter'),world=generateWorld(root),room=generateRoom(world.nodes[0]);
-  const game={seed:root,seedLabel,random,rewardRandom,world,currentNodeId:world.startId,rooms:{[world.startId]:room},stats,room,phase:'playing',time:0,elapsed:0,coins:0,shotsFired:0,projectiles:[],effects:[],boulders:[],camera:0,cameraY:0,shake:0,hitStop:0,previous:{},choices:[],notice:'',noticeTime:0,roomIntro:3};
-  game.player={x:150,y:FLOOR,vx:0,vy:0,w:32,h:78,facing:1,grounded:true,jumps:0,coyote:.1,jumpBuffer:0,dash:0,dashCooldown:0,invulnerable:0,skillTime:0,skillCooldown:0,attackCooldown:0,action:null,gait:{phase:0,amount:0,clock:0}};
+  const seedLabel=String(seed).trim().slice(0,48)||'0',root=seedNumber(seedLabel),random=seededRandom(`${root}:combat`),rewardRandom=seededRandom(`${root}:loot`),shopRandom=seededRandom(`${root}:shop`),stats=createBuildState(),world=generateWorld(root),room=generateRoom(world.nodes[0]);
+  const game={seed:root,seedLabel,random,rewardRandom,shopRandom,world,currentNodeId:world.startId,rooms:{[world.startId]:room},stats,room,phase:'playing',time:0,elapsed:0,coins:0,shotsFired:0,lowerProcs:0,buildRevision:0,lastPickup:'',projectiles:[],effects:[],boulders:[],camera:0,cameraY:0,shake:0,hitStop:0,previous:{},choices:[],notice:'',noticeTime:0,roomIntro:3};
+  game.player={x:150,y:FLOOR,vx:0,vy:0,w:32,h:78,facing:1,grounded:true,jumps:0,coyote:.1,jumpBuffer:0,dash:0,dashCooldown:0,dashHits:[],shield:0,lowerDryShots:0,invulnerable:0,skillTime:0,skillCooldown:0,attackCooldown:0,action:null,gait:{phase:0,amount:0,clock:0}};
   game.checkpoint={...room.spawn};
   return game;
 }
 export function notifyGame(g,text){g.notice=text;g.noticeTime=2.6;}
 function effect(g,type,x,y,extra={}){g.effects.push({type,x,y,time:0,duration:type==='text'?.7:.32,...extra});}
-function hitEnemy(g,e,damage,force=0){
-  if(e.hp<=0)return;e.hp=Math.max(0,e.hp-damage);e.flash=.12;e.x=clamp(e.x+force,e.home.x+e.w/2,e.home.x+e.home.w-e.w/2);
-  effect(g,'hit',e.x,e.y-e.h*.55);effect(g,'text',e.x,e.y-e.h,{text:String(Math.round(damage)),color:'#fff3b4'});
-  if(!e.hp){e.mode='die';e.death=0;g.stats.kills++;g.coins+=e.type==='ghost'?15:2;g.shake=Math.max(g.shake,.13);}
+export function hitEnemy(g,e,damage,force=0,{critical=false,direct=true}={}){
+  if(e.hp<=0)return;const dealt=Math.min(e.hp,damage);e.hp=Math.max(0,e.hp-damage);e.flash=.12;e.x=clamp(e.x+force,e.home.x+e.w/2,e.home.x+e.home.w-e.w/2);
+  effect(g,'hit',e.x,e.y-e.h*.55);effect(g,'text',e.x,e.y-e.h,{text:String(Math.round(damage))+(critical?'!':''),color:critical?'#ffce66':direct?'#fff3b4':'#ffa995'});
+  if(direct&&g.stats.lifeSteal>0)g.stats.hp=Math.min(g.stats.maxHp,g.stats.hp+dealt*g.stats.lifeSteal);
+  if(direct&&g.stats.burnPower>0){e.burnTime=2;e.burnDPS=g.stats.damage*g.stats.burnPower;e.burnTick=e.burnTick??.5;}
+  if(!e.hp){
+    e.mode='die';e.death=0;g.stats.kills++;g.coins+=e.type==='ghost'?15:2;g.shake=Math.max(g.shake,.13);g.stats.hp=Math.min(g.stats.maxHp,g.stats.hp+g.stats.killHeal);
+    if(g.stats.killExplosion>0){effect(g,'burst',e.x,e.y-e.h*.5,{color:'#ffbb86',duration:.5});for(const other of g.room.enemies)if(other.hp>0&&Math.hypot(other.x-e.x,(other.y-other.h*.5)-(e.y-e.h*.5))<100)hitEnemy(g,other,g.stats.damage*g.stats.killExplosion,0,{direct:false});}
+  }
 }
 export function hurtPlayer(g,damage,dir=1){
   const p=g.player;if(p.invulnerable>0||p.dash>0||p.skillTime>0||g.phase!=='playing')return false;
-  g.stats.hp=Math.max(0,g.stats.hp-damage);p.invulnerable=.9;p.vx=dir*250;g.shake=.2;effect(g,'hit',p.x,p.y-45,{color:'#ff9395'});
+  const reduced=damage*(1-g.stats.damageReduction),absorbed=Math.min(p.shield,reduced),loss=reduced-absorbed;p.shield-=absorbed;
+  g.stats.hp=Math.max(0,g.stats.hp-loss);g.room.hpDamage=(g.room.hpDamage||0)+loss;p.invulnerable=.9;p.vx=dir*250;g.shake=.2;effect(g,'hit',p.x,p.y-45,{color:absorbed?'#b7e9fa':'#ff9395'});
   if(g.stats.hp===0)g.phase='dead';return true;
 }
 function fire(g,action){
   const p=g.player,m=heroMuzzle(p);g.shotsFired++;
   if(action.type==='high'){
-    const power=upperPower(g.stats);g.boulders.push({x:m.x,y:Math.min(m.y,FLOOR-48),vx:p.facing*660,vy:-160,r:45+g.stats.upperGrade*2,life:power.duration,damage:power.damage,hits:{},angle:0});g.shake=.18;effect(g,'burst',m.x,m.y);return;
+    const power=upperPower(g.stats);for(let i=0;i<power.count;i++){const critical=g.random()<g.stats.critChance;g.boulders.push({x:m.x,y:Math.min(m.y,FLOOR-48),vx:p.facing*(i?-1:1)*660,vy:-160,r:power.radius,life:power.duration,damage:power.damage*(i?.65:1)*(critical?g.stats.critDamage:1),critical,hits:{},angle:0});}g.shake=.18;effect(g,'burst',m.x,m.y);return;
   }
   const low=action.type==='low',power=lowerPower(g.stats),speed=g.stats.projectileSpeed*1.55;
-  g.projectiles.push({owner:'player',x:m.x,y:m.y,vx:p.facing*speed,vy:0,r:low?9:6,life:2.4,damage:g.stats.damage*(low?1.25:1),homing:low,bounces:low?power.bounces:0,hitIds:[]});
+  p.lowerDryShots=low?0:p.lowerDryShots+1;if(low)g.lowerProcs++;
+  const count=1+g.stats.extraProjectiles+(low?power.extraProjectiles:0);
+  for(let i=0;i<count;i++){
+    const angle=i===0?0:Math.ceil(i/2)*.11*(i%2?1:-1),critical=g.random()<g.stats.critChance,damage=(low?power.damage:g.stats.damage)*(i?.55:1)*(critical?g.stats.critDamage:1);
+    g.projectiles.push({owner:'player',x:m.x,y:m.y,vx:p.facing*Math.cos(angle)*speed,vy:Math.sin(angle)*speed,speed,r:low?9:6,life:g.stats.projectileLifetime,damage,critical,homing:low,homingStrength:power.homing,bounces:low?power.bounces:0,pierce:low?0:g.stats.pierce,hitIds:[]});
+  }
   effect(g,'shot',m.x,m.y,{dir:p.facing,color:low?'#b9eeff':'#fff3bb'});
 }
 function updatePlayer(g,input,pressed,dt){
@@ -58,17 +69,18 @@ function updatePlayer(g,input,pressed,dt){
   if(!input.jump&&(g.previous.jump||input.jumpReleased)&&p.vy< -260)p.vy=-260;
   const axis=(input.right?1:0)-(input.left?1:0);
   if(axis&&p.dash<=0)p.facing=axis;
-  if(pressed.dash&&p.dashCooldown<=0){p.dash=.17;p.dashCooldown=.7;p.dashFacing=p.facing;effect(g,'dash',p.x,p.y-40,{duration:.25,dir:p.facing});}
+  if(pressed.dash&&p.dashCooldown<=0){p.dash=.17;p.dashCooldown=g.stats.dashCooldown;p.dashFacing=p.facing;p.dashHits=[];effect(g,'dash',p.x,p.y-40,{duration:.25,dir:p.facing});}
   if(pressed.skill&&p.skillCooldown<=0){
-    p.skillCooldown=13;p.skillTime=upperPower(g.stats).duration+1;p.action={type:'high',time:0,duration:1,fired:false};
+    p.skillCooldown=g.stats.skillCooldown;p.skillTime=upperPower(g.stats).duration+1;p.action={type:'high',time:0,duration:1,fired:false};
     notifyGame(g,'왕새총! 짱돌이 구르는 동안 무적');
   }
   if((input.attack||input.attackPressed)&&p.attackCooldown<=0&&!p.action){
-    const low=g.random()<lowerPower(g.stats).chance;p.action={type:low?'low':'normal',time:0,duration:Math.min(.42,g.stats.attackCooldown*.82),fired:false};p.attackCooldown=g.stats.attackCooldown;
+    const power=lowerPower(g.stats),low=p.lowerDryShots+1>=power.pity||g.random()<power.chance;p.action={type:low?'low':'normal',time:0,duration:Math.min(.42,g.stats.attackCooldown*.82),fired:false};p.attackCooldown=g.stats.attackCooldown;
   }
   if(p.dash>0){p.dash=Math.max(0,p.dash-dt);p.vx=p.dashFacing*850;p.vy=0;}
   else{p.vx=approach(p.vx,axis*g.stats.moveSpeed*1.4,dt*(axis?PHYSICS.acceleration:PHYSICS.braking));p.vy=Math.min(PHYSICS.maxFall,p.vy+PHYSICS.gravity*dt);}
   p.x=clamp(p.x+p.vx*dt,22,g.room.width-22);landBody(p,g.room.platforms,dt);
+  if(p.dash>0&&g.stats.dashDamage>0)for(const e of g.room.enemies)if(e.hp>0&&!p.dashHits.includes(e.id)&&segmentHitsBody(oldX,p.y-40,p.x,p.y-40,e,18)){p.dashHits.push(e.id);hitEnemy(g,e,g.stats.damage*g.stats.dashDamage,p.facing*15);}
   if(p.grounded){const floor=g.room.platforms.find(q=>q.id===p.platformId);if(floor)g.checkpoint={x:clamp(p.x,floor.x+40,floor.x+floor.w-40),y:floor.y,platformId:floor.id};}
   if(p.y>FLOOR+240){hurtPlayer(g,8);Object.assign(p,{x:g.checkpoint.x,y:g.checkpoint.y,vx:0,vy:0,jumps:0,grounded:true,dash:0,action:null,invulnerable:1});notifyGame(g,'발을 헛디뎠어! 마지막 발판으로 돌아왔어.');}
   if(!wasGrounded&&p.grounded)effect(g,'land',p.x,p.y,{duration:.25});
@@ -79,6 +91,7 @@ function updateEnemies(g,dt){
   const p=g.player;
   for(const e of g.room.enemies){
     e.clock+=dt;e.flash=Math.max(0,e.flash-dt);if(e.hp<=0){e.death+=dt;continue;}
+    if(e.burnTime>0){e.burnTime=Math.max(0,e.burnTime-dt);e.burnTick-=dt;if(e.burnTick<=0){e.burnTick+=.5;hitEnemy(g,e,e.burnDPS*.5,0,{direct:false});if(e.hp<=0)continue;}}
     e.cooldown=Math.max(0,e.cooldown-dt);const dx=p.x-e.x,dy=p.y-e.y;e.facing=dx>=0?1:-1;
     if(e.mode==='attack'){
       const before=e.timer;e.timer+=dt;const windup=e.type==='ghost'?.75:e.type==='archer'?.55:.46;
@@ -112,14 +125,14 @@ function updateProjectiles(g,dt){
   const p=g.player;
   for(const b of g.projectiles){
     b.life-=dt;const oldX=b.x,oldY=b.y;
-    if(b.homing){const target=g.room.enemies.filter(e=>e.hp>0&&!b.hitIds.includes(e.id)).sort((a,c)=>Math.hypot(a.x-b.x,a.y-a.h*.5-b.y)-Math.hypot(c.x-b.x,c.y-c.h*.5-b.y))[0];if(target){const angle=Math.atan2(target.y-target.h*.5-b.y,target.x-b.x),speed=Math.hypot(b.vx,b.vy),mix=1-Math.exp(-dt*7);b.vx+=(Math.cos(angle)*speed-b.vx)*mix;b.vy+=(Math.sin(angle)*speed-b.vy)*mix;}}
+    if(b.homing){const target=g.room.enemies.find(e=>e.id===b.targetId&&e.hp>0&&!b.hitIds.includes(e.id))||g.room.enemies.filter(e=>e.hp>0&&!b.hitIds.includes(e.id)).sort((a,c)=>Math.hypot(a.x-b.x,a.y-a.h*.5-b.y)-Math.hypot(c.x-b.x,c.y-c.h*.5-b.y))[0];if(target){b.targetId=target.id;const angle=Math.atan2(target.y-target.h*.5-b.y,target.x-b.x),speed=b.speed||Math.hypot(b.vx,b.vy),mix=1-Math.exp(-dt*(b.homingStrength||7));b.vx+=(Math.cos(angle)*speed-b.vx)*mix;b.vy+=(Math.sin(angle)*speed-b.vy)*mix;const actual=Math.hypot(b.vx,b.vy)||1;b.vx=b.vx/actual*speed;b.vy=b.vy/actual*speed;}}
     b.x+=b.vx*dt;b.y+=b.vy*dt;
     if(b.owner==='player'){
-      for(const e of g.room.enemies){
+      for(const e of [...g.room.enemies].sort((a,c)=>Math.hypot(a.x-oldX,a.y-a.h*.5-oldY)-Math.hypot(c.x-oldX,c.y-c.h*.5-oldY))){
         if(e.hp<=0||b.hitIds.includes(e.id))continue;
         if(!segmentHitsBody(oldX,oldY,b.x,b.y,e,b.r))continue;
-        hitEnemy(g,e,b.damage,Math.sign(b.vx)*8);b.hitIds.push(e.id);
-        if(b.bounces>0){b.bounces--;const next=g.room.enemies.filter(c=>c.hp>0&&!b.hitIds.includes(c.id)).sort((a,c)=>Math.abs(a.x-b.x)-Math.abs(c.x-b.x))[0];if(next){const a=Math.atan2(next.y-next.h*.5-b.y,next.x-b.x),speed=Math.hypot(b.vx,b.vy);b.vx=Math.cos(a)*speed;b.vy=Math.sin(a)*speed;}else b.life=0;}else b.life=0;
+        hitEnemy(g,e,b.damage,Math.sign(b.vx)*8,{critical:b.critical});b.hitIds.push(e.id);
+        if(b.bounces>0){b.bounces--;const next=g.room.enemies.filter(c=>c.hp>0&&!b.hitIds.includes(c.id)).sort((a,c)=>Math.hypot(a.x-b.x,a.y-a.h*.5-b.y)-Math.hypot(c.x-b.x,c.y-c.h*.5-b.y))[0];if(next){const a=Math.atan2(next.y-next.h*.5-b.y,next.x-b.x),speed=b.speed||Math.hypot(b.vx,b.vy);b.targetId=next.id;b.vx=Math.cos(a)*speed;b.vy=Math.sin(a)*speed;b.life=Math.max(b.life,1.3);effect(g,'chain',e.x,e.y-e.h*.5,{duration:.25});}else b.life=0;}else if(b.pierce>0){b.pierce--;continue;}else b.life=0;
         break;
       }
     }else if(segmentHitsBody(oldX,oldY,b.x,b.y,p,b.r)){hurtPlayer(g,b.damage,Math.sign(b.vx));b.life=0;}
@@ -132,14 +145,27 @@ function updateProjectiles(g,dt){
     const floor=g.room.platforms.filter(p=>b.x+b.r>p.x&&b.x-b.r<p.x+p.w&&previousBottom<=p.y+.5&&b.y+b.r>=p.y).sort((a,c)=>a.y-c.y)[0];
     if(b.vy>0&&floor){b.y=floor.y-b.r;b.vy=-Math.max(160,Math.abs(b.vy)*.6);}
     if(b.y>FLOOR+180)b.life=0;
-    for(const e of g.room.enemies)if(e.hp>0&&Math.hypot(e.x-b.x,e.y-e.h*.5-b.y)<b.r+e.w*.5&&(!b.hits[e.id]||g.time-b.hits[e.id]>.32)){b.hits[e.id]=g.time;hitEnemy(g,e,b.damage,Math.sign(b.vx)*20);}
+    for(const e of g.room.enemies)if(e.hp>0&&Math.hypot(clamp(b.x,e.x-e.w/2,e.x+e.w/2)-b.x,clamp(b.y,e.y-e.h,e.y)-b.y)<=b.r&&(b.hits[e.id]===undefined||g.time-b.hits[e.id]>.32)){b.hits[e.id]=g.time;hitEnemy(g,e,b.damage,Math.sign(b.vx)*20,{critical:b.critical});}
   }
   g.boulders=g.boulders.filter(b=>b.life>0);
 }
 export function chooseReward(g,id){
   if(g.phase!=='reward'||!g.choices.includes(id))return false;
-  g.stats=applyItem(g.stats,id);g.room.rewardTaken=true;g.world.nodes.find(n=>n.id===g.currentNodeId).completed=true;if(g.room.shrine)g.room.shrine.used=true;g.phase='playing';g.choices=[];notifyGame(g,'아이템 획득! 출구에서 다음 경로를 골라 보자.');return true;
+  grantItem(g,id);g.room.rewardTaken=true;g.world.nodes.find(n=>n.id===g.currentNodeId).completed=true;if(g.room.shrine)g.room.shrine.used=true;g.phase='playing';g.choices=[];notifyGame(g,g.lastPickup);return true;
 }
+export function grantItem(g,id){
+  if(!ITEMS[id])return false;const before=g.stats,changes=itemChanges(before,id);g.stats=applyBuildItem(before,id);g.buildRevision++;
+  g.player.shield=Math.min(g.stats.shieldMax,g.player.shield+Math.max(0,g.stats.shieldMax-before.shieldMax));g.player.skillCooldown*=g.stats.skillCooldown/before.skillCooldown;g.player.attackCooldown*=g.stats.attackCooldown/before.attackCooldown;g.player.dashCooldown*=g.stats.dashCooldown/before.dashCooldown;
+  g.lastPickup=`${ITEMS[id].name} ×${g.stats.inventory[id]} · ${changes.slice(0,2).join(' / ')}`;return true;
+}
+export const rewardRerollCost=g=>8+(g.room.rewardRerolls||0)*6;
+export function rerollReward(g){if(g.phase!=='reward'||(g.room.rewardRerolls||0)>=2||g.coins<rewardRerollCost(g))return false;g.coins-=rewardRerollCost(g);g.room.rewardRerolls=(g.room.rewardRerolls||0)+1;g.choices=rewardChoices(g.rewardRandom,g.stats,g.room,g.choices);return true;}
+export function openShop(g){
+  if(!['playing','build'].includes(g.phase)||!g.room.cleared||!g.room.rewardTaken)return false;
+  if(!g.room.shop)g.room.shop={stock:rollBuildItems(g.shopRandom,g.stats,g.room.index).map(id=>({id,sold:false})),rerolls:0};g.phase='shop';return true;
+}
+export function buyShopItem(g,index){const offer=g.room.shop?.stock[index];if(g.phase!=='shop'||!offer||offer.sold)return false;const price=RARITIES[ITEMS[offer.id].rarity].price;if(g.coins<price)return false;g.coins-=price;offer.sold=true;grantItem(g,offer.id);return true;}
+export function rerollShop(g){const shop=g.room.shop;if(g.phase!=='shop'||!shop||shop.rerolls>=3||g.coins<10)return false;g.coins-=10;shop.rerolls++;shop.stock=rollBuildItems(g.shopRandom,g.stats,g.room.index,3,shop.stock.map(o=>o.id)).map(id=>({id,sold:false}));return true;}
 export function enterNextRoom(g){
   if(g.phase!=='playing'||!g.room.cleared||!g.room.rewardTaken||!g.player.grounded||Math.abs(g.player.x-g.room.exit.x)>90||Math.abs(g.player.y-g.room.exit.y)>40)return false;
   if(g.room.type==='boss'){g.phase='won';return true;}
@@ -149,12 +175,11 @@ export function routeOptions(g){const node=g.world.nodes.find(n=>n.id===g.curren
 export function chooseRoute(g,id){
   if(g.phase!=='route')return false;const node=routeOptions(g).find(n=>n.id===id);if(!node)return false;
   const room=g.rooms[id]??generateRoom(node);g.rooms[id]=room;g.room=room;g.currentNodeId=id;node.visited=true;
-  Object.assign(g.player,{x:room.spawn.x,y:room.spawn.y,vx:0,vy:0,action:null,grounded:true,jumps:0,coyote:.1,jumpBuffer:0,dash:0,skillTime:0,invulnerable:1});
+  Object.assign(g.player,{x:room.spawn.x,y:room.spawn.y,vx:0,vy:0,action:null,grounded:true,jumps:0,coyote:.1,jumpBuffer:0,dash:0,dashHits:[],shield:g.stats.shieldMax,skillTime:0,invulnerable:1});
   g.checkpoint={...room.spawn};g.projectiles=[];g.boulders=[];g.effects=[];g.camera=0;g.cameraY=0;g.roomIntro=2.6;g.phase='playing';g.previous={};g.noticeTime=0;return true;
 }
 function offerReward(g){
-  g.choices=rollItems(g.rewardRandom,3);
-  if(g.room.type==='elite'){const extra=g.choices.find(id=>!['lower_book','upper_book'].includes(id));g.choices=['lower_book','upper_book',extra];}
+  g.choices=rewardChoices(g.rewardRandom,g.stats,g.room);
   g.phase='reward';
 }
 export function interactRoom(g){
@@ -169,11 +194,11 @@ export function tick(g,input={},dt=1/120){
   dt=clamp(dt,0,1/30);g.time+=dt;g.elapsed+=dt;
   const pressed={};for(const key of ['jump','dash','skill','interact'])pressed[key]=Boolean(input[key+'Pressed']||(input[key]&&!g.previous[key]));
   updatePlayer(g,input,pressed,dt);updateEnemies(g,dt);updateProjectiles(g,dt);
-  for(const item of g.room.pickups)if(!item.taken&&Math.hypot(g.player.x-item.x,g.player.y-30-item.y)<45){item.taken=true;if(item.kind==='heart'){g.stats.hp=Math.min(g.stats.maxHp,g.stats.hp+15);effect(g,'text',item.x,item.y,{text:'+15 HP',color:'#ffb6be'});}else{g.coins+=5;effect(g,'text',item.x,item.y,{text:'+5',color:'#ffe09b'});}}
+  for(const item of g.room.pickups)if(!item.taken&&Math.hypot(g.player.x-item.x,g.player.y-30-item.y)<g.stats.pickupRadius){item.taken=true;if(item.kind==='heart'){g.stats.hp=Math.min(g.stats.maxHp,g.stats.hp+15);effect(g,'text',item.x,item.y,{text:'+15 HP',color:'#ffb6be'});}else{g.coins+=5;effect(g,'text',item.x,item.y,{text:'+5',color:'#ffe09b'});}}
   for(const e of g.effects)e.time+=dt;g.effects=g.effects.filter(e=>e.time<e.duration);
   g.noticeTime=Math.max(0,g.noticeTime-dt);g.roomIntro=Math.max(0,g.roomIntro-dt);g.shake=Math.max(0,g.shake-dt);
   const cameraGoal=clamp(g.player.x-VIEW.width*.42+g.player.facing*65,0,g.room.width-VIEW.width);g.camera+=(cameraGoal-g.camera)*(1-Math.exp(-dt*5));
   g.cameraY+=(clamp(g.player.y-340,-230,0)-g.cameraY)*(1-Math.exp(-dt*6));
-  if(g.phase==='playing'&&!g.room.cleared&&g.room.enemies.every(e=>e.hp<=0)){g.room.cleared=true;g.projectiles=g.projectiles.filter(b=>b.owner==='player');offerReward(g);}
+  if(g.phase==='playing'&&!g.room.cleared&&g.room.enemies.every(e=>e.hp<=0)){g.room.cleared=true;g.projectiles=g.projectiles.filter(b=>b.owner==='player');if(!(g.room.hpDamage>0)){g.room.cleanBonus=8;g.coins+=8;g.player.skillCooldown=Math.max(0,g.player.skillCooldown-3);}offerReward(g);}
   if(pressed.interact)interactRoom(g);g.previous={...input};
 }

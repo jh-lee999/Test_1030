@@ -1,11 +1,11 @@
-import {createGame,tick,chooseReward,enterNextRoom,chooseRoute,routeOptions,interactRoom,STAGES} from './platformer-engine.js?v=38';
-import {renderGame} from './platformer-renderer.js?v=38';
+import {createGame,tick,chooseReward,enterNextRoom,chooseRoute,routeOptions,interactRoom,grantItem,rerollReward,rewardRerollCost,openShop,buyShopItem,rerollShop,notifyGame,STAGES} from './platformer-engine.js?v=39';
+import {renderGame} from './platformer-renderer.js?v=39';
 import {BIOMES,ROOM_TYPES} from './platformer-world.js?v=38';
 import {BUTTER_ORIGINAL,BUTTER_POSTER} from './butter-original-motion.js';
 import {STAGE_ART} from './assets/trickcal-stage37/atlas.js';
-import {ITEMS} from './survivor-engine.js';
+import {ITEMS,INSCRIPTIONS,RARITIES,statRows,itemChanges,gradeSources,lowerPower,upperPower,applyBuildItem} from './platformer-build.js?v=39';
 const $=id=>document.getElementById(id),canvas=$('game-canvas'),ctx=canvas.getContext('2d');
-let game=createGame(),started=false,ready=false,last=0,accumulator=0,shownPhase='',shownRoom=-1;
+let game=createGame(),started=false,ready=false,last=0,accumulator=0,shownPhase='',shownRoom=-1,buildReturnPhase='playing';
 const urlSeed=new URLSearchParams(location.search).get('seed');if(urlSeed)$('seed-input').value=urlSeed.slice(0,48);
 const keys=new Set(),touch=new Map(),pending=new Set(),images={butter:{},monsters:{fan:{},archer:{},ghost:{}},backgrounds:{}},reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const bindings={KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right',Space:'jump',KeyW:'jump',ArrowUp:'jump',KeyJ:'attack',KeyX:'attack',ShiftLeft:'dash',ShiftRight:'dash',KeyK:'dash',KeyE:'skill',KeyF:'interact',ArrowDown:'interact',KeyS:'interact'};
@@ -20,10 +20,16 @@ document.querySelectorAll('.restart').forEach(b=>b.addEventListener('click',()=>
 document.querySelectorAll('.replay').forEach(b=>b.addEventListener('click',()=>start(game.seedLabel)));
 function toggleMap(){if(!started)return;if(game.phase==='map'){game.phase='playing';syncUI();focusGame();}else if(game.phase==='playing'){game.phase='map';clearInput();syncUI();$('map-close').focus({preventScroll:true});}}
 $('map-button').addEventListener('click',toggleMap);$('map-close').addEventListener('click',toggleMap);
+function closeBuild(){if(!['build','shop'].includes(game.phase))return;game.phase=game.phase==='build'?buildReturnPhase:'playing';clearInput();syncUI();if(game.phase==='playing')focusGame();else document.querySelector('.overlay:not([hidden]) button:not(:disabled)')?.focus({preventScroll:true});}
+function toggleBuild(){if(!started)return;if(game.phase==='build')closeBuild();else if(['playing','reward','shop'].includes(game.phase)){buildReturnPhase=game.phase;game.phase='build';clearInput();syncUI();$('build-close').focus({preventScroll:true});}}
+function shop(){if(!started)return;if(game.phase==='shop'){closeBuild();return;}if(openShop(game)){clearInput();syncUI();$('shop-close').focus({preventScroll:true});}else notifyGame(game,'상점은 이 방의 전투와 보물·쉼터 이용을 마친 뒤 열려요.');}
+$('build-button').addEventListener('click',toggleBuild);$('build-close').addEventListener('click',closeBuild);$('shop-open').addEventListener('click',shop);$('shop-close').addEventListener('click',closeBuild);
+$('reward-build').addEventListener('click',toggleBuild);
+$('reward-reroll').addEventListener('click',()=>{if(rerollReward(game))drawRewards();});
+$('shop-reroll').addEventListener('click',()=>{if(rerollShop(game))drawShop();});
 $('touch-toggle').addEventListener('click',()=>{const show=document.body.classList.toggle('show-touch');$('touch-toggle').setAttribute('aria-pressed',String(show));});
 window.addEventListener('keydown',e=>{
-  if(e.code==='KeyM'&&started){e.preventDefault();toggleMap();return;}
-  if(e.code==='Escape'){e.preventDefault();game.phase==='map'?toggleMap():game.phase==='paused'?resume():pause();return;}
+  if(['KeyM','KeyI','KeyB','Escape'].includes(e.code)&&started){e.preventDefault();if(e.repeat)return;if(e.code==='KeyM')toggleMap();else if(e.code==='KeyI')toggleBuild();else if(e.code==='KeyB')shop();else if(['build','shop'].includes(game.phase))closeBuild();else game.phase==='map'?toggleMap():game.phase==='paused'?resume():pause();return;}
   if(bindings[e.code]&&started&&game.phase==='playing'&&!(e.target instanceof HTMLButtonElement)){e.preventDefault();keys.add(e.code);if(!e.repeat)pending.add(bindings[e.code]);}
 });
 window.addEventListener('keyup',e=>{keys.delete(e.code);if(bindings[e.code]==='jump')pending.add('jumpRelease');});
@@ -36,8 +42,12 @@ function syncUI(){
   $('start-screen').hidden=started;$('hud').hidden=!started;$('skill-hud').hidden=!started;
   $('pause-screen').hidden=game.phase!=='paused';$('reward-screen').hidden=game.phase!=='reward';$('end-screen').hidden=!['dead','won'].includes(game.phase);
   $('map-screen').hidden=!['map','route'].includes(game.phase);
+  $('build-screen').hidden=game.phase!=='build';$('shop-screen').hidden=game.phase!=='shop';
   $('hp-text').textContent=`${Math.ceil(game.stats.hp)} / ${game.stats.maxHp}`;$('hp-fill').style.width=`${game.stats.hp/game.stats.maxHp*100}%`;
-  $('grades').textContent=`저학년 ${game.stats.lowerGrade} · 고학년 ${game.stats.upperGrade}`;$('coins').textContent=game.coins;
+  $('grades').textContent=`저학년 Lv.${game.stats.lowerGrade} · 고학년 Lv.${game.stats.upperGrade}`;$('coins').textContent=game.coins;
+  $('shield-label').textContent=game.stats.shieldMax?`보호막 ${Math.ceil(game.player.shield)} / ${game.stats.shieldMax}`:'';
+  $('low-label').textContent=`${Math.round(lowerPower(game.stats).chance*100)}% · ${game.lowerProcs}회 발동`;
+  $('build-button').disabled=!['playing','build','reward','shop'].includes(game.phase);
   $('enemy-count').textContent=game.room.rewardTaken?'출구 개방':game.room.shrine?`${ROOM_TYPES[game.room.type].name} · F로 이용`:`남은 적 ${game.room.enemies.filter(e=>e.hp>0).length}`;
   $('dash-label').textContent=game.player.dashCooldown>0?`${game.player.dashCooldown.toFixed(1)}s`:'준비';
   $('skill-label').textContent=game.player.skillTime>0?'무적':game.player.skillCooldown>0?`${Math.ceil(game.player.skillCooldown)}s`:'준비';
@@ -45,12 +55,41 @@ function syncUI(){
   if(shownRoom!==game.room.index){shownRoom=game.room.index;$('room-label').textContent=`0${shownRoom+1} / 0${STAGES}`;$('route').replaceChildren(...Array.from({length:STAGES},(_,i)=>{const dot=document.createElement('i');dot.className='route-dot '+(i===shownRoom?'active':i<shownRoom?'done':'');return dot;}));}
   if(shownPhase!==game.phase){shownPhase=game.phase;document.body.dataset.phase=game.phase;
     if(game.phase==='map'||game.phase==='route'){clearInput();drawWorldMap();if(game.phase==='route')$('world-map').querySelector('button:not(:disabled)')?.focus({preventScroll:true});}
-    if(game.phase==='reward'){
-      clearInput();$('reward-cards').replaceChildren(...game.choices.map((id,i)=>{const item=ITEMS[id],button=document.createElement('button');button.className='reward-card';button.dataset.item=id;button.innerHTML=`<small>선택 ${i+1}</small><svg aria-hidden="true"><use href="./assets/ui-icons.svg#${item.icon}"></use></svg><b>${item.name}</b><span>${item.description}</span>`;button.addEventListener('click',()=>{if(chooseReward(game,id)){clearInput();syncUI();focusGame();}});return button;}));$('reward-cards').firstElementChild?.focus({preventScroll:true});
-    }
+    if(game.phase==='reward'){clearInput();drawRewards();$('reward-cards').firstElementChild?.focus({preventScroll:true});}
+    if(game.phase==='build'){clearInput();drawBuild();}
+    if(game.phase==='shop'){clearInput();drawShop();}
     if(game.phase==='dead'||game.phase==='won'){clearInput();const won=game.phase==='won';$('end-kicker').textContent=won?'ESCAPED!':'ONE MORE TRY';$('end-title').textContent=won?'버터, 탈출 성공!':'조금만 더 가면 되는데…';$('end-summary').textContent=`${game.room.index+1}구역 · ${game.stats.kills}마리 처치 · 아이템 ${game.stats.itemsTaken}개 · ${Math.floor(game.elapsed/60)}분 ${Math.floor(game.elapsed%60)}초`;$('end-screen').querySelector('button').focus({preventScroll:true});}
   }
   canvas.dataset.x=game.player.x.toFixed(2);canvas.dataset.y=game.player.y.toFixed(2);canvas.dataset.facing=game.player.facing;canvas.dataset.butterRenderer='original36-mirrored37';
+}
+// Only static item definitions go into markup; seeds/user input use textContent.
+function itemCard(id,onSelect,{price=null,sold=false}={}){
+  const item=ITEMS[id],rarity=RARITIES[item.rarity],owned=game.stats.inventory[id]||0,next=applyBuildItem(game.stats,id),changes=itemChanges(game.stats,id),button=document.createElement('button');
+  button.className='reward-card';button.dataset.item=id;button.style.setProperty('--rarity',rarity.color);button.disabled=sold||(price!==null&&game.coins<price);
+  const tags=item.tags.map(t=>{const before=game.stats.inscriptions[t],after=next.inscriptions[t],unlocks=sold?[]:[2,4].filter(n=>before<n&&after>=n);return `<span class="item-tag${unlocks.length?' unlock':''}">${INSCRIPTIONS[t].name} ${before}${sold?'':'→'+after}${unlocks.length?' · '+unlocks.join('/')+'세트 활성':''}</span>`;}).join('');
+  button.innerHTML=`<small class="rarity">${rarity.name} · ${sold?'구매 완료':price!==null?price+' G':'하나 선택'}</small><svg aria-hidden="true"><use href="./assets/ui-icons.svg#${item.icon}"></use></svg><b>${item.name}</b><strong class="owned">보유 ×${owned}${sold?'':' → ×'+(owned+1)}</strong><span>${item.description}</span><div class="item-tags">${tags}</div><div class="item-deltas">${sold?'<span>이 진열에서 이미 구매한 물건이에요.</span>':changes.slice(0,3).map(t=>`<span>${t}</span>`).join('')||'<span>현재 효과 상한 도달 · 보유 개수는 누적</span>'}${!sold&&changes.length>3?`<small>그 외 ${changes.length-3}개 변화 · 능력치 창에서 확인</small>`:''}</div>`;
+  if(!sold)button.title=changes.join('\n');
+  button.addEventListener('click',onSelect);return button;
+}
+function drawRewards(){
+  $('reward-cards').replaceChildren(...game.choices.map(id=>itemCard(id,()=>{if(chooseReward(game,id)){clearInput();syncUI();focusGame();}})));
+  $('reward-info').textContent=game.room.cleanBonus?'체력 손실 없이 클리어! +8 G · 왕새총 쿨타임 3초 회복':'같은 아이템도 누적돼요. 학년 아이템은 항상 한 종류 이상 등장해요.';
+  const n=game.room.rewardRerolls||0;$('reward-reroll').textContent=`다시 뽑기 ${rewardRerollCost(game)} G (${n}/2)`;$('reward-reroll').disabled=n>=2||game.coins<rewardRerollCost(game);$('reward-coins').textContent=`보유 ${game.coins} G · 선택 후 상점 B 이용 가능`;
+}
+function drawBuild(){
+  const s=game.stats,low=lowerPower(s),high=upperPower(s);
+  $('build-count').textContent=`이번 여정 · 아이템 ${s.itemsTaken}개 / ${Object.keys(s.inventory).length}종 · ${game.coins} G`;
+  $('build-last').textContent=game.lastPickup||'보상과 상점에서 같은 아이템을 다시 얻어도 효과가 쌓여요.';
+  $('grade-details').innerHTML=`<article><small>자동 발동 · 저학년</small><h3>추적 새총 <b>Lv.${s.lowerGrade}</b></h3><p>${gradeSources(s,'lowerGrade')}</p><strong>발동 ${(low.chance*100).toFixed(1)}% · 추가 도약 ${low.bounces}회</strong><p>피해 ${low.damage.toFixed(1)} · 유도 성능 ${low.homing.toFixed(1)}<br>최대 ${low.pity}회 사격마다 발동 보장 · 발동 누적 ${game.lowerProcs}회<br>다른 살아 있는 적에게 도약하며 같은 적은 재타격하지 않아요.</p><div class="milestones"><span class="${s.lowerGrade>=3?'active':''}">Lv.3 추적탄 +1발</span><span class="${s.lowerGrade>=5?'active':''}">Lv.5 추적탄 총 +2발</span></div></article><article><small>E · 고학년</small><h3>왕새총 <b>Lv.${s.upperGrade}</b></h3><p>${gradeSources(s,'upperGrade')}</p><strong>피해 ${high.damage.toFixed(1)} · ${high.duration.toFixed(1)}초 지속</strong><p>재사용 ${s.skillCooldown.toFixed(2)}초 · 반경 ${high.radius}px<br>추가 탄환은 55%, 반대편 왕짱돌은 65% 피해.<br>왕새총 사용 중 무적, 방 이동 시 종료돼요.</p><div class="milestones"><span class="${s.upperGrade>=3?'active':''}">Lv.3 반대 방향 왕짱돌 +1</span><span class="active">매 레벨 피해 · 크기 · 지속 증가</span></div></article>`;
+  $('stat-grid').innerHTML=statRows(s).map(([id,label,value])=>`<div data-stat="${id}"><span>${label}</span><b>${value}</b></div>`).join('');
+  $('inscriptions').innerHTML=Object.entries(INSCRIPTIONS).map(([id,v])=>{const n=s.inscriptions[id];return `<article style="--tag-color:${v.color}"><h4>${v.name} <b>${n}</b></h4><p class="${n>=2?'active':''}">② ${v.two}</p><p class="${n>=4?'active':''}">④ ${v.four}</p></article>`;}).join('');
+  $('inventory').innerHTML=Object.entries(s.inventory).map(([id,n])=>`<div data-owned="${id}"><svg aria-hidden="true"><use href="./assets/ui-icons.svg#${ITEMS[id].icon}"></use></svg><span><b>${ITEMS[id].name} <em>×${n}</em></b><small>${ITEMS[id].tags.map(t=>INSCRIPTIONS[t].name).join(' · ')}</small></span></div>`).join('')||'<p>아직 가방이 비어 있어요.</p>';
+  $('shop-open').disabled=!game.room.cleared||!game.room.rewardTaken;$('shop-open').textContent=$('shop-open').disabled?'상점 · 이 방 완료 후 개방':'상점 열기 B';
+}
+function drawShop(){
+  $('shop-coins').textContent=`보유 ${game.coins} G · 이 방에서만 판매하는 세 가지 물건`;
+  $('shop-cards').replaceChildren(...game.room.shop.stock.map((o,i)=>itemCard(o.id,()=>{if(buyShopItem(game,i)){drawShop();notifyGame(game,game.lastPickup);}},{price:RARITIES[ITEMS[o.id].rarity].price,sold:o.sold})));
+  $('shop-last').textContent=game.lastPickup;$('shop-reroll').textContent=`진열 바꾸기 10 G (${game.room.shop.rerolls}/3)`;$('shop-reroll').disabled=game.coins<10||game.room.shop.rerolls>=3;
 }
 function drawWorldMap(){
   const selecting=game.phase==='route',available=new Set(selecting?routeOptions(game).map(n=>n.id):[]),world=game.world;
@@ -77,4 +116,4 @@ async function boot(){
 }
 requestAnimationFrame(frame);boot().catch(error=>{$('load-status').textContent='준비 중 오류가 났어요. 새로고침해 주세요.';console.error(error);});
 // Only the explicit local test URL exposes fixtures; normal play has no debug UI.
-if(new URLSearchParams(location.search).get('test')==='1')window.__platformer37={get game(){return game;},start,tick,chooseReward,enterNextRoom,chooseRoute,interactRoom,images,render:()=>renderGame(ctx,game,images,{started:true,reducedMotion:true})};
+if(new URLSearchParams(location.search).get('test')==='1')window.__platformer37={get game(){return game;},start,tick,chooseReward,enterNextRoom,chooseRoute,interactRoom,grantItem,rerollReward,openShop,buyShopItem,rerollShop,images,render:()=>renderGame(ctx,game,images,{started:true,reducedMotion:true})};
