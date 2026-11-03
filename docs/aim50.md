@@ -1,5 +1,9 @@
 # v50 · aiming control feel
 
+**Superseded for pointer input by v51:** the user rejected the trailing mouse
+motion as wobbling. Pointer tracking and mouse firing are now immediate; easing
+and buffered alignment described below remain keyboard-only. See pointer51.md.
+
 The user reported overly fast angle changes. Previously every pointer event
 assigned g.aim immediately; each arrow press also shifted the target by45 world
 pixels. This patch changes input handling only, not the v48 combat engine,

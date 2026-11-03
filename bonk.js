@@ -4,7 +4,7 @@ import {ITEM_ICONS,ITEM_TYPES,phaseView,enemySummary,enemyIntent,fusionProgress,
 import {STAGE_ART} from './platformer-art.js?v=43';
 import {BUTTER_ORIGINAL,BUTTER_POSTER} from './butter-original-motion.js';
 import {createGameAudio} from './platformer-audio.js?v=46';
-import {AIM_CONTROL,createAimControl,cancelAim,setAimTarget,nudgeAim,requestAimShot,advanceAim} from './bonk-aim.js?v=50';
+import {AIM_CONTROL,createAimControl,cancelAim,setPointerAim,nudgeAim,requestAimShot,advanceAim} from './bonk-aim.js?v=51';
 const $=id=>document.getElementById(id),canvas=$('board'),ctx=canvas.getContext('2d'),params=new URLSearchParams(location.search),audio=createGameAudio();
 let g=createGame(params.get('seed')||'BUTTER-BONK'),started=false,ready=false,last=0,phaseShown='',buildShown='',stageShown=-1,returnPhase='aim',helpOpen=false,helpPaused=false,inspectedId=null;
 let aimControl=createAimControl(g),lastPointer=null,keyHoldTime=0,fineAim=false;
@@ -46,7 +46,7 @@ function inspect(p){inspectedId=g.enemies.find(e=>!e.dead&&Math.hypot(e.x-p.x,e.
 function pointerAim(p,precise){
   if(aimControl.pending)return;
   const target=precise&&lastPointer?{x:aimControl.target.x+(p.x-lastPointer.x)*.2,y:aimControl.target.y+(p.y-lastPointer.y)*.2}:p;
-  setAimTarget(aimControl,g,target.x,target.y);lastPointer=p;inspect(p);
+  setPointerAim(aimControl,g,target.x,target.y);lastPointer=p;inspect(p);
 }
 let pointer=null;
 canvas.addEventListener('pointermove',e=>{if(!started||g.phase!=='aim')return;const p=point(e);if(e.pointerType==='mouse'||pointer===e.pointerId)pointerAim(p,e.shiftKey);});

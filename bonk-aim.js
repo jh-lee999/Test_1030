@@ -13,6 +13,12 @@ export function setAimTarget(c,g,x,y){
   syncAim(c,g);if(g.phase!=='aim'||c.pending||!Number.isFinite(x)||!Number.isFinite(y))return false;
   c.target={x:clamp(x,BOARD.left,BOARD.right),y:clamp(y,BOARD.top,BOARD.danger-55)};return true;
 }
+// Pointer coordinates are authoritative: no trailing angle, inertia or firing delay.
+// Easing below is ONLY for keyboard increments, not mouse/touch tracking.
+export function setPointerAim(c,g,x,y){
+  if(!setAimTarget(c,g,x,y))return false;
+  aimAt(g,c.target.x,c.target.y);c.applied=g.aim;return true;
+}
 function pointOnRay(g,angle,distance){
   const minY=BOARD.danger-55,dy=BOARD.launch.y-minY;
   angle=clamp(angle,Math.atan2(-dy,BOARD.left-g.launchX),Math.atan2(-dy,BOARD.right-g.launchX));

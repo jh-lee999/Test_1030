@@ -1,5 +1,19 @@
 # Project instructions
 
+## v51 pointer correction: NO mouse/touch inertia
+
+The user explicitly rejected v50 mouse aiming as wobbling. Pointer coordinates
+must now update g.aim immediately through setPointerAim(), synchronizing the
+controller target/applied reference so RAF cannot keep trailing or recentering.
+When the pointer stops, both actual angle AND reflection path must stay fixed.
+Mouse release fires immediately, with no alignment queue. Touch aims immediately
+but still waits for the Fire button. Preserve Shift20% mouse gain and keyboard
+fine controls; angular easing/buffered alignment below are KEYBOARD-ONLY now.
+Do not restore pointer smoothing under the label of polish. v50 pointer rules
+below are historical and superseded. Keep combat, RNG and original art unchanged.
+Run test/bonk-pointer51.test.js and the updated check-bonk50-browser.mjs (legacy
+filename), plus existing unit/art/browser checks. See docs/pointer51.md.
+
 ## v50 aim feel (input only; v48 combat and v49 GUI preserved)
 
 The user reported that aim angles move too fast and feel unfinished. bonk-aim.js

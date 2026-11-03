@@ -5,7 +5,7 @@ import {AIM_CONTROL,aimAngle,createAimControl,cancelAim,setAimTarget,nudgeAim,re
 const angle=(g,p=g.aim)=>Math.atan2(p.y-BOARD.launch.y,p.x-g.launchX);
 const settle=(c,g,fps=60)=>{for(let i=0;i<fps*2;i++)advanceAim(c,g,1/fps);};
 
-test('a large pointer jump does not snap the actual aim and never overshoots its target',()=>{
+test('a large keyboard target eases without overshooting (not used for pointer tracking)',()=>{
   const g=createGame(50),c=createAimControl(g),before={...g.aim};setAimTarget(c,g,752,723);
   assert.deepEqual(g.aim,before);const goal=angle(g,c.target);let previous=angle(g);
   for(let i=0;i<120;i++){
@@ -31,7 +31,7 @@ test('all intermediate aim points stay legal from both returned launcher edges',
   }
 });
 
-test('a quick click locks one intended direction and fires exactly on that preview ray',()=>{
+test('a buffered keyboard fire request locks one direction and fires on its preview ray',()=>{
   const g=createGame(50),c=createAimControl(g),target={x:80,y:720};setAimTarget(c,g,target.x,target.y);
   assert.equal(requestAimShot(c,g),true);assert.equal(requestAimShot(c,g),false);
   assert.equal(setAimTarget(c,g,750,120),false);assert.equal(nudgeAim(c,g,.1),false);
