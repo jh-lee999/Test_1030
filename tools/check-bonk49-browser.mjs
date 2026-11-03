@@ -15,7 +15,7 @@ try{
   const enemy=await page.evaluate(()=>window.__bonk48.game.enemies[0]),board=await page.locator('#board').boundingBox();
   await page.mouse.move(board.x+enemy.x/800*board.width,board.y+enemy.y/960*board.height);
   await page.waitForFunction(()=>document.getElementById('target-info').textContent.includes('돌진 팬'));
-  await page.locator('#fire').click();assert.match(await page.locator('#fire-label').innerText(),/이동 중/);
+  await page.locator('#fire').click();await page.waitForFunction(()=>window.__bonk48.game.phase==='flight');assert.match(await page.locator('#fire-label').innerText(),/이동 중/);
   await page.locator('#help').click();const time=await page.evaluate(()=>window.__bonk48.game.time);
   assert.equal(await page.locator('#pause').isDisabled(),true);await page.waitForTimeout(200);
   assert.equal(await page.evaluate(()=>window.__bonk48.game.time),time);await page.keyboard.press('Escape');

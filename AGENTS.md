@@ -1,5 +1,21 @@
 # Project instructions
 
+## v50 aim feel (input only; v48 combat and v49 GUI preserved)
+
+The user reported that aim angles move too fast and feel unfinished. bonk-aim.js
+owns angular rate limiting and easing, not a separate cosmetic aim. Preview,
+launcher and actual shot all use g.aim. Pointer events update an intended target;
+RAF advances the actual angle without overshoot or event-count dependence.
+Quick fire requests lock ONE target, align exactly, then fire once. Pause, help,
+blur, visibility loss, restart and pointer cancellation discard pending requests.
+Never silently fire on resume or let mouse/keyboard E retarget a committed shot.
+Arrow taps are .45 degrees (.1 with Shift); held arrows are18 degrees/s (4 fine)
+after a .18s hold delay. Shift mouse movement uses20% delta gain. Touch still aims
+without firing until the separate Fire button. Direct engine diagnostic aimAt
+calls must remain compatible. Do not modify combat physics, RNG, art or anchor.
+Run bonk-aim50 unit tests and check-bonk50-browser plus v48/v49 and archive checks.
+See docs/aim50.md. Technical checks are not subjective approval of control feel.
+
 ## v49 pinball GUI (v48 engine and source art unchanged)
 
 The user requested a GUI improvement, not another genre change. Keep v48 rules,
