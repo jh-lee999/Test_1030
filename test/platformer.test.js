@@ -1,13 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,tick,makeRoom,seededRandom,landBody,heroMuzzle,heroPose,segmentHitsBody,chooseReward,enterNextRoom,hurtPlayer,FLOOR,STAGES,HERO_SIZE} from '../platformer-engine.js';
+import {createGame,tick,makeRoom,seededRandom,landBody,heroMuzzle,heroPose,segmentHitsBody,chooseReward,enterNextRoom,chooseRoute,routeOptions,interactRoom,hurtPlayer,FLOOR,STAGES,HERO_SIZE} from '../platformer-engine.js';
 import {butterMuzzleOffset,selectButterFrame} from '../butter-original-motion.js';
 import {applyItem,upperPower} from '../survivor-engine.js';
-function safe(){const g=createGame(37);g.room.enemies=g.room.enemies.slice(0,1);g.room.enemies[0].x=2500;return g;}
+// A flat isolated fixture for combat/physics regression, not map-generation coverage.
+function safe(){const g=createGame(37),floor={id:'flat',x:0,y:FLOOR,w:g.room.width,ground:true};g.room.platforms=[floor];g.room.exit.y=FLOOR;g.room.enemies=g.room.enemies.slice(0,1);Object.assign(g.room.enemies[0],{x:2500,y:FLOOR,home:floor});return g;}
 function step(g,n,input={}){for(let i=0;i<n;i++)tick(g,input,1/120);}
 test('seeded platform layouts are repeatable, varied and have open grounded exits',()=>{
   assert.deepEqual(makeRoom(0,seededRandom(7)),makeRoom(0,seededRandom(7)));
-  const variants=new Set();for(let seed=0;seed<20;seed++){const r=makeRoom(0,seededRandom(seed));variants.add(JSON.stringify(r.platforms));assert.equal(r.platforms[0].w,r.width);assert.ok(r.exit.x<r.width);assert.equal(r.enemies.length,7);}
+  const variants=new Set();for(let seed=0;seed<20;seed++){const r=makeRoom(0,seededRandom(seed));variants.add(JSON.stringify(r.platforms));assert.ok(r.platforms[0].w<r.width);assert.ok(r.exit.x<r.width);assert.ok(r.enemies.length>=1);assert.equal(r.navigation.valid,true);}
   assert.ok(variants.size>10);assert.equal(makeRoom(STAGES-1,seededRandom(1)).enemies[0].type,'ghost');
 });
 test('jump, release height cut, double jump, no third jump, landing reset',()=>{
@@ -57,10 +58,16 @@ test('lower grade emits tracking chain projectile that cannot hit the same enemy
 test('room clear queues one three-choice reward; invalid/double claim rejected; stats persist',()=>{
   const g=safe();assert.equal(enterNextRoom(g),false);g.room.enemies[0].hp=0;tick(g,{});assert.equal(g.phase,'reward');assert.equal(g.choices.length,3);assert.equal(chooseReward(g,'nope'),false);
   const choice=g.choices[0];assert.equal(chooseReward(g,choice),true);assert.equal(chooseReward(g,choice),false);assert.equal(g.stats.itemsTaken,1);assert.equal(enterNextRoom(g),false);
-  g.player.x=g.room.exit.x;assert.equal(enterNextRoom(g),true);assert.equal(g.room.index,1);assert.equal(g.stats.inventory[choice],1);assert.equal(g.projectiles.length,0);
+  g.player.x=g.room.exit.x;assert.equal(enterNextRoom(g),true);assert.equal(g.phase,'route');assert.equal(chooseRoute(g,routeOptions(g)[0].id),true);assert.equal(g.room.index,1);assert.equal(g.stats.inventory[choice],1);assert.equal(g.projectiles.length,0);
 });
-test('all four stages can be cleared through rewards and grounded exits, then victory',()=>{
-  const g=createGame(1);for(let stage=0;stage<STAGES;stage++){assert.equal(g.room.index,stage);g.room.enemies.forEach(e=>e.hp=0);tick(g,{});assert.equal(g.phase,'reward');chooseReward(g,g.choices[0]);g.player.x=g.room.exit.x;g.player.y=FLOOR;assert.equal(enterNextRoom(g),true);}assert.equal(g.phase,'won');assert.equal(g.stats.itemsTaken,4);
+test('all seven depths can progress through events, route choices and elevated exits',()=>{
+  const g=createGame(1);let rewards=0;for(let stage=0;stage<STAGES;stage++){
+    assert.equal(g.room.index,stage);g.room.enemies.forEach(e=>e.hp=0);
+    if(g.room.shrine){Object.assign(g.player,{x:g.room.shrine.x,y:g.room.shrine.y,grounded:true});assert.equal(interactRoom(g),true);}else tick(g,{});
+    if(g.phase==='reward'){chooseReward(g,g.choices[0]);rewards++;}
+    Object.assign(g.player,{x:g.room.exit.x,y:g.room.exit.y,grounded:true});assert.equal(enterNextRoom(g),true);
+    if(stage<STAGES-1){assert.equal(g.phase,'route');assert.equal(chooseRoute(g,routeOptions(g)[0].id),true);}
+  }assert.equal(g.phase,'won');assert.equal(g.stats.itemsTaken,rewards);
 });
 test('pause, death and reward stop simulation; hurt cooldown prevents repeated damage',()=>{
   const g=safe();hurtPlayer(g,10);assert.equal(g.stats.hp,80);hurtPlayer(g,10);assert.equal(g.stats.hp,80);g.phase='paused';const x=g.player.x,t=g.time;step(g,120,{right:true});assert.equal(g.player.x,x);assert.equal(g.time,t);g.phase='playing';g.player.invulnerable=0;hurtPlayer(g,100);assert.equal(g.phase,'dead');assert.equal(g.stats.hp,0);step(g,30);assert.equal(g.time,t);

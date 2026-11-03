@@ -1,10 +1,26 @@
-import {VIEW,FLOOR,HERO_SIZE,heroPose,clamp} from './platformer-engine.js';
+import {VIEW,FLOOR,HERO_SIZE,heroPose,clamp} from './platformer-engine.js?v=38';
+import {BIOMES,ROOM_TYPES} from './platformer-world.js?v=38';
 import {drawButterMotion,selectButterFrame} from './butter-original-motion.js';
 import {STAGE_ART} from './assets/trickcal-stage37/atlas.js';
 const TAU=Math.PI*2;
 function ellipse(ctx,x,y,rx,ry,color){ctx.fillStyle=color;ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,TAU);ctx.fill();}
 function text(ctx,value,x,y,size=16,color='#fff1cd',align='center'){ctx.fillStyle=color;ctx.font=`700 ${size}px system-ui,sans-serif`;ctx.textAlign=align;ctx.fillText(value,x,y);}
 function rounded(ctx,x,y,w,h,r,color){ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill();}
+function decorate(ctx,d,time,reduced){
+  ctx.save();ctx.translate(d.x,d.y);
+  if(d.kind==='pillar'){rounded(ctx,-15,-90-d.variant*12,30,100,3,'#777987');ctx.fillStyle='#989ca9';ctx.fillRect(-20,-95-d.variant*12,40,10);ctx.strokeStyle='#4c5268';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-4,-78);ctx.lineTo(4,-50);ctx.lineTo(-6,-38);ctx.stroke();}
+  else if(d.kind==='lantern'){ctx.strokeStyle='#9c8660';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,-95);ctx.lineTo(28,-95);ctx.stroke();ctx.strokeStyle='#d2b578';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(26,-95);ctx.lineTo(26,-70);ctx.stroke();ellipse(ctx,26,-61,13,18,'#ead997');ellipse(ctx,26,-61,23,28,'#f4e9aa22');}
+  else if(d.kind==='mushroom'){for(let i=0;i<2;i++){ctx.fillStyle='#b6a6cb';ctx.fillRect(i*24-4,-25-i*17,7,28+i*17);ellipse(ctx,i*24,-28-i*17,18,9,i?'#bd9fd6':'#8995c5');ellipse(ctx,i*24-5,-31-i*17,3,2,'#f7e5eb');}ellipse(ctx,12,-30,38,43,'#c7b7ee15');}
+  else{for(let i=0;i<3;i++){ctx.strokeStyle='#91ae5b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(i*13,0);ctx.lineTo(i*13,-16-i%2*7);ctx.stroke();for(let a=0;a<5;a++)ellipse(ctx,i*13+Math.cos(a*1.25)*4,-18-i%2*7+Math.sin(a*1.25)*4,3,3,d.variant%2?'#eec3a4':'#f3dfa0');}}
+  ctx.restore();
+}
+function roomOverview(ctx,g){
+  const x=22,y=653,w=230,h=48;rounded(ctx,x-7,y-10,w+14,h+15,7,'#18251ee6');
+  const mapX=v=>x+v/g.room.width*w,mapY=v=>y+(v-280)/380*h;
+  for(const p of g.room.platforms){ctx.fillStyle=p.optional?'#b4a7d2':'#b7c99a';ctx.fillRect(mapX(p.x),mapY(p.y),Math.max(2,p.w/g.room.width*w),3);}
+  for(const e of g.room.enemies)if(e.hp>0)ellipse(ctx,mapX(e.x),mapY(e.y)-4,2,2,'#ed9a95');
+  ellipse(ctx,mapX(g.room.exit.x),mapY(g.room.exit.y)-4,3,3,'#cfc1ef');ellipse(ctx,mapX(g.player.x),mapY(g.player.y)-4,3,3,'#ffed9d');
+}
 function monster(ctx,e,images){
   const source=STAGE_ART.monsters[e.type],key=e.hp<=0?'die':e.mode==='attack'?'attack':e.mode==='walk'?'walk':'idle';
   let clip=source.clips[key],image=images.monsters[e.type][key];
@@ -29,30 +45,35 @@ function monster(ctx,e,images){
   }
 }
 export function renderGame(ctx,g,images,{started=true,reducedMotion=false}={}){
-  const W=VIEW.width,H=VIEW.height,room=g.room,p=g.player,time=g.time;
+  const W=VIEW.width,H=VIEW.height,room=g.room,p=g.player,time=g.time,theme=BIOMES[room.biome]||BIOMES.grove;
   ctx.clearRect(0,0,W,H);ctx.fillStyle='#344b2b';ctx.fillRect(0,0,W,H);
   const bg=images.backgrounds[room.background];
-  if(bg?.naturalWidth){const bw=W+(room.width-W)*.22,bh=bw*bg.naturalHeight/bg.naturalWidth;ctx.drawImage(bg,-g.camera*.22,FLOOR-bh*.83,bw,bh);}
+  if(bg?.naturalWidth){const bw=W+(room.width-W)*.22,bh=bw*bg.naturalHeight/bg.naturalWidth;ctx.drawImage(bg,-g.camera*.22,FLOOR-bh*.83-g.cameraY*.12,bw,bh);}
+  ctx.fillStyle=theme.fog+'36';ctx.fillRect(0,0,W,H);
   const shade=ctx.createLinearGradient(0,0,0,H);shade.addColorStop(0,'#13291d77');shade.addColorStop(.4,'#1d33100a');shade.addColorStop(1,'#101b1477');ctx.fillStyle=shade;ctx.fillRect(0,0,W,H);
   // Far fireflies remain decorative, not collision geometry.
   for(let i=0;i<22;i++){const x=((i*173-g.camera*.12)%W+W)%W,y=150+(i*97)%380;ellipse(ctx,x,y+(reducedMotion?0:Math.sin(time+i)*9),1.8,1.8,`rgba(255,239,157,${.25+Math.sin(time*.6+i)*.15})`);}
-  ctx.save();if(!reducedMotion&&g.shake>0)ctx.translate(Math.sin(time*119)*g.shake*17,Math.cos(time*93)*g.shake*10);ctx.translate(-g.camera,0);
+  ctx.save();if(!reducedMotion&&g.shake>0)ctx.translate(Math.sin(time*119)*g.shake*17,Math.cos(time*93)*g.shake*10);ctx.translate(-g.camera,-g.cameraY);
+  const main=room.platforms.filter(p=>!p.optional).sort((a,b)=>a.x-b.x);let covered=main[0];
+  for(const next of main.slice(1)){if(next.x>covered.x+covered.w){const start=covered.x+covered.w,top=Math.min(covered.y,next.y)+8,fade=ctx.createLinearGradient(0,top,0,top+160);fade.addColorStop(0,theme.fog+'88');fade.addColorStop(1,'#131f29');ctx.fillStyle=fade;ctx.fillRect(start,top,next.x-start,H-top+300);}if(next.x+next.w>covered.x+covered.w)covered=next;}
+  for(const d of room.decorations||[])if(d.x>g.camera-100&&d.x<g.camera+W+100)decorate(ctx,d,time,reducedMotion);
   for(const platform of room.platforms){
     if(platform.x+platform.w<g.camera-30||platform.x>g.camera+W+30)continue;
-    const depth=platform.ground?H-FLOOR+40:32;
-    rounded(ctx,platform.x,platform.y+5,platform.w,depth,platform.ground?0:10,'#513d2b');
-    ctx.fillStyle='#6b5135';ctx.fillRect(platform.x+5,platform.y+12,platform.w-10,6);
+    const depth=platform.ground?H-platform.y+150:32;
+    rounded(ctx,platform.x,platform.y+5,platform.w,depth,platform.ground?0:theme.material==='stone'?3:10,theme.body);
+    ctx.fillStyle=theme.grain;ctx.fillRect(platform.x+5,platform.y+12,platform.w-10,6);
     ctx.strokeStyle='#352e2160';ctx.lineWidth=2;
     for(let x=platform.x+13;x<platform.x+platform.w;x+=47){ctx.beginPath();ctx.moveTo(x,platform.y+22);ctx.lineTo(x+24,platform.y+26);ctx.stroke();}
-    rounded(ctx,platform.x-3,platform.y-3,platform.w+6,12,5,'#34442b');rounded(ctx,platform.x-3,platform.y-4,platform.w+6,7,4,'#9dba59');
-    for(let x=platform.x+9;x<platform.x+platform.w;x+=25){ctx.strokeStyle=x%3?'#b4c86f':'#6d9845';ctx.beginPath();ctx.moveTo(x,platform.y);ctx.lineTo(x-3,platform.y-6-(Math.floor(x)%7));ctx.lineTo(x+3,platform.y-2);ctx.stroke();}
-    if(!platform.ground){for(const x of [platform.x+24,platform.x+platform.w-28]){ctx.strokeStyle='#6d894c';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,platform.y+28);ctx.bezierCurveTo(x-8,platform.y+37,x+10,platform.y+48,x+2,platform.y+60);ctx.stroke();ellipse(ctx,x+4,platform.y+45,7,3,'#869f4e');}}
+    rounded(ctx,platform.x-3,platform.y-3,platform.w+6,12,5,theme.edge);rounded(ctx,platform.x-3,platform.y-4,platform.w+6,7,4,theme.top);
+    for(let x=platform.x+9;x<platform.x+platform.w;x+=25){ctx.strokeStyle=theme.top;ctx.beginPath();ctx.moveTo(x,platform.y);ctx.lineTo(x-3,platform.y-6-(Math.floor(x)%7));if(theme.material!=='stone')ctx.lineTo(x+3,platform.y-2);ctx.stroke();}
+    if(!platform.ground&&theme.material==='wood'){for(const x of [platform.x+24,platform.x+platform.w-28]){ctx.strokeStyle=theme.edge;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,platform.y+28);ctx.bezierCurveTo(x-8,platform.y+37,x+10,platform.y+48,x+2,platform.y+60);ctx.stroke();ellipse(ctx,x+4,platform.y+45,7,3,theme.top);}}
   }
   for(const item of room.pickups)if(!item.taken){const y=item.y+(reducedMotion?0:Math.sin(time*3+item.x)*3);ellipse(ctx,item.x,item.y+23,12,3,'#12251d44');if(item.kind==='coin'){ellipse(ctx,item.x,y,9,12,'#f6d680');ellipse(ctx,item.x,y,6,8,'#b79347');text(ctx,'✦',item.x,y+5,15,'#fff4b4');}else{text(ctx,'♥',item.x,y+8,28,'#f6b1a8');}}
   const exit=room.exit,open=room.cleared&&room.rewardTaken;
+  if(room.shrine){const s=room.shrine;ctx.save();ctx.translate(s.x,s.y);if(s.kind==='treasure'){rounded(ctx,-28,-34,56,34,5,s.used?'#786d4b':'#c7a65d');rounded(ctx,-28,-43,56,17,6,'#e3c57e');ctx.fillStyle='#75572e';ctx.fillRect(-4,-28,8,10);}else{ellipse(ctx,0,-10,36,12,'#a4b68a');ellipse(ctx,0,-12,26,7,s.used?'#849d85':'#bce5bf');text(ctx,'♥',0,-30,28,'#c7e9b8');}if(!s.used)text(ctx,`F / ↓ ${s.kind==='rest'?'40% 회복':'보물 열기'}`,0,-65,14);else text(ctx,'이용 완료',0,-60,12,'#c0c7a5');ctx.restore();}
   ctx.save();ctx.translate(exit.x,exit.y);ctx.fillStyle='#263d30';ctx.beginPath();ctx.roundRect(-44,-148,88,148,[44,44,2,2]);ctx.fill();ctx.lineWidth=7;ctx.strokeStyle=open?'#e5d891':'#6e8667';ctx.stroke();
-  if(open){const aura=ctx.createRadialGradient(0,-75,5,0,-75,90);aura.addColorStop(0,'#fff6b1bb');aura.addColorStop(1,'#b3e19000');ctx.fillStyle=aura;ctx.fillRect(-85,-165,170,170);text(ctx,'F / ↓',0,-65,16);text(ctx,room.index===3?'탈출':'다음 구역',0,-40,13);}
-  else{text(ctx,'봉인',0,-65,16,'#a9bb99');text(ctx,'적을 모두 처치',0,-40,11,'#a9bb99');}ctx.restore();
+  if(open){const aura=ctx.createRadialGradient(0,-75,5,0,-75,90);aura.addColorStop(0,'#fff6b1bb');aura.addColorStop(1,'#b3e19000');ctx.fillStyle=aura;ctx.fillRect(-85,-165,170,170);text(ctx,'F / ↓',0,-65,16);text(ctx,room.type==='boss'?'탈출':'경로 선택',0,-40,13);}
+  else{text(ctx,'봉인',0,-65,16,'#a9bb99');text(ctx,room.shrine?'쉼터 / 보물 이용':'적을 모두 처치',0,-40,11,'#a9bb99');}ctx.restore();
   for(const e of room.enemies)if(e.x>g.camera-220&&e.x<g.camera+W+220)monster(ctx,e,images);
   for(const b of g.boulders){ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.angle);ctx.shadowColor='#ffdf92';ctx.shadowBlur=18;ctx.fillStyle='#9c8060';ctx.strokeStyle='#493e31';ctx.lineWidth=5;ctx.beginPath();for(let i=0;i<9;i++){const angle=i/9*TAU,r=b.r*(.94+.08*Math.sin(i*8));if(!i)ctx.moveTo(Math.cos(angle)*r,Math.sin(angle)*r);else ctx.lineTo(Math.cos(angle)*r,Math.sin(angle)*r);}ctx.closePath();ctx.fill();ctx.stroke();ctx.shadowBlur=0;ctx.strokeStyle='#c2a77d';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-b.r*.5,-b.r*.4);ctx.lineTo(b.r*.05,-b.r*.65);ctx.lineTo(b.r*.5,-b.r*.2);ctx.stroke();ctx.restore();}
   const ground=room.platforms.filter(q=>p.x>=q.x&&p.x<=q.x+q.w&&q.y>=p.y).sort((a,b)=>a.y-b.y)[0];
@@ -73,7 +94,8 @@ export function renderGame(ctx,g,images,{started=true,reducedMotion=false}={}){
   }
   ctx.restore();
   if(started&&g.roomIntro>0){ctx.save();ctx.globalAlpha=clamp(g.roomIntro,0,1);text(ctx,`0${room.index+1}  /  아공간`,W/2,190,13,'#ffedb4');text(ctx,room.title,W/2,227,30);ctx.restore();}
-  if(started&&room.index===3){const boss=room.enemies[0];if(boss.hp>0){text(ctx,'아공간을 지키는 이불령',W/2,132,13);rounded(ctx,W/2-190,143,380,8,4,'#202123bb');rounded(ctx,W/2-190,143,380*boss.hp/boss.maxHp,8,4,'#c99ada');}}
+  if(started&&room.type==='boss'){const boss=room.enemies[0];if(boss.hp>0){text(ctx,'아공간을 지키는 이불령',W/2,132,13);rounded(ctx,W/2-190,143,380,8,4,'#202123bb');rounded(ctx,W/2-190,143,380*boss.hp/boss.maxHp,8,4,'#c99ada');}}
   if(started&&g.room.cleared&&p.x<exit.x-250)text(ctx,'출구 →',W-90,H-85,15,'#ffedb4');
+  if(started)roomOverview(ctx,g);
   ctx.canvas.dataset.butterFrame=`${selectButterFrame(pose).key}/${selectButterFrame(pose).index}`;
 }

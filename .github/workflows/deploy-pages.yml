@@ -40,6 +40,8 @@ jobs:
           node --check app.js
           node --check platformer.js
           node --check platformer-engine.js
+          node --check platformer-world.js
+          node --check platformer-physics.js
           node --check platformer-renderer.js
           npm test
           npm run check:sprites

@@ -12,6 +12,14 @@ the active side-scroller only. Do not change or regenerate the source artwork.
 `platformer-renderer.js` flips the WHOLE original pose, and `heroMuzzle` in
 `platformer-engine.js` applies the same transform to the source muzzle marker.
 Jump poses are samples of source Move, not a newly discovered Jump animation.
+As of v38, room topology/geometry comes from `platformer-world.js`, not preset
+platform arrays. Keep map, per-node geometry, loot and combat RNG streams separate.
+`platformer-physics.js` is shared by actual movement and navigation validation;
+changing jump/gravity/speed requires regenerating and retesting reachability.
+Run `test/platformer-world.test.js`: seed reproducibility, graph connectivity,
+all-platform/exit navigation, live jump witnesses, events and route gating.
+Never silently reintroduce fixed four-room progression or assume an exit is at
+the global FLOOR height. Preserve Butter artwork during world-generation changes.
 Run the v36 preview/archive browser check AND `tools/check-platformer-browser.mjs`.
 Keep source provenance in `assets/trickcal-stage37/CREDITS.md` / `sources.json`.
 

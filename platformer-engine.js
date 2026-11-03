@@ -1,10 +1,11 @@
 import {createRunState,applyItem,rollItems,lowerPower,upperPower} from './survivor-engine.js';
 import {advanceButterGait,butterMuzzleOffset,butterReleasePoint} from './butter-original-motion.js';
+import {PHYSICS,approach,landBody} from './platformer-physics.js?v=38';
+import {FLOOR,STAGES,BIOMES,generateWorld,generateRoom,seedNumber,seededRandom} from './platformer-world.js?v=38';
+export {FLOOR,STAGES,seededRandom,landBody};
 
-export const VIEW={width:1280,height:720},FLOOR=634,HERO_SIZE=92,STAGES=4;
+export const VIEW={width:1280,height:720},HERO_SIZE=92;
 export const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-export function seededRandom(seed){let n=seed>>>0;return()=>{n+=0x6D2B79F5;let t=n;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
-const approach=(a,b,n)=>a<b?Math.min(a+n,b):Math.max(a-n,b);
 export function heroPose(p){
   // Jump uses intact source Move poses, not a newly fabricated Jump rig.
   const gait=p.grounded?p.gait:{...p.gait,amount:1,phase:p.vy<0?1.7:4.5};
@@ -13,36 +14,18 @@ export function heroPose(p){
 export function heroMuzzle(p){const q=butterMuzzleOffset(heroPose(p));return{x:p.x+(p.facing>0?-1:1)*q.x,y:p.y+q.y-HERO_SIZE*.28};}
 
 export function makeRoom(index,random){
-  const boss=index===STAGES-1,width=boss?1920:2720;
-  const templates=[
-    [[420,500,260],[900,386,260],[1350,500,300],[1830,385,270],[2210,500,240]],
-    [[380,510,300],[830,420,300],[1300,330,250],[1600,500,300],[2110,420,300]],
-    [[460,470,250],[880,350,260],[1240,480,300],[1730,380,270],[2120,505,300]],
-  ];
-  const layout=boss?[[350,480,270],[1300,480,270]]:templates[Math.floor(random()*templates.length)];
-  const platforms=[{x:0,y:FLOOR,w:width,ground:true},...layout.map(([x,y,w],i)=>({x:x+(boss?0:Math.floor(random()*41)-20),y,w,id:i}))];
-  const enemies=[];
-  const add=(type,x,y,platform)=>{const hp=type==='ghost'?420:type==='archer'?38+index*8:48+index*9;enemies.push({id:enemies.length,type,x,y,home:platform,hp,maxHp:hp,h:type==='ghost'?148:94,w:type==='ghost'?126:44,facing:-1,vx:0,clock:random()*4,mode:'idle',timer:0,cooldown:.8+random(),flash:0,death:0,attackId:0});};
-  if(boss)add('ghost',1390,FLOOR,platforms[0]);
-  else{
-    for(const x of [720,1310,1920,2380])add('fan',x,FLOOR,platforms[0]);
-    for(const i of [0,2,4]){const p=platforms[i+1];add('archer',p.x+p.w*.55,p.y,p);}
-  }
-  const pickups=boss?[]:platforms.slice(1).map((p,i)=>({x:p.x+p.w*.25,y:p.y-26,kind:i===3?'heart':'coin',taken:false}));
-  return{index,width,platforms,enemies,pickups,exit:{x:width-130,y:FLOOR},cleared:false,rewardTaken:false,background:index>=2?'night':'forest',title:['길을 잃은 숲','장난꾸러기의 길','뒤집힌 밤의 숲','아공간의 문지기'][index]};
+  const seed=Math.floor(random()*4294967296);
+  return generateRoom({id:`standalone:${index}`,depth:index,seed,biome:Object.keys(BIOMES)[seed%4],type:index===STAGES-1?'boss':'combat'});
 }
 export function createGame(seed=Date.now()){
-  const random=seededRandom(seed),stats=createRunState('butter');
-  const game={seed,random,stats,room:makeRoom(0,random),phase:'playing',time:0,elapsed:0,coins:0,projectiles:[],effects:[],boulders:[],camera:0,shake:0,hitStop:0,previous:{},choices:[],notice:'',noticeTime:0,roomIntro:3};
+  const seedLabel=String(seed).trim().slice(0,48)||'0',root=seedNumber(seedLabel),random=seededRandom(`${root}:combat`),rewardRandom=seededRandom(`${root}:loot`),stats=createRunState('butter'),world=generateWorld(root),room=generateRoom(world.nodes[0]);
+  const game={seed:root,seedLabel,random,rewardRandom,world,currentNodeId:world.startId,rooms:{[world.startId]:room},stats,room,phase:'playing',time:0,elapsed:0,coins:0,shotsFired:0,projectiles:[],effects:[],boulders:[],camera:0,cameraY:0,shake:0,hitStop:0,previous:{},choices:[],notice:'',noticeTime:0,roomIntro:3};
   game.player={x:150,y:FLOOR,vx:0,vy:0,w:32,h:78,facing:1,grounded:true,jumps:0,coyote:.1,jumpBuffer:0,dash:0,dashCooldown:0,invulnerable:0,skillTime:0,skillCooldown:0,attackCooldown:0,action:null,gait:{phase:0,amount:0,clock:0}};
+  game.checkpoint={...room.spawn};
   return game;
 }
 export function notifyGame(g,text){g.notice=text;g.noticeTime=2.6;}
 function effect(g,type,x,y,extra={}){g.effects.push({type,x,y,time:0,duration:type==='text'?.7:.32,...extra});}
-export function landBody(body,platforms,dt){
-  const previous=body.y;body.y+=body.vy*dt;body.grounded=false;
-  if(body.vy>=0){const candidates=platforms.filter(p=>body.x+body.w/2>p.x&&body.x-body.w/2<p.x+p.w&&previous<=p.y+.5&&body.y>=p.y).sort((a,b)=>a.y-b.y);if(candidates.length){body.y=candidates[0].y;body.vy=0;body.grounded=true;body.jumps=0;}}
-}
 function hitEnemy(g,e,damage,force=0){
   if(e.hp<=0)return;e.hp=Math.max(0,e.hp-damage);e.flash=.12;e.x=clamp(e.x+force,e.home.x+e.w/2,e.home.x+e.home.w-e.w/2);
   effect(g,'hit',e.x,e.y-e.h*.55);effect(g,'text',e.x,e.y-e.h,{text:String(Math.round(damage)),color:'#fff3b4'});
@@ -54,7 +37,7 @@ export function hurtPlayer(g,damage,dir=1){
   if(g.stats.hp===0)g.phase='dead';return true;
 }
 function fire(g,action){
-  const p=g.player,m=heroMuzzle(p);
+  const p=g.player,m=heroMuzzle(p);g.shotsFired++;
   if(action.type==='high'){
     const power=upperPower(g.stats);g.boulders.push({x:m.x,y:Math.min(m.y,FLOOR-48),vx:p.facing*660,vy:-160,r:45+g.stats.upperGrade*2,life:power.duration,damage:power.damage,hits:{},angle:0});g.shake=.18;effect(g,'burst',m.x,m.y);return;
   }
@@ -69,7 +52,7 @@ function updatePlayer(g,input,pressed,dt){
   if(pressed.jump)p.jumpBuffer=.13;
   if(p.jumpBuffer>0&&(p.coyote>0||p.jumps<2)){
     if(!p.grounded&&p.coyote===0&&p.jumps===0)p.jumps=1;
-    p.vy=p.jumps===0?-690:-660;p.jumps++;p.grounded=false;p.coyote=0;p.jumpBuffer=0;p.dash=0;
+    p.vy=p.jumps===0?-PHYSICS.jump:-PHYSICS.doubleJump;p.jumps++;p.grounded=false;p.coyote=0;p.jumpBuffer=0;p.dash=0;
     effect(g,'jump',p.x,p.y,{duration:.35});
   }
   if(!input.jump&&(g.previous.jump||input.jumpReleased)&&p.vy< -260)p.vy=-260;
@@ -84,8 +67,10 @@ function updatePlayer(g,input,pressed,dt){
     const low=g.random()<lowerPower(g.stats).chance;p.action={type:low?'low':'normal',time:0,duration:Math.min(.42,g.stats.attackCooldown*.82),fired:false};p.attackCooldown=g.stats.attackCooldown;
   }
   if(p.dash>0){p.dash=Math.max(0,p.dash-dt);p.vx=p.dashFacing*850;p.vy=0;}
-  else{p.vx=approach(p.vx,axis*g.stats.moveSpeed*1.4,dt*(axis?2400:3200));p.vy=Math.min(1050,p.vy+1850*dt);}
+  else{p.vx=approach(p.vx,axis*g.stats.moveSpeed*1.4,dt*(axis?PHYSICS.acceleration:PHYSICS.braking));p.vy=Math.min(PHYSICS.maxFall,p.vy+PHYSICS.gravity*dt);}
   p.x=clamp(p.x+p.vx*dt,22,g.room.width-22);landBody(p,g.room.platforms,dt);
+  if(p.grounded){const floor=g.room.platforms.find(q=>q.id===p.platformId);if(floor)g.checkpoint={x:clamp(p.x,floor.x+40,floor.x+floor.w-40),y:floor.y,platformId:floor.id};}
+  if(p.y>FLOOR+240){hurtPlayer(g,8);Object.assign(p,{x:g.checkpoint.x,y:g.checkpoint.y,vx:0,vy:0,jumps:0,grounded:true,dash:0,action:null,invulnerable:1});notifyGame(g,'발을 헛디뎠어! 마지막 발판으로 돌아왔어.');}
   if(!wasGrounded&&p.grounded)effect(g,'land',p.x,p.y,{duration:.25});
   advanceButterGait(p.gait,Math.abs(p.x-oldX),p.x-oldX,0,dt);
   if(p.action){const a=p.action;a.time+=dt;if(!a.fired&&a.time/a.duration>=butterReleasePoint(a.type)){a.fired=true;fire(g,a);}if(a.time>=a.duration)p.action=null;}
@@ -142,21 +127,42 @@ function updateProjectiles(g,dt){
   }
   g.projectiles=g.projectiles.filter(b=>b.life>0);
   for(const b of g.boulders){
-    b.life-=dt;b.vy+=1000*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;b.angle+=b.vx*dt/b.r;
+    const previousBottom=b.y+b.r;b.life-=dt;b.vy+=1000*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;b.angle+=b.vx*dt/b.r;
     if(b.x<b.r||b.x>g.room.width-b.r){b.x=clamp(b.x,b.r,g.room.width-b.r);b.vx*=-1;}
-    if(b.y>FLOOR-b.r){b.y=FLOOR-b.r;b.vy=-Math.max(160,Math.abs(b.vy)*.6);}
+    const floor=g.room.platforms.filter(p=>b.x+b.r>p.x&&b.x-b.r<p.x+p.w&&previousBottom<=p.y+.5&&b.y+b.r>=p.y).sort((a,c)=>a.y-c.y)[0];
+    if(b.vy>0&&floor){b.y=floor.y-b.r;b.vy=-Math.max(160,Math.abs(b.vy)*.6);}
+    if(b.y>FLOOR+180)b.life=0;
     for(const e of g.room.enemies)if(e.hp>0&&Math.hypot(e.x-b.x,e.y-e.h*.5-b.y)<b.r+e.w*.5&&(!b.hits[e.id]||g.time-b.hits[e.id]>.32)){b.hits[e.id]=g.time;hitEnemy(g,e,b.damage,Math.sign(b.vx)*20);}
   }
   g.boulders=g.boulders.filter(b=>b.life>0);
 }
 export function chooseReward(g,id){
   if(g.phase!=='reward'||!g.choices.includes(id))return false;
-  g.stats=applyItem(g.stats,id);g.room.rewardTaken=true;g.phase='playing';g.choices=[];notifyGame(g,'아이템 획득! 오른쪽 아공간 문으로 이동');return true;
+  g.stats=applyItem(g.stats,id);g.room.rewardTaken=true;g.world.nodes.find(n=>n.id===g.currentNodeId).completed=true;if(g.room.shrine)g.room.shrine.used=true;g.phase='playing';g.choices=[];notifyGame(g,'아이템 획득! 출구에서 다음 경로를 골라 보자.');return true;
 }
 export function enterNextRoom(g){
-  if(g.phase!=='playing'||!g.room.cleared||!g.room.rewardTaken||Math.abs(g.player.x-g.room.exit.x)>100||Math.abs(g.player.y-FLOOR)>50)return false;
-  if(g.room.index===STAGES-1){g.phase='won';return true;}
-  g.room=makeRoom(g.room.index+1,g.random);g.player.x=120;g.player.y=FLOOR;g.player.vx=0;g.player.vy=0;g.player.action=null;g.player.grounded=true;g.player.jumps=0;g.player.dash=0;g.player.skillTime=0;g.player.invulnerable=1;g.projectiles=[];g.boulders=[];g.effects=[];g.camera=0;g.roomIntro=2.6;return true;
+  if(g.phase!=='playing'||!g.room.cleared||!g.room.rewardTaken||!g.player.grounded||Math.abs(g.player.x-g.room.exit.x)>90||Math.abs(g.player.y-g.room.exit.y)>40)return false;
+  if(g.room.type==='boss'){g.phase='won';return true;}
+  g.phase='route';return true;
+}
+export function routeOptions(g){const node=g.world.nodes.find(n=>n.id===g.currentNodeId);return g.world.nodes.filter(n=>node.next.includes(n.id)&&!n.visited);}
+export function chooseRoute(g,id){
+  if(g.phase!=='route')return false;const node=routeOptions(g).find(n=>n.id===id);if(!node)return false;
+  const room=g.rooms[id]??generateRoom(node);g.rooms[id]=room;g.room=room;g.currentNodeId=id;node.visited=true;
+  Object.assign(g.player,{x:room.spawn.x,y:room.spawn.y,vx:0,vy:0,action:null,grounded:true,jumps:0,coyote:.1,jumpBuffer:0,dash:0,skillTime:0,invulnerable:1});
+  g.checkpoint={...room.spawn};g.projectiles=[];g.boulders=[];g.effects=[];g.camera=0;g.cameraY=0;g.roomIntro=2.6;g.phase='playing';g.previous={};g.noticeTime=0;return true;
+}
+function offerReward(g){
+  g.choices=rollItems(g.rewardRandom,3);
+  if(g.room.type==='elite'){const extra=g.choices.find(id=>!['lower_book','upper_book'].includes(id));g.choices=['lower_book','upper_book',extra];}
+  g.phase='reward';
+}
+export function interactRoom(g){
+  if(g.phase!=='playing')return false;const shrine=g.room.shrine,p=g.player;
+  if(shrine&&!shrine.used&&p.grounded&&Math.abs(p.x-shrine.x)<85&&Math.abs(p.y-shrine.y)<40){
+    if(shrine.kind==='treasure')offerReward(g);
+    else{g.stats.hp=Math.min(g.stats.maxHp,g.stats.hp+Math.ceil(g.stats.maxHp*.4));shrine.used=true;g.room.rewardTaken=true;g.world.nodes.find(n=>n.id===g.currentNodeId).completed=true;notifyGame(g,'따뜻한 쉼터 · 최대 체력의 40% 회복');}return true;
+  }return enterNextRoom(g);
 }
 export function tick(g,input={},dt=1/120){
   if(g.phase!=='playing')return;
@@ -167,6 +173,7 @@ export function tick(g,input={},dt=1/120){
   for(const e of g.effects)e.time+=dt;g.effects=g.effects.filter(e=>e.time<e.duration);
   g.noticeTime=Math.max(0,g.noticeTime-dt);g.roomIntro=Math.max(0,g.roomIntro-dt);g.shake=Math.max(0,g.shake-dt);
   const cameraGoal=clamp(g.player.x-VIEW.width*.42+g.player.facing*65,0,g.room.width-VIEW.width);g.camera+=(cameraGoal-g.camera)*(1-Math.exp(-dt*5));
-  if(g.phase==='playing'&&!g.room.cleared&&g.room.enemies.every(e=>e.hp<=0)){g.room.cleared=true;g.projectiles=g.projectiles.filter(b=>b.owner==='player');g.choices=rollItems(g.random,3);g.phase='reward';}
-  if(pressed.interact)enterNextRoom(g);g.previous={...input};
+  g.cameraY+=(clamp(g.player.y-340,-230,0)-g.cameraY)*(1-Math.exp(-dt*6));
+  if(g.phase==='playing'&&!g.room.cleared&&g.room.enemies.every(e=>e.hp<=0)){g.room.cleared=true;g.projectiles=g.projectiles.filter(b=>b.owner==='player');offerReward(g);}
+  if(pressed.interact)interactRoom(g);g.previous={...input};
 }
