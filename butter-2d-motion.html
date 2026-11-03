@@ -2,32 +2,30 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>버터 · 고정 원화 스프라이트</title><link rel="icon" href="data:,">
+  <title>버터 · 원작 모션 v36</title><link rel="icon" href="data:,">
   <style>
-    :root{font:16px/1.7 system-ui,sans-serif;color:#60463d;background:#faf4e9;color-scheme:light}*{box-sizing:border-box}body{max-width:1160px;margin:auto;padding:32px 20px 60px}h1{font-size:clamp(26px,5vw,38px);line-height:1.3}h2{font-size:19px;margin:0}p{max-width:80ch}a{color:#87522b;text-underline-offset:4px}.tag{font-size:13px;background:#efddb4;padding:5px 12px;border-radius:20px}.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:14px 0}button,select{font:inherit;color:inherit;background:#fffaf1;border:1px solid #d4bea5;padding:7px 13px;border-radius:16px;cursor:pointer}button:focus-visible,select:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #ad7741;outline-offset:3px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}article{border:1px solid #ddcdbb;border-radius:16px;background:#fffcf7;overflow:hidden;text-align:center}article h2{padding:12px}figure{margin:0;padding:12px 4px;border-top:1px solid #eadfd3}figcaption{font-size:13px;color:#88715f}canvas{display:block;margin:auto;max-width:100%;height:auto;background:conic-gradient(#f4ece0 25%,#fffaf2 0 50%,#f4ece0 0 75%,#fffaf2 0) 0 0/20px 20px}.notice{background:#f0e4d2;padding:14px 18px;border-radius:12px}.small{font-size:14px;color:#88715f}nav{display:flex;flex-wrap:wrap;gap:20px}input[type=range]{width:180px}#timeline{font-variant-numeric:tabular-nums}@media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}body{padding:20px 12px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+    :root{font:16px/1.6 system-ui,sans-serif;color:#523d36;background:#faf5ec;color-scheme:light}*{box-sizing:border-box}body{max-width:1080px;margin:auto;padding:28px 20px 60px}h1{font-size:clamp(28px,5vw,42px);line-height:1.2;margin:14px 0}p{max-width:80ch}a{color:#85532f;text-underline-offset:4px}.tag{font-size:13px;border-radius:20px;background:#eadcbd;padding:5px 12px}.controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:16px 0}button,select{font:inherit;color:inherit;background:#fffaf2;border:1px solid #d7c4ac;border-radius:12px;padding:9px 13px;cursor:pointer}button:focus-visible,select:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #b17d43;outline-offset:3px}#play,#enable-motion{background:#f5d58d;font-weight:700}canvas{display:block;max-width:100%;height:auto}#stage{width:100%;border:1px solid #decfbb;border-radius:18px;background:radial-gradient(ellipse at 50% 70%,#f5e9d6,#fffcf6 65%)}.notice{border-left:4px solid #b59062;padding:12px 18px;background:#f0e7d8;border-radius:8px}.small{font-size:14px;color:#7e6b5e}.sizes{display:flex;align-items:end;gap:24px;flex-wrap:wrap}.sizes figure{margin:0;text-align:center}.sizes canvas{background:#fffaf3;border-radius:12px}.sizes figcaption{font-size:13px}.timelines input{width:170px;max-width:100%}details{margin:24px 0}summary{cursor:pointer}nav{display:flex;flex-wrap:wrap;gap:20px}[hidden]{display:none!important}@media(max-width:600px){body{padding:20px 12px 40px}.controls{gap:8px}.timelines{display:grid;grid-template-columns:1fr 1fr}.timelines label{display:grid;gap:6px}}
   </style>
-  <style>
-    [hidden]{display:none!important}.playback{display:flex;flex-wrap:wrap;align-items:center;gap:12px;background:#f0e4d2;padding:12px 16px;border-radius:12px}.playback strong{color:#42694a}body[data-playing=false] .playback strong{color:#946039}#play,#enable-motion{background:#f3d99c;font-weight:700;min-width:132px}.reference{background:#f2eee7}.reference figcaption{color:#786c60}#reduced-notice{border:2px solid #c99457;padding:12px;border-radius:12px}.phase-controls{padding-top:0}.motion-caption{font-weight:700;color:#60463d}
-  </style>
-  <script type="module" src="./butter-2d-motion-preview.js?v=35"></script>
+  <style>.controls label{min-width:0;max-width:100%}.controls select{min-width:0;max-width:100%}.timelines input{width:100%;max-width:170px}@media(max-width:600px){.controls:not(.timelines) label{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.controls select{max-width:260px}}</style>
+  <script type="module" src="./butter-original-preview.js?v=36"></script>
 </head>
 <body>
-  <span class="tag">v35 후보 · 양손 장전 + 독립 보행</span>
-  <h1>그림은 그대로, 동작만 분리</h1>
-  <p>양발은 계속 교대하고, 오른손은 새총을 잡고 왼손은 줄을 당겼다가 놓아. 보행과 사격 슬라이더를 따로 움직여 확인할 수 있어. 얼굴·머리·몸 비율과 원본 PNG는 보존했어.</p>
-  <nav><a href="./?v=motion35">게임에서 보기</a><a href="./butter-2d-assets.html?v=motion35">원본 시안 비교</a><a href="./assets/butter-2d32/directions.png" download>고정 원본 PNG</a></nav>
+  <span class="tag">v36 · 원작 그림과 리그에서 렌더</span>
+  <h1>이제 몸 전체가 함께 움직이도록</h1>
+  <p>원작 버터의 얼굴·팔·다리·머리카락·귀·꼬리를 한 리그에서 렌더했어. v35의 잘라 붙인 팔·다리와 코드로 그린 팔은 사용하지 않아.</p>
+  <nav><a href="./?v=original36">게임에서 보기</a><a href="https://viewer.dclnslde.com/" target="_blank" rel="noopener noreferrer">참조한 원작 뷰어</a><a href="./assets/butter-original36/CREDITS.md">출처·변경 범위</a></nav>
   <div class="controls">
-    <label>동작 <select id="motion"><option value="walkShoot">이동 + 평타</option><option value="idle">정지</option><option value="walk">보행</option><option value="shoot">평타</option><option value="low">이동 + 저학년</option><option value="high">고학년 반동</option></select></label>
-    <label>크기 <select id="size"><option value="96">96px</option><option value="160">160px</option><option value="256" selected>256px</option></select></label>
-    <label>속도 <select id="speed"><option value="0.5">0.5배</option><option value="1" selected>1배</option></select></label>
-    <label><input id="show-source" type="checkbox"> 원본 비교</label>
-    <label><input id="guides" type="checkbox"> 발·발사점 표시</label>
+    <label>동작 <select id="motion"><option value="walkShoot">이동 사격 · 리그 결합</option><option value="walk">원작 달리기</option><option value="shoot">원작 평타</option><option value="low">원작 저학년</option><option value="high">원작 고학년</option><option value="idle">원작 대기</option></select></label>
+    <label>재생 기준 <select id="pace"><option value="game">게임 속도</option><option value="source">원작 속도</option></select></label>
+    <label>속도 <select id="speed"><option value="1">1배</option><option value="0.5">0.5배</option></select></label>
+    <button id="play" type="button" aria-pressed="true">Ⅱ 일시 정지</button><button id="step" type="button">한 프레임 →</button>
   </div>
-  <div class="playback"><button id="play" type="button" aria-pressed="true">Ⅱ 일시 정지</button><strong id="playback-state" role="status">불러오는 중</strong><button id="step" type="button">한 프레임 →</button></div>
-  <p id="reduced-notice" hidden>기기의 ‘동작 줄이기’ 설정으로 자동재생이 꺼져 있어. 직접 눌러 재생할 수 있어. <button id="enable-motion" type="button">▶ 동작 재생</button></p>
-  <div class="controls phase-controls"><label for="phase">보행</label><input id="phase" type="range" min="0" max="1" step="0.005" value="0"><label for="shot-phase">사격</label><input id="shot-phase" type="range" min="0" max="1" step="0.005" value="0"><output id="timeline" aria-live="off">0%</output></div>
-  <section id="views" class="grid" aria-label="4방향 원본과 동작 비교"></section>
-  <p id="status" class="small" role="status">고정 에셋을 불러오는 중…</p>
-  <p class="notice">공개 전투 자료의 손 두 조각과 발사 타이밍을 활용한 4방향 2D 후보야. 고학년의 왕새총 전용 자세는 아직 별도 작업이 필요해. <a href="./assets/butter-2d35/CREDITS.md">자료 출처·사용 범위</a></p>
+  <p id="reduced-notice" class="notice" hidden>기기의 ‘동작 줄이기’ 설정으로 자동재생을 멈췄어. <button id="enable-motion" type="button">▶ 동작 재생</button></p>
+  <canvas id="stage" width="720" height="360" style="max-width:720px;margin:auto" role="img" aria-label="원작 리그에서 렌더한 버터 동작"></canvas>
+  <div class="controls timelines"><label>걸음 / 대기 <input id="phase" type="range" min="0" max="1" step="0.001" value="0"></label><label>장전 / 발사 <input id="shot-phase" type="range" min="0" max="1" step="0.001" value="0"></label><output id="timeline"></output></div>
+  <p id="status" class="small" role="status">원작 프레임을 불러오는 중…</p>
+  <p class="notice"><strong>현재 자료는 한 시점의 3/4 모습이야.</strong> 위·아래·좌·우 원본 모션이 모두 있는 것은 아니며, 뒤돌기처럼 보이게 뒤집거나 억지로 변형하지 않았어. 게임의 바닥 화살표가 조준 방향을 표시해.</p>
+  <details open><summary>작은 크기에서도 확인</summary><div class="sizes"><figure><canvas id="small96" width="96" height="96"></canvas><figcaption>96px</figcaption></figure><figure><canvas id="small160" width="160" height="160"></canvas><figcaption>160px</figcaption></figure></div><p class="small">큰 스킬은 효과 전체가 보이도록 맞춰 보여줘. 게임에서는 모든 클립의 캐릭터 배율과 바닥 원점을 고정해.</p></details>
+  <details><summary>원작 그대로인 부분과 새로 연결한 부분</summary><p>대기·달리기·평타·저학년·고학년은 원작 클립이야. 이동 사격만 원본 리그 안에서 달리기의 골반·다리와 평타의 상체를 합쳐 렌더했어. 원작에 있던 이동 사격 클립이라고 부르지는 않아. 이동 중 저학년 추가탄도 이 사격 동작을 사용해.</p><p>이전 승인 시안과 v35 파일은 보관했지만 게임에서는 읽지 않아. 비공식 팬 프로토타입이며 원작 에셋의 별도 재배포 라이선스가 확인된 것은 아니야.</p></details>
 </body>
 </html>

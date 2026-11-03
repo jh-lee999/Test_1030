@@ -70,7 +70,7 @@ try {
   document.querySelector('#source-path').textContent = canon.approvedMaster.path;
   document.querySelector('#source-hash').textContent = canon.approvedMaster.sha256;
   update();
-  status.textContent = '승인한 4방향 템플릿 · PNG 변경 없이 v35 게임에 적용됨';
+  status.textContent = '이전 승인 4방향 템플릿 보관 · 현재 v36 게임은 원작 모션을 사용';
   document.body.dataset.ready = 'true';
 } catch (error) {
   status.textContent = '미리보기를 불러오지 못했어. 아래 원본 PNG 링크로 확인하거나 새로고침해줘.';

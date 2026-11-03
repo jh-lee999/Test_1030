@@ -622,9 +622,9 @@ button:focus-visible {
 }
 
 .portrait:not(.komi) {
-  background-image: url("./assets/butter-2d32/directions.png");
-  background-size: 450% auto;
-  background-position: 20.5% 13.8%;
+  background-image: url("./assets/butter-original36/poster.png");
+  background-size: 245% auto;
+  background-position: 52% 18%;
 }
 
 .komi-art {

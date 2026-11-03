@@ -2,6 +2,33 @@
 
 ## Butter artwork: persistent source of truth
 
+**Latest user decision, 2026-11-03:** v35 was explicitly rejected as unnatural
+and grotesque. Asked whether the original game's art/motion should take priority
+over the fixed 2D template (with only one source view available), the user chose
+**"원작 그림·모션 우선"**. This supersedes v32-as-active-game-template below.
+
+The ACTIVE renderer is now `butter-original-motion.js`, using whole baked poses
+from `assets/butter-original36/`. Read its `CREDITS.md`, inspect `poster.png` and
+actual animated poses, and read the motion reference before changing it. The
+game must not load the rejected v35 limb/cleanplate assets or restore that rig as
+a fallback. Missing animation images fall back to the ORIGINAL idle/poster.
+
+Idle/Move/Attack1_1/Skill1_1/Ultimate1_1 are source clips. WalkShoot is explicitly
+our original-rig composition (Move lower body + Attack1_1 upper body), NOT a
+discovered original clip. Only ONE three-quarter source view exists in this
+implementation: no fake four-direction claim, no mirrored physical hands.
+The floor arrow shows aim independently. Future directional art is separate work.
+
+Run `npm test`, `npm run check:butter-canon`, `npm run check:butter-original`,
+and the current `tools/check-butter-original-browser.mjs` browser test. Inspect
+real playback: technical success is not aesthetic approval. Every source-frame
+cell has a constant clip origin and shared world scale, never per-frame auto-fit.
+The baker must apply local rig/constraint overrides BEFORE Spine updates meshes.
+The metadata lowerChecks must stay identical across shot phases at one gait phase.
+
+The following v28–35 rules/documentation are HISTORICAL preservation rules, not
+instructions to force those rejected pixels back into the active game.
+
 Before changing Butter's images, sprites, animation, model, proportions, colors,
 outfit, handedness, or the rendering of those assets:
 

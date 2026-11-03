@@ -15,7 +15,7 @@ import {
   rollItems,
   upperPower
 } from "./survivor-engine.js?v=23";
-import { advanceButterGait, drawButterMotion, butterMuzzleOffset, prepareButterMotion, BUTTER_2D_LAYOUT, BUTTER_LIMB_IMAGE, BUTTER_CLEAN_IMAGE, butterReleasePoint } from "./butter-motion.js?v=35";
+import { advanceButterGait, drawButterMotion, butterMuzzleOffset, BUTTER_ORIGINAL, BUTTER_POSTER, butterReleasePoint } from "./butter-original-motion.js?v=36";
 
 const LOGICAL = { width: 800, height: 1450 };
 const WALL = 58;
@@ -34,15 +34,15 @@ heroAtlas.decoding = "async";
 heroAtlas.addEventListener("load", () => { heroArtReady = true; });
 heroAtlas.src = "./assets/trickcal-heroes.webp?v=23";
 
-const butterMotionImages = { atlas: new Image(), limbs: new Image(), clean: new Image() };
+const butterMotionImages = Object.fromEntries([...Object.keys(BUTTER_ORIGINAL.clips), "poster"].map(key => [key, new Image()]));
 let butterMotionPartsLoaded = 0;
 for (const [part, image] of Object.entries(butterMotionImages)) {
   image.decoding = "async";
   image.addEventListener("load", () => {
-    if (part === "atlas") { prepareButterMotion(image); butterMotionPartsLoaded = 1; }
-    canvas.dataset.butterRenderer = butterMotionImages.limbs.naturalWidth && butterMotionImages.clean.naturalWidth ? "layered35" : "fallback34";
+    if (part === "idle" || part === "poster") butterMotionPartsLoaded = 1;
+    canvas.dataset.butterRenderer = "original36";
   });
-  image.src = part === "atlas" ? BUTTER_2D_LAYOUT.image : part === "limbs" ? BUTTER_LIMB_IMAGE : BUTTER_CLEAN_IMAGE;
+  image.src = part === "poster" ? BUTTER_POSTER : BUTTER_ORIGINAL.clips[part].image;
 }
 let butterGait = { phase: 0, amount: 0, dx: 0, dy: -1 };
 
@@ -560,7 +560,7 @@ function beginButterAttack(dx, dy) {
 }
 
 function butterAttackOrigin(action) {
-  const offset = butterMuzzleOffset({size:112,facingX:action.dx,facingY:action.dy,gait:butterGait,action,fallback:!butterMotionImages.limbs.naturalWidth||!butterMotionImages.clean.naturalWidth});
+  const offset = butterMuzzleOffset({size:112,gait:butterGait,action});
   return {x:player.x+offset.x,y:player.y+offset.y};
 }
 
@@ -1320,6 +1320,13 @@ function drawHero() {
   ctx.fill();
   ctx.globalAlpha = 1;
 
+  if (run.characterId === "butter") {
+    // One source view: show aim explicitly, without mirrored physical hands.
+    ctx.save();ctx.translate(0, size * .28);ctx.rotate(Math.atan2(player.facingY, player.facingX));
+    ctx.fillStyle = butterAction ? "#fff0a1" : "#f2d28dbb";
+    ctx.beginPath();ctx.moveTo(size * .57 + 9, 0);ctx.lineTo(size * .57 - 3, -6);ctx.lineTo(size * .57 - 3, 6);ctx.closePath();ctx.fill();ctx.restore();
+  }
+
   if (abilityPulse > 0) {
     ctx.globalAlpha = abilityPulse * 0.55;
     ctx.strokeStyle = run.characterId === "butter" ? "#ffe074" : "#d4bff5";
@@ -1353,7 +1360,7 @@ function drawHero() {
 
   if (hurtTimer > 0 && Math.floor(hurtTimer * 18) % 2 === 0) ctx.globalAlpha = 0.42;
   if (butterSpriteReady) {
-    drawButterMotion(ctx, butterMotionImages, { size, facingX: player.facingX, facingY: player.facingY, gait: butterGait, action: butterAction, recoil: attackKick });
+    drawButterMotion(ctx, butterMotionImages, { size, gait: butterGait, action: butterAction, time: elapsed });
   } else if (run.characterId !== "butter" && heroArtReady && heroAtlas.naturalWidth) {
     const half = heroAtlas.naturalWidth / 2;
     const sourceX = run.characterId === "butter" ? 0 : half;

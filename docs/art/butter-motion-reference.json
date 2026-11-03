@@ -2,7 +2,7 @@
   "version": 1,
   "checkedAt": "2026-11-03",
   "status": "observed-original-reference-not-a-four-direction-runtime-asset",
-  "subsequentAdaptation": "assets/butter-2d35/CREDITS.md",
+  "subsequentAdaptation": "assets/butter-original36/CREDITS.md",
   "viewer": "https://viewer.dclnslde.com/",
   "selection": {
     "displayName": "버터",
@@ -75,6 +75,6 @@
     "No combined Move+Attack clip was listed in the inspected skeleton.",
     "Release reference is a visual transition corroborated by an event, not verified original gameplay code.",
     "Source durations are not our game's cooldowns.",
-    "Original assets and viewer runtime were not added to the repository."
+    "The initial survey did not bundle source files. Later v36 bundles derived whole-pose images, not the original skeleton or viewer runtime."
   ]
 }

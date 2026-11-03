@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>보관 · 거절된 v35 동작</title><link rel="icon" href="data:,">
+  <style>
+    :root{font:16px/1.7 system-ui,sans-serif;color:#60463d;background:#faf4e9;color-scheme:light}*{box-sizing:border-box}body{max-width:1160px;margin:auto;padding:32px 20px 60px}h1{font-size:clamp(26px,5vw,38px);line-height:1.3}h2{font-size:19px;margin:0}p{max-width:80ch}a{color:#87522b;text-underline-offset:4px}.tag{font-size:13px;background:#efddb4;padding:5px 12px;border-radius:20px}.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:14px 0}button,select{font:inherit;color:inherit;background:#fffaf1;border:1px solid #d4bea5;padding:7px 13px;border-radius:16px;cursor:pointer}button:focus-visible,select:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #ad7741;outline-offset:3px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}article{border:1px solid #ddcdbb;border-radius:16px;background:#fffcf7;overflow:hidden;text-align:center}article h2{padding:12px}figure{margin:0;padding:12px 4px;border-top:1px solid #eadfd3}figcaption{font-size:13px;color:#88715f}canvas{display:block;margin:auto;max-width:100%;height:auto;background:conic-gradient(#f4ece0 25%,#fffaf2 0 50%,#f4ece0 0 75%,#fffaf2 0) 0 0/20px 20px}.notice{background:#f0e4d2;padding:14px 18px;border-radius:12px}.small{font-size:14px;color:#88715f}nav{display:flex;flex-wrap:wrap;gap:20px}input[type=range]{width:180px}#timeline{font-variant-numeric:tabular-nums}@media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}body{padding:20px 12px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+  </style>
+  <style>
+    [hidden]{display:none!important}.playback{display:flex;flex-wrap:wrap;align-items:center;gap:12px;background:#f0e4d2;padding:12px 16px;border-radius:12px}.playback strong{color:#42694a}body[data-playing=false] .playback strong{color:#946039}#play,#enable-motion{background:#f3d99c;font-weight:700;min-width:132px}.reference{background:#f2eee7}.reference figcaption{color:#786c60}#reduced-notice{border:2px solid #c99457;padding:12px;border-radius:12px}.phase-controls{padding-top:0}.motion-caption{font-weight:700;color:#60463d}
+  </style>
+  <script type="module" src="./butter-2d-motion-preview.js?v=35"></script>
+</head>
+<body>
+  <span class="tag">보관: 사용자가 거절한 v35 · 현재 게임에 사용하지 않음</span>
+  <h1>그림은 그대로, 동작만 분리</h1>
+  <p>양발은 계속 교대하고, 오른손은 새총을 잡고 왼손은 줄을 당겼다가 놓아. 보행과 사격 슬라이더를 따로 움직여 확인할 수 있어. 얼굴·머리·몸 비율과 원본 PNG는 보존했어.</p>
+  <nav><a href="./?v=motion35">게임에서 보기</a><a href="./butter-2d-assets.html?v=motion35">원본 시안 비교</a><a href="./assets/butter-2d32/directions.png" download>고정 원본 PNG</a></nav>
+  <div class="controls">
+    <label>동작 <select id="motion"><option value="walkShoot">이동 + 평타</option><option value="idle">정지</option><option value="walk">보행</option><option value="shoot">평타</option><option value="low">이동 + 저학년</option><option value="high">고학년 반동</option></select></label>
+    <label>크기 <select id="size"><option value="96">96px</option><option value="160">160px</option><option value="256" selected>256px</option></select></label>
+    <label>속도 <select id="speed"><option value="0.5">0.5배</option><option value="1" selected>1배</option></select></label>
+    <label><input id="show-source" type="checkbox"> 원본 비교</label>
+    <label><input id="guides" type="checkbox"> 발·발사점 표시</label>
+  </div>
+  <div class="playback"><button id="play" type="button" aria-pressed="true">Ⅱ 일시 정지</button><strong id="playback-state" role="status">불러오는 중</strong><button id="step" type="button">한 프레임 →</button></div>
+  <p id="reduced-notice" hidden>기기의 ‘동작 줄이기’ 설정으로 자동재생이 꺼져 있어. 직접 눌러 재생할 수 있어. <button id="enable-motion" type="button">▶ 동작 재생</button></p>
+  <div class="controls phase-controls"><label for="phase">보행</label><input id="phase" type="range" min="0" max="1" step="0.005" value="0"><label for="shot-phase">사격</label><input id="shot-phase" type="range" min="0" max="1" step="0.005" value="0"><output id="timeline" aria-live="off">0%</output></div>
+  <section id="views" class="grid" aria-label="4방향 원본과 동작 비교"></section>
+  <p id="status" class="small" role="status">고정 에셋을 불러오는 중…</p>
+  <p class="notice">공개 전투 자료의 손 두 조각과 발사 타이밍을 활용한 4방향 2D 후보야. 고학년의 왕새총 전용 자세는 아직 별도 작업이 필요해. <a href="./assets/butter-2d35/CREDITS.md">자료 출처·사용 범위</a></p>
+</body>
+</html>

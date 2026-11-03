@@ -1,3 +1,4 @@
+// ARCHIVED v35 checker. The active game is checked by check-butter-original-browser.mjs.
 // Run against a local HTTP server. Playwright is optional for this visual check.
 // PLAYWRIGHT_MODULE may select an already installed module; no downloads here.
 import assert from 'node:assert/strict';

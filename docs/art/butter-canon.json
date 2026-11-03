@@ -1,5 +1,12 @@
 {
-  "version": 3,
+  "version": 4,
+  "latestUserDecision": {
+    "date": "2026-11-03",
+    "choice": "원작 그림·모션 우선",
+    "supersedes": "v32-as-active-game-template",
+    "rejected": "v35 layered cutout motion",
+    "acknowledgedLimitation": "Only one original three-quarter view is available; no four-direction source set"
+  },
   "character": "Butter",
   "approvedMaster": {
     "path": "assets/butter-2d-study.png",
@@ -15,15 +22,25 @@
   "approvedDirections": {
     "manifest": "assets/butter-2d32/directions.json",
     "status": "user-approved-direction-template",
-    "gameApplied": true
+    "gameApplied": false
   },
   "activeAnimation": {
+    "renderer": "butter-original-motion.js",
+    "atlas": "assets/butter-original36/atlas.json",
+    "preview": "butter-2d-motion.html",
+    "credits": "assets/butter-original36/CREDITS.md",
+    "status": "original-art-priority-authorized; composed-moving-fire-candidate",
+    "method": "whole-poses-baked-through-original-rig; source-clips-plus-explicit-Move-Attack-composition",
+    "fallback": "original idle frame or poster; never v35",
+    "limitations": ["One original three-quarter view, not four directions", "Moving fire is a composition, not an original named clip", "Airborne motion retained from original Move", "Aim arrow does not turn the source character"]
+  },
+  "rejectedAnimation35": {
     "rig": "assets/butter-2d35/rig.js",
     "sourceLayout": "assets/butter-2d33/rig.js",
     "motion": "assets/butter-2d35/motion.js",
     "renderer": "butter-motion.js",
     "preview": "butter-2d-motion.html",
-    "status": "integrated-layered-motion-candidate-not-user-approved",
+    "status": "rejected-by-user-2026-11-03; archived-not-loaded-by-game",
     "method": "unchanged-approved-face-and-source-files; uniform-scale; independent-hip-knee-stride; two-hand-pull-release-and-band; fixed-pelvis-tail-sway; masked-occlusion-repair",
     "newAssets": ["assets/butter-2d35/limbs.png", "assets/butter-2d35/cleanplate.png"],
     "credits": "assets/butter-2d35/CREDITS.md",
