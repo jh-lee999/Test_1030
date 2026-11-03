@@ -28,8 +28,8 @@ test('piercing sweeps multiple bodies in one fast step, once each and in travel 
   const g=fixture(),es=enemies(g,[400,300,200]);g.projectiles=[bullet({vx:70000,pierce:2})];tick(g,{});assert.ok(es.every(e=>e.hp===85));assert.equal(g.projectiles.length,0);tick(g,{});assert.ok(es.every(e=>e.hp===85));
   const h=fixture(),targets=enemies(h,[300,200]);h.projectiles=[bullet({vx:70000,pierce:0})];tick(h,{});assert.equal(targets[0].hp,100);assert.equal(targets[1].hp,85);
 });
-test('chain chooses another live target, refreshes near-expired life and keeps speed',()=>{
-  const g=fixture(),es=enemies(g,[200,500,800]);g.projectiles=[bullet({x:175,life:.02,bounces:2,homing:true,homingStrength:11})];tick(g,{});let b=g.projectiles[0];assert.ok(b.life>=1.3);assert.equal(b.targetId,'e1');near(Math.hypot(b.vx,b.vy),1000);step(g,90);assert.ok(es.every(e=>e.hp===85));assert.equal(g.projectiles.length,0);
+test('chain can return to a previous nearby target, refreshes life and keeps speed',()=>{
+  const g=fixture(),es=enemies(g,[200,500,900]);g.projectiles=[bullet({x:175,life:.02,bounces:2,homing:true,homingStrength:11})];tick(g,{});let b=g.projectiles[0];assert.ok(b.life>=1.3);assert.equal(b.targetId,'e1');near(Math.hypot(b.vx,b.vy),1000);step(g,90);assert.deepEqual(es.map(e=>e.hp),[70,85,100]);assert.deepEqual(b.hitIds,['e0','e1','e0']);assert.equal(g.projectiles.length,0);
 });
 test('Lv3 upper skill spawns two boulders, applies skill damage, cooldown and full body collision',()=>{
   const g=fixture();for(const id of ['upper_book','upper_book','magic_ink','hourglass'])grantItem(g,id);tick(g,{skill:true});near(g.player.skillCooldown,g.stats.skillCooldown);step(g,85);assert.equal(g.boulders.length,2);const [a,b]=g.boulders,p=upperPower(g.stats);near(a.damage,p.damage);near(b.damage,a.damage*.65);assert.equal(Math.sign(a.vx),-Math.sign(b.vx));assert.equal(a.r,p.radius);

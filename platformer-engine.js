@@ -1,10 +1,11 @@
-import {createBuildState,applyBuildItem,rewardChoices,rollBuildItems,lowerPower,upperPower,ITEMS,RARITIES,itemChanges} from './platformer-build.js?v=39';
+import {createBuildState,applyBuildItem,rewardChoices,rollBuildItems,lowerPower,upperPower,ITEMS,RARITIES,itemChanges,LOWER_CHAIN_RANGE} from './platformer-build.js?v=40';
 import {advanceButterGait,butterMuzzleOffset,butterReleasePoint} from './butter-original-motion.js';
 import {PHYSICS,approach,landBody} from './platformer-physics.js?v=38';
 import {FLOOR,STAGES,BIOMES,generateWorld,generateRoom,seedNumber,seededRandom} from './platformer-world.js?v=38';
 export {FLOOR,STAGES,seededRandom,landBody};
 
 export const VIEW={width:1280,height:720},HERO_SIZE=92;
+export const CHAIN_HIT_INTERVAL=.08;
 export const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 export function heroPose(p){
   // Jump uses intact source Move poses, not a newly fabricated Jump rig.
@@ -52,7 +53,7 @@ function fire(g,action){
   const count=1+g.stats.extraProjectiles+(low?power.extraProjectiles:0);
   for(let i=0;i<count;i++){
     const angle=i===0?0:Math.ceil(i/2)*.11*(i%2?1:-1),critical=g.random()<g.stats.critChance,damage=(low?power.damage:g.stats.damage)*(i?.55:1)*(critical?g.stats.critDamage:1);
-    g.projectiles.push({owner:'player',x:m.x,y:m.y,vx:p.facing*Math.cos(angle)*speed,vy:Math.sin(angle)*speed,speed,r:low?9:6,life:g.stats.projectileLifetime,damage,critical,homing:low,homingStrength:power.homing,bounces:low?power.bounces:0,pierce:low?0:g.stats.pierce,hitIds:[]});
+    g.projectiles.push({owner:'player',x:m.x,y:m.y,vx:p.facing*Math.cos(angle)*speed,vy:Math.sin(angle)*speed,speed,r:low?9:6,life:g.stats.projectileLifetime,damage,critical,homing:low,homingStrength:power.homing,bounces:low?power.bounces:0,chainRange:power.chainRange,pierce:low?0:g.stats.pierce,hitIds:[]});
   }
   effect(g,'shot',m.x,m.y,{dir:p.facing,color:low?'#b9eeff':'#fff3bb'});
 }
@@ -114,28 +115,61 @@ function updateEnemies(g,dt){
     if(e.type==='ghost'&&Math.abs(dx)<100&&Math.abs(dy)<130)hurtPlayer(g,12,e.facing);
   }
 }
-export function segmentHitsBody(ax,ay,bx,by,body,r=0){
+function segmentBodyEntry(ax,ay,bx,by,body,r=0){
   let lo=0,hi=1;
   for(const [a,d,min,max]of [[ax,bx-ax,body.x-body.w/2-r,body.x+body.w/2+r],[ay,by-ay,body.y-body.h-r,body.y+r]]){
-    if(Math.abs(d)<1e-8){if(a<min||a>max)return false;continue;}
-    const t0=(min-a)/d,t1=(max-a)/d;lo=Math.max(lo,Math.min(t0,t1));hi=Math.min(hi,Math.max(t0,t1));if(lo>hi)return false;
-  }return true;
+    if(Math.abs(d)<1e-8){if(a<min||a>max)return null;continue;}
+    const t0=(min-a)/d,t1=(max-a)/d;lo=Math.max(lo,Math.min(t0,t1));hi=Math.min(hi,Math.max(t0,t1));if(lo>hi)return null;
+  }return lo;
+}
+export const segmentHitsBody=(...args)=>segmentBodyEntry(...args)!==null;
+const enemyCenter=e=>({x:e.x,y:e.y-e.h*.5});
+const distanceTo=(a,e)=>Math.hypot(e.x-a.x,e.y-e.h*.5-a.y);
+function nearestChainTarget(g,b,origin=b,range=Infinity){
+  // A -> B -> A is legal. Only the immediately previous victim is excluded.
+  return g.room.enemies.filter(e=>e.hp>0&&e.id!==b.lastHitId&&distanceTo(origin,e)<=range).sort((a,c)=>distanceTo(origin,a)-distanceTo(origin,c))[0];
+}
+function redirectChain(g,b,victim){
+  b.lastHitId=victim.id;
+  if(b.bounces<=0){b.life=0;return;}
+  const origin=enemyCenter(victim),target=nearestChainTarget(g,b,origin,b.chainRange??LOWER_CHAIN_RANGE);
+  if(!target){b.life=0;return;}
+  b.bounces--;b.chainOrigin=origin;b.targetId=target.id;b.hitDelay=CHAIN_HIT_INTERVAL;
+  const destination=enemyCenter(target),angle=Math.atan2(destination.y-b.y,destination.x-b.x),speed=b.speed||Math.hypot(b.vx,b.vy);
+  b.speed=speed;b.vx=Math.cos(angle)*speed;b.vy=Math.sin(angle)*speed;
+  b.life=Math.max(b.life,1.3,distanceTo(b,target)/Math.max(1,speed)+CHAIN_HIT_INTERVAL+.1);
+  effect(g,'chain',origin.x,origin.y,{duration:.25});
 }
 function updateProjectiles(g,dt){
   const p=g.player;
   for(const b of g.projectiles){
-    b.life-=dt;const oldX=b.x,oldY=b.y;
-    if(b.homing){const target=g.room.enemies.find(e=>e.id===b.targetId&&e.hp>0&&!b.hitIds.includes(e.id))||g.room.enemies.filter(e=>e.hp>0&&!b.hitIds.includes(e.id)).sort((a,c)=>Math.hypot(a.x-b.x,a.y-a.h*.5-b.y)-Math.hypot(c.x-b.x,c.y-c.h*.5-b.y))[0];if(target){b.targetId=target.id;const angle=Math.atan2(target.y-target.h*.5-b.y,target.x-b.x),speed=b.speed||Math.hypot(b.vx,b.vy),mix=1-Math.exp(-dt*(b.homingStrength||7));b.vx+=(Math.cos(angle)*speed-b.vx)*mix;b.vy+=(Math.sin(angle)*speed-b.vy)*mix;const actual=Math.hypot(b.vx,b.vy)||1;b.vx=b.vx/actual*speed;b.vy=b.vy/actual*speed;}}
-    b.x+=b.vx*dt;b.y+=b.vy*dt;
-    if(b.owner==='player'){
-      for(const e of [...g.room.enemies].sort((a,c)=>Math.hypot(a.x-oldX,a.y-a.h*.5-oldY)-Math.hypot(c.x-oldX,c.y-c.h*.5-oldY))){
-        if(e.hp<=0||b.hitIds.includes(e.id))continue;
-        if(!segmentHitsBody(oldX,oldY,b.x,b.y,e,b.r))continue;
+    b.life-=dt;b.hitDelay=Math.max(0,(b.hitDelay||0)-dt);const oldX=b.x,oldY=b.y;let destination;
+    if(b.homing){
+      const target=g.room.enemies.find(e=>e.id===b.targetId&&e.hp>0&&e.id!==b.lastHitId)||nearestChainTarget(g,b,b.chainOrigin||b,b.chainOrigin?(b.chainRange??LOWER_CHAIN_RANGE):Infinity);
+      if(target){
+        const angle=Math.atan2(target.y-target.h*.5-b.y,target.x-b.x),speed=b.speed||Math.hypot(b.vx,b.vy);
+        if(b.chainOrigin&&b.targetId!==target.id)b.life=Math.max(b.life,distanceTo(b,target)/Math.max(1,speed)+b.hitDelay+.1);
+        b.targetId=target.id;
+        if(b.chainOrigin){destination=enemyCenter(target);b.vx=Math.cos(angle)*speed;b.vy=Math.sin(angle)*speed;}
+        else{const mix=1-Math.exp(-dt*(b.homingStrength||7));b.vx+=(Math.cos(angle)*speed-b.vx)*mix;b.vy+=(Math.sin(angle)*speed-b.vy)*mix;const actual=Math.hypot(b.vx,b.vy)||1;b.vx=b.vx/actual*speed;b.vy=b.vy/actual*speed;}
+      }else if(b.chainOrigin){b.life=0;continue;}
+    }
+    if(destination){
+      // Close/overlapping targets still take >=80ms per hop. Stop at the target
+      // while the short lockout expires instead of overshooting and circling.
+      const dx=destination.x-b.x,dy=destination.y-b.y,distance=Math.hypot(dx,dy),travel=Math.min(distance,Math.hypot(b.vx,b.vy)*dt);
+      if(distance>0){b.x+=dx/distance*travel;b.y+=dy/distance*travel;}
+    }else{b.x+=b.vx*dt;b.y+=b.vy*dt;}
+    if(b.owner==='player'&&b.hitDelay<=0){
+      const contacts=g.room.enemies.filter(e=>e.hp>0&&(b.homing?e.id!==b.lastHitId:!b.hitIds.includes(e.id))).map(e=>({e,at:segmentBodyEntry(oldX,oldY,b.x,b.y,e,b.r)})).filter(c=>c.at!==null).sort((a,c)=>a.at-c.at);
+      for(const {e,at}of contacts){
+        if(e.hp<=0)continue;
         hitEnemy(g,e,b.damage,Math.sign(b.vx)*8,{critical:b.critical});b.hitIds.push(e.id);
-        if(b.bounces>0){b.bounces--;const next=g.room.enemies.filter(c=>c.hp>0&&!b.hitIds.includes(c.id)).sort((a,c)=>Math.hypot(a.x-b.x,a.y-a.h*.5-b.y)-Math.hypot(c.x-b.x,c.y-c.h*.5-b.y))[0];if(next){const a=Math.atan2(next.y-next.h*.5-b.y,next.x-b.x),speed=b.speed||Math.hypot(b.vx,b.vy);b.targetId=next.id;b.vx=Math.cos(a)*speed;b.vy=Math.sin(a)*speed;b.life=Math.max(b.life,1.3);effect(g,'chain',e.x,e.y-e.h*.5,{duration:.25});}else b.life=0;}else if(b.pierce>0){b.pierce--;continue;}else b.life=0;
+        if(b.homing){b.x=oldX+(b.x-oldX)*at;b.y=oldY+(b.y-oldY)*at;redirectChain(g,b,e);}
+        else if(b.pierce>0){b.pierce--;continue;}else b.life=0;
         break;
       }
-    }else if(segmentHitsBody(oldX,oldY,b.x,b.y,p,b.r)){hurtPlayer(g,b.damage,Math.sign(b.vx));b.life=0;}
+    }else if(b.owner==='enemy'&&segmentHitsBody(oldX,oldY,b.x,b.y,p,b.r)){hurtPlayer(g,b.damage,Math.sign(b.vx));b.life=0;}
     if(b.x<0||b.x>g.room.width||b.y< -100||b.y>FLOOR+40)b.life=0;
   }
   g.projectiles=g.projectiles.filter(b=>b.life>0);

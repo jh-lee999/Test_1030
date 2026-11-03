@@ -1,5 +1,17 @@
 # Project instructions
 
+## v40 lower-grade ricochet rule
+
+Lower grade adds one bounce per level, plus inscription/item chain bonuses.
+The user explicitly requested repeat hits on a nearby previous target: A -> B -> A
+is legal. Do not restore the lifetime hit blacklist for homing shots; only the
+immediately previous victim is excluded. Select the nearest living target within
+480 world pixels of the hit enemy, with >=80ms between impacts and a finite bounce
+budget. Normal piercing projectiles still use a lifetime hit blacklist. Run
+`test/platformer-chain40.test.js` and `tools/check-platformer-chain-browser.mjs`.
+The previous discussion of replacing the airborne low-skill source pose was only
+a proposal, not approved/applied; do not conflate this ricochet change with art.
+
 ## Active v39 build rules
 
 The user clarified that accumulation means **within the same run**, not permanent

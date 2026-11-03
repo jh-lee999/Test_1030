@@ -31,6 +31,7 @@ Object.assign(ITEMS,{
 });
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const clone=value=>JSON.parse(JSON.stringify(value));
+export const LOWER_CHAIN_RANGE=480;
 export function inscriptionCounts(inventory={}){
   const counts=Object.fromEntries(Object.keys(INSCRIPTIONS).map(id=>[id,0]));
   for(const [id,n]of Object.entries(inventory))for(const tag of ITEMS[id]?.tags||[])counts[tag]+=n;
@@ -60,7 +61,7 @@ export function applyBuildItem(current,id){
   const inventory={...current.inventory,[id]:(current.inventory[id]||0)+1},next=rebuildStats({...current,inventory});
   next.hp=Math.min(next.maxHp,current.hp+Math.max(0,next.maxHp-current.maxHp));return next;
 }
-export function lowerPower(s){return{chance:Math.min(.85,.13+s.lowerGrade*.055+(s.lowerChance||0)),bounces:s.lowerGrade+(s.chainBonus||0),homing:7+s.lowerGrade*.8,damage:s.damage*(1.15+s.lowerGrade*.1)*(s.skillDamage||1),extraProjectiles:s.lowerGrade>=5?2:s.lowerGrade>=3?1:0,pity:Math.max(3,7-Math.floor(s.lowerGrade/2))};}
+export function lowerPower(s){return{chance:Math.min(.85,.13+s.lowerGrade*.055+(s.lowerChance||0)),bounces:s.lowerGrade+(s.chainBonus||0),chainRange:LOWER_CHAIN_RANGE,homing:7+s.lowerGrade*.8,damage:s.damage*(1.15+s.lowerGrade*.1)*(s.skillDamage||1),extraProjectiles:s.lowerGrade>=5?2:s.lowerGrade>=3?1:0,pity:Math.max(3,7-Math.floor(s.lowerGrade/2))};}
 export function upperPower(s){return{duration:4.5+s.upperGrade*.8,damage:s.damage*(2.5+s.upperGrade*.55)*(s.skillDamage||1),radius:40+s.upperGrade*4,count:s.upperGrade>=3?2:1};}
 
 export function rollBuildItems(random,stats,depth=0,count=3,exclude=[]){

@@ -1,4 +1,4 @@
-import {VIEW,FLOOR,HERO_SIZE,heroPose,clamp} from './platformer-engine.js?v=39';
+import {VIEW,FLOOR,HERO_SIZE,heroPose,clamp} from './platformer-engine.js?v=40';
 import {BIOMES,ROOM_TYPES} from './platformer-world.js?v=38';
 import {drawButterMotion,selectButterFrame} from './butter-original-motion.js';
 import {STAGE_ART} from './assets/trickcal-stage37/atlas.js';
