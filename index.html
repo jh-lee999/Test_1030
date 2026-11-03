@@ -1,148 +1,43 @@
 <!doctype html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
-    <meta name="theme-color" content="#f6c760" />
-    <meta name="description" content="셰이디의 뒤틀린 아공간에서 탈출하는 방 탐험 액션 로그라이트" />
-    <link rel="manifest" href="./manifest.webmanifest?v=23" />
-    <link rel="icon" href="./icon.svg?v=23" type="image/svg+xml" />
-    <link rel="preload" href="./assets/butter-original36/poster.png" as="image" type="image/png" fetchpriority="high" />
-    <link rel="preload" href="./assets/butter-original36/idle.webp" as="image" type="image/webp" />
-    <link rel="preload" href="./assets/trickcal-heroes.webp?v=23" as="image" type="image/webp" />
-    <link rel="preload" href="./assets/ui-icons.svg?v=23" as="image" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css?v=36" />
-    <title>셰이디의 아공간 탈출</title>
-  </head>
-  <body>
-    <main class="game-shell">
-      <header class="hud">
-        <section class="hero-status">
-          <div class="portrait" id="portrait" aria-hidden="true"></div>
-          <div class="health-info">
-            <div class="hero-line">
-              <strong id="hero-name">버터</strong>
-              <span id="room-label">탐색 1</span>
-            </div>
-            <div class="health-bar"><span id="health-fill"></span><b id="health-label">90 / 90</b></div>
-          </div>
-        </section>
-        <section class="grade-status">
-          <span class="grade lower">저학년 <b id="lower-level">LV.1</b></span>
-          <span class="grade upper">고학년 <b id="upper-level">LV.1</b></span>
-        </section>
-      </header>
-
-      <section class="game-stage" id="game-stage">
-        <canvas id="game-canvas" aria-label="셰이디의 아공간 게임 화면"></canvas>
-
-        <div class="room-banner" id="room-banner">
-          <small id="room-kicker">1교시</small>
-          <strong id="room-title">뒤틀린 교실</strong>
-        </div>
-
-        <div class="item-strip" id="item-strip" aria-label="보유 아이템"></div>
-        <aside class="minimap" id="minimap" aria-label="아공간 지도"></aside>
-        <div class="resource-bar" aria-label="소지품">
-          <span title="열쇠"><svg class="ui-icon"><use href="./assets/ui-icons.svg?v=23#key"></use></svg><b id="key-count">1</b></span>
-          <span title="폭탄"><svg class="ui-icon"><use href="./assets/ui-icons.svg?v=23#bomb"></use></svg><b id="bomb-count">1</b></span>
-        </div>
-        <button class="pause-button" id="pause-button" aria-label="일시 정지">Ⅱ</button>
-        <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-        <div class="joystick move-stick" id="move-stick" aria-label="이동 조이스틱">
-          <span class="stick-label">이동</span>
-          <span class="joystick-knob" id="move-knob"></span>
-        </div>
-        <div class="joystick aim-stick" id="aim-stick" aria-label="공격 조이스틱">
-          <span class="stick-label">공격</span>
-          <span class="joystick-knob attack-knob" id="aim-knob"></span>
-        </div>
-
-        <div class="ability-buttons">
-          <button class="ability bomb-ability" id="bomb-button">
-            <span><svg class="ui-icon"><use href="./assets/ui-icons.svg?v=23#bomb"></use></svg></span>
-            <b>폭탄</b>
-            <small id="bomb-label">R · 1</small>
-          </button>
-          <button class="ability lower-ability" id="lower-ability">
-            <span id="lower-icon"><svg class="ui-icon"><use href="./assets/ui-icons.svg?v=23#slingshot"></use></svg></span>
-            <b id="lower-name">말썽 유도탄</b>
-            <small id="lower-cooldown">패시브</small>
-          </button>
-          <button class="ability upper-ability" id="upper-ability">
-            <span id="upper-icon"><svg class="ui-icon"><use href="./assets/ui-icons.svg?v=23#attack"></use></svg></span>
-            <b id="upper-name">왕새총 짱돌</b>
-            <small id="upper-cooldown">READY</small>
-          </button>
-        </div>
-
-        <div class="room-transition" id="room-transition" aria-hidden="true"></div>
-
-        <section class="start-screen" id="start-screen">
-          <p class="kicker">ROOM ESCAPE ROGUELITE</p>
-          <h1>셰이디의<br /><em>아공간 탈출</em></h1>
-          <p class="intro">자동 생성된 아공간을 자유롭게 탐색하고<br />열쇠와 폭탄으로 숨은 방을 찾으세요.</p>
-          <div class="character-select" id="character-select">
-            <button class="character-card selected" data-character="butter">
-              <span class="character-art butter-art"><svg viewBox="0 0 144 160" aria-hidden="true"><image href="./assets/butter-original36/poster.png" width="144" height="160" /></svg></span>
-              <span class="character-copy"><small>원거리</small><strong>버터</strong><b>새총 · 유도탄 · 왕짱돌</b></span>
-            </button>
-            <button class="character-card" data-character="komi">
-              <span class="character-art komi-art"></span>
-              <span class="character-copy"><small>근거리</small><strong>코미</strong><b>베개 · 반사 낮잠 · 거대화</b></span>
-            </button>
-          </div>
-          <button class="primary-button" id="start-button">아공간 입장</button>
-          <p class="controls-help">WASD 이동 · 방향키 공격 · Q/E 능력 · R 폭탄</p>
-          <p class="controls-help">원작 모션 적용 · 바닥 화살표가 조준 방향</p>
-          <p class="controls-help">비공식 팬 프로토타입 · <a href="./assets/butter-original36/CREDITS.md">에셋 출처</a></p>
-        </section>
-
-        <section class="item-screen" id="item-screen" hidden>
-          <div class="choice-heading">
-            <p>ROOM CLEAR!</p>
-            <h2>하나만 챙기자</h2>
-            <span>보물방의 아이템을 하나 선택하세요</span>
-          </div>
-          <div class="item-cards" id="item-cards"></div>
-        </section>
-
-        <section class="pause-screen" id="pause-screen" hidden>
-          <div>
-            <span>Ⅱ</span>
-            <h2>잠깐 쉬는 중</h2>
-            <button class="primary-button" id="resume-button">계속하기</button>
-          </div>
-        </section>
-
-        <section class="result-screen" id="result-screen" hidden>
-          <div class="result-card">
-            <span class="result-emblem" id="result-emblem">★</span>
-            <p id="result-kicker">ESCAPED!</p>
-            <h2 id="result-title">아공간에서 탈출했다!</h2>
-            <p id="result-copy"></p>
-            <div class="result-stats">
-              <div><strong id="result-rooms">1</strong><span>돌파 방</span></div>
-              <div><strong id="result-kills">0</strong><span>처치</span></div>
-              <div><strong id="result-items">0</strong><span>아이템</span></div>
-            </div>
-            <button class="primary-button" id="restart-button">다시 들어가기</button>
-          </div>
-        </section>
-      </section>
-    </main>
-
-    <script>
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.getRegistrations()
-          .then((registrations) => Promise.all(registrations.map((registration) => registration.unregister())))
-          .catch(() => {});
-      }
-      if ("caches" in window) {
-        caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key)))).catch(() => {});
-      }
-    </script>
-    <script type="module" src="./app.js?v=36"></script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#262d26">
+  <meta name="description" content="버터와 함께 달리고, 점프하고, 새총을 쏘는 횡스크롤 아공간 탈출 팬게임">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.webmanifest?v=37">
+  <link rel="preload" as="image" href="./assets/trickcal-stage37/forest.webp">
+  <link rel="stylesheet" href="./platformer.css?v=37">
+  <title>버터의 아공간 탈출 · 횡스크롤</title>
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead"><a class="brand" href="./"><img src="./icon.svg" alt="">버터의 아공간 탈출 <span>SIDE STORY</span></a><nav><a href="./butter-2d-motion.html?v=original36">원작 모션</a><a href="./topdown36.html">이전 탑뷰</a><button id="touch-toggle" aria-pressed="false">터치 버튼</button></nav></header>
+    <section class="stage" aria-label="횡스크롤 게임">
+      <canvas id="game-canvas" width="1280" height="720" tabindex="0" aria-label="버터의 횡스크롤 전투 화면. 이동 A D, 점프 Space, 공격 J, 대시 Shift, 왕새총 E"></canvas>
+      <div class="hud" id="hud" hidden>
+        <div class="hero-card"><img src="./assets/butter-original36/poster.png" alt=""><div><div class="hero-line"><b>버터</b><span id="hp-text">90 / 90</span></div><div class="hp-track"><i id="hp-fill"></i></div><small id="grades">저학년 1 · 고학년 1</small></div></div>
+        <div class="journey"><small id="room-label">01 / 04</small><div id="route" aria-label="진행 경로"></div><span id="enemy-count"></span></div>
+        <div class="hud-right"><span class="coin">✦ <b id="coins">0</b></span><button id="pause-button" aria-label="일시 정지">Ⅱ</button></div>
+      </div>
+      <div id="skill-hud" class="skill-hud" hidden><span><kbd>Shift</kbd> 대시 <b id="dash-label">준비</b></span><span><kbd>E</kbd> 왕새총 <b id="skill-label">준비</b></span></div>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      <div id="start-screen" class="overlay start-screen">
+        <div class="start-copy"><span class="eyebrow">TRICKCAL FAN GAME · PROTOTYPE 37</span><h1>이 숲의 출구는<br><em>내가 찾을 거야!</em></h1><p>셰이디의 아공간에 떨어진 버터.<br>달리고, 뛰어넘고, 왕새총으로 길을 열자.</p><button id="start-button" class="primary" disabled>에셋 준비 중…</button><small id="load-status" role="status">원작 모션을 불러오고 있어요.</small><div class="start-tags"><span>2단 점프</span><span>공중 사격</span><span>아이템 성장</span></div></div>
+        <div class="start-art" aria-hidden="true"><div class="halo"></div><img src="./assets/butter-original36/poster.png" alt=""><span>BUTTER<br><small>새총을 든 말랑이</small></span></div>
+      </div>
+      <div id="pause-screen" class="overlay modal" hidden><div class="panel"><span class="eyebrow">TAKE A BREATH</span><h2>잠깐 쉬어 가자</h2><p>A D 이동 · Space 2단 점프<br>J 공격 · Shift 대시 · E 왕새총<br>문 앞에서 F / ↓ 다음 구역</p><button id="resume-button" class="primary">계속하기</button><button class="restart secondary">처음부터</button></div></div>
+      <div id="reward-screen" class="overlay modal" hidden><div class="reward-panel"><span class="eyebrow">ROOM CLEAR</span><h2>버터의 가방에 뭘 넣을까?</h2><p>하나를 고르면 다음 구역의 문이 열려요.</p><div id="reward-cards" class="reward-cards"></div></div></div>
+      <div id="end-screen" class="overlay modal" hidden><div class="panel"><span id="end-kicker" class="eyebrow"></span><h2 id="end-title"></h2><p id="end-summary"></p><button class="restart primary">다시 도전</button></div></div>
+      <noscript><div class="no-script">이 게임을 실행하려면 JavaScript를 켜 주세요.</div></noscript>
+    </section>
+    <div id="touch-controls" class="touch-controls" aria-label="터치 조작"><div class="touch-move"><button data-control="left" aria-label="왼쪽 이동">◀</button><button data-control="right" aria-label="오른쪽 이동">▶</button></div><div class="touch-actions"><button data-control="interact">문</button><button data-control="skill">왕새총</button><button data-control="dash">대시</button><button data-control="jump">점프</button><button data-control="attack" class="attack">공격</button></div></div>
+    <footer><div class="key-guide"><span><kbd>A D</kbd> 이동</span><span><kbd>Space</kbd> 2단 점프</span><span><kbd>J / X</kbd> 공격 유지</span><span><kbd>Shift</kbd> 대시</span><span><kbd>E</kbd> 왕새총</span><span><kbd>F / ↓</kbd> 다음 구역</span></div><p>버터 기본 캐릭터 · 4개 전투 구역 · 원작 스프라이트 좌우 반전 사용 <span class="rotate-hint">휴대폰은 가로 화면 추천</span></p><details><summary>팬게임 안내 / 출처</summary><p>트릭컬의 캐릭터·몬스터·배경은 원저작권자에게 권리가 있습니다. 비공식 팬 프로토타입이며 공식 게임과 무관합니다. 비상업 목적이 사용 허가를 의미하지는 않습니다. <a href="./assets/trickcal-stage37/CREDITS.md">에셋 출처</a> · <a href="https://viewer.dclnslde.com/" target="_blank" rel="noopener">참조 뷰어</a></p></details></footer>
+  </main>
+  <script>
+    if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then(rs=>Promise.all(rs.map(r=>r.unregister()))).catch(()=>{});
+  </script>
+  <script type="module" src="./platformer.js?v=37"></script>
+</body>
 </html>

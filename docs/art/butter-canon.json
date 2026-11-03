@@ -1,5 +1,16 @@
 {
-  "version": 4,
+  "version": 5,
+  "platformerDecision37": {
+    "date": "2026-11-03",
+    "genre": "Skul-like side-scrolling platform action, not belt-scroll",
+    "choice": "좌우 반전 허용",
+    "scope": "Whole-frame horizontal mirroring including weapon and bag is authorized for the side-scroller",
+    "supersedes": "no-mirroring/physical-hand rules for active side-scroller only",
+    "renderer": "platformer-renderer.js",
+    "muzzleTransform": "platformer-engine.js:heroMuzzle",
+    "archive": "topdown36.html",
+    "jump": "Intact source Move poses sampled for ascent/descent, not an original Jump clip"
+  },
   "latestUserDecision": {
     "date": "2026-11-03",
     "choice": "원작 그림·모션 우선",

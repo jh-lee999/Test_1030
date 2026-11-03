@@ -1,6 +1,6 @@
 {
   "name": "shady-pocket-space-escape",
-  "version": "2.7.0",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -21,6 +21,7 @@
     "check:sprites": "node tools/check-butter-sprites.mjs",
     "check:butter-canon": "node tools/check-butter-canon.mjs",
     "check:butter-original": "node tools/check-butter-original.mjs",
+    "check:platformer-art": "node tools/check-platformer-art.mjs",
     "test": "node --test"
   }
 }

@@ -2,6 +2,19 @@
 
 ## Butter artwork: persistent source of truth
 
+**Latest genre / mirroring decision, 2026-11-03:** the user requested a Skul-like
+side-scrolling platform action game (NOT a belt-scroller), Butter as the default,
+and original Trickcal monsters/backgrounds. They explicitly answered
+**"좌우 반전 허용"**, including the weapon and bag changing sides on a whole-frame
+flip. This supersedes the historical no-mirroring/physical-hand rules BELOW for
+the active side-scroller only. Do not change or regenerate the source artwork.
+`index.html` now runs `platformer.js`; `topdown36.html` preserves the old game.
+`platformer-renderer.js` flips the WHOLE original pose, and `heroMuzzle` in
+`platformer-engine.js` applies the same transform to the source muzzle marker.
+Jump poses are samples of source Move, not a newly discovered Jump animation.
+Run the v36 preview/archive browser check AND `tools/check-platformer-browser.mjs`.
+Keep source provenance in `assets/trickcal-stage37/CREDITS.md` / `sources.json`.
+
 **Latest user decision, 2026-11-03:** v35 was explicitly rejected as unnatural
 and grotesque. Asked whether the original game's art/motion should take priority
 over the fixed 2D template (with only one source view available), the user chose
@@ -16,8 +29,8 @@ a fallback. Missing animation images fall back to the ORIGINAL idle/poster.
 Idle/Move/Attack1_1/Skill1_1/Ultimate1_1 are source clips. WalkShoot is explicitly
 our original-rig composition (Move lower body + Attack1_1 upper body), NOT a
 discovered original clip. Only ONE three-quarter source view exists in this
-implementation: no fake four-direction claim, no mirrored physical hands.
-The floor arrow shows aim independently. Future directional art is separate work.
+implementation: no fake four-direction claim. The v36 archived top-down game
+does not mirror; the v37 side-scroller mirrors as explicitly authorized above.
 
 Run `npm test`, `npm run check:butter-canon`, `npm run check:butter-original`,
 and the current `tools/check-butter-original-browser.mjs` browser test. Inspect

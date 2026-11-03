@@ -40,7 +40,7 @@ try{
   const reduced=await browser.newPage({reducedMotion:'reduce',viewport:{width:390,height:844}});reduced.on('pageerror',e=>errors.push(String(e)));
   await reduced.goto(root+'/butter-2d-motion.html');await reduced.waitForSelector('body[data-ready="true"]');assert.equal(await reduced.locator('body').getAttribute('data-playing'),'false');await reduced.locator('#enable-motion').click();assert.equal(await reduced.locator('body').getAttribute('data-playing'),'true');await reduced.close();
   const requests=[];page.on('request',r=>requests.push(r.url()));
-  await page.goto(root);await page.locator('#start-button').click();await page.waitForSelector('#game-canvas[data-butter-renderer="original36"]');
+  await page.goto(root+'/topdown36.html');await page.locator('#start-button').click();await page.waitForSelector('#game-canvas[data-butter-renderer="original36"]');
   await page.waitForFunction(()=>document.querySelector('#start-screen').classList.contains('hidden'));
   await page.keyboard.down('d');await page.keyboard.down('ArrowUp');await page.waitForTimeout(650);await page.keyboard.up('d');await page.keyboard.up('ArrowUp');await page.keyboard.press('e');await page.waitForTimeout(1000);
   await page.locator('#pause-button').click();await page.locator('#resume-button').click();
@@ -48,6 +48,6 @@ try{
   await page.reload();await page.locator('[data-character="komi"]').click();await page.locator('#start-button').click();await page.waitForFunction(()=>document.querySelector('#start-screen').classList.contains('hidden'));await page.keyboard.press('q');
   const missing=await browser.newPage();missing.on('pageerror',e=>errors.push(String(e)));await missing.route('**/assets/butter-original36/*.webp',r=>r.abort());
   await missing.goto(root+'/butter-2d-motion.html');await missing.waitForSelector('body[data-ready="true"]');assert.match(await missing.locator('#status').innerText(),/불러오지 못해서/);
-  await missing.goto(root);await missing.locator('#start-button').click();await missing.waitForFunction(()=>document.querySelector('#start-screen').classList.contains('hidden'));await missing.keyboard.press('ArrowLeft');await missing.close();
+  await missing.goto(root+'/topdown36.html');await missing.locator('#start-button').click();await missing.waitForFunction(()=>document.querySelector('#start-screen').classList.contains('hidden'));await missing.keyboard.press('ArrowLeft');await missing.close();
   assert.deepEqual(errors,[]);console.log(JSON.stringify({...result,playback:'passed',mobile:'passed',reducedMotion:'passed',gameStart:'Butter and Komi passed',optionalImageFailure:'passed',runtimeErrors:errors},null,2));
 }finally{await browser.close();}

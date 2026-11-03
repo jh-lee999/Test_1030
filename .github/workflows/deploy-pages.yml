@@ -38,10 +38,14 @@ jobs:
       - name: Check game, sprite bounds and approved art
         run: |
           node --check app.js
+          node --check platformer.js
+          node --check platformer-engine.js
+          node --check platformer-renderer.js
           npm test
           npm run check:sprites
           npm run check:butter-canon
           npm run check:butter-original
+          npm run check:platformer-art
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

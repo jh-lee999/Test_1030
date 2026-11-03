@@ -1,13 +1,13 @@
 {
   "name": "셰이디의 아공간 탈출",
   "short_name": "아공간 탈출",
-  "description": "자동 생성된 아공간을 탐색하고 비밀방을 찾는 액션 로그라이트",
+  "description": "버터와 달리고 점프하며 아공간을 탈출하는 횡스크롤 액션 로그라이트",
   "lang": "ko",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ef9eb3",
   "theme_color": "#f6c760",
-  "orientation": "portrait",
+  "orientation": "any",
   "icons": [
     {
       "src": "./icon.svg",

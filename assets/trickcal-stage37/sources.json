@@ -1,0 +1,57 @@
+[
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/shadyfollowercloserange/ShadyfollowerCloseRange.atlas",
+    "bytes": 5110,
+    "sha256": "ffd1331469ed38bf63a9e9b1577146b9ff9bcf1583df816bbd7dd46355fdeb55"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/shadyfollowercloserange/ShadyfollowerCloseRange.skel",
+    "bytes": 415187,
+    "sha256": "c86bb38d2219db9eebaa86ffa20fa1af5c74731934813848cda2b7501e0c44af"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/shadyfollowercloserange/ShadyfollowerCloseRange.png",
+    "bytes": 564686,
+    "sha256": "86ecedd23d151803fdddd0e6bdabb6dee11798920c0ee5ebef858cbc9cfea72e"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/shadyfollowerlongrange/ShadyfollowerLongRange.skel",
+    "bytes": 331219,
+    "sha256": "9e0d11eed9234823559d60cea1713a5b8787efa117d991e19ce6e0342e2a06e8"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/shadyfollowerlongrange/ShadyfollowerLongRange.atlas",
+    "bytes": 5094,
+    "sha256": "1723e0b788424cc258bead8af3f1efdbe0fb95d95b7c9e89025ff0c13e8d986d"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/shadyfollowerlongrange/ShadyfollowerLongRange.png",
+    "bytes": 522963,
+    "sha256": "4d4770d40e58de8a79ab0097c311c2e89b46aea5f8d3c2300b437d361027b26d"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/blanketghost/BlanketGhost.atlas",
+    "bytes": 2866,
+    "sha256": "7ed8426e2e46cedeff7b3da499c349763d67a0444387eca342ff718571d714d2"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/blanketghost/BlanketGhost.skel",
+    "bytes": 245073,
+    "sha256": "8998c0bc5b0268ccfc0d5623ebd4984d4675322fbc504f380d385c8b425ad880"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/monsters/blanketghost/BlanketGhost.png",
+    "bytes": 168559,
+    "sha256": "3def280e22ba64693fc8693a1a215f477404e08dda8fbcee07d49eff40336fbb"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/backgroundlist/images/9.png?__sv=aff71270657ec32afc4c",
+    "bytes": 2561491,
+    "sha256": "aff71270657ec32afc4c8011ab1da6a04a525ed6a028eddee7da690a8b0c6781"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/backgroundlist/images/150.png?__sv=571c878d86f271668676",
+    "bytes": 2049936,
+    "sha256": "571c878d86f271668676f61d61b7c07aaf76ad3ae036b38730a0f4e0c8849272"
+  }
+]
