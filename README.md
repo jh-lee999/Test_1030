@@ -6,9 +6,9 @@
 
 버터 에셋 작업은 루트 [AGENTS.md](AGENTS.md)와 [외형 기준 문서](docs/art/BUTTER_CANON.md)를 먼저 읽고, 승인 원본 `assets/butter-2d-study.png`를 직접 열어 시작합니다. 원본은 체크섬으로 고정하며 새 후보가 자동으로 기준을 대체하지 않습니다. 아래의 기존 게임·3D 구현 기록은 승인된 외형을 의미하지 않습니다.
 
-[2D 에셋 비교](butter-2d-assets.html)의 v32 네 방향을 사용자가 스프라이트의 고정 템플릿으로 지정했습니다. v34 게임은 **그 PNG를 바꾸지 않고 직접 사용**합니다. [원본/동작 비교](butter-2d-motion.html)에서 실제 게임 렌더러의 정지·보행·사격·이동 사격을 96/160/256px로 확인하고 한 프레임씩 진행할 수 있습니다. 동작을 먼저 보여주며 정지 원본은 선택해서 펼칩니다. 동작 줄이기 설정에서는 정지 이유와 직접 재생 버튼을 표시합니다.
+[2D 에셋 비교](butter-2d-assets.html)의 v32 네 방향을 사용자가 스프라이트의 고정 템플릿으로 지정했습니다. v35 게임은 **그 PNG를 바꾸지 않고 직접 사용**합니다. [원본/동작 비교](butter-2d-motion.html)에서 실제 게임 렌더러의 정지·보행·사격·이동 사격을 96/160/256px로 확인하고 한 프레임씩 진행할 수 있습니다. 보행과 사격 슬라이더는 독립적이며 정지 원본은 선택해서 펼칩니다. 동작 줄이기 설정에서는 정지 이유와 직접 재생 버튼을 표시합니다.
 
-얼굴/몸통은 고정하며, 양발의 교대 회수·고정점 중심의 회전과 쥔 손 반동을 재생합니다. v33의 1~2px 미세 동작 대신 96px 표시에서도 약 4.8px 발 이동을 확보했습니다. 가려진 측면 뒷발은 같은 원본의 완전한 앞발 조각을 재사용합니다. 모든 방향이 같은 양의 균일 배율을 쓰고 좌우 반전, 메시 변형, 색 보정은 없습니다. 아직 왼손의 큰 장전 자세·왕새총 전용 자세·꼬리 흔들림을 새로 그린 것은 아닙니다.
+얼굴과 비율은 고정하며 양다리의 고관절/무릎 교대, 오른손 새총 유지, 왼손 당기기·놓기, 줄 복귀, 중앙 꼬리 흔들림을 합성합니다. 보행은 사격 중에도 유지되고 뒷모습의 팔은 머리/몸통에 가려집니다. 공개 뷰어의 실제 전투 동작을 분석해 발사 타이밍을 맞췄습니다. 손 두 조각과 옛 팔/무기 영역의 보완 그림만 추가했으며 [출처·사용 범위](assets/butter-2d35/CREDITS.md)를 기록했습니다. 얼굴 재생성, 좌우 반전, 비균일 확대, 색 보정은 없습니다. 동작은 검토 후보이며 왕새총 전용 자세와 머리카락/귀 후속 동작은 아직 없습니다.
 
 `npm run check:butter-canon`은 두 승인 원본의 해시, 실제 투명 여백, 게임의 크롭/발 기준점을 검사합니다. `npm test`는 방향·교대 보행·독립 반동·발사점을 검사합니다. Playwright와 Chromium이 설치된 환경에서 로컬 서버를 연 후 `node tools/check-butter-motion-browser.mjs http://127.0.0.1:4173`을 실행하면 실제 렌더 픽셀의 얼굴 불변·잘림·손/발 독립성과 두 캐릭터의 시작 버튼도 검사합니다. 시스템 브라우저는 `CHROMIUM_EXECUTABLE`, 기존 Playwright 경로는 `PLAYWRIGHT_MODULE`로 지정할 수 있습니다.
 
@@ -35,14 +35,14 @@
 - 전용 SVG 아이콘으로 통일한 HUD, 미니맵, 자원 및 스킬 UI
 - 캐릭터 호흡·보행 체중 이동·발먼지·평타 반동·피격 플래시
 - 적 스쿼시 모션, 투사체 잔상, 문 맥동, 방 전환 애니메이션
-- 승인한 2D 원본의 네 방향 버터 스프라이트, 독립적인 발걸음·쥔 손 반동
+- 승인한 2D 원본의 네 방향 버터 스프라이트, 독립적인 발걸음·양손 사격·꼬리 흔들림
 - 원본/동작 비교와 위상 슬라이더, 이동 사격 발사점 연동
 
 이전 Blender 500프레임과 구형 스프라이트는 보관합니다. `sprite-preview.html`, `motion-preview.html`은 **이전 버전 보관 화면**이며 현재 게임 외형이 아닙니다. `npm run check:sprites`는 이 보관 에셋도 검사합니다(개발 도구: Node.js, ImageMagick).
 
-현재 보행·사격·고학년 모션은 [motion-preview.html](motion-preview.html)에서 비교할 수 있습니다. [Blender 원본](assets/models/butter.blend)을 열면 같은 모델의 메시, 재질, 24개 뼈, 개별 동작과 동기화된 전체 타임라인을 수정할 수 있습니다. 게임은 이 모델을 미리 렌더한 WebP 한 장만 읽으므로 Blender나 3D 라이브러리 설치 없이 실행됩니다. 코미는 기존 스프라이트를 유지합니다.
+보관된 3D 모션은 [motion-preview.html](motion-preview.html)에서 비교할 수 있습니다. [Blender 원본](assets/models/butter.blend)은 과거 모델이며 현재 버터 렌더러에는 쓰지 않습니다. 현재 게임은 2D Canvas로 실행되어 Blender나 Spine 설치가 필요 없습니다. 코미는 기존 스프라이트를 유지합니다.
 
-## 모델과 애니메이션 재생성
+## 보관 모델과 애니메이션 재생성
 
 Blender 4.3(제작·검증 버전 4.3.2), Node.js와 ImageMagick이 필요합니다. 게임 실행 자체에는 필요하지 않습니다.
 
@@ -57,7 +57,7 @@ blender --background assets/models/butter.blend --python-exit-code 1 --python to
 
 ## 승인한 2D 그림체 원본
 
-[model-study.html](model-study.html)은 원래 버터의 얼굴과 복장을 참고해 새로 그린 2D 시안을 보여줍니다. 공개 참고 자료는 [Triple3T/trickcaltool](https://github.com/Triple3T/trickcaltool)의 `public/charas/Butter.png`와 `public/skills/Icon_GraduateSKill_Butter.png`이며, 기존 `trickcal-heroes.webp`의 왼쪽 버터도 복장 참고로 사용했습니다. 결과는 `assets/butter-2d-study.png`의 투명 배경 이미지입니다. 게임 모델·시트·애니메이션은 아직 교체하지 않았습니다.
+[model-study.html](model-study.html)은 원래 버터의 얼굴과 복장을 참고해 새로 그린 2D 시안을 보여줍니다. 공개 참고 자료는 [Triple3T/trickcaltool](https://github.com/Triple3T/trickcaltool)의 `public/charas/Butter.png`와 `public/skills/Icon_GraduateSKill_Butter.png`이며, 기존 `trickcal-heroes.webp`의 왼쪽 버터도 복장 참고로 사용했습니다. 결과는 `assets/butter-2d-study.png`의 투명 배경 이미지이며 이후 승인된 v32 방향별 그림의 외형 기준입니다.
 
 이전 3D 시안과 비교 이미지는 페이지의 접힌 영역에 보관합니다.
 

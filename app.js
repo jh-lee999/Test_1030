@@ -15,7 +15,7 @@ import {
   rollItems,
   upperPower
 } from "./survivor-engine.js?v=23";
-import { advanceButterGait, drawButterMotion, butterMuzzleOffset, prepareButterMotion, BUTTER_2D_LAYOUT } from "./butter-motion.js?v=34";
+import { advanceButterGait, drawButterMotion, butterMuzzleOffset, prepareButterMotion, BUTTER_2D_LAYOUT, BUTTER_LIMB_IMAGE, BUTTER_CLEAN_IMAGE, butterReleasePoint } from "./butter-motion.js?v=35";
 
 const LOGICAL = { width: 800, height: 1450 };
 const WALL = 58;
@@ -34,12 +34,15 @@ heroAtlas.decoding = "async";
 heroAtlas.addEventListener("load", () => { heroArtReady = true; });
 heroAtlas.src = "./assets/trickcal-heroes.webp?v=23";
 
-const butterMotionImages = { atlas: new Image() };
+const butterMotionImages = { atlas: new Image(), limbs: new Image(), clean: new Image() };
 let butterMotionPartsLoaded = 0;
-for (const image of Object.values(butterMotionImages)) {
+for (const [part, image] of Object.entries(butterMotionImages)) {
   image.decoding = "async";
-  image.addEventListener("load", () => { prepareButterMotion(image); butterMotionPartsLoaded += 1; });
-  image.src = BUTTER_2D_LAYOUT.image;
+  image.addEventListener("load", () => {
+    if (part === "atlas") { prepareButterMotion(image); butterMotionPartsLoaded = 1; }
+    canvas.dataset.butterRenderer = butterMotionImages.limbs.naturalWidth && butterMotionImages.clean.naturalWidth ? "layered35" : "fallback34";
+  });
+  image.src = part === "atlas" ? BUTTER_2D_LAYOUT.image : part === "limbs" ? BUTTER_LIMB_IMAGE : BUTTER_CLEAN_IMAGE;
 }
 let butterGait = { phase: 0, amount: 0, dx: 0, dy: -1 };
 
@@ -557,7 +560,7 @@ function beginButterAttack(dx, dy) {
 }
 
 function butterAttackOrigin(action) {
-  const offset = butterMuzzleOffset({size:112,facingX:action.dx,facingY:action.dy,gait:butterGait,action});
+  const offset = butterMuzzleOffset({size:112,facingX:action.dx,facingY:action.dy,gait:butterGait,action,fallback:!butterMotionImages.limbs.naturalWidth||!butterMotionImages.clean.naturalWidth});
   return {x:player.x+offset.x,y:player.y+offset.y};
 }
 
@@ -610,7 +613,7 @@ function updateButterAction(dt) {
   if (!butterAction || run.characterId !== "butter") return;
   butterAction.time += dt;
   const progress = butterAction.time / butterAction.duration;
-  const releasePoint = butterAction.type === "high" ? 0.68 : butterAction.type === "low" ? 0.5 : 0.55;
+  const releasePoint = butterReleasePoint(butterAction.type);
   if (!butterAction.fired && progress >= releasePoint) {
     butterAction.fired = true;
     if (butterAction.type === "high") releaseButterHigh(butterAction);

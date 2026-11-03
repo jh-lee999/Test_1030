@@ -1,0 +1,19 @@
+{
+  "version": 35,
+  "image": "./assets/butter-2d35/limbs.png",
+  "source": "https://viewer.dclnslde.com/spine/battle/butter/Butter.png",
+  "parts": {
+    "Hand_L_2": [
+      16,
+      16,
+      32,
+      38
+    ],
+    "Hand_L_1_B": [
+      80,
+      16,
+      33,
+      38
+    ]
+  }
+}

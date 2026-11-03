@@ -22,15 +22,30 @@ outfit, handedness, or the rendering of those assets:
 
 The 3D studies in versions 26–31 were criticized by the user and are **not**
 approved visual references. The user approved the v32 four-direction sheet as
-the fixed sprite template and requested integration. The v34 game uses that
-UNCHANGED PNG through `butter-motion.js` and `assets/butter-2d33/rig.js`.
+the fixed sprite template and requested integration. The v35 game uses that
+UNCHANGED PNG through `butter-motion.js` and the v33 source layout, with
+`assets/butter-2d35/rig.js` and `motion.js` for independent limbs/tail/band.
 New animations remain reviewable candidates: do not regenerate the face/body
-to add motion. The small cutouts are not full new two-handed/skill poses.
+to add motion. The two-hand motion is implemented; a dedicated giant-slingshot
+pose is NOT. `assets/butter-2d35/cleanplate.png` may only fill old arm/weapon
+occlusion masks, never replace the entire approved character. Two source hand
+attachments and their provenance are recorded in that directory's CREDITS.md.
 `butter-2d-motion.html` compares the source and the actual game renderer.
-The user rejected v33's barely visible motion. v34 amplitude/timing lives in
-`assets/butter-2d34/motion.js`. Check visible foot travel at 96px AND real preview
+The user rejected v33's barely visible motion. v34 is preserved as
+`butter-motion-cutout34.js` for optional-image failure fallback. Check foot travel at 96px AND real preview
 playback (including reduced-motion opt-in), not only sampled frame differences.
 Existing 3D assets and their archived renderer are preserved, not used in-game.
+
+For animation work, also read `docs/art/BUTTER_MOTION_REFERENCE.md` and its linked
+JSON. They record actual playback/pose inspection of the user-supplied Trickcal
+viewer (`battle/butter`, Normal) on 2026-11-03, not guessed motion from static art.
+The original has separate Move/Attack/Skill clips, but four-direction coverage
+and combined moving fire were NOT established. Keep the approved artwork and
+handedness rules; source motion is a reference, not an approved replacement.
+Distinguish the original reference survey from the subsequent v35 implementation.
+Browser checks must load all three images and assert `layered35`, not silently
+exercise the fallback. Keep rear-view arms behind hair/body, and clear the full
+old silhouettes (including antialiasing) when moving arms or tail.
 
 Carry forward explicit user corrections in `BUTTER_CANON.md`. If the user changes
 an approved rule or approves a new master, update the record and checksum together

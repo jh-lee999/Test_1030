@@ -1,11 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {advanceButterGait,butterSpriteState,butterBootTransforms,butterSourceTransform,butterMuzzleOffset,drawButterMotion,BUTTER_STRIDE_DISTANCE,BUTTER_2D_LAYOUT,BUTTER_2D_VIEWS,BUTTER_MOTION} from '../butter-motion.js';
+// Archived v34 fallback; v35's live renderer is tested in butter-layered35.test.js.
+import {advanceButterGait,butterSpriteState,butterBootTransforms,butterSourceTransform,butterMuzzleOffset,drawButterMotion,BUTTER_STRIDE_DISTANCE,BUTTER_2D_LAYOUT,BUTTER_2D_VIEWS,BUTTER_MOTION} from '../butter-motion-cutout34.js';
 const axes={down:[0,1],left:[-1,0],up:[0,-1],right:[1,0]};
 const state=(view='down',phase=0,amount=1,action=null)=>({size:112,facingX:axes[view][0],facingY:axes[view][1],gait:{phase,amount,dx:axes[view][0],dy:axes[view][1]},action});
 
-test('live 2D renderer uses the approved four independent rectangles and foot anchors',()=>{
+test('v34 fallback preserves the approved four independent rectangles and foot anchors',()=>{
   const meta=JSON.parse(readFileSync(new URL('../assets/butter-2d32/directions.json',import.meta.url)));
   assert.equal(BUTTER_2D_LAYOUT.image,'./'+meta.image);
   assert.equal(new Set(Object.values(BUTTER_2D_VIEWS).map(v=>v.rect.join(','))).size,4);

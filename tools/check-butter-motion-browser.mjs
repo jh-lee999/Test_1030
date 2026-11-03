@@ -9,13 +9,16 @@ try {
   const root=process.argv[2] || 'http://127.0.0.1:4183';
   await page.goto(`${root}/butter-2d-motion.html`);
   await page.waitForSelector('body[data-ready="true"]');
+  assert.equal(await page.locator('body').getAttribute('data-renderer'),'layered35');
   const result=await page.evaluate(async()=>{
-    const m=await import('./butter-motion.js?v=34'),image=new Image();image.src=m.BUTTER_2D_LAYOUT.image;await image.decode();
+    const m=await import('./butter-motion.js?v=35'),image=new Image(),limbs=new Image(),clean=new Image();
+    image.src=m.BUTTER_2D_LAYOUT.image;limbs.src=m.BUTTER_LIMB_IMAGE;clean.src=m.BUTTER_CLEAN_IMAGE;
+    await Promise.all([image.decode(),limbs.decode(),clean.decode()]);
     const axes={down:[0,1],left:[-1,0],up:[0,-1],right:[1,0]},canvas=document.createElement('canvas');
     const ctx=canvas.getContext('2d',{willReadFrequently:true});let checked=0,headMaxDelta=0,minGutter=Infinity;const motionPixels={};
     const draw=(state,size)=>{
       canvas.width=canvas.height=size;ctx.translate(size/2,(148-112*.28)*size/160);ctx.scale(size/160,size/160);
-      m.drawButterMotion(ctx,{atlas:image},state);return ctx.getImageData(0,0,size,size).data;
+      m.drawButterMotion(ctx,{atlas:image,limbs,clean},state);return ctx.getImageData(0,0,size,size).data;
     };
     const differences=(a,b,size,top,bottom,tolerance=2)=>{
       let n=0;for(let y=top;y<bottom;y++)for(let x=0;x<size;x++){
@@ -33,6 +36,21 @@ try {
         const pixels=draw(s,size);
         const headDiff=differences(reference,pixels,size,0,headBottom,0);headMaxDelta=Math.max(headMaxDelta,headDiff);
         if(headDiff)throw Error(`${view}/${type}/${gait}/${time}: head or face changed (${headDiff} pixels)`);
+        if(view==='up'){
+          // Arms reach forward, so the middle of the back must occlude them.
+          // This catches the former white forearm drawn across the rear shirt.
+          const t=m.butterSourceTransform(112,view),scale=size/160;
+          const x0=Math.ceil((80+t.x+300*t.scale)*scale),x1=Math.floor((80+t.x+400*t.scale)*scale);
+          const y0=Math.ceil((148+(315-m.BUTTER_2D_VIEWS.up.foot[1])*t.scale)*scale);
+          const y1=Math.floor((148+(385-m.BUTTER_2D_VIEWS.up.foot[1])*t.scale)*scale);
+          for(let yy=y0;yy<y1;yy++)for(let xx=x0;xx<x1;xx++)for(let channel=0;channel<4;channel++){
+            // Ignore translucent source edge pixels: a layer behind them
+            // legitimately increases opacity even with the correct order.
+            if(reference[(yy*size+xx)*4+3]<255)continue;
+            const i=(yy*size+xx)*4+channel;
+            if(Math.abs(pixels[i]-reference[i])>2)throw Error(`up/${type}/${time}: back pixel changed at ${xx},${yy}, channel ${channel} (${pixels[i]} vs ${reference[i]})`);
+          }
+        }
         for(let yy=0;yy<size;yy++)for(let xx=0;xx<size;xx++)if(pixels[(yy*size+xx)*4+3]>=24){
           const g=Math.min(xx,yy,size-1-xx,size-1-yy);minGutter=Math.min(minGutter,g);
           if(g<2)throw Error(`${view}: clipped silhouette at ${xx},${yy}`);
@@ -67,6 +85,9 @@ try {
   assert.equal(await page.locator('#phase').inputValue(),pausedPhase,'pause must freeze the preview');
   await page.locator('#step').click();
   assert.notEqual(await page.locator('#phase').inputValue(),pausedPhase,'frame stepping must change the pose');
+  const heldGait=await page.locator('#phase').inputValue();
+  await page.locator('#shot-phase').evaluate(e=>{e.value='0.3';e.dispatchEvent(new Event('input'));});
+  assert.equal(await page.locator('#phase').inputValue(),heldGait,'editing shot phase must not reset gait');
   await page.locator('#show-source').check();assert.equal(await page.locator('.reference:visible').count(),4);
   await page.locator('#show-source').uncheck();assert.equal(await page.locator('.reference:visible').count(),0);
   await page.locator('#play').click();
@@ -89,6 +110,7 @@ try {
   assert.equal(await page.locator('#preview').getAttribute('data-direction'),'left');
   await page.goto(root);await page.locator('#start-button').click();
   await page.waitForFunction(()=>document.querySelector('#start-screen').classList.contains('hidden'));
+  await page.waitForSelector('#game-canvas[data-butter-renderer="layered35"]');
   await page.keyboard.down('d');await page.keyboard.down('ArrowLeft');await page.waitForTimeout(400);
   await page.keyboard.up('d');await page.keyboard.up('ArrowLeft');
   await page.keyboard.press('e');await page.waitForTimeout(500);
@@ -96,6 +118,14 @@ try {
   await page.reload();await page.locator('[data-character="komi"]').click();await page.locator('#start-button').click();
   await page.waitForFunction(()=>document.querySelector('#start-screen').classList.contains('hidden'));
   await page.keyboard.press('ArrowRight');await page.keyboard.press('q');
+  const missing=await browser.newPage();missing.on('pageerror',e=>errors.push(String(e)));
+  await missing.route('**/assets/butter-2d35/cleanplate.png',route=>route.abort());
+  await missing.goto(`${root}/butter-2d-motion.html`);await missing.waitForSelector('body[data-ready="true"]');
+  assert.equal(await missing.locator('body').getAttribute('data-renderer'),'fallback34','missing optional artwork must not break startup');
+  assert.match(await missing.locator('#status').innerText(),/불러오지 못해/);
+  await missing.goto(root);await missing.locator('#start-button').click();
+  await missing.waitForFunction(()=>document.querySelector('#start-screen').classList.contains('hidden'));
+  await missing.keyboard.press('ArrowLeft');await missing.close();
   assert.deepEqual(errors,[],'browser runtime errors');
   console.log(JSON.stringify({...result,livePlayback:'passed',reducedMotionOptIn:'passed',previewControls:'passed',mobile:'passed',butterAndKomiStart:'passed',runtimeErrors:errors},null,2));
 } finally { await browser.close(); }

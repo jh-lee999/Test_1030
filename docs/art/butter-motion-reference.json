@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "checkedAt": "2026-11-03",
+  "status": "observed-original-reference-not-a-four-direction-runtime-asset",
+  "subsequentAdaptation": "assets/butter-2d35/CREDITS.md",
+  "viewer": "https://viewer.dclnslde.com/",
+  "selection": {
+    "displayName": "버터",
+    "category": "인게임",
+    "id": "battle/butter",
+    "stem": "Butter",
+    "skin": "Normal"
+  },
+  "sourceFiles": [
+    {
+      "url": "https://viewer.dclnslde.com/spine/battle/butter/Butter.skel",
+      "bytes": 399073,
+      "sha256": "191c9632527f68ffa821d0376e0e786d098097ad74740c7d5f7d568346682e09"
+    },
+    {
+      "url": "https://viewer.dclnslde.com/spine/battle/butter/Butter.atlas",
+      "bytes": 5211,
+      "sha256": "4e9610a78c7934cd9a7c608cdc9192edba5f19aac2ae9317a015eda0fd2b2b4a"
+    },
+    {
+      "url": "https://viewer.dclnslde.com/spine/battle/butter/Butter.png",
+      "bytes": 277188,
+      "sha256": "3f0b809ecab4f6560e7a7d035b2e4fbb27d8493a2ff3a8bd4eb9c588de080613"
+    }
+  ],
+  "observedClips": [
+    {
+      "name": "Move",
+      "durationSeconds": 0.8000000715255737,
+      "sampleTimesSeconds": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7],
+      "observation": "Alternating bent legs, airborne phases and secondary motion; not a grounded walking loop."
+    },
+    {
+      "name": "Attack1_1",
+      "durationSeconds": 1.5000001192092896,
+      "releaseReferenceSeconds": 0.6666666865348816,
+      "eventAtReference": {"name": "Event", "stringValue": "1002901"},
+      "sampleTimesSeconds": [0, 0.3, 0.6, 0.633333, 0.666667, 0.7, 0.85, 1.5]
+    },
+    {
+      "name": "Attack2_1",
+      "durationSeconds": 1.5000001192092896,
+      "releaseReferenceSeconds": 0.6333333849906921,
+      "eventAtReference": {"name": "Event", "stringValue": "1002902,1002903"},
+      "sampleTimesSeconds": [0, 0.3, 0.566667, 0.6, 0.633333, 0.666667, 0.85, 1.5]
+    },
+    {
+      "name": "Skill1_1",
+      "durationSeconds": 2.3333334922790527,
+      "releaseReferenceSeconds": 1.100000023841858,
+      "eventAtReference": {"name": "Event", "stringValue": "1002904,1002907"},
+      "sampleTimesSeconds": [0, 0.633333, 0.9, 1.066667, 1.1, 1.133333, 1.633333, 2.333333]
+    },
+    {
+      "name": "Ultimate1_1",
+      "durationSeconds": 3.9333336353302,
+      "releaseReferenceSeconds": 2.500000238418579,
+      "eventAtReference": {"name": "Event", "stringValue": "1002913,1002914"},
+      "sampleTimesSeconds": [0, 1.066667, 1.5, 2.3, 2.5, 2.566667, 3.066667, 3.933333]
+    }
+  ],
+  "otherListedClips": [
+    "Die", "Experience_1", "Experience_2", "Groggy", "Idle",
+    "OW1_Attack2_1", "Spawn", "Victory"
+  ],
+  "observedTailChain": ["Pelvis_1", "tail_0", "tail_1", "tail_2"],
+  "limits": [
+    "Not an approved replacement for assets/butter-2d32/directions.png.",
+    "Four-direction coverage was not established by this inspection.",
+    "No combined Move+Attack clip was listed in the inspected skeleton.",
+    "Release reference is a visual transition corroborated by an event, not verified original gameplay code.",
+    "Source durations are not our game's cooldowns.",
+    "Original assets and viewer runtime were not added to the repository."
+  ]
+}

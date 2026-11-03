@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "character": "Butter",
   "approvedMaster": {
     "path": "assets/butter-2d-study.png",
@@ -18,13 +18,17 @@
     "gameApplied": true
   },
   "activeAnimation": {
-    "rig": "assets/butter-2d33/rig.js",
-    "motion": "assets/butter-2d34/motion.js",
+    "rig": "assets/butter-2d35/rig.js",
+    "sourceLayout": "assets/butter-2d33/rig.js",
+    "motion": "assets/butter-2d35/motion.js",
     "renderer": "butter-motion.js",
     "preview": "butter-2d-motion.html",
-    "status": "integrated-limited-cutout-candidate",
-    "method": "unchanged-source-pixels; uniform-scale; readable-rigid-boot-stride; complete-source-boot-reuse-for-occluded-rear-foot; independent-holding-hand-recoil",
-    "limitations": ["No newly drawn left-hand pull pose", "No new giant-slingshot pose", "Tail remains at approved source pose"]
+    "status": "integrated-layered-motion-candidate-not-user-approved",
+    "method": "unchanged-approved-face-and-source-files; uniform-scale; independent-hip-knee-stride; two-hand-pull-release-and-band; fixed-pelvis-tail-sway; masked-occlusion-repair",
+    "newAssets": ["assets/butter-2d35/limbs.png", "assets/butter-2d35/cleanplate.png"],
+    "credits": "assets/butter-2d35/CREDITS.md",
+    "fallback": "butter-motion-cutout34.js",
+    "limitations": ["No new giant-slingshot pose", "Hair and ears remain static", "Four-direction motions are adaptations, not four original game clips", "Occlusion repairs and limb joins remain visual review candidates"]
   },
   "anatomy": {"holdingHand":"right","drawingHand":"left","pouchHip":"left","tailRoot":"posterior-pelvis-midline"},
   "requiredDirections": ["down","left","up","right"],

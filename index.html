@@ -8,6 +8,8 @@
     <link rel="manifest" href="./manifest.webmanifest?v=23" />
     <link rel="icon" href="./icon.svg?v=23" type="image/svg+xml" />
     <link rel="preload" href="./assets/butter-2d32/directions.png" as="image" type="image/png" fetchpriority="high" />
+    <link rel="preload" href="./assets/butter-2d35/limbs.png" as="image" type="image/png" />
+    <link rel="preload" href="./assets/butter-2d35/cleanplate.png" as="image" type="image/png" />
     <link rel="preload" href="./assets/trickcal-heroes.webp?v=23" as="image" type="image/webp" />
     <link rel="preload" href="./assets/ui-icons.svg?v=23" as="image" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css?v=33" />
@@ -94,6 +96,7 @@
           </div>
           <button class="primary-button" id="start-button">아공간 입장</button>
           <p class="controls-help">WASD 이동 · 방향키 공격 · Q/E 능력 · R 폭탄</p>
+          <p class="controls-help">비공식 팬 프로토타입 · <a href="./assets/butter-2d35/CREDITS.md">에셋 출처</a></p>
         </section>
 
         <section class="item-screen" id="item-screen" hidden>
@@ -140,6 +143,6 @@
         caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key)))).catch(() => {});
       }
     </script>
-    <script type="module" src="./app.js?v=34"></script>
+    <script type="module" src="./app.js?v=35"></script>
   </body>
 </html>
