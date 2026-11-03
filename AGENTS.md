@@ -1,5 +1,20 @@
 # Project instructions
 
+## v49 pinball GUI (v48 engine and source art unchanged)
+
+The user requested a GUI improvement, not another genre change. Keep v48 rules,
+physics, XP queue and original art untouched. bonk-ui.js is read-only: no game
+state or RNG writes. Card comparisons must match actual emitted-ball stats;
+fusion tracks cap each ingredient instead of counting irrelevant extra copies.
+Enemy intent includes BOTH shooting and danger-line contact when applicable.
+During the enemy animation, predict from fromY, not the already moving y.
+Help freezes and restores the exact aim/flight/enemy phase; opening help from
+an already paused game must NOT resume it on close. Disable header pause while
+help is open. Keep all six 400-XP choices reachable on small screens. Mobile
+build details start collapsed; touch aiming must never fire until Fire is tapped.
+Run test/bonk-ui49.test.js and tools/check-bonk49-browser.mjs as well as all v48
+and archived required checks. See docs/gui49.md. GUI tests are not fun validation.
+
 ## ACTIVE v48: slingshot pinball prototype (user-approved genre change)
 
 The user explicitly accepted the proposed small Butter pinball roguelike after
