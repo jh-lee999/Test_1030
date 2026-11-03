@@ -1,5 +1,5 @@
-import {VIEW,FLOOR,HERO_SIZE,heroPose,clamp} from './platformer-engine.js?v=41';
-import {BIOMES,ROOM_TYPES} from './platformer-world.js?v=41';
+import {VIEW,FLOOR,HERO_SIZE,STAGES,heroPose,clamp} from './platformer-engine.js?v=42';
+import {BIOMES,ROOM_TYPES,ACTS} from './platformer-world.js?v=42';
 import {drawButterMotion,selectButterFrame} from './butter-original-motion.js';
 import {STAGE_ART} from './assets/trickcal-stage37/atlas.js';
 const TAU=Math.PI*2;
@@ -29,7 +29,7 @@ function monster(ctx,e,images){
   let frame=Math.min(clip.count-1,Math.floor(phase*(clip.loop?clip.count:clip.count-1)));
   if(!image?.naturalWidth){clip=source.clips.idle;image=images.monsters[e.type].poster;frame=0;}
   if(e.hp<=0&&e.death>clip.duration)return;
-  const scale=e.type==='ghost'?1.65:.75;
+  const scale=e.type==='ghost'?1.65:e.boss?1.1:.75;
   ellipse(ctx,e.x,e.y+2,e.type==='ghost'?62:28,7,'#17231555');
   ctx.save();ctx.translate(e.x,e.y);if(e.facing>0)ctx.scale(-1,1);
   if(e.hp<=0)ctx.globalAlpha=clamp(1-e.death/clip.duration,0,1);
@@ -38,9 +38,9 @@ function monster(ctx,e,images){
   else{ellipse(ctx,0,-35,25,35,'#ac9cb8');text(ctx,'?',0,-27,24);}
   ctx.restore();
   if(e.hp>0&&e.burnTime>0){for(let i=0;i<3;i++){const rise=(e.clock*24+i*13)%40;ellipse(ctx,e.x-14+i*14,e.y-15-rise,3,6,'#ffc080bb');}}
-  if(e.hp>0&&e.hp<e.maxHp&&e.type!=='ghost'){rounded(ctx,e.x-24,e.y-e.h-22,48,5,2,'#1c2924bb');rounded(ctx,e.x-24,e.y-e.h-22,48*e.hp/e.maxHp,5,2,'#f3afa1');}
+  if(e.hp>0&&e.hp<e.maxHp&&e.type!=='ghost'&&!e.boss){rounded(ctx,e.x-24,e.y-e.h-22,48,5,2,'#1c2924bb');rounded(ctx,e.x-24,e.y-e.h-22,48*e.hp/e.maxHp,5,2,'#f3afa1');}
   if(e.mode==='attack'&&e.hp>0){
-    const release=e.type==='ghost'?.75:e.type==='archer'?.55:.46;
+    const release=e.boss?(e.windup??.95):e.type==='ghost'?.75:e.type==='archer'?.55:.46;
     if(e.timer<release){const amount=e.timer/release;ctx.strokeStyle='#ffbd83';ctx.lineWidth=3;ctx.beginPath();ctx.arc(e.x,e.y-e.h-10,10, -Math.PI/2,-Math.PI/2+TAU*amount);ctx.stroke();text(ctx,'!',e.x,e.y-e.h-5,13,'#ffe3a1');
       if(e.type==='fan'){ctx.fillStyle='#fa895343';ctx.fillRect(e.facing>0?e.x:e.x-95,e.y-5,95,5);}
     }
@@ -72,6 +72,8 @@ export function renderGame(ctx,g,images,{started=true,reducedMotion=false}={}){
   // Far fireflies remain decorative, not collision geometry.
   for(let i=0;i<22;i++){const x=((i*173-g.camera*.12)%W+W)%W,y=150+(i*97)%380;ellipse(ctx,x,y+(reducedMotion?0:Math.sin(time+i)*9),1.8,1.8,`rgba(255,239,157,${.25+Math.sin(time*.6+i)*.15})`);}
   ctx.save();if(!reducedMotion&&g.shake>0)ctx.translate(Math.sin(time*119)*g.shake*17,Math.cos(time*93)*g.shake*10);ctx.translate(-g.camera,-g.cameraY);
+  if(room.act===1)for(let i=0;i<7;i++){const x=i*470;rounded(ctx,x,170,54,600,8,'#262f44aa');ctx.strokeStyle='#89b6d433';ctx.lineWidth=8;ctx.beginPath();ctx.arc(x+235,270,210,Math.PI,0);ctx.stroke();}
+  if(room.act===2)for(let i=0;i<8;i++){const x=i*410+150,y=230+(i%3)*60;ellipse(ctx,x,y,95,125,'#33204477');ctx.strokeStyle='#d3a2f433';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(x,y,90,120,0,0,TAU);ctx.stroke();text(ctx,'✦',x,y+10,35,'#ddb6e955');}
   const main=room.platforms.filter(p=>!p.optional).sort((a,b)=>a.x-b.x);let covered=main[0];
   for(const next of main.slice(1)){if(next.x>covered.x+covered.w){const start=covered.x+covered.w,top=Math.min(covered.y,next.y)+8,fade=ctx.createLinearGradient(0,top,0,top+160);fade.addColorStop(0,theme.fog+'88');fade.addColorStop(1,'#131f29');ctx.fillStyle=fade;ctx.fillRect(start,top,next.x-start,H-top+300);}if(next.x+next.w>covered.x+covered.w)covered=next;}
   for(const d of room.decorations||[])if(d.x>g.camera-100&&d.x<g.camera+W+100)decorate(ctx,d,time,reducedMotion);
@@ -88,10 +90,15 @@ export function renderGame(ctx,g,images,{started=true,reducedMotion=false}={}){
   }
   for(const item of room.pickups)if(!item.taken){const y=item.y+(reducedMotion?0:Math.sin(time*3+item.x)*3);ellipse(ctx,item.x,item.y+23,12,3,'#12251d44');if(item.kind==='coin'){ellipse(ctx,item.x,y,9,12,'#f6d680');ellipse(ctx,item.x,y,6,8,'#b79347');text(ctx,'✦',item.x,y+5,15,'#fff4b4');}else{text(ctx,'♥',item.x,y+8,28,'#f6b1a8');}}
   const exit=room.exit,open=room.cleared&&room.rewardTaken;
+  for(const h of room.hazards||[]){
+    const phase=(h.clock+h.offset)%h.period,warning=phase>=h.period-1.3,active=phase>=h.period-.4;
+    rounded(ctx,h.x-h.w/2,h.y-5,h.w,6,3,room.cleared?'#9d91a144':active?'#f7b1ef':warning?'#f1b96baa':'#9f8ac855');
+    if(!room.cleared&&warning){rounded(ctx,h.x-h.w/2,h.y-65,h.w,60,4,active?'#e8a4ee88':'#ecc17f25');text(ctx,active?'✦':'!',h.x,h.y-30,20,active?'#fff1fc':'#ffda95');}
+  }
   merchant(ctx,g,images);
   if(room.shrine){const s=room.shrine;ctx.save();ctx.translate(s.x,s.y);if(s.kind==='treasure'){rounded(ctx,-28,-34,56,34,5,s.used?'#786d4b':'#c7a65d');rounded(ctx,-28,-43,56,17,6,'#e3c57e');ctx.fillStyle='#75572e';ctx.fillRect(-4,-28,8,10);}else{ellipse(ctx,0,-10,36,12,'#a4b68a');ellipse(ctx,0,-12,26,7,s.used?'#849d85':'#bce5bf');text(ctx,'♥',0,-30,28,'#c7e9b8');}if(!s.used)text(ctx,`F / ↓ ${s.kind==='rest'?'40% 회복':'보물 열기'}`,0,-65,14);else text(ctx,'이용 완료',0,-60,12,'#c0c7a5');ctx.restore();}
   ctx.save();ctx.translate(exit.x,exit.y);ctx.fillStyle='#263d30';ctx.beginPath();ctx.roundRect(-44,-148,88,148,[44,44,2,2]);ctx.fill();ctx.lineWidth=7;ctx.strokeStyle=open?'#e5d891':'#6e8667';ctx.stroke();
-  if(open){const aura=ctx.createRadialGradient(0,-75,5,0,-75,90);aura.addColorStop(0,'#fff6b1bb');aura.addColorStop(1,'#b3e19000');ctx.fillStyle=aura;ctx.fillRect(-85,-165,170,170);text(ctx,'F / ↓',0,-65,16);text(ctx,room.type==='boss'?'탈출':'경로 선택',0,-40,13);}
+  if(open){const aura=ctx.createRadialGradient(0,-75,5,0,-75,90);aura.addColorStop(0,'#fff6b1bb');aura.addColorStop(1,'#b3e19000');ctx.fillStyle=aura;ctx.fillRect(-85,-165,170,170);text(ctx,'F / ↓',0,-65,16);text(ctx,room.index===STAGES-1?'탈출':room.type==='boss'?'다음 지역':'경로 선택',0,-40,13);}
   else{text(ctx,'봉인',0,-65,16,'#a9bb99');text(ctx,room.shrine?'쉼터 / 보물 이용':'적을 모두 처치',0,-40,11,'#a9bb99');}ctx.restore();
   for(const e of room.enemies)if(e.x>g.camera-220&&e.x<g.camera+W+220)monster(ctx,e,images);
   for(const b of g.boulders){ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.angle);ctx.shadowColor='#ffdf92';ctx.shadowBlur=18;ctx.fillStyle='#9c8060';ctx.strokeStyle='#493e31';ctx.lineWidth=5;ctx.beginPath();for(let i=0;i<9;i++){const angle=i/9*TAU,r=b.r*(.94+.08*Math.sin(i*8));if(!i)ctx.moveTo(Math.cos(angle)*r,Math.sin(angle)*r);else ctx.lineTo(Math.cos(angle)*r,Math.sin(angle)*r);}ctx.closePath();ctx.fill();ctx.stroke();ctx.shadowBlur=0;ctx.strokeStyle='#c2a77d';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-b.r*.5,-b.r*.4);ctx.lineTo(b.r*.05,-b.r*.65);ctx.lineTo(b.r*.5,-b.r*.2);ctx.stroke();ctx.restore();}
@@ -114,8 +121,8 @@ export function renderGame(ctx,g,images,{started=true,reducedMotion=false}={}){
     else if(e.type==='dash'){ctx.strokeStyle='#ffefbb';ctx.lineWidth=2;for(let i=0;i<4;i++){ctx.beginPath();ctx.moveTo(-e.dir*f*70,-15+i*10);ctx.lineTo(-e.dir*(f*70+35),-15+i*10);ctx.stroke();}}ctx.restore();
   }
   ctx.restore();
-  if(started&&g.roomIntro>0){ctx.save();ctx.globalAlpha=clamp(g.roomIntro,0,1);text(ctx,`0${room.index+1}  /  아공간`,W/2,190,13,'#ffedb4');text(ctx,room.title,W/2,227,30);ctx.restore();}
-  if(started&&room.type==='boss'){const boss=room.enemies[0];if(boss.hp>0){text(ctx,'아공간을 지키는 이불령',W/2,132,13);rounded(ctx,W/2-190,143,380,8,4,'#202123bb');rounded(ctx,W/2-190,143,380*boss.hp/boss.maxHp,8,4,'#c99ada');}}
+  if(started&&g.roomIntro>0){ctx.save();ctx.globalAlpha=clamp(g.roomIntro,0,1);text(ctx,`${room.act+1}막 · ${room.local+1}/7  /  ${ACTS[room.act].rule}`,W/2,190,13,'#ffedb4');text(ctx,room.title,W/2,227,30);ctx.restore();}
+  if(started&&room.type==='boss'){const boss=room.enemies[0];if(boss.hp>0){text(ctx,ACTS[room.act].boss+(boss.hp<boss.maxHp*.5?' · 격노':''),W/2,132,13);rounded(ctx,W/2-190,143,380,8,4,'#202123bb');rounded(ctx,W/2-190,143,380*boss.hp/boss.maxHp,8,4,'#c99ada');}}
   if(started&&g.room.cleared&&p.x<exit.x-250)text(ctx,'출구 →',W-90,H-85,15,'#ffedb4');
   if(started)roomOverview(ctx,g);
   ctx.canvas.dataset.butterFrame=`${selectButterFrame(pose).key}/${selectButterFrame(pose).index}`;

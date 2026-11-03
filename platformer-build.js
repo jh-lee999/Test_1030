@@ -78,6 +78,10 @@ export function rollBuildItems(random,stats,depth=0,count=3,exclude=[]){
   }return result;
 }
 export function rewardChoices(random,stats,room,exclude=[]){
+  if(room.type==='boss'){
+    const pool=Object.keys(ITEMS).filter(id=>ITEMS[id].rarity==='epic'),result=[];
+    while(result.length<3&&pool.length)result.push(pool.splice(Math.floor(random()*pool.length),1)[0]);return result;
+  }
   const grade=random()<.5?'lower_book':'upper_book',guaranteed=room.type==='elite'?['lower_book','upper_book']:[grade];
   return [...guaranteed,...rollBuildItems(random,stats,room.index,3-guaranteed.length,[...exclude,...guaranteed])];
 }

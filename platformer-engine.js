@@ -1,8 +1,8 @@
-import {createBuildState,applyBuildItem,removeBuildItem,rewardChoices,lowerPower,upperPower,ITEMS,itemChanges,LOWER_CHAIN_RANGE} from './platformer-build.js?v=41';
-import {CONTRACTS,HEAL_PRICE,BAG_PRICE,createEconomy,createMarket,marketStock,offerPrice,salePrice,shopRerollCost,rollSealedBag} from './platformer-economy.js?v=41';
+import {createBuildState,applyBuildItem,removeBuildItem,rewardChoices,lowerPower,upperPower,ITEMS,itemChanges,LOWER_CHAIN_RANGE} from './platformer-build.js?v=42';
+import {CONTRACTS,HEAL_PRICE,BAG_PRICE,createEconomy,createMarket,marketStock,offerPrice,salePrice,shopRerollCost,rollSealedBag} from './platformer-economy.js?v=42';
 import {advanceButterGait,butterMuzzleOffset,butterReleasePoint} from './butter-original-motion.js';
 import {PHYSICS,approach,landBody} from './platformer-physics.js?v=38';
-import {FLOOR,STAGES,BIOMES,generateWorld,generateRoom,seedNumber,seededRandom} from './platformer-world.js?v=41';
+import {FLOOR,STAGES,BIOMES,generateWorld,generateRoom,seedNumber,seededRandom} from './platformer-world.js?v=42';
 export {FLOOR,STAGES,seededRandom,landBody};
 
 export const VIEW={width:1280,height:720},HERO_SIZE=92;
@@ -97,12 +97,13 @@ function updateEnemies(g,dt){
     e.clock+=dt;e.flash=Math.max(0,e.flash-dt);if(e.hp<=0){e.death+=dt;continue;}
     if(e.burnTime>0){e.burnTime=Math.max(0,e.burnTime-dt);e.burnTick-=dt;if(e.burnTick<=0){e.burnTick+=.5;hitEnemy(g,e,e.burnDPS*.5,0,{direct:false});if(e.hp<=0)continue;}}
     e.cooldown=Math.max(0,e.cooldown-dt);const dx=p.x-e.x,dy=p.y-e.y;e.facing=dx>=0?1:-1;
+    if(e.boss){updateGuardian(g,e,dx,dy,dt);continue;}
     if(e.mode==='attack'){
       const before=e.timer;e.timer+=dt;const windup=e.type==='ghost'?.75:e.type==='archer'?.55:.46;
       if(before<windup&&e.timer>=windup){
         if(e.type==='fan'){if(Math.abs(dx)<98&&Math.abs(dy)<70)hurtPlayer(g,10,e.facing);effect(g,'slash',e.x+e.facing*40,e.y-45,{dir:e.facing});}
         else{
-          const count=e.type==='ghost'?7:1,speed=e.type==='ghost'?270:290,angle=Math.atan2(p.y-42-(e.y-e.h*.6),dx);
+          const count=e.type==='ghost'?7:e.veteran?3:1,speed=e.type==='ghost'?270:290,angle=Math.atan2(p.y-42-(e.y-e.h*.6),dx);
           for(let i=0;i<count;i++){const a=angle+(i-(count-1)/2)*.18;g.projectiles.push({owner:'enemy',x:e.x+e.facing*25,y:e.y-e.h*.6,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,r:e.type==='ghost'?11:8,life:4,damage:e.type==='ghost'?12:8});}
           if(e.type==='ghost'){g.shake=.1;effect(g,'burst',e.x,e.y-50,{color:'#dfb8ff'});}
         }
@@ -113,9 +114,44 @@ function updateEnemies(g,dt){
     const range=e.type==='ghost'?950:e.type==='archer'?650:85;
     if(Math.abs(dx)<range&&Math.abs(dy)<(e.type==='fan'?80:420)&&e.cooldown===0){e.mode='attack';e.timer=0;e.attackId++;continue;}
     const chasing=(e.type==='fan'&&Math.abs(dx)<800&&Math.abs(dx)>60)||(e.type==='ghost'&&Math.abs(dx)>480);
-    e.vx=chasing?e.facing*(e.type==='ghost'?68:110):0;
+    e.vx=chasing?e.facing*(e.type==='ghost'?68:110+(e.act===0?20:0)+(e.veteran?35:0)):0;
     const old=e.x;e.x=clamp(e.x+e.vx*dt,e.home.x+e.w/2+12,e.home.x+e.home.w-e.w/2-12);e.mode=Math.abs(e.x-old)>.01?'walk':'idle';
     if(e.type==='ghost'&&Math.abs(dx)<100&&Math.abs(dy)<130)hurtPlayer(g,12,e.facing);
+  }
+}
+function enemyShot(g,e,angle,speed=280){g.projectiles.push({owner:'enemy',x:e.x,y:e.y-e.h*.55,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,r:9,life:5,damage:10+(e.act||0)*2});}
+function updateGuardian(g,e,dx,dy,dt){
+  const enraged=e.hp<e.maxHp*.5,windup=e.windup??(enraged?.65:.95);
+  if(e.mode==='attack'){
+    const old=e.timer;e.timer+=dt;
+    if(old<windup&&e.timer>=windup){
+      const aim=Math.atan2(dy-40+e.h*.55,dx);
+      if(e.act===0){
+        // Two ground-hugging shockwaves: jumping is useful, not just DPS.
+        for(const dir of [-1,1])g.projectiles.push({owner:'enemy',x:e.x,y:e.y-15,vx:dir*(enraged?410:310),vy:0,r:15,life:5,damage:12});
+        if(Math.abs(dx)<130&&Math.abs(dy)<95)hurtPlayer(g,14,e.facing);
+      }else if(e.act===1){
+        for(let i=-2;i<=2;i++)enemyShot(g,e,aim+i*.16,enraged?390:320);
+        if(enraged)for(const h of [-170,0,170])g.projectiles.push({owner:'enemy',x:clamp(g.player.x+h,30,g.room.width-30),y:g.player.y-300,vx:0,vy:240,r:10,life:3,damage:10});
+      }else{
+        const count=enraged?14:10;for(let i=0;i<count;i++)enemyShot(g,e,aim+i*Math.PI*2/count,240);
+        for(let i=-1;i<=1;i++)enemyShot(g,e,aim+i*.12,360);
+      }
+      effect(g,'burst',e.x,e.y-35,{color:'#edb2f2'});g.shake=.15;
+    }
+    if(e.timer>=windup+.5){e.mode='idle';e.timer=0;e.cooldown=enraged?.7:1.2;}
+  }else if(e.cooldown<=0){e.mode='attack';e.timer=0;e.windup=enraged?.65:.95;e.attackId++;}
+  else{
+    const chase=e.act===0?Math.abs(dx)>125:e.act===2&&Math.abs(dx)>380;
+    const old=e.x;if(chase)e.x=clamp(e.x+e.facing*(enraged?155:95)*dt,e.home.x+80,e.home.x+e.home.w-80);
+    e.mode=Math.abs(old-e.x)>.01?'walk':'idle';
+  }
+}
+function updateHazards(g,dt){
+  if(g.room.cleared)return;
+  for(const h of g.room.hazards||[]){
+    h.clock+=dt;const phase=(h.clock+h.offset)%h.period;
+    if(phase>=h.period-.4&&Math.abs(g.player.x-h.x)<h.w/2+g.player.w/2&&Math.abs(g.player.y-h.y)<30)hurtPlayer(g,8+(g.room.act||0)*2);
   }
 }
 function segmentBodyEntry(ax,ay,bx,by,body,r=0){
@@ -261,7 +297,7 @@ function settleContract(g,dead=false){
 export function enterNextRoom(g){
   if(g.phase!=='playing'||!g.room.cleared||!g.room.rewardTaken||!g.player.grounded||Math.abs(g.player.x-g.room.exit.x)>90||Math.abs(g.player.y-g.room.exit.y)>40)return false;
   g.world.nodes.find(n=>n.id===g.currentNodeId).completed=true;
-  if(g.room.type==='boss'){g.phase='won';return true;}
+  if(g.room.index===STAGES-1){g.phase='won';return true;}
   g.phase='route';return true;
 }
 export function routeOptions(g){const node=g.world.nodes.find(n=>n.id===g.currentNodeId);return g.world.nodes.filter(n=>node.next.includes(n.id)&&!n.visited);}
@@ -275,6 +311,11 @@ export function chooseRoute(g,id){
 function offerReward(g){
   g.choices=rewardChoices(g.rewardRandom,g.stats,g.room);
   g.phase='reward';
+}
+export const cashReward=g=>(g.room.rewardKind==='gold'?28:14)+(g.room.act||0)*8;
+export function chooseGoldReward(g){
+  if(g.phase!=='reward'||g.room.type==='boss'||g.room.type==='treasure')return false;
+  const amount=cashReward(g);g.coins+=amount;g.room.rewardTaken=true;g.world.nodes.find(n=>n.id===g.currentNodeId).completed=true;g.choices=[];g.phase='playing';notifyGame(g,`아이템 대신 상점 자금 +${amount} G`);return true;
 }
 export function interactRoom(g){
   if(g.phase!=='playing')return false;const shrine=g.room.shrine,p=g.player;
@@ -290,7 +331,7 @@ export function tick(g,input={},dt=1/120){
   dt=clamp(dt,0,1/30);g.time+=dt;g.elapsed+=dt;
   if(g.contract?.status==='active'&&g.contract.nodeId===g.currentNodeId&&!g.room.cleared)g.contract.elapsed+=dt;
   const pressed={};for(const key of ['jump','dash','skill','interact'])pressed[key]=Boolean(input[key+'Pressed']||(input[key]&&!g.previous[key]));
-  updatePlayer(g,input,pressed,dt);updateEnemies(g,dt);updateProjectiles(g,dt);
+  updatePlayer(g,input,pressed,dt);updateEnemies(g,dt);updateProjectiles(g,dt);updateHazards(g,dt);
   for(const item of g.room.pickups)if(!item.taken&&Math.hypot(g.player.x-item.x,g.player.y-30-item.y)<g.stats.pickupRadius){item.taken=true;if(item.kind==='heart'){g.stats.hp=Math.min(g.stats.maxHp,g.stats.hp+15);effect(g,'text',item.x,item.y,{text:'+15 HP',color:'#ffb6be'});}else{g.coins+=5;effect(g,'text',item.x,item.y,{text:'+5',color:'#ffe09b'});}}
   for(const e of g.effects)e.time+=dt;g.effects=g.effects.filter(e=>e.time<e.duration);
   g.noticeTime=Math.max(0,g.noticeTime-dt);g.roomIntro=Math.max(0,g.roomIntro-dt);g.shake=Math.max(0,g.shake-dt);

@@ -52,7 +52,7 @@ test('high skill produces bouncing piercing boulder and grants duration immunity
   const stronger=applyItem(g.stats,'upper_book');assert.ok(upperPower(stronger).damage>upperPower(g.stats).damage);assert.ok(upperPower(stronger).duration>upperPower(g.stats).duration);
 });
 test('Lv1 lower grade emits a tracking chain projectile with one additional hit',()=>{
-  const g=createGame(8);g.random=()=>0;g.player.x=400;g.room.enemies=g.room.enemies.slice(0,2);g.room.enemies.forEach((e,i)=>{e.x=600+i*160;e.hp=300;e.cooldown=99;});
+  const g=createGame(8),floor={id:'chain-fixture',x:0,y:FLOOR,w:g.room.width,ground:true};g.room.platforms=[floor];g.random=()=>0;g.player.x=400;g.room.enemies=g.room.enemies.slice(0,2);g.room.enemies.forEach((e,i)=>{e.home=floor;e.y=FLOOR;e.x=1000+i*160;e.hp=300;e.cooldown=99;});
   step(g,30,{attack:true});assert.ok(g.projectiles.some(b=>b.homing&&b.bounces===1));step(g,120);assert.ok(g.room.enemies.every(e=>e.hp<300));
 });
 test('room clear queues one three-choice reward; invalid/double claim rejected; stats persist',()=>{

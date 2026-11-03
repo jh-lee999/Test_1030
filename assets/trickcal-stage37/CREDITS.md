@@ -39,3 +39,8 @@ are procedural game elements, not claimed to be extracted Trickcal illustrations
 v41 reuses the existing `fan` Idle animation for a friendly merchant behind a
 procedural stall. This shop role is a fan-game adaptation, not an extracted or
 official merchant NPC. No source sprite, animation or background was changed.
+
+v42 also assigns guardian roles to the existing fan and archer, enlarging whole
+poses uniformly and adding procedural attacks. The three-act locations, guardian
+names, half-health phases, architecture and danger zones are fan-game additions;
+no new official boss illustrations or background assets were extracted.

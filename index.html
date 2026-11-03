@@ -8,7 +8,7 @@
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="manifest" href="./manifest.webmanifest?v=37">
   <link rel="preload" as="image" href="./assets/trickcal-stage37/forest.webp">
-  <link rel="stylesheet" href="./platformer.css?v=41">
+  <link rel="stylesheet" href="./platformer.css?v=42">
   <title>버터의 아공간 탈출 · 횡스크롤</title>
 </head>
 <body>
@@ -25,11 +25,11 @@
       <div id="toast" class="toast" role="status" aria-live="polite"></div>
       <div id="contract-hud" class="contract-hud" hidden></div>
       <div id="start-screen" class="overlay start-screen">
-        <div class="start-copy"><span class="eyebrow">TRICKCAL FAN GAME · MARKET 41</span><h1>모험에도,<br><em>좋은 거래가 필요해!</em></h1><p>갈림길 너머 상인, 가방 속 아이템, 위험한 계약.<br>이번에는 무엇을 챙겨 아공간을 탈출할까?</p><div class="seed-entry"><label for="seed-input">맵 시드</label><input id="seed-input" maxlength="48" placeholder="비워 두면 새로운 맵" autocomplete="off" spellcheck="false"></div><button id="start-button" class="primary" disabled>에셋 준비 중…</button><small id="load-status" role="status">원작 모션을 불러오고 있어요.</small><div class="start-tags"><span>상점 · 거래</span><span>선택형 전투 계약</span><span>28종 아이템 · 6종 각인</span></div></div>
+        <div class="start-copy"><span class="eyebrow">TRICKCAL FAN GAME · CAMPAIGN 42</span><h1>세 개의 지역,<br><em>세 번의 보스전!</em></h1><p>숲을 넘어 회랑, 그리고 셰이디의 아공간까지.<br>지역을 돌파하며 버터만의 빌드를 완성하자.</p><div class="seed-entry"><label for="seed-input">맵 시드</label><input id="seed-input" maxlength="48" placeholder="비워 두면 새로운 맵" autocomplete="off" spellcheck="false"></div><button id="start-button" class="primary" disabled>에셋 준비 중…</button><small id="load-status" role="status">원작 모션을 불러오고 있어요.</small><div class="start-tags"><span>3막 · 21구간</span><span>선택형 전투 계약</span><span>28종 아이템 · 6종 각인</span></div></div>
         <div class="start-art" aria-hidden="true"><div class="halo"></div><img src="./assets/butter-original36/poster.png" alt=""><span>BUTTER<br><small>새총을 든 말랑이</small></span></div>
       </div>
       <div id="pause-screen" class="overlay modal" hidden><div class="panel"><span class="eyebrow">TAKE A BREATH</span><h2>잠깐 쉬어 가자</h2><p>A D 이동 · Space 2단 점프<br>J 공격 · Shift 대시 · E 왕새총<br>F / ↓ 상호작용 · M 지도 · I 가방 · B 상점</p><button id="resume-button" class="primary">계속하기</button><button class="replay secondary">같은 시드로 재도전</button><button class="restart secondary">새 맵으로 시작</button></div></div>
-      <div id="reward-screen" class="overlay modal build-modal" role="dialog" aria-modal="true" aria-labelledby="reward-title" hidden><div class="reward-panel scroll-panel"><span class="eyebrow">ROOM CLEAR · BUILD YOUR BUTTER</span><h2 id="reward-title">버터의 가방에 뭘 넣을까?</h2><p id="reward-info"></p><div id="reward-cards" class="reward-cards"></div><div class="panel-actions"><span id="reward-coins"></span><button id="reward-build">가방·능력치 I</button><button id="reward-reroll">다시 뽑기</button></div></div></div>
+      <div id="reward-screen" class="overlay modal build-modal" role="dialog" aria-modal="true" aria-labelledby="reward-title" hidden><div class="reward-panel scroll-panel"><span class="eyebrow">ROOM CLEAR · BUILD YOUR BUTTER</span><h2 id="reward-title">버터의 가방에 뭘 넣을까?</h2><p id="reward-info"></p><div id="reward-cards" class="reward-cards"></div><div class="panel-actions"><span id="reward-coins"></span><button id="reward-build">가방·능력치 I</button><button id="reward-gold">아이템 대신 자금</button><button id="reward-reroll">다시 뽑기</button></div></div></div>
       <div id="build-screen" class="overlay modal build-modal" role="dialog" aria-modal="true" aria-labelledby="build-title" hidden><div class="build-panel scroll-panel"><div class="map-heading"><div><span class="eyebrow">BUTTER'S BACKPACK</span><h2 id="build-title">지금의 버터</h2></div><button id="build-close">닫기 I / Esc</button></div><p id="build-count"></p><p id="build-last" class="acquisition"></p><p id="build-contract" class="acquisition"></p><div id="grade-details" class="grade-details"></div><h3>실제 적용 능력치</h3><div id="stat-grid" class="stat-grid"></div><h3>각인 · 같은 아이템도 개수만큼 누적</h3><div id="inscriptions" class="inscriptions"></div><h3>보유 아이템</h3><div id="inventory" class="inventory"></div><p class="build-limits">상한: 치명타 80% · 쿨감 65% · 흡혈 15% · 방어 200 · 관통 +6명 · 추가 탄환 +6발 · 공격 간격 최소 0.08초. 상한에 도달하면 개수만 더 쌓여요.</p><div class="panel-actions"><span>이번 판에서 계속 누적 · 새 판 / 재도전 시 초기화</span><button id="shop-open">상점 열기 B</button></div></div></div>
       <div id="shop-screen" class="overlay modal build-modal" role="dialog" aria-modal="true" aria-labelledby="shop-title" hidden>
         <div class="reward-panel scroll-panel market-panel">
@@ -50,7 +50,7 @@
           <section id="contracts-pane" aria-label="다음 전투 계약" hidden><p id="contract-status" class="acquisition"></p><p class="market-note">다음 전투 한 번에만 적용 · 동시에 1개 · 수락은 무료, 실패해도 추가 벌금 없음.<br>휴식·보물·상점방에서는 대기해요. 계약 없이 출발해도 돼요.</p><div id="contract-cards" class="contract-cards"></div></section>
         </div>
       </div>
-      <div id="map-screen" class="overlay modal" hidden><div class="world-panel"><div class="map-heading"><div><span class="eyebrow">POCKET SPACE · ROUTE MAP</span><h2 id="map-title">아공간 지도</h2></div><button id="map-close" aria-label="지도 닫기">닫기 M</button></div><p id="map-instruction"></p><div id="world-map" class="world-map" aria-label="분기 구역 지도"></div><div class="map-legend">⚔ 전투　◆ 정예　✦ 보물　♥ 휴식　¤ 상점　♛ 보스</div><small id="seed-label"></small></div></div>
+      <div id="map-screen" class="overlay modal" hidden><div class="world-panel"><div class="map-heading"><div><span class="eyebrow">POCKET SPACE · ROUTE MAP</span><h2 id="map-title">아공간 지도</h2></div><button id="map-close" aria-label="지도 닫기">닫기 M</button></div><p id="map-instruction"></p><div id="act-track" class="act-track"></div><div id="world-map" class="world-map" aria-label="분기 구역 지도"></div><div class="map-legend">⚔ 전투　◆ 정예　✦ 보물　♥ 휴식　¤ 상점　♛ 보스</div><small id="seed-label"></small></div></div>
       <div id="end-screen" class="overlay modal" hidden><div class="panel"><span id="end-kicker" class="eyebrow"></span><h2 id="end-title"></h2><p id="end-summary"></p><p id="end-economy"></p><button class="restart primary">새 맵으로 도전</button><button class="replay secondary">같은 시드로 재도전</button></div></div>
       <noscript><div class="no-script">이 게임을 실행하려면 JavaScript를 켜 주세요.</div></noscript>
     </section>
@@ -60,6 +60,6 @@
   <script>
     if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then(rs=>Promise.all(rs.map(r=>r.unregister()))).catch(()=>{});
   </script>
-  <script type="module" src="./platformer.js?v=41"></script>
+  <script type="module" src="./platformer.js?v=42"></script>
 </body>
 </html>

@@ -13,7 +13,7 @@ const close=(a,b)=>assert.ok(Math.abs(a-b)<1e-8,`${a} != ${b}`);
 
 test('v41 guarantees reachable optional shop routes and a supported first-room merchant',()=>{
   for(let seed=0;seed<100;seed++){
-    const w=generateWorld(seed);assert.equal(w.version,41);
+    const w=generateWorld(seed);assert.equal(w.version,42);
     assert.ok(w.nodes.find(n=>n.id===w.startId).next.some(id=>w.nodes.find(n=>n.id===id).type==='shop'));
     for(const depth of [1,3,5])assert.equal(w.nodes.filter(n=>n.depth===depth&&n.type==='shop').length,1);
     for(const node of w.nodes.filter(n=>n.type==='shop'||n.depth===0)){

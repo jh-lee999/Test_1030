@@ -1,10 +1,10 @@
-import {createGame,tick,chooseReward,enterNextRoom,chooseRoute,routeOptions,interactRoom,grantItem,rerollReward,rewardRerollCost,canOpenShop,openShop,buyShopItem,rerollShop,sellShopItem,buyShopHealing,buySealedBag,acceptContract,notifyGame,STAGES} from './platformer-engine.js?v=41';
-import {renderGame} from './platformer-renderer.js?v=41';
-import {BIOMES,ROOM_TYPES} from './platformer-world.js?v=41';
-import {CONTRACTS,HEAL_PRICE,BAG_PRICE,basePrice,offerPrice,salePrice,shopRerollCost,contractLabel} from './platformer-economy.js?v=41';
+import {createGame,tick,chooseReward,enterNextRoom,chooseRoute,routeOptions,interactRoom,chooseGoldReward,cashReward,grantItem,rerollReward,rewardRerollCost,canOpenShop,openShop,buyShopItem,rerollShop,sellShopItem,buyShopHealing,buySealedBag,acceptContract,notifyGame,STAGES} from './platformer-engine.js?v=42';
+import {renderGame} from './platformer-renderer.js?v=42';
+import {BIOMES,ROOM_TYPES,ACTS,ROOMS_PER_ACT} from './platformer-world.js?v=42';
+import {CONTRACTS,HEAL_PRICE,BAG_PRICE,basePrice,offerPrice,salePrice,shopRerollCost,contractLabel} from './platformer-economy.js?v=42';
 import {BUTTER_ORIGINAL,BUTTER_POSTER} from './butter-original-motion.js';
 import {STAGE_ART} from './assets/trickcal-stage37/atlas.js';
-import {ITEMS,INSCRIPTIONS,RARITIES,statRows,itemChanges,gradeSources,lowerPower,upperPower,applyBuildItem,removeBuildItem} from './platformer-build.js?v=41';
+import {ITEMS,INSCRIPTIONS,RARITIES,statRows,itemChanges,gradeSources,lowerPower,upperPower,applyBuildItem,removeBuildItem} from './platformer-build.js?v=42';
 const $=id=>document.getElementById(id),canvas=$('game-canvas'),ctx=canvas.getContext('2d');
 let game=createGame(),started=false,ready=false,last=0,accumulator=0,shownPhase='',shownRoom=-1,buildReturnPhase='playing';
 let shopTab='goods',sellSelection=null;
@@ -26,6 +26,7 @@ function closeBuild(){if(!['build','shop'].includes(game.phase))return;game.phas
 function toggleBuild(){if(!started)return;if(game.phase==='build')closeBuild();else if(['playing','reward','shop'].includes(game.phase)){buildReturnPhase=game.phase;game.phase='build';clearInput();syncUI();$('build-close').focus({preventScroll:true});}}
 function shop(){if(!started)return;if(game.phase==='shop'){closeBuild();return;}if(openShop(game)){clearInput();syncUI();$('shop-close').focus({preventScroll:true});}else notifyGame(game,'상인 근처에서 F / B로 거래해요. 첫 방 출구와 지도 속 ¤ 상점방에서 만날 수 있어요.');}
 $('build-button').addEventListener('click',toggleBuild);$('build-close').addEventListener('click',closeBuild);$('shop-open').addEventListener('click',shop);$('shop-close').addEventListener('click',closeBuild);
+$('reward-gold').addEventListener('click',()=>{if(chooseGoldReward(game)){clearInput();syncUI();focusGame();}});
 $('reward-build').addEventListener('click',toggleBuild);
 $('reward-reroll').addEventListener('click',()=>{if(rerollReward(game))drawRewards();});
 $('shop-reroll').addEventListener('click',()=>{if(rerollShop(game))drawShop();});
@@ -60,7 +61,7 @@ function syncUI(){
   $('skill-label').textContent=game.player.skillTime>0?'무적':game.player.skillCooldown>0?`${Math.ceil(game.player.skillCooldown)}s`:'준비';
   $('toast').textContent=game.noticeTime>0?game.notice:'';
   $('contract-hud').hidden=!started||!game.contract;$('contract-hud').textContent=contractLabel(game);$('contract-hud').dataset.status=game.contract?.status||'';
-  if(shownRoom!==game.room.index){shownRoom=game.room.index;$('room-label').textContent=`0${shownRoom+1} / 0${STAGES}`;$('route').replaceChildren(...Array.from({length:STAGES},(_,i)=>{const dot=document.createElement('i');dot.className='route-dot '+(i===shownRoom?'active':i<shownRoom?'done':'');return dot;}));}
+  if(shownRoom!==game.room.index){shownRoom=game.room.index;$('room-label').textContent=`${game.room.act+1}막 · ${ACTS[game.room.act].name} ${game.room.local+1}/7`;$('route').replaceChildren(...Array.from({length:ROOMS_PER_ACT},(_,i)=>{const dot=document.createElement('i');dot.className='route-dot '+(i===game.room.local?'active':i<game.room.local?'done':'');return dot;}));}
   if(shownPhase!==game.phase){shownPhase=game.phase;document.body.dataset.phase=game.phase;
     if(game.phase==='map'||game.phase==='route'){clearInput();drawWorldMap();if(game.phase==='route')$('world-map').querySelector('button:not(:disabled)')?.focus({preventScroll:true});}
     if(game.phase==='reward'){clearInput();drawRewards();$('reward-cards').firstElementChild?.focus({preventScroll:true});}
@@ -83,6 +84,8 @@ function drawRewards(){
   $('reward-cards').replaceChildren(...game.choices.map(id=>itemCard(id,()=>{if(chooseReward(game,id)){clearInput();syncUI();focusGame();}})));
   $('reward-info').textContent=game.room.cleanBonus?'체력 손실 없이 클리어! +8 G · 왕새총 쿨타임 3초 회복':'같은 아이템도 누적돼요. 학년 아이템은 항상 한 종류 이상 등장해요.';
   if(game.room.contractResult)$('reward-info').textContent+=' · '+game.room.contractResult;
+  $('reward-gold').hidden=['boss','treasure'].includes(game.room.type);$('reward-gold').textContent=`아이템 대신 ${cashReward(game)} G`;
+  if(game.room.type==='boss')$('reward-info').textContent=`지역 보스 격파! 영웅 아이템 하나 선택 · ${game.room.act<2?'다음 지역으로 계속':'마지막 출구로 탈출'}`;
   const n=game.room.rewardRerolls||0;$('reward-reroll').textContent=`다시 뽑기 ${rewardRerollCost(game)} G (${n}/2)`;$('reward-reroll').disabled=n>=2||game.coins<rewardRerollCost(game);$('reward-coins').textContent=`보유 ${game.coins} G · ${game.room.merchant?'출구 근처 상인에게 F / B':'지도에서 ¤ 상점방 선택 가능'}`;
 }
 function drawBuild(){
@@ -126,13 +129,14 @@ function drawContracts(){
   $('contract-cards').replaceChildren(...Object.entries(CONTRACTS).map(([id,c])=>{const card=document.createElement('article');card.className='contract-card';const title=document.createElement('h3'),desc=document.createElement('p'),button=document.createElement('button');title.textContent=c.name;desc.textContent=c.description;button.textContent=busy?'진행 중인 계약이 있어요':'무료로 계약 수락';button.disabled=busy;button.dataset.contract=id;button.addEventListener('click',()=>{if(acceptContract(game,id))drawShop();});card.append(title,desc,button);return card;}));
 }
 function drawWorldMap(){
-  const selecting=game.phase==='route',available=new Set(selecting?routeOptions(game).map(n=>n.id):[]),world=game.world;
-  $('map-title').textContent=selecting?'다음에는 어디로 갈까?':'아공간 지도';$('map-instruction').textContent=selecting?'빛나는 방을 선택하세요. 선택하지 않은 갈래는 이번 여정에서 지나갑니다.':'출구에서 다음 갈림길을 선택할 수 있어요. 지도 확인 중에는 전투가 멈춰요.';
+  const selecting=game.phase==='route',available=new Set(selecting?routeOptions(game).map(n=>n.id):[]),world=game.world,displayAct=Math.min(2,Math.floor((selecting?routeOptions(game)[0]?.depth??game.room.index:game.room.index)/7)),nodes=world.nodes.filter(n=>n.act===displayAct);
+  $('map-title').textContent=`${displayAct+1}막 · ${ACTS[displayAct].name}`;$('map-instruction').textContent=selecting?'빛나는 방을 선택하세요. 선택하지 않은 갈래는 이번 여정에서 지나갑니다.':'출구에서 다음 갈림길을 선택할 수 있어요. 지도 확인 중에는 전투가 멈춰요.';
+  $('act-track').replaceChildren(...ACTS.map((a,i)=>{const tag=document.createElement('span');tag.className=i===displayAct?'active':'';tag.textContent=`${i+1}. ${a.name}${i<displayAct?' ✓':''}`;return tag;}));
   $('map-close').hidden=selecting;$('seed-label').textContent=`SEED ${game.seedLabel} · 생성 규칙 v${world.version}`;
-  const positions=new Map(world.nodes.map(n=>{const layer=world.nodes.filter(v=>v.depth===n.depth);return[n.id,{x:6+n.depth/(STAGES-1)*88,y:layer.length===1?50:18+n.lane/(layer.length-1)*64}];}));
+  const positions=new Map(nodes.map(n=>{const layer=world.nodes.filter(v=>v.depth===n.depth);return[n.id,{x:6+n.local/(ROOMS_PER_ACT-1)*88,y:layer.length===1?50:18+n.lane/(layer.length-1)*64}];}));
   const map=$('world-map');map.replaceChildren();const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 1000 300');svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-hidden','true');
-  for(const node of world.nodes)for(const id of node.next){const a=positions.get(node.id),b=positions.get(id),line=document.createElementNS(svg.namespaceURI,'line');for(const [key,value]of Object.entries({x1:a.x*10,y1:a.y*3,x2:b.x*10,y2:b.y*3}))line.setAttribute(key,value);line.setAttribute('class',node.id===game.currentNodeId&&available.has(id)?'available-edge':node.completed&&world.nodes.find(n=>n.id===id).visited?'visited-edge':'');svg.append(line);}map.append(svg);
-  for(const node of world.nodes){const pos=positions.get(node.id),type=ROOM_TYPES[node.type],button=document.createElement('button');button.className='map-node'+(node.visited?' visited':'')+(node.id===game.currentNodeId?' current':'')+(available.has(node.id)?' available':'');button.style.left=`${pos.x}%`;button.style.top=`${pos.y}%`;button.style.setProperty('--node-color',type.color);button.disabled=!available.has(node.id);button.dataset.node=node.id;button.setAttribute('aria-label',`${node.depth+1}단계 ${type.name}, ${BIOMES[node.biome].name}, ${type.reward}`);button.title=`${BIOMES[node.biome].name} · ${type.reward}`;button.innerHTML=`<b>${type.symbol} ${type.name}</b><small>${BIOMES[node.biome].name}</small>`;button.addEventListener('click',()=>{if(chooseRoute(game,node.id)){clearInput();syncUI();focusGame();}});map.append(button);}
+  for(const node of nodes)for(const id of node.next){if(!positions.has(id))continue;const a=positions.get(node.id),b=positions.get(id),line=document.createElementNS(svg.namespaceURI,'line');for(const [key,value]of Object.entries({x1:a.x*10,y1:a.y*3,x2:b.x*10,y2:b.y*3}))line.setAttribute(key,value);line.setAttribute('class',node.id===game.currentNodeId&&available.has(id)?'available-edge':node.completed&&world.nodes.find(n=>n.id===id).visited?'visited-edge':'');svg.append(line);}map.append(svg);
+  for(const node of nodes){const pos=positions.get(node.id),type=ROOM_TYPES[node.type],button=document.createElement('button');button.className='map-node'+(node.visited?' visited':'')+(node.id===game.currentNodeId?' current':'')+(available.has(node.id)?' available':'');button.style.left=`${pos.x}%`;button.style.top=`${pos.y}%`;button.style.setProperty('--node-color',type.color);button.disabled=!available.has(node.id);button.dataset.node=node.id;button.setAttribute('aria-label',`${node.depth+1}단계 ${type.name}, ${BIOMES[node.biome].name}, ${type.reward}`);button.title=`${BIOMES[node.biome].name} · ${type.reward}`;button.innerHTML=`<b>${type.symbol} ${type.name}</b><small>${node.type==='boss'?ACTS[node.act].boss:node.rewardKind==='gold'?'자금 보상 ↑':BIOMES[node.biome].name}</small>`;button.addEventListener('click',()=>{if(chooseRoute(game,node.id)){clearInput();syncUI();focusGame();}});map.append(button);}
 }
 function frame(ms){
   const dt=Math.min(.1,(ms-(last||ms))/1000);last=ms;
@@ -150,4 +154,4 @@ async function boot(){
 }
 requestAnimationFrame(frame);boot().catch(error=>{$('load-status').textContent='준비 중 오류가 났어요. 새로고침해 주세요.';console.error(error);});
 // Only the explicit local test URL exposes fixtures; normal play has no debug UI.
-if(new URLSearchParams(location.search).get('test')==='1')window.__platformer37={get game(){return game;},start,tick,chooseReward,enterNextRoom,chooseRoute,interactRoom,grantItem,rerollReward,openShop,buyShopItem,rerollShop,sellShopItem,buyShopHealing,buySealedBag,acceptContract,images,render:()=>renderGame(ctx,game,images,{started:true,reducedMotion:true})};
+if(new URLSearchParams(location.search).get('test')==='1')window.__platformer37={get game(){return game;},start,tick,chooseReward,enterNextRoom,chooseRoute,interactRoom,chooseGoldReward,cashReward,grantItem,rerollReward,openShop,buyShopItem,rerollShop,sellShopItem,buyShopHealing,buySealedBag,acceptContract,images,render:()=>renderGame(ctx,game,images,{started:true,reducedMotion:true})};

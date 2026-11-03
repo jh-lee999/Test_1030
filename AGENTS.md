@@ -1,5 +1,21 @@
 # Project instructions
 
+## Active v42 campaign (supersedes v41 single-act topology)
+
+WORLD_VERSION 42 has 3 acts, 7 route depths each (STAGES=21). Bosses at 6/13
+lead onward; ONLY the exit at depth 20 wins. Keep ACTS biome pools coherent.
+Map shows one act at a time and switches to the next act at a guardian gate.
+Inventory, money, coupons and pending contracts persist across acts.
+Each act keeps its own shop/rest choices. Bosses reuse existing source art with
+new fan shockwave / archer spread / ghost radial patterns and half-HP pressure.
+Preserve windup for an attack already in progress when crossing half HP.
+Hazards warn for .9 seconds before .4 seconds of damage, stop in menus and
+after clearing, and can be avoided by jumping/dashing. Do not change physics.
+Boss rewards guarantee three epic choices even on reroll; no cash alternative.
+Normal rewards allow a once-only cash alternative, higher on gold-marked routes.
+Run campaign42 tests, all existing required tests and the 21-room browser loop.
+See docs/campaign42.md for scope and remaining limits.
+
 ## Active v41 economy and contracts (supersedes v39 remote shop access)
 
 Shops are physical merchants: first-room exit and optional shop rooms at depths
