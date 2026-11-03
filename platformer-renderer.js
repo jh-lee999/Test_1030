@@ -1,5 +1,5 @@
-import {VIEW,FLOOR,HERO_SIZE,heroPose,clamp} from './platformer-engine.js?v=40';
-import {BIOMES,ROOM_TYPES} from './platformer-world.js?v=38';
+import {VIEW,FLOOR,HERO_SIZE,heroPose,clamp} from './platformer-engine.js?v=41';
+import {BIOMES,ROOM_TYPES} from './platformer-world.js?v=41';
 import {drawButterMotion,selectButterFrame} from './butter-original-motion.js';
 import {STAGE_ART} from './assets/trickcal-stage37/atlas.js';
 const TAU=Math.PI*2;
@@ -19,6 +19,7 @@ function roomOverview(ctx,g){
   const mapX=v=>x+v/g.room.width*w,mapY=v=>y+(v-280)/380*h;
   for(const p of g.room.platforms){ctx.fillStyle=p.optional?'#b4a7d2':'#b7c99a';ctx.fillRect(mapX(p.x),mapY(p.y),Math.max(2,p.w/g.room.width*w),3);}
   for(const e of g.room.enemies)if(e.hp>0)ellipse(ctx,mapX(e.x),mapY(e.y)-4,2,2,'#ed9a95');
+  if(g.room.merchant)ellipse(ctx,mapX(g.room.merchant.x),mapY(g.room.merchant.y)-7,4,4,'#ffd27b');
   ellipse(ctx,mapX(g.room.exit.x),mapY(g.room.exit.y)-4,3,3,'#cfc1ef');ellipse(ctx,mapX(g.player.x),mapY(g.player.y)-4,3,3,'#ffed9d');
 }
 function monster(ctx,e,images){
@@ -44,6 +45,22 @@ function monster(ctx,e,images){
       if(e.type==='fan'){ctx.fillStyle='#fa895343';ctx.fillRect(e.facing>0?e.x:e.x-95,e.y-5,95,5);}
     }
   }
+}
+function merchant(ctx,g,images){
+  const m=g.room.merchant;if(!m)return;
+  const open=g.room.cleared&&g.room.rewardTaken,near=g.player.grounded&&Math.abs(g.player.x-m.x)<=100&&Math.abs(g.player.y-m.y)<=40;
+  // Friendly reuse of an intact fan Idle clip, not a newly sourced NPC rig.
+  monster(ctx,{type:'fan',x:m.x-38,y:m.y-24,hp:1,maxHp:1,h:94,facing:g.player.x>=m.x?1:-1,clock:g.time,mode:'idle',flash:0},images);
+  ctx.save();ctx.translate(m.x,m.y);
+  for(const x of [-64,64])rounded(ctx,x-3,-139,6,139,2,'#765a40');
+  rounded(ctx,-76,-148,152,26,7,'#dcc38c');
+  for(let i=0;i<6;i++){ctx.fillStyle=i%2?'#8b9c6a':'#efdbac';ctx.fillRect(-72+i*24,-144,24,28);}
+  rounded(ctx,-64,-42,128,42,5,'#866a45');rounded(ctx,-69,-48,138,10,3,'#d6b782');
+  rounded(ctx,20,-66,24,17,4,'#e8c597');text(ctx,'✦',32,-52,13,'#7a5938');
+  text(ctx,'주머니 상인',0,-166,15,'#ffdfa1');
+  text(ctx,open?(near?'F / B · 거래하기':'상품 · 회복 · 계약'):'전투 보상 선택 후 개점',0,-190,13,open?'#ffedb4':'#c1c7b0');
+  if(open&&near){rounded(ctx,-30,-34,60,25,5,'#493c2c');text(ctx,'상점',0,-16,13,'#ffe1a3');}
+  ctx.restore();
 }
 export function renderGame(ctx,g,images,{started=true,reducedMotion=false}={}){
   const W=VIEW.width,H=VIEW.height,room=g.room,p=g.player,time=g.time,theme=BIOMES[room.biome]||BIOMES.grove;
@@ -71,6 +88,7 @@ export function renderGame(ctx,g,images,{started=true,reducedMotion=false}={}){
   }
   for(const item of room.pickups)if(!item.taken){const y=item.y+(reducedMotion?0:Math.sin(time*3+item.x)*3);ellipse(ctx,item.x,item.y+23,12,3,'#12251d44');if(item.kind==='coin'){ellipse(ctx,item.x,y,9,12,'#f6d680');ellipse(ctx,item.x,y,6,8,'#b79347');text(ctx,'✦',item.x,y+5,15,'#fff4b4');}else{text(ctx,'♥',item.x,y+8,28,'#f6b1a8');}}
   const exit=room.exit,open=room.cleared&&room.rewardTaken;
+  merchant(ctx,g,images);
   if(room.shrine){const s=room.shrine;ctx.save();ctx.translate(s.x,s.y);if(s.kind==='treasure'){rounded(ctx,-28,-34,56,34,5,s.used?'#786d4b':'#c7a65d');rounded(ctx,-28,-43,56,17,6,'#e3c57e');ctx.fillStyle='#75572e';ctx.fillRect(-4,-28,8,10);}else{ellipse(ctx,0,-10,36,12,'#a4b68a');ellipse(ctx,0,-12,26,7,s.used?'#849d85':'#bce5bf');text(ctx,'♥',0,-30,28,'#c7e9b8');}if(!s.used)text(ctx,`F / ↓ ${s.kind==='rest'?'40% 회복':'보물 열기'}`,0,-65,14);else text(ctx,'이용 완료',0,-60,12,'#c0c7a5');ctx.restore();}
   ctx.save();ctx.translate(exit.x,exit.y);ctx.fillStyle='#263d30';ctx.beginPath();ctx.roundRect(-44,-148,88,148,[44,44,2,2]);ctx.fill();ctx.lineWidth=7;ctx.strokeStyle=open?'#e5d891':'#6e8667';ctx.stroke();
   if(open){const aura=ctx.createRadialGradient(0,-75,5,0,-75,90);aura.addColorStop(0,'#fff6b1bb');aura.addColorStop(1,'#b3e19000');ctx.fillStyle=aura;ctx.fillRect(-85,-165,170,170);text(ctx,'F / ↓',0,-65,16);text(ctx,room.type==='boss'?'탈출':'경로 선택',0,-40,13);}

@@ -47,8 +47,8 @@ test('reward rerolls cost escalating coins, preserve old stats and cannot duplic
   const id=g.choices[0];assert.equal(chooseReward(g,id),true);assert.equal(chooseReward(g,id),false);assert.equal(g.stats.itemsTaken,1);assert.equal(rerollReward(g),false);
 });
 test('shops require room completion, spend coins exactly once, stack and keep map/loot RNG independent',()=>{
-  const g=createGame('shop'),control=createGame('shop');assert.equal(openShop(g),false);g.room.cleared=true;assert.equal(openShop(g),false);g.room.rewardTaken=true;assert.equal(openShop(g),true);
-  const id=g.room.shop.stock[0].id,price=RARITIES[ITEMS[id].rarity].price;assert.equal(buyShopItem(g,0),false);g.coins=200;assert.equal(buyShopItem(g,0),true);assert.equal(g.coins,200-price);assert.equal(buyShopItem(g,0),false);assert.equal(g.stats.inventory[id],1);
+  const g=createGame('shop'),control=createGame('shop');assert.equal(openShop(g),false);g.room.cleared=true;assert.equal(openShop(g),false);g.room.rewardTaken=true;Object.assign(g.player,{x:g.room.merchant.x,y:g.room.merchant.y,grounded:true});assert.equal(openShop(g),true);
+  const id=g.room.shop.stock[0].id,price=Math.ceil(RARITIES[ITEMS[id].rarity].price*.75);assert.equal(buyShopItem(g,0),false);g.coins=200;assert.equal(buyShopItem(g,0),true);assert.equal(g.coins,200-price);assert.equal(buyShopItem(g,0),false);assert.equal(g.stats.inventory[id],1);
   g.room.shop.stock[1]={id,sold:false};assert.equal(buyShopItem(g,1),true);assert.equal(g.stats.inventory[id],2);assert.equal(buyShopItem(g,99),false);
   const old=g.room.shop.stock.map(o=>o.id);assert.equal(rerollShop(g),true);assert.ok(g.room.shop.stock.every(o=>!old.includes(o.id)));assert.equal(rerollShop(g),true);assert.equal(rerollShop(g),true);assert.equal(rerollShop(g),false);
   assert.equal(g.rewardRandom(),control.rewardRandom());assert.equal(g.random(),control.random());assert.deepEqual(g.world,control.world);

@@ -1,11 +1,12 @@
 import {PHYSICS,approach,landBody} from './platformer-physics.js?v=38';
 
-export const WORLD_VERSION=38,STAGES=7,FLOOR=634;
+export const WORLD_VERSION=41,STAGES=7,FLOOR=634;
 export const ROOM_TYPES={
   combat:{name:'전투',symbol:'⚔',color:'#e9c989',reward:'아이템 1개'},
   elite:{name:'정예',symbol:'◆',color:'#f2a39a',reward:'학년 아이템 선택지 보장'},
   treasure:{name:'보물',symbol:'✦',color:'#f5dc8f',reward:'적 없이 아이템 1개'},
   rest:{name:'휴식',symbol:'♥',color:'#a8d9b0',reward:'최대 체력의 40% 회복'},
+  shop:{name:'상점',symbol:'¤',color:'#f3cf83',reward:'상품 · 판매 · 회복 · 계약 (이용 선택)'},
   boss:{name:'보스',symbol:'♛',color:'#d3b0f2',reward:'아공간 탈출'},
 };
 export const BIOMES={
@@ -29,16 +30,16 @@ export function seededRandom(seed){let n=seedNumber(seed);return()=>{n+=0x6D2B79
 // combat timing / item rolls from changing future geometry.
 export function generateWorld(seed){
   const root=seedNumber(seed),rng=seededRandom(`${root}:graph:v${WORLD_VERSION}`),nodes=[],layers=[];
-  const types=[['combat'],['combat','treasure','combat'],['combat','elite','combat'],['rest','treasure'],['combat','elite','combat'],['rest','elite','combat'],['boss']];
+  const types=[['combat'],['treasure','combat','shop'],['combat','elite','combat'],['rest','shop'],['combat','elite','combat'],['rest','elite','shop'],['boss']];
   for(let depth=0;depth<STAGES;depth++){
-    const count=depth===0||depth===STAGES-1?1:depth===3?2:integer(rng,2,3),layer=[];
+    const count=depth===0||depth===STAGES-1?1:depth===3?2:[1,5].includes(depth)?3:integer(rng,2,3),layer=[];
     const pool=[...types[depth]];if(rng()>.5)pool.reverse();
     for(let lane=0;lane<count;lane++){
       const id=`${depth}:${lane}`,node={id,depth,lane,type:pool[lane],biome:choose(rng,Object.keys(BIOMES)),seed:seedNumber(`${root}:room:${id}`),next:[],visited:false,completed:false};nodes.push(node);layer.push(node);
     }layers.push(layer);
   }
   // Preserve useful alternatives even when a layer has only two nodes.
-  layers[1][0].type='treasure';layers[1][1].type='combat';layers[2][0].type='elite';layers[3][0].type='rest';layers[3][1].type='treasure';layers[5][0].type='rest';layers[5][1].type='elite';
+  layers[1][0].type='treasure';layers[1][1].type='combat';layers[1][2].type='shop';layers[2][0].type='elite';layers[3][0].type='rest';layers[3][1].type='shop';layers[5][0].type='rest';layers[5][1].type='elite';layers[5][2].type='shop';
   for(let depth=0;depth<STAGES-1;depth++){
     const from=layers[depth],to=layers[depth+1],link=(a,b)=>{if(!a.next.includes(b.id))a.next.push(b.id);};
     for(const a of from){const center=Math.round(a.lane/Math.max(1,from.length-1)*(to.length-1));link(a,to[center]);if(to.length>1)link(a,to[clamp(center+(center===to.length-1?-1:1),0,to.length-1)]);}
@@ -87,11 +88,12 @@ export function validateRoom(room){
   for(const e of room.enemies){if(!reachable.has(e.home.id)||!contains(e.home,e.x,e.y,e.w/2+8))errors.push(`unreachable enemy ${e.id}`);if(Math.abs(e.x-room.spawn.x)<340)errors.push('spawn ambush');}
   for(const item of room.pickups)if(!reachable.has(item.platformId)||!contains(byId.get(item.platformId),item.x,item.y+26,20))errors.push('unreachable pickup');
   if(room.shrine&&(!reachable.has(room.shrine.platformId)||!contains(byId.get(room.shrine.platformId),room.shrine.x,room.shrine.y,30)))errors.push('unreachable shrine');
+  if(room.merchant&&(!reachable.has(room.merchant.platformId)||!contains(byId.get(room.merchant.platformId),room.merchant.x,room.merchant.y,60)))errors.push('unreachable merchant');
   return{valid:errors.length===0,errors,reachable:[...reachable],exitReachable:[...exitReachable],witnesses,returnWitnesses};
 }
 
 function buildRoom(node,attempt=0,simple=false){
-  const rng=seededRandom(`${node.seed}:layout:${attempt}`),profile=BIOMES[node.biome],event=['rest','treasure'].includes(node.type),boss=node.type==='boss';
+  const rng=seededRandom(`${node.seed}:layout:${attempt}`),profile=BIOMES[node.biome],event=['rest','treasure','shop'].includes(node.type),boss=node.type==='boss';
   const platforms=[],add=(x,y,w,ground=false,optional=false)=>{const p={id:`p${platforms.length}`,x:Math.round(x),y:Math.round(y),w:Math.round(w),ground,optional,material:profile.material};platforms.push(p);return p;};
   const first=add(0,FLOOR,480,true),main=[first];
   if(boss){first.w=integer(rng,1850,2250);main.push(first);add(360,530,240);add(first.w-650,530,250);add(430,430,220);}
@@ -114,9 +116,11 @@ function buildRoom(node,attempt=0,simple=false){
   if(boss){addEnemy('ghost',first);enemies[0].x=width*.72;}
   else if(!event){for(const p of main.slice(1,-1))if(rng()<.76)addEnemy(rng()<.35?'archer':'fan',p);for(const p of platforms.filter(p=>p.optional))if(rng()<.55)addEnemy('archer',p);if(!enemies.length)addEnemy('fan',main[1]);}
   if(!boss)for(const p of platforms.slice(1,-1))if(rng()<.6||p.optional)pickups.push({x:p.x+30,y:p.y-26,platformId:p.id,kind:rng()<.16?'heart':'coin',taken:false});
-  const shrinePlatform=main[Math.floor(main.length/2)],shrine=event?{kind:node.type,x:shrinePlatform.x+shrinePlatform.w/2,y:shrinePlatform.y,platformId:shrinePlatform.id,used:false}:null;
+  const shrinePlatform=main[Math.floor(main.length/2)],shrine=['rest','treasure'].includes(node.type)?{kind:node.type,x:shrinePlatform.x+shrinePlatform.w/2,y:shrinePlatform.y,platformId:shrinePlatform.id,used:false}:null;
+  const merchantPlatform=node.type==='shop'?shrinePlatform:node.depth===0?last:null;
+  const merchant=merchantPlatform?{x:node.type==='shop'?merchantPlatform.x+merchantPlatform.w/2:exit.x-145,y:merchantPlatform.y,platformId:merchantPlatform.id}:null;
   const decorations=platforms.map(p=>({kind:profile.prop,x:p.x+Math.min(p.w-25,integer(rng,25,90)),y:p.y,variant:integer(rng,0,3)}));
-  return{nodeId:node.id,index:node.depth,type:node.type,biome:node.biome,seed:node.seed,width,platforms,spawn,enemies,pickups,exit,shrine,decorations,cleared:event,rewardTaken:false,background:profile.background,title:`${profile.name} · ${ROOM_TYPES[node.type].name}`,generation:{attempt,fallback:simple}};
+  return{nodeId:node.id,index:node.depth,type:node.type,biome:node.biome,seed:node.seed,width,platforms,spawn,enemies,pickups,exit,shrine,merchant,decorations,cleared:event,rewardTaken:node.type==='shop',background:profile.background,title:`${profile.name} · ${ROOM_TYPES[node.type].name}`,generation:{attempt,fallback:simple}};
 }
 export function generateRoom(node){
   for(let attempt=0;attempt<8;attempt++){const room=buildRoom(node,attempt),validation=validateRoom(room);if(validation.valid){room.navigation=validation;return room;}}

@@ -1,18 +1,20 @@
-import {createGame,tick,chooseReward,enterNextRoom,chooseRoute,routeOptions,interactRoom,grantItem,rerollReward,rewardRerollCost,openShop,buyShopItem,rerollShop,notifyGame,STAGES} from './platformer-engine.js?v=40';
-import {renderGame} from './platformer-renderer.js?v=40';
-import {BIOMES,ROOM_TYPES} from './platformer-world.js?v=38';
+import {createGame,tick,chooseReward,enterNextRoom,chooseRoute,routeOptions,interactRoom,grantItem,rerollReward,rewardRerollCost,canOpenShop,openShop,buyShopItem,rerollShop,sellShopItem,buyShopHealing,buySealedBag,acceptContract,notifyGame,STAGES} from './platformer-engine.js?v=41';
+import {renderGame} from './platformer-renderer.js?v=41';
+import {BIOMES,ROOM_TYPES} from './platformer-world.js?v=41';
+import {CONTRACTS,HEAL_PRICE,BAG_PRICE,basePrice,offerPrice,salePrice,shopRerollCost,contractLabel} from './platformer-economy.js?v=41';
 import {BUTTER_ORIGINAL,BUTTER_POSTER} from './butter-original-motion.js';
 import {STAGE_ART} from './assets/trickcal-stage37/atlas.js';
-import {ITEMS,INSCRIPTIONS,RARITIES,statRows,itemChanges,gradeSources,lowerPower,upperPower,applyBuildItem} from './platformer-build.js?v=40';
+import {ITEMS,INSCRIPTIONS,RARITIES,statRows,itemChanges,gradeSources,lowerPower,upperPower,applyBuildItem,removeBuildItem} from './platformer-build.js?v=41';
 const $=id=>document.getElementById(id),canvas=$('game-canvas'),ctx=canvas.getContext('2d');
 let game=createGame(),started=false,ready=false,last=0,accumulator=0,shownPhase='',shownRoom=-1,buildReturnPhase='playing';
+let shopTab='goods',sellSelection=null;
 const urlSeed=new URLSearchParams(location.search).get('seed');if(urlSeed)$('seed-input').value=urlSeed.slice(0,48);
 const keys=new Set(),touch=new Map(),pending=new Set(),images={butter:{},monsters:{fan:{},archer:{},ghost:{}},backgrounds:{}},reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const bindings={KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right',Space:'jump',KeyW:'jump',ArrowUp:'jump',KeyJ:'attack',KeyX:'attack',ShiftLeft:'dash',ShiftRight:'dash',KeyK:'dash',KeyE:'skill',KeyF:'interact',ArrowDown:'interact',KeyS:'interact'};
 function input(){const value={};for(const key of keys){const action=bindings[key]||key;value[action]=true;}for(const action of touch.values())value[action]=true;for(const action of pending)value[action+'Pressed']=true;value.jumpReleased=pending.has('jumpRelease');return value;}
 function clearInput(){keys.clear();touch.clear();pending.clear();document.querySelectorAll('[data-control]').forEach(b=>b.classList.remove('pressed'));if(game)game.previous={};}
 function focusGame(){canvas.focus({preventScroll:true});}
-function start(seed=$('seed-input').value.trim()||Date.now()){if(!ready)return;clearInput();game=createGame(seed);started=true;shownPhase='';shownRoom=-1;accumulator=0;const url=new URL(location.href);url.searchParams.set('seed',game.seedLabel);history.replaceState(null,'',url);syncUI();focusGame();}
+function start(seed=$('seed-input').value.trim()||Date.now()){if(!ready)return;clearInput();game=createGame(seed);shopTab='goods';sellSelection=null;started=true;shownPhase='';shownRoom=-1;accumulator=0;const url=new URL(location.href);url.searchParams.set('seed',game.seedLabel);history.replaceState(null,'',url);syncUI();focusGame();}
 function pause(){if(!started||game.phase!=='playing')return;game.phase='paused';clearInput();syncUI();$('resume-button').focus({preventScroll:true});}
 function resume(){if(game.phase!=='paused')return;game.phase='playing';clearInput();syncUI();focusGame();}
 $('start-button').addEventListener('click',()=>start());$('pause-button').addEventListener('click',pause);$('resume-button').addEventListener('click',resume);
@@ -22,11 +24,16 @@ function toggleMap(){if(!started)return;if(game.phase==='map'){game.phase='playi
 $('map-button').addEventListener('click',toggleMap);$('map-close').addEventListener('click',toggleMap);
 function closeBuild(){if(!['build','shop'].includes(game.phase))return;game.phase=game.phase==='build'?buildReturnPhase:'playing';clearInput();syncUI();if(game.phase==='playing')focusGame();else document.querySelector('.overlay:not([hidden]) button:not(:disabled)')?.focus({preventScroll:true});}
 function toggleBuild(){if(!started)return;if(game.phase==='build')closeBuild();else if(['playing','reward','shop'].includes(game.phase)){buildReturnPhase=game.phase;game.phase='build';clearInput();syncUI();$('build-close').focus({preventScroll:true});}}
-function shop(){if(!started)return;if(game.phase==='shop'){closeBuild();return;}if(openShop(game)){clearInput();syncUI();$('shop-close').focus({preventScroll:true});}else notifyGame(game,'상점은 이 방의 전투와 보물·쉼터 이용을 마친 뒤 열려요.');}
+function shop(){if(!started)return;if(game.phase==='shop'){closeBuild();return;}if(openShop(game)){clearInput();syncUI();$('shop-close').focus({preventScroll:true});}else notifyGame(game,'상인 근처에서 F / B로 거래해요. 첫 방 출구와 지도 속 ¤ 상점방에서 만날 수 있어요.');}
 $('build-button').addEventListener('click',toggleBuild);$('build-close').addEventListener('click',closeBuild);$('shop-open').addEventListener('click',shop);$('shop-close').addEventListener('click',closeBuild);
 $('reward-build').addEventListener('click',toggleBuild);
 $('reward-reroll').addEventListener('click',()=>{if(rerollReward(game))drawRewards();});
 $('shop-reroll').addEventListener('click',()=>{if(rerollShop(game))drawShop();});
+for(const button of document.querySelectorAll('[data-shop-tab]'))button.addEventListener('click',()=>{shopTab=button.dataset.shopTab;sellSelection=null;drawShop();document.querySelector('.market-panel').scrollTop=0;});
+$('shop-heal').addEventListener('click',()=>{if(buyShopHealing(game))drawShop();});
+$('shop-bag').addEventListener('click',()=>{if(buySealedBag(game))drawShop();});
+$('sell-cancel').addEventListener('click',()=>{sellSelection=null;drawShop();});
+$('sell-confirm').addEventListener('click',()=>{if(sellShopItem(game,sellSelection)){sellSelection=null;drawShop();}});
 $('touch-toggle').addEventListener('click',()=>{const show=document.body.classList.toggle('show-touch');$('touch-toggle').setAttribute('aria-pressed',String(show));});
 window.addEventListener('keydown',e=>{
   if(['KeyM','KeyI','KeyB','Escape'].includes(e.code)&&started){e.preventDefault();if(e.repeat)return;if(e.code==='KeyM')toggleMap();else if(e.code==='KeyI')toggleBuild();else if(e.code==='KeyB')shop();else if(['build','shop'].includes(game.phase))closeBuild();else game.phase==='map'?toggleMap():game.phase==='paused'?resume():pause();return;}
@@ -52,13 +59,14 @@ function syncUI(){
   $('dash-label').textContent=game.player.dashCooldown>0?`${game.player.dashCooldown.toFixed(1)}s`:'준비';
   $('skill-label').textContent=game.player.skillTime>0?'무적':game.player.skillCooldown>0?`${Math.ceil(game.player.skillCooldown)}s`:'준비';
   $('toast').textContent=game.noticeTime>0?game.notice:'';
+  $('contract-hud').hidden=!started||!game.contract;$('contract-hud').textContent=contractLabel(game);$('contract-hud').dataset.status=game.contract?.status||'';
   if(shownRoom!==game.room.index){shownRoom=game.room.index;$('room-label').textContent=`0${shownRoom+1} / 0${STAGES}`;$('route').replaceChildren(...Array.from({length:STAGES},(_,i)=>{const dot=document.createElement('i');dot.className='route-dot '+(i===shownRoom?'active':i<shownRoom?'done':'');return dot;}));}
   if(shownPhase!==game.phase){shownPhase=game.phase;document.body.dataset.phase=game.phase;
     if(game.phase==='map'||game.phase==='route'){clearInput();drawWorldMap();if(game.phase==='route')$('world-map').querySelector('button:not(:disabled)')?.focus({preventScroll:true});}
     if(game.phase==='reward'){clearInput();drawRewards();$('reward-cards').firstElementChild?.focus({preventScroll:true});}
     if(game.phase==='build'){clearInput();drawBuild();}
-    if(game.phase==='shop'){clearInput();drawShop();}
-    if(game.phase==='dead'||game.phase==='won'){clearInput();const won=game.phase==='won';$('end-kicker').textContent=won?'ESCAPED!':'ONE MORE TRY';$('end-title').textContent=won?'버터, 탈출 성공!':'조금만 더 가면 되는데…';$('end-summary').textContent=`${game.room.index+1}구역 · ${game.stats.kills}마리 처치 · 아이템 ${game.stats.itemsTaken}개 · ${Math.floor(game.elapsed/60)}분 ${Math.floor(game.elapsed%60)}초`;$('end-screen').querySelector('button').focus({preventScroll:true});}
+    if(game.phase==='shop'){clearInput();sellSelection=null;drawShop();$('shop-close').focus({preventScroll:true});}
+    if(game.phase==='dead'||game.phase==='won'){clearInput();const won=game.phase==='won';$('end-kicker').textContent=won?'ESCAPED!':'ONE MORE TRY';$('end-title').textContent=won?'버터, 탈출 성공!':'조금만 더 가면 되는데…';$('end-summary').textContent=`${game.room.index+1}구역 · ${game.stats.kills}마리 처치 · 보유 아이템 ${game.stats.itemsTaken}개 · ${Math.floor(game.elapsed/60)}분 ${Math.floor(game.elapsed%60)}초`;$('end-economy').textContent=`상점 ${game.economy.visitedShops.length}곳 · 상품 구매 ${game.economy.purchases}개 / 판매 ${game.economy.sales}개 · 상점 지출 ${game.economy.coinsSpent} G · 계약 성공 ${game.economy.contractsWon} / 실패 ${game.economy.contractsLost}`;$('end-screen').querySelector('button').focus({preventScroll:true});}
   }
   canvas.dataset.x=game.player.x.toFixed(2);canvas.dataset.y=game.player.y.toFixed(2);canvas.dataset.facing=game.player.facing;canvas.dataset.butterRenderer='original36-mirrored37';
 }
@@ -74,7 +82,8 @@ function itemCard(id,onSelect,{price=null,sold=false}={}){
 function drawRewards(){
   $('reward-cards').replaceChildren(...game.choices.map(id=>itemCard(id,()=>{if(chooseReward(game,id)){clearInput();syncUI();focusGame();}})));
   $('reward-info').textContent=game.room.cleanBonus?'체력 손실 없이 클리어! +8 G · 왕새총 쿨타임 3초 회복':'같은 아이템도 누적돼요. 학년 아이템은 항상 한 종류 이상 등장해요.';
-  const n=game.room.rewardRerolls||0;$('reward-reroll').textContent=`다시 뽑기 ${rewardRerollCost(game)} G (${n}/2)`;$('reward-reroll').disabled=n>=2||game.coins<rewardRerollCost(game);$('reward-coins').textContent=`보유 ${game.coins} G · 선택 후 상점 B 이용 가능`;
+  if(game.room.contractResult)$('reward-info').textContent+=' · '+game.room.contractResult;
+  const n=game.room.rewardRerolls||0;$('reward-reroll').textContent=`다시 뽑기 ${rewardRerollCost(game)} G (${n}/2)`;$('reward-reroll').disabled=n>=2||game.coins<rewardRerollCost(game);$('reward-coins').textContent=`보유 ${game.coins} G · ${game.room.merchant?'출구 근처 상인에게 F / B':'지도에서 ¤ 상점방 선택 가능'}`;
 }
 function drawBuild(){
   const s=game.stats,low=lowerPower(s),high=upperPower(s);
@@ -84,17 +93,42 @@ function drawBuild(){
   $('stat-grid').innerHTML=statRows(s).map(([id,label,value])=>`<div data-stat="${id}"><span>${label}</span><b>${value}</b></div>`).join('');
   $('inscriptions').innerHTML=Object.entries(INSCRIPTIONS).map(([id,v])=>{const n=s.inscriptions[id];return `<article style="--tag-color:${v.color}"><h4>${v.name} <b>${n}</b></h4><p class="${n>=2?'active':''}">② ${v.two}</p><p class="${n>=4?'active':''}">④ ${v.four}</p></article>`;}).join('');
   $('inventory').innerHTML=Object.entries(s.inventory).map(([id,n])=>`<div data-owned="${id}"><svg aria-hidden="true"><use href="./assets/ui-icons.svg#${ITEMS[id].icon}"></use></svg><span><b>${ITEMS[id].name} <em>×${n}</em></b><small>${ITEMS[id].tags.map(t=>INSCRIPTIONS[t].name).join(' · ')}</small></span></div>`).join('')||'<p>아직 가방이 비어 있어요.</p>';
-  $('shop-open').disabled=!game.room.cleared||!game.room.rewardTaken;$('shop-open').textContent=$('shop-open').disabled?'상점 · 이 방 완료 후 개방':'상점 열기 B';
+  $('build-contract').textContent=contractLabel(game);
+  $('shop-open').disabled=!canOpenShop(game);$('shop-open').textContent=$('shop-open').disabled?'상인 근처에서 거래 가능':'상점 열기 B';
 }
 function drawShop(){
-  $('shop-coins').textContent=`보유 ${game.coins} G · 이 방에서만 판매하는 세 가지 물건`;
-  $('shop-cards').replaceChildren(...game.room.shop.stock.map((o,i)=>itemCard(o.id,()=>{if(buyShopItem(game,i)){drawShop();notifyGame(game,game.lastPickup);}},{price:RARITIES[ITEMS[o.id].rarity].price,sold:o.sold})));
-  $('shop-last').textContent=game.lastPickup;$('shop-reroll').textContent=`진열 바꾸기 10 G (${game.room.shop.rerolls}/3)`;$('shop-reroll').disabled=game.coins<10||game.room.shop.rerolls>=3;
+  const market=game.room.shop,e=game.economy;
+  $('shop-coins').textContent=`보유 ${game.coins} G · 구매 도장 ${e.stamps}/3 · 20% 할인권 ${e.coupons}장`;
+  for(const button of document.querySelectorAll('[data-shop-tab]')){const active=button.dataset.shopTab===shopTab;button.setAttribute('aria-pressed',String(active));$(button.dataset.shopTab+'-pane').hidden=!active;}
+  $('shop-cards').replaceChildren(...market.stock.map((o,i)=>{
+    const card=itemCard(o.id,()=>{if(buyShopItem(game,i))drawShop();},{price:offerPrice(game,o),sold:o.sold});
+    if(!o.sold&&(o.sale||e.coupons>0)){const badge=document.createElement('span');badge.className='sale-badge';badge.textContent=`정가 ${basePrice(o.id)} G · ${o.sale?'25% 특가 ':''}${e.coupons>0?'+ 할인권 자동 적용':''}`;card.prepend(badge);}return card;
+  }));
+  $('shop-last').textContent=game.lastTransaction||'어서 와! 필요한 것만 고르고, 원하면 계약도 맡아 봐.';
+  const reroll=shopRerollCost(game);$('shop-reroll').textContent=`진열 바꾸기 ${reroll} G (${market.rerolls}/3)`;$('shop-reroll').disabled=game.coins<reroll||market.rerolls>=3;
+  $('shop-heal').textContent=market.healed?'간식 이용 완료':`간식 · 체력 30% 회복 ${HEAL_PRICE} G`;$('shop-heal').disabled=market.healed||game.coins<HEAL_PRICE||game.stats.hp>=game.stats.maxHp;
+  $('shop-bag').textContent=market.bagOpened?'봉인 주머니 구매 완료':`봉인 주머니 · 아이템 1개 ${BAG_PRICE} G`;$('shop-bag').disabled=market.bagOpened||game.coins<BAG_PRICE;
+  drawSales();drawContracts();
+}
+function drawSales(){
+  $('sell-items').replaceChildren(...Object.entries(game.stats.inventory).map(([id,n])=>{const button=document.createElement('button');button.dataset.sell=id;button.textContent=`${ITEMS[id].name} ×${n} · 1개 ${salePrice(id)} G`;button.setAttribute('aria-pressed',String(id===sellSelection));button.addEventListener('click',()=>{sellSelection=id;drawSales();$('sell-confirm').focus({preventScroll:true});});return button;}));
+  $('sell-empty').hidden=Object.keys(game.stats.inventory).length>0;
+  $('sell-preview').hidden=!sellSelection;if(!sellSelection)return;
+  const s=game.stats,next=removeBuildItem(s,sellSelection),before=statRows(s),after=statRows(next);
+  const changes=after.filter((r,i)=>r[2]!==before[i][2]).map(r=>`${r[1]} ${before.find(b=>b[0]===r[0])[2]} → ${r[2]}`);
+  const lost=Object.keys(INSCRIPTIONS).flatMap(id=>[2,4].filter(n=>s.inscriptions[id]>=n&&next.inscriptions[id]<n).map(n=>`${INSCRIPTIONS[id].name} ${n}세트 해제`));
+  if(next.hp!==s.hp)changes.push(`현재 체력 ${Math.ceil(s.hp)} → ${Math.ceil(next.hp)}`);
+  $('sell-description').textContent=`${ITEMS[sellSelection].name} ×${s.inventory[sellSelection]} → ×${next.inventory[sellSelection]||0}. ${[...lost,...changes].join(' / ')||'현재 상한으로 인해 표시 능력치 변화 없음'}. 판매 시 효과도 사라지며 체력은 회복되지 않아요.`;
+  $('sell-confirm').textContent=`1개 판매 확정 +${salePrice(sellSelection)} G`;
+}
+function drawContracts(){
+  const busy=['pending','active'].includes(game.contract?.status);$('contract-status').textContent=contractLabel(game);
+  $('contract-cards').replaceChildren(...Object.entries(CONTRACTS).map(([id,c])=>{const card=document.createElement('article');card.className='contract-card';const title=document.createElement('h3'),desc=document.createElement('p'),button=document.createElement('button');title.textContent=c.name;desc.textContent=c.description;button.textContent=busy?'진행 중인 계약이 있어요':'무료로 계약 수락';button.disabled=busy;button.dataset.contract=id;button.addEventListener('click',()=>{if(acceptContract(game,id))drawShop();});card.append(title,desc,button);return card;}));
 }
 function drawWorldMap(){
   const selecting=game.phase==='route',available=new Set(selecting?routeOptions(game).map(n=>n.id):[]),world=game.world;
   $('map-title').textContent=selecting?'다음에는 어디로 갈까?':'아공간 지도';$('map-instruction').textContent=selecting?'빛나는 방을 선택하세요. 선택하지 않은 갈래는 이번 여정에서 지나갑니다.':'출구에서 다음 갈림길을 선택할 수 있어요. 지도 확인 중에는 전투가 멈춰요.';
-  $('map-close').hidden=selecting;$('seed-label').textContent=`SEED ${game.seedLabel} · 생성 규칙 v38`;
+  $('map-close').hidden=selecting;$('seed-label').textContent=`SEED ${game.seedLabel} · 생성 규칙 v${world.version}`;
   const positions=new Map(world.nodes.map(n=>{const layer=world.nodes.filter(v=>v.depth===n.depth);return[n.id,{x:6+n.depth/(STAGES-1)*88,y:layer.length===1?50:18+n.lane/(layer.length-1)*64}];}));
   const map=$('world-map');map.replaceChildren();const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 1000 300');svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-hidden','true');
   for(const node of world.nodes)for(const id of node.next){const a=positions.get(node.id),b=positions.get(id),line=document.createElementNS(svg.namespaceURI,'line');for(const [key,value]of Object.entries({x1:a.x*10,y1:a.y*3,x2:b.x*10,y2:b.y*3}))line.setAttribute(key,value);line.setAttribute('class',node.id===game.currentNodeId&&available.has(id)?'available-edge':node.completed&&world.nodes.find(n=>n.id===id).visited?'visited-edge':'');svg.append(line);}map.append(svg);
@@ -116,4 +150,4 @@ async function boot(){
 }
 requestAnimationFrame(frame);boot().catch(error=>{$('load-status').textContent='준비 중 오류가 났어요. 새로고침해 주세요.';console.error(error);});
 // Only the explicit local test URL exposes fixtures; normal play has no debug UI.
-if(new URLSearchParams(location.search).get('test')==='1')window.__platformer37={get game(){return game;},start,tick,chooseReward,enterNextRoom,chooseRoute,interactRoom,grantItem,rerollReward,openShop,buyShopItem,rerollShop,images,render:()=>renderGame(ctx,game,images,{started:true,reducedMotion:true})};
+if(new URLSearchParams(location.search).get('test')==='1')window.__platformer37={get game(){return game;},start,tick,chooseReward,enterNextRoom,chooseRoute,interactRoom,grantItem,rerollReward,openShop,buyShopItem,rerollShop,sellShopItem,buyShopHealing,buySealedBag,acceptContract,images,render:()=>renderGame(ctx,game,images,{started:true,reducedMotion:true})};

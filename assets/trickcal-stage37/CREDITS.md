@@ -35,3 +35,7 @@ Moving fire is our same-rig composition, not an original named combined clip.
 Jump uses intact Move samples; there is no new original Jump animation.
 Platforms, collision geometry, projectiles, boulder, portal, effects and interface
 are procedural game elements, not claimed to be extracted Trickcal illustrations.
+
+v41 reuses the existing `fan` Idle animation for a friendly merchant behind a
+procedural stall. This shop role is a fan-game adaptation, not an extracted or
+official merchant NPC. No source sprite, animation or background was changed.

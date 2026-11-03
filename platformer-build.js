@@ -61,6 +61,12 @@ export function applyBuildItem(current,id){
   const inventory={...current.inventory,[id]:(current.inventory[id]||0)+1},next=rebuildStats({...current,inventory});
   next.hp=Math.min(next.maxHp,current.hp+Math.max(0,next.maxHp-current.maxHp));return next;
 }
+export function removeBuildItem(current,id){
+  if(!ITEMS[id]||!(current.inventory[id]>0))return clone(current);
+  const inventory={...current.inventory};if(--inventory[id]===0)delete inventory[id];
+  // Removing a maximum-health item clamps health; it never heals the player.
+  return rebuildStats({...current,inventory});
+}
 export function lowerPower(s){return{chance:Math.min(.85,.13+s.lowerGrade*.055+(s.lowerChance||0)),bounces:s.lowerGrade+(s.chainBonus||0),chainRange:LOWER_CHAIN_RANGE,homing:7+s.lowerGrade*.8,damage:s.damage*(1.15+s.lowerGrade*.1)*(s.skillDamage||1),extraProjectiles:s.lowerGrade>=5?2:s.lowerGrade>=3?1:0,pity:Math.max(3,7-Math.floor(s.lowerGrade/2))};}
 export function upperPower(s){return{duration:4.5+s.upperGrade*.8,damage:s.damage*(2.5+s.upperGrade*.55)*(s.skillDamage||1),radius:40+s.upperGrade*4,count:s.upperGrade>=3?2:1};}
 

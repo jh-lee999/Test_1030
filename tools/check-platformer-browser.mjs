@@ -23,7 +23,7 @@ try{
   for(let i=0;i<7;i++){
     const kind=await page.evaluate(()=>{const g=window.__platformer37.game;g.room.enemies.forEach(e=>{e.hp=0;});if(g.room.shrine)Object.assign(g.player,{x:g.room.shrine.x,y:g.room.shrine.y,vy:0,grounded:true});return g.room.type;});types.push(kind);
     if(['treasure','rest'].includes(kind))await page.keyboard.press('f');
-    if(kind!=='rest'){await page.waitForSelector('body[data-phase="reward"]');assert.equal(await page.locator('.reward-card').count(),3);if(i===0)await page.screenshot({path:'/tmp/platform37-reward.png'});await page.locator('.reward-card').first().click();items++;}
+    if(!['rest','shop'].includes(kind)){await page.waitForSelector('body[data-phase="reward"]');assert.equal(await page.locator('#reward-cards .reward-card').count(),3);if(i===0)await page.screenshot({path:'/tmp/platform37-reward.png'});await page.locator('#reward-cards .reward-card').first().click();items++;}
     else await page.waitForFunction(()=>window.__platformer37.game.room.rewardTaken);
     assert.equal((await state(page)).items,items);
     await page.evaluate(()=>{const g=window.__platformer37.game;g.player.x=g.room.exit.x;g.player.y=g.room.exit.y;g.player.vy=0;g.player.grounded=true;});

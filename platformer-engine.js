@@ -1,7 +1,8 @@
-import {createBuildState,applyBuildItem,rewardChoices,rollBuildItems,lowerPower,upperPower,ITEMS,RARITIES,itemChanges,LOWER_CHAIN_RANGE} from './platformer-build.js?v=40';
+import {createBuildState,applyBuildItem,removeBuildItem,rewardChoices,lowerPower,upperPower,ITEMS,itemChanges,LOWER_CHAIN_RANGE} from './platformer-build.js?v=41';
+import {CONTRACTS,HEAL_PRICE,BAG_PRICE,createEconomy,createMarket,marketStock,offerPrice,salePrice,shopRerollCost,rollSealedBag} from './platformer-economy.js?v=41';
 import {advanceButterGait,butterMuzzleOffset,butterReleasePoint} from './butter-original-motion.js';
 import {PHYSICS,approach,landBody} from './platformer-physics.js?v=38';
-import {FLOOR,STAGES,BIOMES,generateWorld,generateRoom,seedNumber,seededRandom} from './platformer-world.js?v=38';
+import {FLOOR,STAGES,BIOMES,generateWorld,generateRoom,seedNumber,seededRandom} from './platformer-world.js?v=41';
 export {FLOOR,STAGES,seededRandom,landBody};
 
 export const VIEW={width:1280,height:720},HERO_SIZE=92;
@@ -23,6 +24,7 @@ export function createGame(seed=Date.now()){
   const game={seed:root,seedLabel,random,rewardRandom,shopRandom,world,currentNodeId:world.startId,rooms:{[world.startId]:room},stats,room,phase:'playing',time:0,elapsed:0,coins:0,shotsFired:0,lowerProcs:0,buildRevision:0,lastPickup:'',projectiles:[],effects:[],boulders:[],camera:0,cameraY:0,shake:0,hitStop:0,previous:{},choices:[],notice:'',noticeTime:0,roomIntro:3};
   game.player={x:150,y:FLOOR,vx:0,vy:0,w:32,h:78,facing:1,grounded:true,jumps:0,coyote:.1,jumpBuffer:0,dash:0,dashCooldown:0,dashHits:[],shield:0,lowerDryShots:0,invulnerable:0,skillTime:0,skillCooldown:0,attackCooldown:0,action:null,gait:{phase:0,amount:0,clock:0}};
   game.checkpoint={...room.spawn};
+  game.economy=createEconomy();game.contract=null;game.lastTransaction='';
   return game;
 }
 export function notifyGame(g,text){g.notice=text;g.noticeTime=2.6;}
@@ -39,9 +41,10 @@ export function hitEnemy(g,e,damage,force=0,{critical=false,direct=true}={}){
 }
 export function hurtPlayer(g,damage,dir=1){
   const p=g.player;if(p.invulnerable>0||p.dash>0||p.skillTime>0||g.phase!=='playing')return false;
-  const reduced=damage*(1-g.stats.damageReduction),absorbed=Math.min(p.shield,reduced),loss=reduced-absorbed;p.shield-=absorbed;
+  const frenzy=g.contract?.status==='active'&&g.contract.nodeId===g.currentNodeId&&g.contract.id==='frenzy';
+  const reduced=damage*(frenzy?1.2:1)*(1-g.stats.damageReduction),absorbed=Math.min(p.shield,reduced),loss=reduced-absorbed;p.shield-=absorbed;
   g.stats.hp=Math.max(0,g.stats.hp-loss);g.room.hpDamage=(g.room.hpDamage||0)+loss;p.invulnerable=.9;p.vx=dir*250;g.shake=.2;effect(g,'hit',p.x,p.y-45,{color:absorbed?'#b7e9fa':'#ff9395'});
-  if(g.stats.hp===0)g.phase='dead';return true;
+  if(g.stats.hp===0){g.phase='dead';settleContract(g,true);}return true;
 }
 function fire(g,action){
   const p=g.player,m=heroMuzzle(p);g.shotsFired++;
@@ -189,19 +192,75 @@ export function chooseReward(g,id){
 }
 export function grantItem(g,id){
   if(!ITEMS[id])return false;const before=g.stats,changes=itemChanges(before,id);g.stats=applyBuildItem(before,id);g.buildRevision++;
-  g.player.shield=Math.min(g.stats.shieldMax,g.player.shield+Math.max(0,g.stats.shieldMax-before.shieldMax));g.player.skillCooldown*=g.stats.skillCooldown/before.skillCooldown;g.player.attackCooldown*=g.stats.attackCooldown/before.attackCooldown;g.player.dashCooldown*=g.stats.dashCooldown/before.dashCooldown;
+  syncBuildResources(g,before);
   g.lastPickup=`${ITEMS[id].name} ×${g.stats.inventory[id]} · ${changes.slice(0,2).join(' / ')}`;return true;
+}
+function syncBuildResources(g,before){
+  g.player.shield=Math.min(g.stats.shieldMax,g.player.shield+Math.max(0,g.stats.shieldMax-before.shieldMax));
+  for(const key of ['skillCooldown','attackCooldown','dashCooldown'])g.player[key]*=g.stats[key]/before[key];
 }
 export const rewardRerollCost=g=>8+(g.room.rewardRerolls||0)*6;
 export function rerollReward(g){if(g.phase!=='reward'||(g.room.rewardRerolls||0)>=2||g.coins<rewardRerollCost(g))return false;g.coins-=rewardRerollCost(g);g.room.rewardRerolls=(g.room.rewardRerolls||0)+1;g.choices=rewardChoices(g.rewardRandom,g.stats,g.room,g.choices);return true;}
-export function openShop(g){
-  if(!['playing','build'].includes(g.phase)||!g.room.cleared||!g.room.rewardTaken)return false;
-  if(!g.room.shop)g.room.shop={stock:rollBuildItems(g.shopRandom,g.stats,g.room.index).map(id=>({id,sold:false})),rerolls:0};g.phase='shop';return true;
+export function canOpenShop(g){
+  const m=g.room.merchant,p=g.player;
+  return Boolean(['playing','build'].includes(g.phase)&&g.room.cleared&&g.room.rewardTaken&&m&&p.grounded&&Math.abs(p.x-m.x)<=100&&Math.abs(p.y-m.y)<=40);
 }
-export function buyShopItem(g,index){const offer=g.room.shop?.stock[index];if(g.phase!=='shop'||!offer||offer.sold)return false;const price=RARITIES[ITEMS[offer.id].rarity].price;if(g.coins<price)return false;g.coins-=price;offer.sold=true;grantItem(g,offer.id);return true;}
-export function rerollShop(g){const shop=g.room.shop;if(g.phase!=='shop'||!shop||shop.rerolls>=3||g.coins<10)return false;g.coins-=10;shop.rerolls++;shop.stock=rollBuildItems(g.shopRandom,g.stats,g.room.index,3,shop.stock.map(o=>o.id)).map(id=>({id,sold:false}));return true;}
+export function openShop(g){
+  if(!canOpenShop(g))return false;
+  g.room.shop??=createMarket(g);if(!g.economy.visitedShops.includes(g.currentNodeId))g.economy.visitedShops.push(g.currentNodeId);
+  g.phase='shop';return true;
+}
+function spend(g,amount){g.coins-=amount;g.economy.coinsSpent+=amount;}
+function receipt(g,message){g.lastTransaction=message;notifyGame(g,message);return true;}
+export function buyShopItem(g,index){
+  const offer=g.room.shop?.stock[index];if(g.phase!=='shop'||!offer||offer.sold)return false;
+  const price=offerPrice(g,offer);if(g.coins<price)return false;
+  spend(g,price);offer.sold=true;if(g.economy.coupons>0)g.economy.coupons--;
+  grantItem(g,offer.id);g.economy.purchases++;g.economy.stamps++;
+  const earned=g.economy.stamps>=3;if(earned){g.economy.stamps-=3;g.economy.coupons++;}
+  return receipt(g,`${ITEMS[offer.id].name} 구매 −${price} G · 보유 ×${g.stats.inventory[offer.id]}${earned?' · 20% 할인권 획득!':''}`);
+}
+export function rerollShop(g){
+  const shop=g.room.shop,price=shopRerollCost(g);if(g.phase!=='shop'||!shop||shop.rerolls>=3||g.coins<price)return false;
+  spend(g,price);shop.rerolls++;shop.stock=marketStock(g.shopRandom,g.stats,g.room.index,shop.stock.map(o=>o.id));
+  return receipt(g,`진열 교체 −${price} G · 할인 상품도 새로 입고됐어요.`);
+}
+export function sellShopItem(g,id){
+  if(g.phase!=='shop'||!g.room.shop||!ITEMS[id]||!(g.stats.inventory[id]>0))return false;
+  const before=g.stats,price=salePrice(id);g.stats=removeBuildItem(before,id);syncBuildResources(g,before);g.buildRevision++;
+  g.coins+=price;g.economy.sales++;g.economy.salesEarned+=price;
+  return receipt(g,`${ITEMS[id].name} 1개 판매 +${price} G · 남은 수량 ${g.stats.inventory[id]||0}개`);
+}
+export function buyShopHealing(g){
+  const shop=g.room.shop;if(g.phase!=='shop'||!shop||shop.healed||g.coins<HEAL_PRICE||g.stats.hp>=g.stats.maxHp)return false;
+  spend(g,HEAL_PRICE);shop.healed=true;const amount=Math.min(g.stats.maxHp-g.stats.hp,Math.ceil(g.stats.maxHp*.3));g.stats.hp+=amount;
+  return receipt(g,`따뜻한 간식 −${HEAL_PRICE} G · 체력 ${Math.round(amount)} 회복`);
+}
+export function buySealedBag(g){
+  const shop=g.room.shop;if(g.phase!=='shop'||!shop||shop.bagOpened||g.coins<BAG_PRICE)return false;
+  spend(g,BAG_PRICE);shop.bagOpened=true;g.economy.bags++;const id=rollSealedBag(g.shopRandom);grantItem(g,id);
+  return receipt(g,`봉인 주머니 −${BAG_PRICE} G → ${ITEMS[id].name} · 보유 ×${g.stats.inventory[id]}`);
+}
+export function acceptContract(g,id){
+  if(g.phase!=='shop'||!g.room.shop||!CONTRACTS[id]||['pending','active'].includes(g.contract?.status))return false;
+  g.contract={id,status:'pending',acceptedNodeId:g.currentNodeId,elapsed:0};
+  return receipt(g,`${CONTRACTS[id].name} 수락 · 다음 전투 한 번에 적용돼요. 휴식·보물·상점에서는 대기해요.`);
+}
+function activateContract(g){
+  const c=g.contract;if(c?.status!=='pending'||g.room.cleared||!g.room.enemies.length)return;
+  c.status='active';c.nodeId=g.currentNodeId;c.elapsed=0;
+  if(c.id==='frenzy')for(const e of g.room.enemies){e.maxHp=Math.ceil(e.maxHp*1.35);e.hp=e.maxHp;}
+}
+function settleContract(g,dead=false){
+  const c=g.contract;if(!c||!['pending','active'].includes(c.status)||(!dead&&(c.status!=='active'||c.nodeId!==g.currentNodeId)))return;
+  const success=!dead&&(c.id==='frenzy'||(c.id==='haste'&&c.elapsed<=60+1e-8)||(c.id==='flawless'&&!(g.room.hpDamage>0)));
+  c.status=success?'completed':'failed';g.economy[success?'contractsWon':'contractsLost']++;
+  if(success){g.coins+=CONTRACTS[c.id].coins;if(c.id==='flawless')g.economy.coupons++;}
+  g.room.contractResult=`${CONTRACTS[c.id].name} ${success?`성공! +${CONTRACTS[c.id].coins} G${c.id==='flawless'?' · 할인권 +1':''}`:'실패 · 추가 페널티 없음'}`;
+}
 export function enterNextRoom(g){
   if(g.phase!=='playing'||!g.room.cleared||!g.room.rewardTaken||!g.player.grounded||Math.abs(g.player.x-g.room.exit.x)>90||Math.abs(g.player.y-g.room.exit.y)>40)return false;
+  g.world.nodes.find(n=>n.id===g.currentNodeId).completed=true;
   if(g.room.type==='boss'){g.phase='won';return true;}
   g.phase='route';return true;
 }
@@ -209,6 +268,7 @@ export function routeOptions(g){const node=g.world.nodes.find(n=>n.id===g.curren
 export function chooseRoute(g,id){
   if(g.phase!=='route')return false;const node=routeOptions(g).find(n=>n.id===id);if(!node)return false;
   const room=g.rooms[id]??generateRoom(node);g.rooms[id]=room;g.room=room;g.currentNodeId=id;node.visited=true;
+  activateContract(g);
   Object.assign(g.player,{x:room.spawn.x,y:room.spawn.y,vx:0,vy:0,action:null,grounded:true,jumps:0,coyote:.1,jumpBuffer:0,dash:0,dashHits:[],shield:g.stats.shieldMax,skillTime:0,invulnerable:1});
   g.checkpoint={...room.spawn};g.projectiles=[];g.boulders=[];g.effects=[];g.camera=0;g.cameraY=0;g.roomIntro=2.6;g.phase='playing';g.previous={};g.noticeTime=0;return true;
 }
@@ -221,11 +281,14 @@ export function interactRoom(g){
   if(shrine&&!shrine.used&&p.grounded&&Math.abs(p.x-shrine.x)<85&&Math.abs(p.y-shrine.y)<40){
     if(shrine.kind==='treasure')offerReward(g);
     else{g.stats.hp=Math.min(g.stats.maxHp,g.stats.hp+Math.ceil(g.stats.maxHp*.4));shrine.used=true;g.room.rewardTaken=true;g.world.nodes.find(n=>n.id===g.currentNodeId).completed=true;notifyGame(g,'따뜻한 쉼터 · 최대 체력의 40% 회복');}return true;
-  }return enterNextRoom(g);
+  }
+  if(canOpenShop(g)&&Math.abs(p.x-g.room.merchant.x)<Math.abs(p.x-g.room.exit.x))return openShop(g);
+  return enterNextRoom(g);
 }
 export function tick(g,input={},dt=1/120){
   if(g.phase!=='playing')return;
   dt=clamp(dt,0,1/30);g.time+=dt;g.elapsed+=dt;
+  if(g.contract?.status==='active'&&g.contract.nodeId===g.currentNodeId&&!g.room.cleared)g.contract.elapsed+=dt;
   const pressed={};for(const key of ['jump','dash','skill','interact'])pressed[key]=Boolean(input[key+'Pressed']||(input[key]&&!g.previous[key]));
   updatePlayer(g,input,pressed,dt);updateEnemies(g,dt);updateProjectiles(g,dt);
   for(const item of g.room.pickups)if(!item.taken&&Math.hypot(g.player.x-item.x,g.player.y-30-item.y)<g.stats.pickupRadius){item.taken=true;if(item.kind==='heart'){g.stats.hp=Math.min(g.stats.maxHp,g.stats.hp+15);effect(g,'text',item.x,item.y,{text:'+15 HP',color:'#ffb6be'});}else{g.coins+=5;effect(g,'text',item.x,item.y,{text:'+5',color:'#ffe09b'});}}
@@ -233,6 +296,6 @@ export function tick(g,input={},dt=1/120){
   g.noticeTime=Math.max(0,g.noticeTime-dt);g.roomIntro=Math.max(0,g.roomIntro-dt);g.shake=Math.max(0,g.shake-dt);
   const cameraGoal=clamp(g.player.x-VIEW.width*.42+g.player.facing*65,0,g.room.width-VIEW.width);g.camera+=(cameraGoal-g.camera)*(1-Math.exp(-dt*5));
   g.cameraY+=(clamp(g.player.y-340,-230,0)-g.cameraY)*(1-Math.exp(-dt*6));
-  if(g.phase==='playing'&&!g.room.cleared&&g.room.enemies.every(e=>e.hp<=0)){g.room.cleared=true;g.projectiles=g.projectiles.filter(b=>b.owner==='player');if(!(g.room.hpDamage>0)){g.room.cleanBonus=8;g.coins+=8;g.player.skillCooldown=Math.max(0,g.player.skillCooldown-3);}offerReward(g);}
+  if(g.phase==='playing'&&!g.room.cleared&&g.room.enemies.every(e=>e.hp<=0)){g.room.cleared=true;g.projectiles=g.projectiles.filter(b=>b.owner==='player');if(!(g.room.hpDamage>0)){g.room.cleanBonus=8;g.coins+=8;g.player.skillCooldown=Math.max(0,g.player.skillCooldown-3);}settleContract(g);offerReward(g);}
   if(pressed.interact)interactRoom(g);g.previous={...input};
 }

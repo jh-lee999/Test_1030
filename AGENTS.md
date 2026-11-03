@@ -1,5 +1,31 @@
 # Project instructions
 
+## Active v41 economy and contracts (supersedes v39 remote shop access)
+
+Shops are physical merchants: first-room exit and optional shop rooms at depths
+1/3/5. F/B requires room completion, ground contact and merchant proximity.
+Shop rooms start cleared/rewardTaken and can be skipped without spending or
+accepting a contract. Validate merchant platform support and path reachability.
+WORLD_VERSION is 41; the same input seed is reproducible within this version,
+not promised to reproduce the v38 graph. Physics stays unchanged.
+
+`platformer-economy.js` owns quotes, shop RNG rolls and contract definitions.
+Purchases/removals must pass through engine functions to synchronize cooldowns
+and shields. Sell one inventory copy, rebuild stats and clamp HP; never heal on
+removal or double-apply inscriptions. Show sale consequences before confirmation.
+Sale value is less than the combined discount/coupon buy price: no arbitrage.
+Service purchases don't earn stamps or consume coupons; stock rerolls don't
+reset once-per-market service flags. Use only shopRandom for market randomness.
+
+Contracts activate on the next combat, wait through safe rooms, settle once,
+and pause timers in all menu phases. Flawless tracks actual HP damage, not shield
+loss; frenzy affects enemy HP and incoming damage only while active in its room.
+Everything resets on a fresh run. No permanent progression has been authorized.
+Run economy41 unit tests and `tools/check-platformer-market-browser.mjs` alongside
+the build/chain/world/art/browser checks. The merchant is friendly reuse of the
+existing fan Idle pose with a procedural stall, not an original merchant NPC.
+See `docs/market41.md`. Butter and all source sprite files are unchanged.
+
 ## v40 lower-grade ricochet rule
 
 Lower grade adds one bounce per level, plus inscription/item chain bonuses.

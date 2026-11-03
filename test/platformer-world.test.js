@@ -22,8 +22,8 @@ test('1,000 seeds / every generated room: all platforms, enemies, loot, shrines 
   let rooms=0,fallbacks=0;const biomes=new Set(),widths=new Set(),counts=new Set();
   for(let seed=0;seed<1000;seed++)for(const node of generateWorld(seed).nodes){
     const room=generateRoom(node);rooms++;fallbacks+=Number(room.generation.fallback);assert.equal(room.navigation.valid,true);assert.equal(room.navigation.reachable.length,room.platforms.length);assert.equal(room.navigation.exitReachable.length,room.platforms.length);biomes.add(room.biome);widths.add(room.width);counts.add(room.platforms.length);
-    assert.equal(room.enemies.length===0,['treasure','rest'].includes(room.type));assert.ok(room.generation.attempt<=8);
-  }assert.equal(biomes.size,Object.keys(BIOMES).length);assert.ok(widths.size>500);assert.ok(counts.size>8);assert.ok(fallbacks/rooms<.02);console.log(`world38: ${rooms} rooms across 1,000 seeds; ${fallbacks} safe fallbacks; ${widths.size} widths; ${counts.size} platform counts`);
+    assert.equal(room.enemies.length===0,['treasure','rest','shop'].includes(room.type));assert.ok(room.generation.attempt<=8);
+  }assert.equal(biomes.size,Object.keys(BIOMES).length);assert.ok(widths.size>500);assert.ok(counts.size>8);assert.ok(fallbacks/rooms<.02);console.log(`world41: ${rooms} rooms across 1,000 seeds; ${fallbacks} safe fallbacks; ${widths.size} widths; ${counts.size} platform counts`);
 });
 test('numeric/text seeds reproduce graph + geometry; combat and loot randomness cannot perturb rooms',()=>{
   assert.equal(seedNumber('42'),seedNumber(42));assert.deepEqual(generateWorld('버터'),generateWorld('버터'));
@@ -43,7 +43,7 @@ test('jump witnesses execute in the live tick at base speed, including return pa
         tick(g,{left:axis<0,right:axis>0,jump:true,jumpPressed:frame===0},PHYSICS.step);
       }assert.equal(g.player.grounded,true);assert.equal(g.player.platformId,to.id);assert.ok(g.player.x>=to.x+18&&g.player.x<=to.x+to.w-18);checked++;
     }
-  }assert.ok(checked>2000);console.log(`world38: ${checked} jump witnesses replayed through live physics`);
+  }assert.ok(checked>2000);console.log(`world41: ${checked} jump witnesses replayed through live physics`);
 });
 test('validator rejects unreachable geometry, unsupported loot and exit traps',()=>{
   const room=generateRoom(generateWorld(99).nodes[0]);room.platforms.push({id:'bad',x:100,y:0,w:150});assert.equal(validateRoom(room).valid,false);
