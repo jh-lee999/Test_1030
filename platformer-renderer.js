@@ -1,4 +1,4 @@
-import {VIEW,FLOOR,HERO_SIZE,STAGES,heroPose,clamp} from './platformer-engine.js?v=43';
+import {VIEW,FLOOR,HERO_SIZE,STAGES,heroPose,clamp} from './platformer-engine.js?v=44';
 import {BIOMES,ROOM_TYPES,ACTS} from './platformer-world.js?v=43';
 import {drawButterMotion,selectButterFrame} from './butter-original-motion.js';
 import {STAGE_ART} from './platformer-art.js?v=43';
@@ -38,7 +38,7 @@ function monster(ctx,e,images){
   else{ellipse(ctx,0,-35,25,35,'#ac9cb8');text(ctx,'?',0,-27,24);}
   ctx.restore();
   if(e.hp>0&&['rusher','guard','caster','drone'].includes(e.type)){
-    const label={rusher:'도약 돌진',guard:e.mode==='attack'?'방패 빈틈':'정면 방어',caster:'바닥 저주',drone:'공중 추적'}[e.type];
+    const label={rusher:'도약 돌진',guard:e.mode==='attack'?'방패 빈틈':'정면 방어',caster:'바닥 저주',drone:e.droneState==='aim'?'조준 고정':e.droneState==='recover'?'사격 후 빈틈':'거리 확보'}[e.type];
     rounded(ctx,e.x-35,e.y-e.h-43,70,19,4,'#202b28dd');text(ctx,label,e.x,e.y-e.h-29,10,e.type==='guard'?'#a5e1f3':'#ffd5a7');
     if(e.type==='guard'&&e.mode!=='attack'){ctx.strokeStyle='#a5e1f3';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(e.x+e.facing*34,e.y-72);ctx.lineTo(e.x+e.facing*38,e.y-22);ctx.stroke();}
   }

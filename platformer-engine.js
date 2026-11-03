@@ -2,6 +2,7 @@ import {createBuildState,applyBuildItem,removeBuildItem,rewardChoices,lowerPower
 import {CONTRACTS,HEAL_PRICE,BAG_PRICE,createEconomy,createMarket,marketStock,offerPrice,salePrice,shopRerollCost,rollSealedBag} from './platformer-economy.js?v=43';
 import {advanceButterGait,butterMuzzleOffset,butterReleasePoint} from './butter-original-motion.js';
 import {PHYSICS,approach,landBody} from './platformer-physics.js?v=38';
+import {updateDrone} from './platformer-drone.js?v=44';
 import {FLOOR,STAGES,BIOMES,generateWorld,generateRoom,seedNumber,seededRandom} from './platformer-world.js?v=43';
 export {FLOOR,STAGES,seededRandom,landBody};
 
@@ -98,7 +99,7 @@ function updateEnemies(g,dt){
     e.clock+=dt;e.flash=Math.max(0,e.flash-dt);if(e.hp<=0){e.death+=dt;continue;}
     if(e.burnTime>0){e.burnTime=Math.max(0,e.burnTime-dt);e.burnTick-=dt;if(e.burnTick<=0){e.burnTick+=.5;hitEnemy(g,e,e.burnDPS*.5,0,{direct:false});if(e.hp<=0)continue;}}
     e.cooldown=Math.max(0,e.cooldown-dt);const dx=p.x-e.x,dy=p.y-e.y;
-    if(e.type!=='guard'||(e.mode!=='attack'&&!(e.turnCooldown>0))){e.facing=dx>=0?1:-1;if(e.type==='guard')e.turnCooldown=.8;}
+    if(e.type!=='drone'&&(e.type!=='guard'||(e.mode!=='attack'&&!(e.turnCooldown>0)))){e.facing=dx>=0?1:-1;if(e.type==='guard')e.turnCooldown=.8;}
     e.turnCooldown=Math.max(0,(e.turnCooldown||0)-dt);
     if(e.boss){updateGuardian(g,e,dx,dy,dt);continue;}
     if(['rusher','guard','caster','drone'].includes(e.type)){updateSpecialEnemy(g,e,dx,dy,dt);continue;}
@@ -126,11 +127,8 @@ function updateEnemies(g,dt){
 function enemyShot(g,e,angle,speed=280){g.projectiles.push({owner:'enemy',x:e.x,y:e.y-e.h*.55,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,r:9,life:5,damage:10+(e.act||0)*2});}
 function updateSpecialEnemy(g,e,dx,dy,dt){
   const p=g.player;
+  if(e.type==='drone'){updateDrone(g,e,dt,enemyShot);return;}
   if(e.type==='rusher'&&e.mode==='attack'&&e.timer>=.55&&e.chargeFacing)e.facing=e.chargeFacing;
-  if(e.type==='drone'){
-    const desiredY=p.y-100+Math.sin(e.clock*2+e.id)*25;
-    e.x=clamp(e.x+clamp(p.x-e.facing*240-e.x,-160*dt,160*dt),30,g.room.width-30);e.y+=clamp(desiredY-e.y,-110*dt,110*dt);
-  }
   if(e.mode==='attack'){
     const old=e.timer;e.timer+=dt;
     if(e.type==='rusher'){
@@ -142,7 +140,6 @@ function updateSpecialEnemy(g,e,dx,dy,dt){
       }
       if(e.y>FLOOR+220){e.x=e.home.x+e.home.w/2;e.y=e.home.y;e.vy=0;}
     }else if(e.type==='guard'&&old<.65&&e.timer>=.65){if(Math.abs(dx)<130&&Math.abs(dy)<90)hurtPlayer(g,18,e.facing);effect(g,'slash',e.x+e.facing*55,e.y-35,{dir:e.facing});}
-    else if(e.type==='drone'&&old<.7&&e.timer>=.7){const aim=e.aimAngle;for(const spread of [-.12,.12])enemyShot(g,e,aim+spread,340);}
     const recovery=e.type==='rusher'?1.7:e.type==='caster'?1.15:1.05;
     if(e.timer>=recovery){e.mode='idle';e.timer=0;e.cooldown=e.type==='caster'?1.6:e.type==='rusher'?.8:.8;}
     return;

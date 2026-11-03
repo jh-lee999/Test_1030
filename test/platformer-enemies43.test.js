@@ -30,8 +30,8 @@ test('caster locks a visible delayed zone; moving, jumping or killing the caster
     step(g,65);assert.equal(g.stats.hp,response==='stay'?75:90);assert.equal(g.room.marks.length,0);
   }
 });
-test('drone leaves its home platform, tracks airborne targets and fires a dodgeable two-shot burst',()=>{
-  const {g,e}=scene('drone');e.home={id:'old',x:500,y:FLOOR,w:200};g.player.x=150;step(g,125);assert.ok(e.x<500);assert.ok(e.y<FLOOR-40);assert.equal(g.projectiles.filter(b=>b.owner==='enemy').length,2);
+test('drone leaves its home platform, settles into a shootable flight lane and fires a burst',()=>{
+  const {g,e}=scene('drone');e.home={id:'old',x:500,y:FLOOR,w:200};g.player.x=150;step(g,260);assert.ok(e.x<500);assert.ok(e.y<FLOOR-20&&e.y>FLOOR-45);assert.equal(e.attackId,1);
 });
 test('high skill immunity ends before boulder expiry, and menus freeze new attacks',()=>{
   const {g}=scene('caster');tick(g,{skill:true});assert.ok(g.player.skillTime<=1.1);assert.equal(hurtPlayer(g,10),false);step(g,150);assert.ok(g.boulders.length);assert.equal(g.player.skillTime,0);

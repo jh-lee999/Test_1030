@@ -1,5 +1,14 @@
 # Project instructions
 
+## v44 drone correction
+
+platformer-drone.js owns drone behavior: finite detection, a horizontal distance
+band, acceleration limits, grounded flight lane, fixed-muzzle .7s aim and .45s
+recovery. Never resume exact pixel-offset pursuit or copy player jump/fall Y.
+Do not rotate or move the muzzle during an attack: aimTarget and telegraph must
+match the two released shots. World generation stays v43 so the reported seed
+1793682210169 is unchanged. Run drone44 tests and check-platformer-drone-browser.
+
 ## Active v43 enemy variety and difficulty
 
 Use platformer-art.js to merge immutable v37 art with the four original v43
