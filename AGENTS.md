@@ -1,5 +1,28 @@
 # Project instructions
 
+## ACTIVE v60: show completed hands without changing attack selection
+
+User asked to see what the current hand has achieved. Root/poker58.html now use
+poker.js/css cache60; engine and order UI remain59, with NO combat/math changes.
+poker-hand-ui.js is a pure view of evaluateHands/bestHand: display all completed
+scoring patterns, real damage and level; automatic strongest first, banned last.
+Banned-but-completed hands remain inspectable and explicitly not playable.
+Do not hide this list inside the existing closed handbook. It lives below cards.
+
+Inspecting a badge only changes local presentation: cyan outlines + exact card
+labels/chips/mult/guard. Gold scoring borders and attack preview MUST remain the
+actual automatic best. Red discard selection remains independent and unchanged.
+No RNG/resource/selection/engine writes on inspection. Reset inspection on hand,
+turn or room change, keep it on mere discard-selection toggles. Relic reordering
+recomputes all damages and best, without turning inspection into manual firing.
+During resolve/paused-resolve display ONLY pending.result, including its exact
+damage, even though the newly committed boss ban changes live evaluateHands.
+Disable inspection until pick resumes; next hand removes old highlights.
+
+Run hands60 unit/browser (native first turn plus separate fixtures), poker58
+six-room native-resource run, order59 and all required archived checks/npm/art.
+Preserve source art, all engine versions and unrelated chibi WebP. See docs/hands60.md.
+
 ## ACTIVE v59: relic slot order is real scoring order
 
 User explicitly requested Balatro-like order-dependent relic damage. Preserve
