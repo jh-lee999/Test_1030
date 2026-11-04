@@ -1,5 +1,22 @@
 # Project instructions
 
+## ACTIVE v53: original artifact references in the dice game
+
+Eight unchanged source PNGs and Korean names/effect summaries are pinned in
+assets/trickcal-artifacts53/sources.json and CREDITS.md. This is a 2025 snapshot,
+not current live balance or a verified art license. trickcal-artifacts.js labels
+original summaries separately from explicit turn/dice adaptations. Six old fan
+relics stay; old pillow ID is now 꼭 쥔 행운, NOT the real 코미의 베개 (komi).
+Drafts offer two source-reference artifacts plus one fan relic without duplicates.
+Previews are read-only. Commit charges/heal once at impact; counters absorb shield
+first, charge rage/mace only on real HP loss, and Komi cannot revive zero HP.
+Rage/lightning/mace carry across fights; shield and Komi's one-use flag reset only
+on new fight; everything resets on a new run. Mace stun requires free/pair and
+consumes charge even on a kill. Scythe excludes bosses; lifesteal excludes overkill.
+Source Butter/monsters/backgrounds and archived engines are unchanged. Run
+artifacts53 tests/browser plus v52 and all archived required checks. Do not equate
+the diagnostic policy's win or test passes with subjective fun. See docs/artifacts53.md.
+
 ## ACTIVE v52: Butter dice roguelike (user-approved genre change)
 
 The user rejected the pinball and explicitly accepted the proposed dice game

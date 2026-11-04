@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#251d33"><title>버터의 사기 주사위</title><link rel="icon" href="./assets/butter-original36/poster.png"><link rel="stylesheet" href="./dice.css?v=52"><script type="module" src="./dice.js?v=52"></script></head>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#251d33"><title>버터의 사기 주사위</title><link rel="icon" href="./assets/butter-original36/poster.png"><link rel="stylesheet" href="./dice.css?v=53"><script type="module" src="./dice.js?v=53"></script></head>
 <body>
 <div id="app">
 <header><a class="brand" href="./"><span class="brand-mark">⚄</span><span>버터의 사기 주사위<small>BUTTER'S LITTLE BIG BET</small></span></a><nav><button id="help" aria-label="도움말">?</button><button id="sound" aria-pressed="true">소리 켬</button><button id="pause" aria-label="일시정지" disabled>Ⅱ</button></nav></header>
@@ -14,16 +14,17 @@
 <div class="pattern-heading"><h2>이번엔 어떤 조합으로?</h2><small>조합 선택 → 공격 · 숫자 1~6은 주사위 눈이에요</small></div>
 <div id="patterns" class="patterns" role="group" aria-label="공격 조합 4종"></div>
 <div class="attack-dock"><div><small id="attack-name">자유 투척</small><span><b id="preview-damage">0</b> <em>예상 피해</em></span></div><button id="attack" class="primary">이 조합으로 공격 <span>→</span></button><button id="pass" hidden>빈손으로 넘기기 · 반격 받음</button></div>
+<p id="attack-effect" class="artifact-feedback" role="status"></p>
 <p id="notice" role="status" aria-live="polite">남길 주사위와 다시 굴릴 주사위를 골라요.</p>
 </section>
 </section>
 <aside>
 <section class="score-card"><div class="section-title"><span class="eyebrow">THE LITTLE CHEAT SHEET</span><b id="score-caption">이번 공격의 계산</b></div><div class="score-formula"><div><span>칩</span><b id="chips">0</b></div><i>×</i><div><span>배수</span><b id="mult">1</b></div></div><div class="score-total"><span id="score-label">예상 피해</span><b id="score-total">0</b></div><div id="chain" class="chain" aria-label="주사위와 유물의 계산 순서"></div></section>
-<section class="relic-note"><div class="section-title"><h2>버터의 장난 주머니</h2><span id="relic-count">0 / 6</span></div><p class="note">주사위 발동 → 유물 추가 → 배수 증폭<br>리본의 재발동에도 다른 유물이 반응해요.</p><div id="relics"></div></section>
+<section class="relic-note"><div class="section-title"><h2>버터의 장난 주머니</h2><span id="relic-count">0 / 14</span></div><p class="note">주사위 발동 → 유물 추가 → 배수 증폭<br>리본의 재발동에도 다른 유물이 반응해요.</p><p id="artifact-state" class="artifact-feedback" role="status"></p><div id="relics"></div></section>
 <section class="run-note"><span>최고의 한 방 <b id="best">0</b></span><span>공격 <b id="attacks">0</b></span><small id="seed-label"></small></section>
 </aside>
 </main>
-<footer>비공식 트릭컬 팬 프로토타입 · 원작 에셋 권리는 원 권리자에게 있습니다. <a href="./assets/trickcal-stage37/CREDITS.md">출처</a> · <a href="./slingshot51.html">이전 새총 게임</a> · <a href="./side-scroll47.html">이전 횡스크롤</a></footer>
+<footer>비공식 트릭컬 팬 프로토타입 · 원작 에셋 권리는 원 권리자에게 있습니다. <a href="./assets/trickcal-stage37/CREDITS.md">모션 출처</a> · <a href="./assets/trickcal-artifacts53/CREDITS.md">아티팩트 출처·각색</a> · <a href="./slingshot51.html">이전 새총 게임</a> · <a href="./side-scroll47.html">이전 횡스크롤</a></footer>
 </div>
 <div id="screen" class="modal" role="dialog" aria-modal="true" aria-labelledby="screen-title"><div id="screen-panel" class="modal-panel"><h2 id="screen-title">버터의 사기 주사위</h2><p>게임을 준비하고 있어요.</p></div></div>
 </body></html>

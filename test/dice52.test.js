@@ -6,8 +6,8 @@ import {BUTTER_ORIGINAL} from '../butter-original-motion.js';
 import {STAGE_ART} from '../platformer-art.js';
 const settle=g=>{for(let i=0;i<300&&['rolling','resolve'].includes(g.phase);i++)tick(g,1/120);};
 function ready(seed=52){const g=createGame(seed);chooseRelic(g,g.choices[0]);settle(g);return g;}
-test('seed replay, three unique offers, six bounded non-duplicate relics and isolated RNG streams',()=>{
- const a=ready('52'),b=ready('52');assert.deepEqual(a,b);assert.equal(Object.keys(RELICS).length,6);assert.equal(ENCOUNTERS.length,4);assert.equal(new Set(createGame(52).choices).size,3);
+test('seed replay, three unique offers, fourteen bounded non-duplicate relics and isolated RNG streams',()=>{
+ const a=ready('52'),b=ready('52');assert.deepEqual(a,b);assert.equal(Object.keys(RELICS).length,14);assert.equal(ENCOUNTERS.length,4);assert.equal(new Set(createGame(52).choices).size,3);
  const control=structuredClone(a),before=JSON.stringify(a);for(let i=0;i<20;i++)for(const id of ['free','pair','kind','straight'])evaluate(a,id);assert.equal(JSON.stringify(a),before);
  reroll(a);settle(a);assert.equal(a.lootState,control.lootState);assert.notEqual(a.rollState,control.rollState);
 });

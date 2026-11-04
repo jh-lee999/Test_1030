@@ -19,7 +19,8 @@ export function bestMove(g,samples=20){
 }
 export function relicChoice(g,style='echo'){
  const order=style==='pillow'?['pillow','echo','rubber','empty','candy','bell']:style==='early'?['bell','rubber','echo','candy','pillow','empty']:['echo','rubber','candy','pillow','empty','bell'];
- return [...g.choices].sort((a,b)=>order.indexOf(a)-order.indexOf(b))[0];
+ order.splice(2,0,'weather','yellow','scythe','rust');order.push('belt','lucky','komi','mace');
+ return [...g.choices].sort((a,b)=>(order.includes(a)?order.indexOf(a):999)-(order.includes(b)?order.indexOf(b):999))[0];
 }
 export function play(seed,{style='echo',plan=true}={}){
  const g=createGame(seed),trace=[];

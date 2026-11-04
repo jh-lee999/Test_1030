@@ -1,0 +1,18 @@
+{
+  "repository": "https://github.com/Triple3T/trickcaltool",
+  "commit": "d15bb4c1f3f6d363939f851a434226bff9a77557",
+  "snapshotDate": "2025-08-25",
+  "retrievedDate": "2026-11-04",
+  "koreanData": "src/locale/ko-KR.json#translation.card.artifact",
+  "license": "Original Trickcal artwork; no separate redistribution license verified",
+  "items": [
+    {"id":"belt","sourceId":10,"file":"ArtifactIcon_10.png","sha256":"81c877943bee9a8962d9f6838fb94e7ddc51dc8c6b023c6fbb2d5985c56fbabf","url":"https://raw.githubusercontent.com/Triple3T/trickcaltool/d15bb4c1f3f6d363939f851a434226bff9a77557/public/artifacts/ArtifactIcon_10.png"},
+    {"id":"komi","sourceId":11,"file":"ArtifactIcon_11.png","sha256":"587ec36121d02b94c22155d01155d9e67890e3c94de4d602526a9315222245b6","url":"https://raw.githubusercontent.com/Triple3T/trickcaltool/d15bb4c1f3f6d363939f851a434226bff9a77557/public/artifacts/ArtifactIcon_11.png"},
+    {"id":"weather","sourceId":12,"file":"ArtifactIcon_12.png","sha256":"bcefa1f48ff9c60952584d8fe98c50f46841dccb01a1a32d92cb5d48e4647a01","url":"https://raw.githubusercontent.com/Triple3T/trickcaltool/d15bb4c1f3f6d363939f851a434226bff9a77557/public/artifacts/ArtifactIcon_12.png"},
+    {"id":"scythe","sourceId":40,"file":"ArtifactIcon_40.png","sha256":"7852dc28990181ad9af1f0bcd6b5525eadabc59833e33b9a860fd66c483c8c5f","url":"https://raw.githubusercontent.com/Triple3T/trickcaltool/d15bb4c1f3f6d363939f851a434226bff9a77557/public/artifacts/ArtifactIcon_40.png"},
+    {"id":"mace","sourceId":65,"file":"ArtifactIcon_65.png","sha256":"e16da9a83154aa098d596e1f55beaf498c2892ef77328a51bfabb44e594f97b6","url":"https://raw.githubusercontent.com/Triple3T/trickcaltool/d15bb4c1f3f6d363939f851a434226bff9a77557/public/artifacts/ArtifactIcon_65.png"},
+    {"id":"lucky","sourceId":73,"file":"ArtifactIcon_73.png","sha256":"94b4a51ebebf62acf080f994c1ca5fd8dda0ac0a6284ffb955c77d4e67d9b93b","url":"https://raw.githubusercontent.com/Triple3T/trickcaltool/d15bb4c1f3f6d363939f851a434226bff9a77557/public/artifacts/ArtifactIcon_73.png"},
+    {"id":"rust","sourceId":80,"file":"ArtifactIcon_80.png","sha256":"beeab3e1c1732244628d7a5cf67ee350cfde662db9b327877cae4820067231b5","url":"https://raw.githubusercontent.com/Triple3T/trickcaltool/d15bb4c1f3f6d363939f851a434226bff9a77557/public/artifacts/ArtifactIcon_80.png"},
+    {"id":"yellow","sourceId":83,"file":"ArtifactIcon_83.png","sha256":"a3214ae08053637b304f2384099c48349e9d84ea56ea7cf88c4b883d1141b40a","url":"https://raw.githubusercontent.com/Triple3T/trickcaltool/d15bb4c1f3f6d363939f851a434226bff9a77557/public/artifacts/ArtifactIcon_83.png"}
+  ]
+}
