@@ -1,6 +1,6 @@
 // Read-only markup; the engine owns validated moves and exact score previews.
-import {RELICS,RELIC_STAGES,MAX_RELICS,canReorder,reorderPreview} from './poker-engine.js?v=61';
-const stages={card:'카드 발동',relic:'배수·칩 계산',impact:'적중 후',passive:'전투·피격'};
+import {RELICS,RELIC_STAGES,MAX_RELICS,canReorder,reorderPreview} from './poker-engine.js?v=62';
+const stages={card:'카드 발동',relic:'배수·칩 계산',impact:'적중 후',passive:'전투·피격',resource:'횟수 확장'};
 export function relicOrderMarkup(g,{feedback=''}={}){
  const enabled=canReorder(g),picking=g.phase==='pick';
  const control=(from,to,direction)=>{

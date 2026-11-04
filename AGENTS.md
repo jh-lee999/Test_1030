@@ -1,5 +1,33 @@
 # Project instructions
 
+## ACTIVE v62: equipped relics raise real attack/discard caps
+
+User explicitly requested increasing attack/discard counts through relics.
+Base caps remain4 attacks/FIGHT and3 discards/TURN; resourceLimits(g) derives
+installed bonuses from unique relic IDs. extraHand adds1 attack, extraDiscard
+adds1 discard. Both fan relics cost8 G, use one of4 slots, cannot duplicate-stack.
+Shop guarantees at least one UNOWNED resource relic among3 offers if any remain;
+stock is still seeded/cached/no reroll by browsing; draw RNG is independent.
+
+startFight fills both derived caps; nextHand refills only derived discard cap.
+Buying/replacing in shop NEVER refills or adds to current remaining budgets.
+Clamp remaining counts down if a cap shrinks. Replacement preserves the chosen
+slot and removes its bonus; no repeated-equipment refund farming. resourceLimits
+and relicResourcePreview are pure and must not consume RNG/change charges.
+Passive resource-stage effects have NO score proc and ignore slot order.
+Empty/bell still use actual current-turn remaining discards, now possibly4.
+Fifth attack/fourth discard must really work, not just show bigger denominators.
+
+All HUD, shop future-budget text, notices, loss text, help and purchase/replacement
+comparisons use derived caps; baseline rules are labeled basic4/3. resource stage
+badge is explicit. JS/CSS and main/engine/order/hand imports use62; poker58.html
+remains a current alias. No new source character/monster/projectile art. Existing
+original artifact icons and provenance remain unchanged; new utility names are
+fan creations. Run resources62 unit/native first-two-fights acquisition browser,
+poker58 full run, order59/hands60/turn61 and all prior required npm/art/archive
+checks. Fixtures after the native acquisitions are labeled separately. See
+docs/resources62.md. Preserve unrelated chibi WebP.
+
 ## ACTIVE v61: discards are per turn, attacks remain per fight
 
 Latest explicit user request overrides the v58-60 fight-wide discard rule below.
