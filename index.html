@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#251d33"><title>버터의 사기 주사위</title><link rel="icon" href="./assets/butter-original36/poster.png"><link rel="stylesheet" href="./dice.css?v=53"><link rel="stylesheet" href="./dice55.css?v=55"><link rel="stylesheet" href="./dice56.css?v=56"><script type="module" src="./dice55.js?v=56"></script></head>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#251d33"><title>버터의 사기 주사위</title><link rel="icon" href="./assets/butter-original36/poster.png"><link rel="stylesheet" href="./dice.css?v=53"><link rel="stylesheet" href="./dice55.css?v=55"><link rel="stylesheet" href="./dice56.css?v=56"><script type="module" src="./dice55.js?v=57"></script></head>
 <body>
 <div id="app">
 <header><a class="brand" href="./"><span class="brand-mark">⚄</span><span>버터의 사기 주사위<small>BUTTER'S LITTLE BIG BET</small></span></a><nav><button id="help" aria-label="도움말">?</button><button id="sound" aria-pressed="true">소리 켬</button><button id="pause" aria-label="일시정지" disabled>Ⅱ</button></nav></header>
@@ -11,7 +11,7 @@
 <div class="table-heading"><div><span class="eyebrow">HOLD YOUR LUCK</span><h1 id="phase-label">행운은, 만드는 거야.</h1></div><span id="rolls">재굴림 2 / 2</span></div>
 <div id="dice" class="dice-row" role="group" aria-label="주사위 5개 · 누르면 고정"></div>
 <div class="roll-row"><button id="unhold">고정 모두 풀기</button><span id="hold-hint" class="sr-only">주사위를 눌러 남길 눈을 골라요</span><div class="die-editor"><span id="edit-label">1번 눈</span><button id="nudge-down" aria-label="선택한 주사위 눈 1 내리기">−</button><button id="nudge-up" aria-label="선택한 주사위 눈 1 올리기">+</button><b id="nudge-left">손보기 2 / 2</b></div><button id="reroll" class="reroll"><span>↻</span> 다시 굴리기 <em class="risk-cost">반격 +1</em><kbd>R</kbd></button></div>
-<div id="near-miss" class="near-miss" aria-label="손보기로 완성할 수 있는 조합"></div><div class="pattern-heading"><h2>이번엔 어떤 조합으로?</h2><small>조합 선택 → 공격 · 남은 주사위는 방어 · 재굴림은 반격 +1</small></div>
+<div id="near-miss" class="near-miss" aria-label="손보기로 완성할 수 있는 조합"></div><div class="pattern-heading"><h2>최대 피해 조합 자동 선택</h2><small>카드를 누르면 직접 선택 · 패가 바뀌면 최대 피해로 갱신</small></div>
 <div id="patterns" class="patterns" role="group" aria-label="공격 조합 4종"></div>
 <div class="attack-dock"><div><small id="attack-name">자유 투척</small><span><b id="preview-damage">0</b> <em>예상 피해</em></span></div><button id="attack" class="primary">이 조합으로 공격 <span>→</span></button><button id="pass" hidden>빈손으로 넘기기 · 반격 받음</button></div>
 <p id="attack-effect" class="artifact-feedback" role="status"></p>

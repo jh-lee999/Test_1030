@@ -1,11 +1,12 @@
 import {createGame,FACES,PATTERNS,RELICS,RUN_LENGTH,TRAIN_CAP,MAX_RELICS,nudgeDie,nudgeSuggestions,synergyHints,travelFromCamp,enemyIntent,camp,cancelReward,leaveCamp,chooseRoute,evaluate,toggleHold,reroll,attack,chooseRelic,counterPreview,canPass,pass,pause,resume,tick} from './dice-run-engine.js?v=56';
 import {renderDiceScene} from './dice-renderer.js?v=55';
 import {EFFECT_ATLAS} from './dice-effects.js?v=54';
+import {strongestPattern,attackSelectionKey} from './dice-selection.js?v=57';
 import {BUTTER_ORIGINAL,BUTTER_POSTER} from './butter-original-motion.js';
 import {STAGE_ART} from './platformer-art.js?v=43';
 import {createGameAudio} from './platformer-audio.js?v=46';
 const $=id=>document.getElementById(id),params=new URLSearchParams(location.search),audio=createGameAudio(),canvas=$('scene'),ctx=canvas.getContext('2d'),reduced=matchMedia('(prefers-reduced-motion: reduce)');
-let seedInput=params.get('seed')||'',g=createGame(seedInput||'BUTTER-DICE'),started=false,ready=false,last=0,selected='free',modalKey='',diceKey='',chainKey='',relicKey='',helpOpen=false,helpPaused=false,seenRoll=-1,swapCandidate=null,selectedDie=0,suggestKey='';
+let seedInput=params.get('seed')||'',g=createGame(seedInput||'BUTTER-DICE'),started=false,ready=false,last=0,selected='free',modalKey='',diceKey='',chainKey='',relicKey='',helpOpen=false,helpPaused=false,seenRoll=-1,swapCandidate=null,selectedDie=0,suggestKey='',selectionKey='';
 const images={butter:{},monsters:Object.fromEntries(['fan','archer','guard','ghost'].map(id=>[id,{}])),backgrounds:{}};
 const uiSymbols=new Map();
 const number=value=>Number(value.toFixed(3));
@@ -18,12 +19,12 @@ const buildHint=id=>synergyHints(g,id).map(text=>'<span class="synergy-hint">연
 document.addEventListener('error',e=>{if(e.target.matches?.('.relic-icon img'))e.target.hidden=true;},true);
 const focusTable=()=>$('table').focus({preventScroll:true});
 function start(seed=seedInput.trim()||Date.now()){
- if(!ready)return;audio.unlock();g=createGame(seed);started=true;selected='free';helpOpen=false;helpPaused=false;modalKey='';diceKey='';chainKey='';relicKey='';seenRoll=-1;last=0;swapCandidate=null;selectedDie=0;suggestKey='';
+ if(!ready)return;audio.unlock();g=createGame(seed);started=true;selected='free';helpOpen=false;helpPaused=false;modalKey='';diceKey='';chainKey='';relicKey='';seenRoll=-1;last=0;swapCandidate=null;selectedDie=0;suggestKey='';selectionKey='';
  const url=new URL(location.href);url.searchParams.set('seed',g.seed);history.replaceState(null,'',url);sync();
 }
 function doRoll(){if(reroll(g)){audio.unlock();audio.play(['shot']);sync();focusTable();}}
-function doAttack(){if(attack(g,selected)){audio.unlock();audio.play(['shot']);chainKey='';sync();focusTable();}}
-function doNudge(index,delta,pattern=null){if(nudgeDie(g,index,delta)){selectedDie=index;if(pattern)selected=pattern;audio.unlock();audio.play([pattern?'evade':'charge']);chainKey='';sync();focusTable();}}
+function doAttack(){sync();if(attack(g,selected)){audio.unlock();audio.play(['shot']);chainKey='';sync();focusTable();}}
+function doNudge(index,delta,pattern=null){if(nudgeDie(g,index,delta)){selectedDie=index;audio.unlock();audio.play([pattern?'evade':'charge']);chainKey='';sync();focusTable();}}
 function togglePause(){if(!started||helpOpen)return;if(g.phase==='paused')resume(g);else pause(g);sync();if(g.phase!=='paused')focusTable();}
 function openHelp(){if(helpOpen)return;helpPaused=started&&pause(g);helpOpen=true;sync();}
 function closeHelp(){helpOpen=false;if(helpPaused){resume(g);helpPaused=false;}sync();if(!['draft','reward','camp','route','paused','dead','won'].includes(g.phase))focusTable();}
@@ -67,7 +68,7 @@ function modal(){
   const r=RELICS[swapCandidate];p.innerHTML='<span class="eyebrow">FOUR SLOTS, ONE BUILD</span><h2 id="screen-title">어떤 유물을 빼 줄까?</h2><p>새 유물: <b>'+r.name+'</b><br>'+r.text+'</p><p>유물은 최대 4개. 교체를 확정할 때만 캠프 활동 1회를 사용해요.</p><div class="swap-choices">'+g.relics.map(id=>'<button data-replace="'+id+'">'+relicIcon(id)+'<b>'+RELICS[id].name+'</b><small>'+RELICS[id].text+'</small><span>이 유물 대신 넣기 →</span></button>').join('')+'</div><button id="swap-cancel" class="secondary">교체 취소 · 다시 고르기</button>';
   for(const b of p.querySelectorAll('[data-replace]'))b.addEventListener('click',()=>{if(chooseRelic(g,swapCandidate,b.dataset.replace)){swapCandidate=null;sync();}});$('swap-cancel').addEventListener('click',()=>{swapCandidate=null;sync();});
  }else if(kind==='help'){
-  p.innerHTML='<span class="eyebrow">BUTTER\'S CHEAT SHEET</span><h2 id="screen-title">한 번 더 굴릴까?</h2><ol class="help-list"><li><b>① 남길 주사위를 눌러 고정</b><span>초기 굴림 후 두 번 더 굴릴 수 있어요. 고정하지 않은 주사위만 바뀌어요. 숫자 1~5 키로도 고정할 수 있어요.</span></li><li><b>② 조합을 고르고 공격</b><span>자유 투척 / 짝꿍 / 삼총사 / 별빛 행진 중 골라요. 카드에 실제 유물 계산을 적용한 피해가 보여요. 삼총사는 같은 눈 4개·5개면 더 강해져요.</span></li><li><b>③ 유물의 조건을 활용</b><span>꼭 쥔 행운은 재굴림 때 지킨 주사위를 강화해요. 원작 코미의 베개는 위기 회복, 옐로카드는 분노, 날씨는 맑음은 번개예요. 캠프에서 조합을 Lv3까지 훈련할 수도 있어요.</span></li><li><b>④ 반격과 보스의 규칙 확인</b><span>적의 3턴 행동 순서를 보고, 빈틈의 피해 ×1.35를 노려요. 캠프는 자동 회복 없이 휴식·훈련·유물 중 하나를 골라요. 재굴림마다 반격 +1. 득점하지 않는 주사위는 개당 방어 2예요. 짝꿍은 적 방패를 부숴요. 보스에게 같은 조합을 연속 사용할 수 없어요. 공격할 조합이 전혀 없고 재굴림도 없으면 빈손으로 넘길 수 있어요.</span></li></ol><button id="help-close" class="primary">알겠어, 돌아가기</button>';$('help-close').addEventListener('click',closeHelp);
+  p.innerHTML='<span class="eyebrow">BUTTER\'S CHEAT SHEET</span><h2 id="screen-title">한 번 더 굴릴까?</h2><ol class="help-list"><li><b>① 남길 주사위를 눌러 고정</b><span>초기 굴림 후 두 번 더 굴릴 수 있어요. 고정하지 않은 주사위만 바뀌어요. 숫자 1~5 키로도 고정할 수 있어요.</span></li><li><b>② 조합을 고르고 공격</b><span>완성된 조합 중 최대 피해를 자동 선택해요. 방어를 원하면 카드를 눌러 직접 바꿀 수도 있어요. 카드에 실제 유물 계산을 적용한 피해가 보여요. 삼총사는 같은 눈 4개·5개면 더 강해져요.</span></li><li><b>③ 유물의 조건을 활용</b><span>꼭 쥔 행운은 재굴림 때 지킨 주사위를 강화해요. 원작 코미의 베개는 위기 회복, 옐로카드는 분노, 날씨는 맑음은 번개예요. 캠프에서 조합을 Lv3까지 훈련할 수도 있어요.</span></li><li><b>④ 반격과 보스의 규칙 확인</b><span>적의 3턴 행동 순서를 보고, 빈틈의 피해 ×1.35를 노려요. 캠프는 자동 회복 없이 휴식·훈련·유물 중 하나를 골라요. 재굴림마다 반격 +1. 득점하지 않는 주사위는 개당 방어 2예요. 짝꿍은 적 방패를 부숴요. 보스에게 같은 조합을 연속 사용할 수 없어요. 공격할 조합이 전혀 없고 재굴림도 없으면 빈손으로 넘길 수 있어요.</span></li></ol><button id="help-close" class="primary">알겠어, 돌아가기</button>';$('help-close').addEventListener('click',closeHelp);
  }else if(kind==='camp'){
   p.innerHTML='<span class="eyebrow">A BREATHER, OR A BIGGER BET?</span><h2 id="screen-title">잠깐, 뭘 챙겨 갈까?</h2><p>남은 캠프 활동 <b>'+g.campPoints+'회</b> · '+(g.foe.elite?'정예 보상으로 2회':'일반전 보상으로 1회')+' · 자동 회복 없음</p><div class="camp-next">다음 갈림길: '+g.routes.map(r=>r.name+' (HP '+r.maxHp+')').join(' / ')+'</div><div class="camp-grid"><article><span class="camp-symbol">♡</span><h3>숨 돌리기</h3><p>체력 16 회복<br>현재 '+g.hp+' / '+g.maxHp+'</p><button data-camp="rest" '+(!g.campPoints||g.hp===g.maxHp?'disabled':'')+'>회복하기 · 활동 1회</button></article><article><span class="camp-symbol">⚄</span><h3>조합 훈련</h3><p>선택한 조합: 칩 +8 · 최종 배수 +0.75<br>매 레벨 누적 / 최대 Lv3</p><div class="training-choices">'+Object.keys(PATTERNS).map(id=>'<button data-train="'+id+'" '+(!g.campPoints||g.training[id]===TRAIN_CAP?'disabled':'')+'>'+PATTERNS[id].name+' <b>Lv'+g.training[id]+' → '+Math.min(TRAIN_CAP,g.training[id]+1)+'</b></button>').join('')+'</div></article><article><span class="camp-symbol">✧</span><h3>유물 찾기</h3><p>미보유 유물 3개 중 하나<br>대신 회복·훈련을 포기해요.</p><button data-camp="relic" '+(!g.campPoints?'disabled':'')+'>유물 살펴보기 · 활동 1회</button></article></div><p class="camp-log">'+(g.campLog.join(' · ')||'지금 필요한 건 체력일까, 다음 전투의 힘일까?')+'</p><button id="leave-camp" class="primary" '+(g.campPoints?'disabled':'')+'>다음 갈림길 →</button>';
   for(const b of p.querySelectorAll('[data-camp]'))b.addEventListener('click',()=>{camp(g,b.dataset.camp);sync();});
@@ -89,7 +90,7 @@ function modal(){
 function sync(){
  const resolving=g.phase==='resolve'||g.phase==='paused'&&g.returnPhase==='resolve';
  const results=Object.keys(PATTERNS).map(id=>evaluate(g,id)),valid=results.filter(r=>r&&!r.blocked);
- if(!resolving&&!valid.some(r=>r.id===selected))selected=[...valid].sort((a,b)=>b.damage-a.damage)[0]?.id||'free';
+ if(!resolving){const key=attackSelectionKey(g,results);if(key!==selectionKey||!valid.some(r=>r.id===selected)){selected=strongestPattern(results)?.id||'free';selectionKey=key;}}
  const result=resolving?g.lastResult:evaluate(g,selected),active=started&&g.phase==='pick'&&!helpOpen;
  document.body.dataset.phase=started?g.phase:'title';document.body.dataset.stage=g.stage;
  label('hp',g.hp+' / '+g.maxHp+(g.shield?' · 방패 '+g.shield:''));$('hp-bar').style.width=g.hp/g.maxHp*100+'%';

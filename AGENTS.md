@@ -1,5 +1,18 @@
 # Project instructions
 
+## ACTIVE v57: highest legal damage is the default shot
+
+dice-selection.js is a read-only UI policy using evaluate() damage AFTER relics,
+training, exposure, armor and execution. Exclude invalid/boss-banned patterns;
+ties prefer guard, then stable order. Recalculate after any hand/scoring change
+or new roll/turn, even if the old selection is still valid. A deliberate manual
+defensive selection survives unchanged hands, holds and animation frames only.
+Freeze selection through committed/paused resolution. doAttack synchronizes
+again before committing to avoid stale-frame shots. Never auto-fire merely
+because a combination exists; preserve reroll/edit opportunity and input timing.
+Engine rules, resources, art and all archives are unchanged. Run selection57
+unit/browser, active v55/v56 checks and preserved required checks.
+
 ## ACTIVE v56: player agency and less menu friction
 
 Root retains dice55.js / dice-run-engine.js filenames with v56 cache keys and
