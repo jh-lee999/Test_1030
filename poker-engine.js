@@ -1,4 +1,4 @@
-// v59: finite cards and ordered relic passes. Previews never consume RNG.
+// v61: discards refill at each surviving turn boundary, not only each fight.
 import {butterReleasePoint} from './butter-original-motion.js';
 import {RELICS as OLD_RELICS,seedNumber} from './dice-engine.js';
 
@@ -24,9 +24,9 @@ const DESCRIPTIONS={
  echo:'득점 카드에 같은 숫자가 2장 이상이면 그 카드들을 한 번 더 발동. 번개·별사탕도 재발동.',
  candy:'득점한 A 또는 그림 카드(J/Q/K)가 발동할 때마다 칩 +8.',
  pillow:'이 유물 위치에서 하트 총 발동 1회당 배수 +0.5. 리본 재발동 포함. 곱배수 앞에 두면 함께 증폭돼요.',
- empty:'버리기를 모두 소모했다면 이 유물 위치에서 배수 +3. 뒤에 놓인 곱배수로 증폭 가능.',
+ empty:'이번 턴 버리기를 모두 소모했다면 이 유물 위치에서 배수 +3. 뒤에 놓인 곱배수로 증폭 가능.',
  rubber:'이 유물 위치에서 현재 배수 ×1.5. 뒤에 오는 +배수까지 미리 곱하지 않아요.',
- bell:'이번 전투에 남긴 버리기 1회마다 칩 +10.',
+ bell:'이번 턴에 남긴 버리기 1회마다 칩 +10. 다음 턴 버리기 충전과 함께 새로 계산.',
  yellow:'트리플 이상 족보 배수 ×1.35. 실제 HP 피해로 분노 3을 모으면 추가 ×2 후 소모.',
  komi:'반격 후 살아 있고 HP가 30% 이하면 8 회복. 전투마다 한 번.',
  weather:'득점 카드 3회 발동마다 번개 칩 +18. 충전은 다음 공격·전투로 유지.',
@@ -42,7 +42,7 @@ Object.assign(RELICS,{
  ladder:{name:'이어 붙인 사다리',color:'#9fbeb0',icon:'book-low',tag:'스트레이트 빌드',text:'스트레이트 계열이면 이 유물 위치에서 배수 ×2. 앞의 +배수도 함께 증폭.'}
 });
 export const RELIC_STAGES={echo:'card',candy:'card',weather:'card',pillow:'relic',empty:'relic',rubber:'relic',bell:'relic',yellow:'relic',rust:'relic',mace:'relic',paint:'relic',ladder:'relic',belt:'passive',komi:'passive',scythe:'impact',lucky:'impact'};
-export const RUN_LENGTH=6,MAX_RELICS=4,MIN_DECK=20;
+export const RUN_LENGTH=6,MAX_RELICS=4,MIN_DECK=20,DISCARDS_PER_TURN=3;
 const small=id=>['high','pair','twoPair'].includes(id),flushes=id=>['flush','straightFlush','royal','flushHouse','flushFive'].includes(id),straights=id=>['straight','straightFlush','royal'].includes(id);
 const score=(c,m)=>Math.floor(Number((c*m).toFixed(8)));
 function random(g,key){g[key]=(g[key]+0x6d2b79f5)>>>0;let t=g[key];t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;}
@@ -132,20 +132,20 @@ export function drawHints(g){
 function foe(depth,elite=false){const roles=['fan','archer','guard','fan','archer','ghost'],names=['숲의 첫 내기','성급한 사수','방패 뒤의 거래','밤숲의 추종자','마지막 문지기','이불령의 마지막 내기'],maxHp=Math.round([180,340,570,850,1250,2300][depth]*(elite?1.45:1));return {depth,enemy:roles[depth],stage:{fan:0,archer:1,guard:2,ghost:3}[roles[depth]],name:(elite?'정예 · ':'')+names[depth],maxHp,boss:depth===5,elite};}
 export function createGame(seed=Date.now()){
  const label=String(seed).trim().slice(0,48)||'BUTTER',deck=[];for(const suit of Object.keys(SUITS))for(let rank=2;rank<=14;rank++)deck.push({id:'c'+deck.length,rank,suit});
- const f=foe(0);return {seed:label,phase:'draft',time:0,depth:0,stage:0,foe:f,enemyHp:f.maxHp,hp:48,maxHp:48,gold:12,deck,nextCard:52,drawPile:[],discardPile:[],hand:[],selected:[],drawState:seedNumber(label+':cards58'),shopState:seedNumber(label+':shop58'),relics:[],training:Object.fromEntries(Object.keys(PATTERNS).map(id=>[id,0])),choices:['echo','paint','ladder'],hands:4,discards:3,turn:1,attacks:0,best:0,totalDamage:0,lastPattern:null,lastResult:null,pending:null,action:null,shield:0,strikes:0,rage:0,maceHits:0,komiUsed:false,armorBroken:false,history:[],shop:null,returnPhase:null,notice:'같은 숫자 / 같은 무늬 / 연속 숫자. 첫 유물로 빌드를 골라요.'};
+ const f=foe(0);return {seed:label,phase:'draft',time:0,depth:0,stage:0,foe:f,enemyHp:f.maxHp,hp:48,maxHp:48,gold:12,deck,nextCard:52,drawPile:[],discardPile:[],hand:[],selected:[],drawState:seedNumber(label+':cards58'),shopState:seedNumber(label+':shop58'),relics:[],training:Object.fromEntries(Object.keys(PATTERNS).map(id=>[id,0])),choices:['echo','paint','ladder'],hands:4,discards:DISCARDS_PER_TURN,turn:1,attacks:0,best:0,totalDamage:0,lastPattern:null,lastResult:null,pending:null,action:null,shield:0,strikes:0,rage:0,maceHits:0,komiUsed:false,armorBroken:false,history:[],shop:null,returnPhase:null,notice:'같은 숫자 / 같은 무늬 / 연속 숫자. 첫 유물로 빌드를 골라요.'};
 }
 function replenish(g){
  while(g.hand.length<8){if(!g.drawPile.length){if(!g.discardPile.length)break;g.drawPile=shuffle(g,g.discardPile);g.discardPile=[];}const id=g.drawPile.pop(),c=g.deck.find(c=>c.id===id);if(c)g.hand.push({...c});}
  g.selected=[];
 }
-function startFight(g,elite=false){g.foe=foe(g.depth,elite);g.stage=g.foe.stage;g.enemyHp=g.foe.maxHp;g.hands=4;g.discards=3;g.turn=1;g.lastPattern=null;g.lastResult=null;g.lastCounter=null;g.pending=null;g.action=null;g.armorBroken=false;g.shield=g.relics.includes('belt')?8:0;g.komiUsed=false;g.hand=[];g.discardPile=[];g.drawPile=shuffle(g,g.deck.map(c=>c.id));replenish(g);g.phase='pick';g.notice='8장 중 최대 피해 족보 자동 선택. 부족한 패를 골라 버릴 수 있어요.';}
+function startFight(g,elite=false){g.foe=foe(g.depth,elite);g.stage=g.foe.stage;g.enemyHp=g.foe.maxHp;g.hands=4;g.discards=DISCARDS_PER_TURN;g.turn=1;g.lastPattern=null;g.lastResult=null;g.lastCounter=null;g.pending=null;g.action=null;g.armorBroken=false;g.shield=g.relics.includes('belt')?8:0;g.komiUsed=false;g.hand=[];g.discardPile=[];g.drawPile=shuffle(g,g.deck.map(c=>c.id));replenish(g);g.phase='pick';g.notice='8장 중 최대 피해 족보 자동 선택. 버리기는 매 턴 3회예요.';}
 export function chooseStarter(g,id){if(g.phase!=='draft'||!g.choices.includes(id))return false;g.relics.push(id);g.choices=[];startFight(g);return true;}
 export function toggleCard(g,id){if(g.phase!=='pick'||!g.hand.some(c=>c.id===id))return false;const i=g.selected.indexOf(id);if(i>=0)g.selected.splice(i,1);else{if(g.selected.length>=5)return false;g.selected.push(id);}return true;}
-export function discard(g){if(g.phase!=='pick'||g.discards<=0||g.selected.length<1||g.selected.length>5||g.selected.some(id=>!g.hand.some(c=>c.id===id)))return false;const selected=new Set(g.selected);g.discardPile.push(...g.hand.filter(c=>selected.has(c.id)).map(c=>c.id));g.hand=g.hand.filter(c=>!selected.has(c.id));g.discards--;replenish(g);g.notice='선택한 카드만 교체했어요. 남은 버리기 '+g.discards+'회 · 전투 전체에서 공유';return true;}
+export function discard(g){if(g.phase!=='pick'||g.discards<=0||g.selected.length<1||g.selected.length>5||g.selected.some(id=>!g.hand.some(c=>c.id===id)))return false;const selected=new Set(g.selected);g.discardPile.push(...g.hand.filter(c=>selected.has(c.id)).map(c=>c.id));g.hand=g.hand.filter(c=>!selected.has(c.id));g.discards--;replenish(g);g.notice='선택한 카드만 교체했어요. 남은 버리기 '+g.discards+'회 · 다음 턴에 3회 충전';return true;}
 export function counterPreview(g,r){const resolving=g.phase==='resolve'||g.phase==='paused'&&g.returnPhase==='resolve',raw=resolving?g.pending.returnDamage:enemyIntent(g).attack,stun=Boolean(r?.stun),ward=stun?0:Math.min(raw,r?.guard||0),shieldSpent=stun?0:Math.min(g.shield,raw-ward);return {raw,ward,shieldSpent,loss:stun?0:raw-ward-shieldSpent,stun};}
 export function attack(g){if(g.phase!=='pick'||g.hands<=0)return false;const result=bestHand(g);if(!result)return false;const type=result.damage>=300?'high':'normal',duration=type==='high'?1.1:.75,hitAt=butterReleasePoint(type)*duration+.3;g.pending={result,clock:0,hitAt,endAt:Math.max(duration+.15,hitAt+.35),applied:false,returnDamage:enemyIntent(g).attack};g.action={type,time:0,duration};g.lastResult=result;g.lastPattern=result.id;g.hands--;g.attacks++;g.selected=[];g.phase='resolve';g.notice=result.name+' · '+result.damage+' 피해 / 방어 '+result.guard;return true;}
 function payCounter(g,r){const p=counterPreview(g,r);g.shield-=p.shieldSpent;g.hp=Math.max(0,g.hp-p.loss);g.lastCounter=p;if(p.loss){if(g.relics.includes('yellow'))g.rage=Math.min(3,g.rage+1);if(g.relics.includes('mace'))g.maceHits=Math.min(3,g.maceHits+1);}if(g.hp>0&&g.hp<=g.maxHp*.3&&g.relics.includes('komi')&&!g.komiUsed){g.hp=Math.min(g.maxHp,g.hp+8);g.komiUsed=true;}if(g.hp<=0||g.hands<=0){g.phase='dead';g.notice=g.hp<=0?'버터의 체력이 다했어요.':'공격 기회 4회를 모두 썼어요. 다음에는 패와 덱을 다듬어 봐요.';return false;}return true;}
-function nextHand(g,ids){const used=new Set(ids);g.discardPile.push(...g.hand.filter(c=>used.has(c.id)).map(c=>c.id));g.hand=g.hand.filter(c=>!used.has(c.id));g.turn++;g.pending=null;g.action=null;replenish(g);g.phase='pick';const p=g.lastCounter;g.notice=(p?.stun?'기절 · 반격 취소':'반격 −'+(p?.loss||0)+' HP'+(p?.shieldSpent?' · 보호막 '+p.shieldSpent+' 흡수':''))+' · 공격 '+g.hands+'회 / 버리기 '+g.discards+'회 남음';}
+function nextHand(g,ids){const used=new Set(ids);g.discardPile.push(...g.hand.filter(c=>used.has(c.id)).map(c=>c.id));g.hand=g.hand.filter(c=>!used.has(c.id));g.turn++;g.discards=DISCARDS_PER_TURN;g.pending=null;g.action=null;replenish(g);g.phase='pick';const p=g.lastCounter;g.notice=(p?.stun?'기절 · 반격 취소':'반격 −'+(p?.loss||0)+' HP'+(p?.shieldSpent?' · 보호막 '+p.shieldSpent+' 흡수':''))+' · 다음 턴 버리기 '+g.discards+'회 충전 / 공격 '+g.hands+'회 남음';}
 export function canPass(g){return g.phase==='pick'&&g.discards===0&&!bestHand(g);}
 export function pass(g){if(!canPass(g))return false;g.hands--;g.lastPattern=null;if(payCounter(g,null))nextHand(g,g.hand.map(c=>c.id));return true;}
 function shopOffers(g){const pool=Object.keys(RELICS).filter(id=>!g.relics.includes(id)),relics=[];for(let i=0;i<3&&pool.length;i++){const j=Math.floor(random(g,'shopState')*pool.length);relics.push(pool.splice(j,1)[0]);}const booster=[];for(let i=0;i<3;i++)booster.push({rank:10+Math.floor(random(g,'shopState')*5),suit:Object.keys(SUITS)[Math.floor(random(g,'shopState')*4)]});return {relics,booster,cuts:0,copies:0,changes:0,lessons:0,rested:false,packBought:false};}

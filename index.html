@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#251d33"><title>버터의 수상한 카드놀이</title><link rel="icon" href="./assets/butter-original36/poster.png"><link rel="stylesheet" href="./dice.css?v=53"><link rel="stylesheet" href="./poker.css?v=60"><script type="module" src="./poker.js?v=60"></script></head>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#251d33"><title>버터의 수상한 카드놀이</title><link rel="icon" href="./assets/butter-original36/poster.png"><link rel="stylesheet" href="./dice.css?v=53"><link rel="stylesheet" href="./poker.css?v=60"><script type="module" src="./poker.js?v=61"></script></head>
 <body><div id="app">
 <header><a class="brand" href="./"><span class="brand-mark">♠</span><span>버터의 수상한 카드놀이<small>BUILD YOUR DECK. MAKE YOUR LUCK.</small></span></a><nav><button id="deck-open">덱 보기</button><button id="help" aria-label="도움말">?</button><button id="sound" aria-pressed="true">소리 켬</button><button id="pause" aria-label="일시정지" disabled>Ⅱ</button></nav></header>
 <main><section class="play-column">
 <div class="run-status"><div class="hp-status"><span>버터의 체력</span><b id="hp">48 / 48</b><div class="track"><i id="hp-bar"></i></div></div><div class="route" id="route" aria-label="전투 진행"></div><div class="turn-status"><small id="round">첫 번째 내기</small><b id="gold">12 G</b></div></div>
 <section class="arena" aria-label="버터와 상대"><div class="enemy-heading"><span id="enemy-name"></span><b id="enemy-hp"></b></div><div class="enemy-track"><i id="enemy-bar"></i></div><canvas id="scene" width="1000" height="300" aria-label="원작 버터와 몬스터 모션"></canvas><div class="enemy-intent"><span id="rule"></span><b id="incoming"></b></div></section>
 <section class="table" id="table" tabindex="-1" aria-label="보유 카드와 공격 족보">
-<div class="table-heading"><div><span class="eyebrow">A DECK YOU SHAPE</span><h1 id="phase-label">패를 만들고, 운을 바꿔.</h1></div><span id="resources">공격 4 · 버리기 3</span></div>
+<div class="table-heading"><div><span class="eyebrow">A DECK YOU SHAPE</span><h1 id="phase-label">패를 만들고, 운을 바꿔.</h1></div><span id="resources" title="공격은 전투당 4회 · 버리기는 턴마다 3회">공격 4 · 버리기 3</span></div>
 <div class="hand-key"><span><i class="key-score"></i> 금색 테두리 = 자동 득점 카드</span><span><i class="key-discard"></i> 붉은 표시 = 버릴 카드</span></div>
 <div id="hand" class="hand" role="group" aria-label="보유 카드 8장 · 누르면 버리기 선택"></div>
 <section id="completed-hands-panel" class="completed-hands-panel" aria-label="현재 패로 완성한 족보" hidden></section>

@@ -1,5 +1,22 @@
 # Project instructions
 
+## ACTIVE v61: discards are per turn, attacks remain per fight
+
+Latest explicit user request overrides the v58-60 fight-wide discard rule below.
+DISCARDS_PER_TURN=3. createGame/startFight initialize it; nextHand refills exactly
+3 ONLY after a surviving attack+counter or legal pass starts the next turn.
+Never refill inside replenish (also used by discard), on click/impact, pause,
+help, inspection, reorder, elapsed time, death or fight clear. No unused carry.
+Hands remain4 per FIGHT; normal counter/last-hand loss rules are unchanged.
+Unscored held cards and finite draw/discard piles still carry as before.
+Empty/bell score the committed CURRENT turn's remaining discards. New turn
+recomputes them with3; never retroactively change pending damage/charges.
+All live help/title/shop/relic/notice copy uses per-turn scope. Root and poker58
+load poker.js61; engine/order/hand imports61; unchanged CSS stays60. Older dice
+archives and all source art stay untouched. Run turn61 unit/native desktop+touch
+browser, poker58 full run, order59/hands60 and all required archives/npm/art checks.
+See docs/turn61.md. Preserve unrelated chibi WebP.
+
 ## ACTIVE v60: show completed hands without changing attack selection
 
 User asked to see what the current hand has achieved. Root/poker58.html now use
