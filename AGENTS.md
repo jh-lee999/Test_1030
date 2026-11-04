@@ -1,5 +1,32 @@
 # Project instructions
 
+## ACTIVE v65: release-quality loop requested by user
+
+Track the user goal and remaining evidence in docs/QUALITY_GOAL.md and
+docs/release65.md. Preserve classic rules and original source art. Optional deep
+mode is explicit at the title: scaled HP, counter +2+(turn-1)+current discard
+pressure, guard armor doubled, unused scoring slots defend3 rather than2.
+Every successful discard adds1 pressure regardless of selected count; next turn/
+fight clears it. Deep boss first hit is capped at half maxHP; wardUsed changes
+ONLY at actual impact. All preview/trace/HUD/save paths must agree. Classic
+remains4 attacks/FIGHT,3 discards/TURN plus relics, max5 scoring / full8 discard.
+
+poker-profile.js handles local versioned snapshots, including pending/applied
+shots; never grant a refill/reward on resume. Reject corrupt snapshots; blocked
+storage remains playable with a warning. Cache checkpoints by meaningful state,
+not animation clocks. Run records are display-only, never permanent stat growth.
+Settings (volume/motion/coach) persist. New run confirms replacement of active
+save. Tests default to no persistence; test=1&persist=1 explicitly exercises it.
+
+poker-release-ui.js is read-only. Shop comparisons use held hand / next normal
+fight first turn, clearly labeled as a SAMPLE not future EV; honor mode/caps/
+relic fold. Main board and visible completed-hand list stay accessible. Detailed
+relic info folds; order controls remain accessible. Desktop core fits1366x768,
+mobile uses sticky attack dock. Main/engine/order/hand/profile/UI/audio use65;
+feedback64/source renderer unchanged. Required new checks: release65 unit,
+check-poker65-browser.mjs, check-poker65-run.mjs native deep6-room resource run,
+and prior current/archive/npm/art checks. Preserve unrelated chibi WebP.
+
 ## ACTIVE v64: event-driven button and card feedback
 
 User requested game-like button animation. poker-feedback.js/css are presentation

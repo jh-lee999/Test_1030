@@ -25,8 +25,8 @@ export function shopPlan(g){
  if(E.canService(g,'copy')&&g.gold>=12){const c=[...g.deck].sort((a,b)=>b.rank-a.rank)[0];return {kind:'copy',id:c.id};}
  return {kind:'travel'};
 }
-export function run(seed,starter='echo'){
- const g=E.createGame(seed),log=[];E.chooseStarter(g,starter);for(let n=0;n<150&&!['won','dead'].includes(g.phase);n++){
+export function run(seed,starter='echo',mode='classic'){
+ const g=E.createGame(seed,mode),log=[];E.chooseStarter(g,starter);for(let n=0;n<150&&!['won','dead'].includes(g.phase);n++){
   if(g.phase==='pick'){const r=E.bestHand(g);if(r&&r.damage>=g.enemyHp){E.attack(g);log.push({room:g.depth+1,hand:r.id,damage:r.damage});settle(g);continue;}const ids=g.discards?discardPlan(g):[];if(ids.length){for(const id of ids)E.toggleCard(g,id);E.discard(g);continue;}if(r){E.attack(g);log.push({room:g.depth+1,hand:r.id,damage:r.damage});settle(g);}else if(g.discards){for(const c of g.hand.slice(0,5))E.toggleCard(g,c.id);E.discard(g);}else E.pass(g);
   }else if(g.phase==='shop'){const p=shopPlan(g);if(p.kind==='relic')E.buyRelic(g,p.id);if(p.kind==='rest')E.rest(g);if(p.kind==='train')E.train(g,p.id);if(p.kind==='remove')E.editDeck(g,'remove',p.id);if(p.kind==='copy')E.editDeck(g,'copy',p.id);if(p.kind==='travel')E.travel(g);}
  }
