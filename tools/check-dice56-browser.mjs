@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox']});
 const root=process.argv[2]||'http://127.0.0.1:4188',errors=[];
-async function open(page){page.on('pageerror',e=>errors.push(e.message));await page.goto(root+'/?test=1&seed=56');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();await page.locator('[data-relic="bell"]').click();await page.waitForSelector('body[data-phase="pick"]');}
+async function open(page){page.on('pageerror',e=>errors.push(e.message));await page.goto(root+'/dice57.html?test=1&seed=56');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();await page.locator('[data-relic="bell"]').click();await page.waitForSelector('body[data-phase="pick"]');}
 try{
  const page=await browser.newPage({viewport:{width:1440,height:900}});await open(page);
  const before=await page.evaluate(()=>[window.__dice55.game.rollState,window.__dice55.game.rerolls]);assert.equal(await page.locator('#nudge-up').isDisabled(),true);await page.keyboard.press('Digit3');await page.keyboard.press('BracketRight');assert.equal(await page.evaluate(()=>window.__dice55.game.dice[2]),2);assert.equal(await page.evaluate(()=>window.__dice55.game.nudges),1);await page.keyboard.press('BracketLeft');assert.equal(await page.evaluate(()=>window.__dice55.game.nudges),0);assert.equal(await page.locator('#nudge-up').isDisabled(),true);assert.deepEqual(await page.evaluate(()=>[window.__dice55.game.rollState,window.__dice55.game.rerolls]),before);

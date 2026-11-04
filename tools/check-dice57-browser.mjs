@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox']});
 const root=process.argv[2]||'http://127.0.0.1:4188',errors=[];
-async function open(page){page.on('pageerror',e=>errors.push(e.message));await page.goto(root+'/?test=1&seed=56');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();await page.locator('[data-relic="bell"]').click();await page.waitForSelector('body[data-phase="pick"]');}
+async function open(page){page.on('pageerror',e=>errors.push(e.message));await page.goto(root+'/dice57.html?test=1&seed=56');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();await page.locator('[data-relic="bell"]').click();await page.waitForSelector('body[data-phase="pick"]');}
 async function expected(page){return page.evaluate(async()=>{const {strongestPattern}=await import('./dice-selection.js?v=57'),{PATTERNS}=await import('./dice-run-engine.js?v=56'),a=window.__dice55;return strongestPattern(Object.keys(PATTERNS).map(id=>a.evaluate(a.game,id)))?.id;});}
 async function selected(page){return page.locator('.pattern.selected').getAttribute('data-pattern');}
 try{

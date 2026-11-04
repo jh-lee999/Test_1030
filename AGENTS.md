@@ -1,5 +1,45 @@
 # Project instructions
 
+## ACTIVE v58: finite poker deck and run deck-building
+
+User explicitly requested Balatro-like deck thinning and full poker mechanics.
+Root now loads poker.js/poker-engine.js/poker.css. dice57.html is verbatim HEAD
+16498c2 index (SHA25616a8e425bba9ef28f17078fe3447dc6b5d0de801eef3000e68aa8f7fc387d066).
+v55/56/57 browser tests now target that archive, including optional-art fallback.
+All older engine rules below protect archives, not a demand to retain dice in v58.
+
+52 persistent uniquely identified cards; draw8; each fight4 hands/3 discards
+(not per-turn). Discard selects1..5, no held-card bonuses. Only scoring cards
+leave the hand on attack; refill to8. Draw pile empty reshuffles discard pile,
+never duplicates in-flight/hand cards. Fight transition shuffles the edited deck.
+Search ALL subsets up to5 for13 exact scoring patterns. Classifier accepts only
+scoring cards (e.g. four uses4; extra kicker is not scored). A2345 and10JQKA,
+never QKA23. Royal requires matching suit; copied cards enable five/flushHouse/
+flushFive. Best actual legal damage is ALWAYS the attack (no card-to-fire button
+selection), with guard tie-break. Boss seals previous exact pattern; no-legal
+hand with no discards exposes pass consuming a hand/counter. Last nonlethal
+attack loses: never infinite throws. Clicking card selects discard, not scoring.
+
+Shop quotes/transactions validate fully before changing money/deck/training.
+Remove4 G then6 (2/shop; floor20 cards), copy6 (1/shop/new unique ID), suit/rank3
+(2 shared/shop), training5 (2/shop; cap8 upgrades), rest4/+16 once, relic8/4slots
+with explicit replacement, pack4/pick1of3 once. Stock is generated only on clear,
+no reroll by browsing. Base reward8/elite14 +2 per remaining hand +interest at
+floor(gold/5), max5, before reward. No autoheal. Elite HPx1.45/counter+3. Six
+fights, boss2300 HP; counter commitment cannot retroactively enrage after hit.
+Run reset clears all deck edits and growth. Independent draw/shop RNG streams.
+drawHints and diagnostic policy read counts, not future shuffled order; previews
+must remain RNG-free. Menu/pause clocks freeze; damages and charges apply once
+at original release+travel. No autofire while editing/discarding.
+
+Fourteen existing relic icons/source summaries retained with explicit NEW poker
+adaptations; two fan starters paint/ladder. Never claim original live mechanics
+or verified license. Butter/monster/source VFX transforms and files are unchanged.
+Shared renderer changes ONLY optional idleTitle/idleSubtitle text (old defaults).
+Run poker58 unit/browser, all archive browsers, npm/art checks. Native six-room
+policy-driven button run is automation, NOT human fun validation. Fixtures are
+separate. See docs/poker58.md. Preserve unrelated chibi WebP.
+
 ## ACTIVE v57: highest legal damage is the default shot
 
 dice-selection.js is a read-only UI policy using evaluate() damage AFTER relics,

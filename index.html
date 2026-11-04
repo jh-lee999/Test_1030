@@ -1,30 +1,22 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#251d33"><title>버터의 사기 주사위</title><link rel="icon" href="./assets/butter-original36/poster.png"><link rel="stylesheet" href="./dice.css?v=53"><link rel="stylesheet" href="./dice55.css?v=55"><link rel="stylesheet" href="./dice56.css?v=56"><script type="module" src="./dice55.js?v=57"></script></head>
-<body>
-<div id="app">
-<header><a class="brand" href="./"><span class="brand-mark">⚄</span><span>버터의 사기 주사위<small>BUTTER'S LITTLE BIG BET</small></span></a><nav><button id="help" aria-label="도움말">?</button><button id="sound" aria-pressed="true">소리 켬</button><button id="pause" aria-label="일시정지" disabled>Ⅱ</button></nav></header>
-<main>
-<section class="play-column">
-<div class="run-status"><div class="hp-status"><span>버터의 체력</span><b id="hp">40 / 40</b><div class="track"><i id="hp-bar"></i></div></div><div class="route" id="route" aria-label="전투 진행"></div><div class="turn-status"><small id="round">첫 번째 시험</small><b id="turn">1 TURN</b></div></div>
-<section class="arena" aria-label="버터와 상대"><div class="enemy-heading"><span id="enemy-name">숲의 초대장</span><b id="enemy-hp">180 / 180</b></div><div class="enemy-track"><i id="enemy-bar"></i></div><canvas id="scene" width="1000" height="300" aria-label="원작 버터와 몬스터 모션"></canvas><div class="enemy-intent"><span id="rule"></span><b id="incoming">반격 −6 HP</b></div></section>
-<section class="table" id="table" tabindex="-1" aria-label="주사위와 공격 조합">
-<div class="table-heading"><div><span class="eyebrow">HOLD YOUR LUCK</span><h1 id="phase-label">행운은, 만드는 거야.</h1></div><span id="rolls">재굴림 2 / 2</span></div>
-<div id="dice" class="dice-row" role="group" aria-label="주사위 5개 · 누르면 고정"></div>
-<div class="roll-row"><button id="unhold">고정 모두 풀기</button><span id="hold-hint" class="sr-only">주사위를 눌러 남길 눈을 골라요</span><div class="die-editor"><span id="edit-label">1번 눈</span><button id="nudge-down" aria-label="선택한 주사위 눈 1 내리기">−</button><button id="nudge-up" aria-label="선택한 주사위 눈 1 올리기">+</button><b id="nudge-left">손보기 2 / 2</b></div><button id="reroll" class="reroll"><span>↻</span> 다시 굴리기 <em class="risk-cost">반격 +1</em><kbd>R</kbd></button></div>
-<div id="near-miss" class="near-miss" aria-label="손보기로 완성할 수 있는 조합"></div><div class="pattern-heading"><h2>최대 피해 조합 자동 선택</h2><small>카드를 누르면 직접 선택 · 패가 바뀌면 최대 피해로 갱신</small></div>
-<div id="patterns" class="patterns" role="group" aria-label="공격 조합 4종"></div>
-<div class="attack-dock"><div><small id="attack-name">자유 투척</small><span><b id="preview-damage">0</b> <em>예상 피해</em></span></div><button id="attack" class="primary">이 조합으로 공격 <span>→</span></button><button id="pass" hidden>빈손으로 넘기기 · 반격 받음</button></div>
-<p id="attack-effect" class="artifact-feedback" role="status"></p>
-<p id="notice" role="status" aria-live="polite">남길 주사위와 다시 굴릴 주사위를 골라요.</p>
-</section>
-</section>
-<aside>
-<section class="score-card"><div class="section-title"><span class="eyebrow">THE LITTLE CHEAT SHEET</span><b id="score-caption">이번 공격의 계산</b></div><div class="score-formula"><div><span>칩</span><b id="chips">0</b></div><i>×</i><div><span>배수</span><b id="mult">1</b></div></div><div class="score-total"><span id="score-label">예상 피해</span><b id="score-total">0</b></div><div id="chain" class="chain" aria-label="주사위와 유물의 계산 순서"></div></section>
-<section class="relic-note"><div class="section-title"><h2>버터의 장난 주머니</h2><span id="relic-count">0 / 4칸 · 전체 14종</span></div><p class="note">주사위 발동 → 유물 추가 → 배수 증폭<br>리본의 재발동에도 다른 유물이 반응해요.</p><p id="artifact-state" class="artifact-feedback" role="status"></p><p id="synergy-line" class="synergy-line"></p><div id="relics"></div></section>
-<section class="run-note"><span>최고의 한 방 <b id="best">0</b></span><span>공격 <b id="attacks">0</b></span><small id="seed-label"></small></section>
-</aside>
-</main>
-<footer>비공식 트릭컬 팬 프로토타입 · 원작 에셋 권리는 원 권리자에게 있습니다. <a href="./assets/trickcal-stage37/CREDITS.md">모션 출처</a> · <a href="./assets/trickcal-artifacts53/CREDITS.md">아티팩트 출처·각색</a> · <a href="./assets/dice-fx54/CREDITS.md">탄환 이펙트 출처</a> · <a href="./dice54.html">이전 주사위 게임</a> · <a href="./slingshot51.html">이전 새총 게임</a> · <a href="./side-scroll47.html">이전 횡스크롤</a></footer>
-</div>
-<div id="screen" class="modal" role="dialog" aria-modal="true" aria-labelledby="screen-title"><div id="screen-panel" class="modal-panel"><h2 id="screen-title">버터의 사기 주사위</h2><p>게임을 준비하고 있어요.</p></div></div>
-</body></html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#251d33"><title>버터의 수상한 카드놀이</title><link rel="icon" href="./assets/butter-original36/poster.png"><link rel="stylesheet" href="./dice.css?v=53"><link rel="stylesheet" href="./poker.css?v=58"><script type="module" src="./poker.js?v=58"></script></head>
+<body><div id="app">
+<header><a class="brand" href="./"><span class="brand-mark">♠</span><span>버터의 수상한 카드놀이<small>BUILD YOUR DECK. MAKE YOUR LUCK.</small></span></a><nav><button id="deck-open">덱 보기</button><button id="help" aria-label="도움말">?</button><button id="sound" aria-pressed="true">소리 켬</button><button id="pause" aria-label="일시정지" disabled>Ⅱ</button></nav></header>
+<main><section class="play-column">
+<div class="run-status"><div class="hp-status"><span>버터의 체력</span><b id="hp">48 / 48</b><div class="track"><i id="hp-bar"></i></div></div><div class="route" id="route" aria-label="전투 진행"></div><div class="turn-status"><small id="round">첫 번째 내기</small><b id="gold">12 G</b></div></div>
+<section class="arena" aria-label="버터와 상대"><div class="enemy-heading"><span id="enemy-name"></span><b id="enemy-hp"></b></div><div class="enemy-track"><i id="enemy-bar"></i></div><canvas id="scene" width="1000" height="300" aria-label="원작 버터와 몬스터 모션"></canvas><div class="enemy-intent"><span id="rule"></span><b id="incoming"></b></div></section>
+<section class="table" id="table" tabindex="-1" aria-label="보유 카드와 공격 족보">
+<div class="table-heading"><div><span class="eyebrow">A DECK YOU SHAPE</span><h1 id="phase-label">패를 만들고, 운을 바꿔.</h1></div><span id="resources">공격 4 · 버리기 3</span></div>
+<div class="hand-key"><span><i class="key-score"></i> 금색 테두리 = 자동 득점 카드</span><span><i class="key-discard"></i> 붉은 표시 = 버릴 카드</span></div>
+<div id="hand" class="hand" role="group" aria-label="보유 카드 8장 · 누르면 버리기 선택"></div>
+<div class="hand-actions"><button id="clear-selection">선택 해제</button><small id="pile-count"></small><button id="discard">선택한 카드 버리기 <kbd>R</kbd></button></div>
+<div id="draw-hints" class="draw-hints" aria-label="한 장 부족한 족보 · 누르면 버릴 카드만 선택"></div>
+<div class="attack-dock"><div><small id="attack-name">자동 최대 피해</small><span><b id="preview-damage">0</b><em>예상 피해</em></span></div><button id="attack" class="primary">최강 족보로 공격 →</button><button id="pass" hidden>빈손으로 넘기기 · 반격 받음</button></div>
+<p id="attack-effect" class="artifact-feedback" role="status"></p><p id="notice" role="status" aria-live="polite"></p>
+<details class="handbook"><summary>족보 사전 · 현재 패의 피해와 성장</summary><div id="patterns" class="poker-patterns"></div><p>카드 최대 5장으로 가능한 모든 족보를 계산해 실제 최대 피해를 자동 선택해요. A는 A2345 또는 10JQKA에만 연결돼요. 로열은 같은 무늬의 10JQKA예요.</p></details>
+</section></section>
+<aside><section class="score-card"><div class="section-title"><span class="eyebrow">THE WINNING HAND</span><b id="score-caption">자동 최대 피해</b></div><div class="score-formula"><div><span>칩</span><b id="chips">0</b></div><i>×</i><div><span>배수</span><b id="mult">1</b></div></div><div class="score-total"><span>예상 피해</span><b id="score-total">0</b></div><div id="chain" class="chain" aria-label="카드와 유물 계산 순서"></div></section>
+<section class="relic-note"><div class="section-title"><h2>유물 연쇄</h2><span id="relic-count">0 / 4</span></div><div id="relics"></div><p id="artifact-state" class="artifact-feedback"></p></section>
+<section class="deck-note"><div class="section-title"><h2>내가 만드는 덱</h2><b id="deck-count">52장</b></div><div id="deck-suits"></div><p>상점에서 제거 · 복제 · 무늬/숫자 변경.<br>족보를 강화하고 이자를 모아 빌드를 완성해요.</p><span>최고의 한 방 <b id="best">0</b> · 공격 <b id="attacks">0</b></span><small id="seed-label"></small></section></aside>
+</main><footer>비공식 트릭컬 팬 프로토타입 · 원작 에셋 권리는 원 권리자에게 있습니다. <a href="./assets/trickcal-stage37/CREDITS.md">모션 출처</a> · <a href="./assets/trickcal-artifacts53/CREDITS.md">아티팩트 출처</a> · <a href="./assets/dice-fx54/CREDITS.md">탄환 출처</a> · <a href="./dice57.html">이전 주사위 게임</a></footer>
+</div><div id="screen" class="modal" role="dialog" aria-modal="true" aria-labelledby="screen-title"><div id="screen-panel" class="modal-panel"><h2 id="screen-title">버터의 수상한 카드놀이</h2><p>준비 중이에요.</p></div></div></body></html>
