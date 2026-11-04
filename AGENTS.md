@@ -1,5 +1,11 @@
 # Project instructions
 
+v66 presentation follow-up: root/alias load poker.js66 and release CSS66.
+Helpers/engine remain65. The attack dock repeats the exact committed/live counter
+and lethal safety from tacticalView; do not predict kill from post-hit remaining
+HP alone. Keep it in the sticky mobile dock and1366x768 core viewport. v65 browser
+test also protects this follow-up. No gameplay/cache-version migration of saves.
+
 ## ACTIVE v65: release-quality loop requested by user
 
 Track the user goal and remaining evidence in docs/QUALITY_GOAL.md and
