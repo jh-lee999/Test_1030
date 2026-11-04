@@ -3,7 +3,7 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox']});
 const root=process.argv[2]||'http://127.0.0.1:4186',errors=[];
 const watch=page=>page.on('pageerror',e=>errors.push(e.message));
-async function open(page){watch(page);await page.goto(root+'/?test=1&seed=48');await page.waitForSelector('body[data-ready="true"]');}
+async function open(page){watch(page);await page.goto(root+'/slingshot51.html?test=1&seed=48');await page.waitForSelector('body[data-ready="true"]');}
 async function noOverflow(page){assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);}
 try{
   const page=await browser.newPage({viewport:{width:1440,height:900}});await open(page);

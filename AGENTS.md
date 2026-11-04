@@ -1,5 +1,38 @@
 # Project instructions
 
+## ACTIVE v52: Butter dice roguelike (user-approved genre change)
+
+The user rejected the pinball and explicitly accepted the proposed dice game
+with "ㄱㄱ". index.html now loads dice.js/engine/renderer/css. slingshot51.html
+preserves the previous root VERBATIM; bonk engines/art are untouched and their
+browser checks now target that archive. Earlier pinball/side-scroller contracts
+below protect archives, not a demand for physics/XP queues in the dice game.
+
+Scope: five6-sided dice, two optional rerolls, four patterns (free/pair/kind/
+straight), six unique nonstacking run relics, three normal fights then one boss.
+An initial three-choice relic draft makes builds available immediately. Each
+normal clear adds one relic and heals12 once; fresh runs reset all growth.
+Boss bans repeating the previous pattern. When no legal pattern remains AND no
+rerolls remain, show a real pass that pays the enemy counter and clears the ban.
+Never strand the player behind disabled buttons or hide unavoidable damage.
+
+Hold flags are not score bonuses. kept[i] becomes true only if that die survives
+an actual reroll. All-held rerolls are invalid and cannot farm kept/consume RNG.
+Scoring order: pattern base -> per-die chips -> finite ribbon echo with candy/
+pillow triggers -> unused/spent reroll bonuses -> final rubber multiplication.
+Pillow adds .5 mult per kept trigger; ribbon echoes exactly once, never recurses.
+Previews and the sampled diagnostic policy are read-only and consume no RNG.
+Roll and loot RNG states are independent. Damage applies once at release+travel,
+then one displayed counter only if the enemy survived. Menus freeze all clocks.
+
+Source Butter idle/shoot/high cells are unchanged, one original view, uniform80px
+scale and anchor(190,220) in1000x300. Do not auto-fit high frames or crop limbs.
+Monster source cells fit using one fixed per-role scale. No new character art.
+Run dice52 unit/browser, original art checks and ALL archived required checks.
+The expected-value sampled bot is NOT a human test, global optimum or proof of
+fun. Separate its genuine resource run from explicit browser fixtures. See
+docs/dice52.md. Preserve unrelated untracked chibi release WebP.
+
 ## v51 pointer correction: NO mouse/touch inertia
 
 The user explicitly rejected v50 mouse aiming as wobbling. Pointer coordinates

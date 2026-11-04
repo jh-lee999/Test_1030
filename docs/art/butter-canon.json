@@ -1,5 +1,15 @@
 {
-  "version": 6,
+  "version": 7,
+  "diceDecision52": {
+    "date": "2026-11-04",
+    "genre": "Small dice roguelike prototype",
+    "choice": "ㄱㄱ",
+    "entry": "dice.js",
+    "renderer": "dice-renderer.js",
+    "archive": "slingshot51.html",
+    "art": "Unchanged original single-view whole poses, no limb edits or source regeneration",
+    "anchor": {"x":190,"y":220,"size":80,"sceneWidth":1000,"sceneHeight":300}
+  },
   "pinballDecision48": {
     "date": "2026-11-03",
     "genre": "Small slingshot pinball roguelike prototype",

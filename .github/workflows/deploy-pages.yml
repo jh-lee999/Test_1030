@@ -38,6 +38,9 @@ jobs:
       - name: Check game, sprite bounds and approved art
         run: |
           node --check app.js
+          node --check dice.js
+          node --check dice-engine.js
+          node --check dice-renderer.js
           node --check bonk.js
           node --check bonk-engine.js
           node --check bonk-renderer.js

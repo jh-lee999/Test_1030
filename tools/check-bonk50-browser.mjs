@@ -3,7 +3,7 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox']});
 const root=process.argv[2]||'http://127.0.0.1:4186',errors=[];
 const angle=g=>Math.atan2(g.aim.y-856,g.aim.x-g.launchX);
-async function boot(page){page.on('pageerror',e=>errors.push(e.message));await page.goto(root+'/?test=1&seed=51');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();}
+async function boot(page){page.on('pageerror',e=>errors.push(e.message));await page.goto(root+'/slingshot51.html?test=1&seed=51');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();}
 // Isolated synchronous keyboard-event fixture: leaves a large unfinished nudge.
 // Mouse no longer buffers shots. Real keyboard taps/holds are exercised below.
 async function queueKeyboardShot(page){await page.evaluate(()=>{
