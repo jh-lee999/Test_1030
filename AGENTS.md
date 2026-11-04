@@ -1,5 +1,33 @@
 # Project instructions
 
+## ACTIVE v55: six-room dice run with meaningful opportunity costs
+
+User explicitly asked to improve fun by learning from other roguelites. Root
+loads dice55.js/dice-run-engine.js/dice55.css; dice54.html is byte-identical to
+the old root (blob645baed19a4b4fff9f65dc16a91e550b5f2e8814). Old dice.js/engine
+and source assets remain unchanged. v52/53/54 browser checks target that archive.
+Shared renderer changes are optional text-label overrides only, default unchanged.
+
+Current rules: six encounters; HP48; each unused SCORING die grants2 temporary
+guard (no ribbon duplication), consumed before permanent shield. Every real
+reroll adds1 current-turn enemy pressure; all-held/invalid rerolls do not. Enemy
+intents cycle explicitly, exposure multiplies damage1.35, pair breaks armor for
+the fight. Boss bans previous pattern and retains the no-legal-move pass.
+After a clear, NO automatic healing/relic. Camp grants1 activity, elite2. Choose
+heal16, one pattern level (chips+8/finalmult+.75 per level, cap3), or one relic.
+Relics have4 slots: a full inventory requires explicit atomic replacement, no
+silent removal. Remove only that relic's charges. Browsing/canceling cannot
+reroll offers for free; cache them until selection or next camp. Route RNG is
+separate; next choices are visible before camp spending. Elite HPx1.6/counter+4
+are disclosed before committing. Boss HP1600. Training/build/charges carry;
+shield/Komi/armor reset per fight, everything resets on a new run. No meta growth.
+Previews and diagnostic policy are read-only; apply damage/heal/guard once at
+the unchanged source release+travel. Camp/route/reward/help freeze combat.
+
+Run dice-run55 tests/browser, all classic archived checks, source/art checks and
+all older platformer/bonk checks. See docs/run55.md for conceptual references,
+balance diagnostics and limits. Bot wins are NOT proof of fun or human tests.
+
 ## ACTIVE v54: sourced projectile VFX, presentation only
 
 dice-effects.js samples deterministic sprites from the existing pending clock.

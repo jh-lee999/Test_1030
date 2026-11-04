@@ -39,6 +39,8 @@ jobs:
         run: |
           node --check app.js
           node --check dice.js
+          node --check dice55.js
+          node --check dice-run-engine.js
           node --check dice-engine.js
           node --check trickcal-artifacts.js
           node --check dice-renderer.js

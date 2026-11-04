@@ -3,7 +3,7 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox']});
 const root=process.argv[2]||'http://127.0.0.1:4187',errors=[],external=[];
 const watch=page=>{page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(!r.url().startsWith(root)&&!r.url().startsWith('data:'))external.push(r.url());});};
-async function open(page){watch(page);await page.goto(root+'/?test=1&seed=52');await page.waitForSelector('body[data-ready="true"]');}
+async function open(page){watch(page);await page.goto(root+'/dice54.html?test=1&seed=52');await page.waitForSelector('body[data-ready="true"]');}
 async function settle(page){await page.evaluate(()=>{const a=window.__dice52;for(let i=0;i<300&&['rolling','resolve'].includes(a.game.phase);i++)a.tick(a.game,1/120);});await page.waitForTimeout(30);}
 try{
  const page=await browser.newPage({viewport:{width:1440,height:900}});await open(page);
@@ -46,6 +46,6 @@ try{
  await mobile.locator('[data-die="0"]').tap();assert.equal(await mobile.locator('[data-die="0"]').getAttribute('aria-pressed'),'true');await mobile.locator('#reroll').tap();await mobile.waitForSelector('body[data-phase="pick"]');await mobile.screenshot({path:'/tmp/dice52-pick-mobile.png'});
  assert.equal(await mobile.locator('[data-die="0"]').evaluate(e=>getComputedStyle(e).animationName),'none');
  for(const width of [320,390,760,844]){await mobile.setViewportSize({width,height:width===844?390:844});assert.equal(await mobile.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);}
- const fallback=await browser.newPage();watch(fallback);await fallback.route('**/assets/**/*.webp',r=>r.abort());await fallback.goto(root+'/?test=1');await fallback.waitForSelector('body[data-ready="true"]');await fallback.locator('#start').click();await fallback.locator('[data-relic]').first().click();await fallback.waitForSelector('body[data-phase="pick"]');await fallback.locator('#attack').click();assert.equal(await fallback.evaluate(()=>window.__dice52.game.attacks),1);
+ const fallback=await browser.newPage();watch(fallback);await fallback.route('**/assets/**/*.webp',r=>r.abort());await fallback.goto(root+'/dice54.html?test=1');await fallback.waitForSelector('body[data-ready="true"]');await fallback.locator('#start').click();await fallback.locator('[data-relic]').first().click();await fallback.waitForSelector('body[data-phase="pick"]');await fallback.locator('#attack').click();assert.equal(await fallback.evaluate(()=>window.__dice52.game.attacks),1);
  assert.deepEqual(errors,[]);assert.deepEqual(external,[]);console.log(JSON.stringify({realMouseAndKeyboard:true,heldDicePreserved:true,menusFreeze:true,genuineRun:{rolls,attacks,rewards,boss},seedReplay:true,bossPassFixture:true,touch:true,reducedMotion:true,widths:[320,390,760,844],assetFallback:true,errors,external},null,2));
 }finally{await browser.close();}

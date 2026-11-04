@@ -6,7 +6,7 @@ export const HERO={x:190,y:220,size:80};
 export const ENEMY_SCALE={fan:.9,archer:.9,guard:.52,ghost:1};
 const TAU=Math.PI*2;
 function text(c,s,x,y,size,color='#f9e7bc'){c.font=`800 ${size}px system-ui,sans-serif`;c.textAlign='center';c.fillStyle=color;c.fillText(s,x,y);}
-export function renderDiceScene(c,g,images,{reduced=false}={}){
+export function renderDiceScene(c,g,images,{reduced=false,roundLabel=null,enemyLabel=null}={}){
  const phase=g.phase==='paused'?g.returnPhase:g.phase;
  c.clearRect(0,0,1000,300);const bg=images.backgrounds[g.stage<2?'forest':'night'];
  c.fillStyle='#2a2437';c.fillRect(0,0,1000,300);
@@ -27,8 +27,8 @@ export function renderDiceScene(c,g,images,{reduced=false}={}){
  if(phase==='resolve'&&p){
   if(p.applied){const fade=Math.max(0,1-(p.clock-p.hitAt)/.55);c.save();c.globalAlpha=fade;text(c,'−'+p.result.damage,810,73-(1-fade)*30,50,'#ffdea2');c.restore();}
  }
- text(c,'버터',190,277,18);text(c,ENCOUNTERS[g.stage].enemy==='ghost'?'아공간의 이불령':'셰이디의 시험',810,277,18,'#d6c9e4');
- text(c,g.stage===3?'LAST BET':'ROUND 0'+(g.stage+1),500,phase==='resolve'?50:97,14,'#d9c59b');
+ text(c,'버터',190,277,18);text(c,enemyLabel||(ENCOUNTERS[g.stage].enemy==='ghost'?'아공간의 이불령':'셰이디의 시험'),810,277,18,'#d6c9e4');
+ text(c,roundLabel||(g.stage===3?'LAST BET':'ROUND 0'+(g.stage+1)),500,phase==='resolve'?50:97,14,'#d9c59b');
  text(c,phase==='resolve'?g.lastResult.name:'한 번 더 굴릴까?',500,phase==='resolve'?80:145,phase==='resolve'?23:29);
  text(c,phase==='resolve'?String(g.lastResult.damage)+' DAMAGE':'행운은, 만드는 거야.',500,phase==='resolve'?115:185,phase==='resolve'?30:16,phase==='resolve'?'#ffdaa0':'#baafc8');
 }
