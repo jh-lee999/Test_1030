@@ -1,6 +1,9 @@
 // Seeded, DOM-free dice roguelike. Presentation and previews never consume RNG.
 import {butterReleasePoint} from './butter-original-motion.js';
 import {TRICKCAL_ARTIFACTS} from './trickcal-artifacts.js?v=53';
+// All coefficients have finite decimal precision; remove binary float noise
+// before flooring so 30 × 1.2 × 1.5 is 54, not 53.99999999999999 -> 53.
+const score=(chips,mult)=>Math.floor(Number((chips*mult).toFixed(8)));
 export const FACES=[null,{name:'별사탕',icon:'attack',color:'#b99ce7'},{name:'베개',icon:'pillow',color:'#91bdd7'},{name:'새총',icon:'slingshot',color:'#d3ad62'},{name:'간식',icon:'snack',color:'#dca58b'},{name:'책',icon:'book-low',color:'#9bba8b'},{name:'왕별',icon:'book-high',color:'#dabf6d'}];
 export const PATTERNS={free:{name:'자유 투척',hint:'어떤 주사위든 5개',chips:4,mult:1},pair:{name:'짝꿍',hint:'같은 눈 2개',chips:8,mult:2},kind:{name:'삼총사',hint:'같은 눈 3개 이상 · 4/5개면 배수 상승',chips:12,mult:3},straight:{name:'별빛 행진',hint:'1~5 또는 2~6 연속',chips:18,mult:4}};
 export const RELICS={
@@ -37,7 +40,7 @@ export function patternMatch(dice,id){
 export function evaluate(g,id){
  const match=patternMatch(g.dice,id);if(!match)return null;
  let chips=PATTERNS[id].chips,mult=match.mult,strikes=g.strikes;const enhanced=['kind','straight'].includes(id),stun=hasMace(g,id),rageSpent=g.relics.includes('yellow')&&enhanced&&g.rage===3;
- const steps=[],has=key=>g.relics.includes(key),record=(label,source,die=null)=>steps.push({label,source,die,chips,mult,total:Math.floor(chips*mult)});
+ const steps=[],has=key=>g.relics.includes(key),record=(label,source,die=null)=>steps.push({label,source,die,chips,mult,total:score(chips,mult)});
  record(match.name,'pattern');
  const counts=g.dice.reduce((a,v)=>(a[v]=(a[v]||0)+1,a),{});
  for(const i of match.indices){
@@ -55,7 +58,7 @@ export function evaluate(g,id){
  if(has('rust')&&g.hp<g.maxHp){mult*=1.2;record('녹슨 붉은 검 · 상처 배수 ×1.2','rust');}
  if(stun){mult*=1.5;record('참회의 메이스 · ×1.5 / 반격 기절','mace');}
  if(has('rubber')){mult*=1.5;record('고무줄 · 최종 배수 ×1.5','rubber');}
- const raw=Math.floor(chips*mult),guard=g.stage===2&&g.turn===1?30:0,blocked=g.stage===3&&g.lastPattern===id;
+ const raw=score(chips,mult),guard=g.stage===2&&g.turn===1?30:0,blocked=g.stage===3&&g.lastPattern===id;
  let damage=Math.max(1,raw-guard);
  if(guard)steps.push({label:'첫 방패 −30 피해',source:'guard',die:null,chips,mult,total:damage});
  const remaining=g.enemyHp-damage,execute=has('scythe')&&!enhanced&&g.stage<3&&remaining>0&&remaining<=ENCOUNTERS[g.stage].hp*.18;

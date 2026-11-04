@@ -46,3 +46,6 @@ test('rust depends on actual health and mace consumes only on normal attacks, ca
 test('fresh runs reset charges, shield and once-per-fight effects; pass still pays counter',()=>{
  const g=createGame(53);assert.deepEqual([g.shield,g.rage,g.strikes,g.maceHits,g.komiUsed],[0,0,0,0,false]);Object.assign(g,{phase:'pick',stage:3,dice:[1,2,3,4,6],rerolls:0,lastPattern:'free',relics:['belt'],shield:8});assert.ok(pass(g));assert.equal(g.hp,36);assert.equal(g.shield,0);
 });
+test('decimal multipliers cannot lose one damage to binary rounding at exact integers',()=>{
+ const g=fixture(['rust','mace']);g.hp=30;g.maceHits=3;g.dice=[1,1,1,5,5];let r=evaluate(g,'free');assert.equal(r.chips,30);assert.equal(r.damage,54);assert.equal(r.steps.at(-1).total,54);g.dice=[5,5,5,4,4];r=evaluate(g,'free');assert.equal(r.chips,50);assert.equal(r.damage,90);
+});

@@ -46,7 +46,7 @@ counter/absorption, lifesteal or execution. Source credit links live in the foot
 
 ## Verification / limits
 
-209 unit tests passed, including 10 new source-hash, draft, trigger, cap, carry,
+210 unit tests passed, including 11 new source-hash, draft, trigger, cap, carry,
 preview purity and once-only tests. Canon/original/stage/sprite checks passed.
 check-artifacts53-browser uses a real draft plus an explicitly labeled eight-item
 fixture (not a legal four-item run) to inspect icons, provenance, shield, charges,
@@ -65,3 +65,6 @@ inventory fixture and 390px scrollable draft screenshots were inspected locally.
 Sampled policy prioritizes some offensive original artifacts and consumes no
 future RNG. It is not a human playtest, proof of fun, optimal policy, or a broad
 difficulty survey. Four encounters, no shop or metaprogression remain the scope.
+
+Decimal multiplication strips binary float noise to 8 decimal places before
+flooring, in both trace totals and damage (e.g. 30 ×1.2 ×1.5 =54, never53).

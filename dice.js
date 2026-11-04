@@ -1,4 +1,4 @@
-import {createGame,FACES,PATTERNS,RELICS,ENCOUNTERS,evaluate,toggleHold,reroll,attack,chooseRelic,counterPreview,canPass,pass,pause,resume,tick} from './dice-engine.js?v=53';
+import {createGame,FACES,PATTERNS,RELICS,ENCOUNTERS,evaluate,toggleHold,reroll,attack,chooseRelic,counterPreview,canPass,pass,pause,resume,tick} from './dice-engine.js?v=53.1';
 import {renderDiceScene} from './dice-renderer.js?v=52';
 import {BUTTER_ORIGINAL,BUTTER_POSTER} from './butter-original-motion.js';
 import {STAGE_ART} from './platformer-art.js?v=43';
