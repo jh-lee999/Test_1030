@@ -1,5 +1,5 @@
 // v60: read-only view of the engine's existing completed hands. Inspect != play.
-import {cardName,SUITS} from './poker-engine.js?v=62';
+import {cardName,SUITS} from './poker-engine.js?v=63';
 export function completedHandView(g,results,automatic,inspectedId=null){
  const resolving=g.phase==='resolve'||g.phase==='paused'&&g.returnPhase==='resolve';
  const committed=resolving?g.pending?.result:null,chosen=committed||automatic;

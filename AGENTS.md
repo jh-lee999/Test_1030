@@ -1,5 +1,28 @@
 # Project instructions
 
+## ACTIVE v63: allow discarding the entire hand, not only5
+
+Latest user request overrides the old1..5 discard limit. toggleCard may select
+all actual hand IDs (currently8); discard validates1..hand.length UNIQUE current
+IDs and spends exactly ONE discard use irrespective of card count. Keep max5
+SCORING cards/classify/evaluateHands unchanged. Do not confuse these two limits.
+selectAllCards toggles full selection/clear in pick only; it never draws, fires,
+changes RNG/resources or refills a budget. Zero discard budget may select but
+cannot execute a discard. Partial selection -> select-all selects the whole hand.
+No selection/discard while resolve/paused/shop/title/end phases. Invalid/duplicate/
+foreign IDs are atomic no-ops. Small finite piles may recycle previously discarded
+cards at exhaustion; conserve all unique deck IDs, no hidden extra draws.
+
+UI adds full select/clear next to existing clear-selection and discard controls.
+Keyboard1..8 and touch both select all8 individually; Enter/Space on bulk button
+must not auto-fire. Pressed state/8-card label/disabled state update, inspection
+and automatic scoring remain independent. Helper text distinguishes8-card discard
+from5-card scoring. JS/CSS/engine/order/hand imports63, current alias updated.
+Read-only diagnostic discardPlan may still choose at most5 by its heuristic; it
+is NOT a gameplay restriction or reason to alter combat/balance. Run discard63
+unit/native desktop+touch browser, current poker58-62 and required archived/
+npm/art checks. See docs/discard63.md. Preserve unrelated chibi WebP.
+
 ## ACTIVE v62: equipped relics raise real attack/discard caps
 
 User explicitly requested increasing attack/discard counts through relics.
