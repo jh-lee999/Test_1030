@@ -1,12 +1,12 @@
 import {drawButterMotion} from './butter-original-motion.js';
 import {STAGE_ART} from './platformer-art.js?v=43';
 import {ENCOUNTERS} from './dice-engine.js?v=53.1';
-import {drawDiceEffects} from './dice-effects.js?v=54';
+import {drawDiceEffects} from './dice-effects.js?v=67';
 export const HERO={x:190,y:220,size:80};
 export const ENEMY_SCALE={fan:.9,archer:.9,guard:.52,ghost:1};
 const TAU=Math.PI*2;
 function text(c,s,x,y,size,color='#f9e7bc'){c.font=`800 ${size}px system-ui,sans-serif`;c.textAlign='center';c.fillStyle=color;c.fillText(s,x,y);}
-export function renderDiceScene(c,g,images,{reduced=false,roundLabel=null,enemyLabel=null,idleTitle='한 번 더 굴릴까?',idleSubtitle='행운은, 만드는 거야.'}={}){
+export function renderDiceScene(c,g,images,{reduced=false,heroFacing=1,heroX=HERO.x,roundLabel=null,enemyLabel=null,idleTitle='한 번 더 굴릴까?',idleSubtitle='행운은, 만드는 거야.'}={}){
  const phase=g.phase==='paused'?g.returnPhase:g.phase;
  c.clearRect(0,0,1000,300);const bg=images.backgrounds[g.stage<2?'forest':'night'];
  c.fillStyle='#2a2437';c.fillRect(0,0,1000,300);
@@ -14,7 +14,7 @@ export function renderDiceScene(c,g,images,{reduced=false,roundLabel=null,enemyL
  c.fillStyle='#231b37a8';c.fillRect(0,0,1000,300);
  const glow=c.createRadialGradient(500,220,20,500,220,560);glow.addColorStop(0,'#d9b77b22');glow.addColorStop(1,'#1a152caa');c.fillStyle=glow;c.fillRect(0,0,1000,300);
  c.strokeStyle='#ead8a122';c.lineWidth=2;c.beginPath();c.ellipse(500,252,450,36,0,0,TAU);c.stroke();
- c.save();c.translate(HERO.x,HERO.y);drawButterMotion(c,images.butter,{size:HERO.size,time:reduced?0:g.time,action:reduced?null:g.action,gait:{amount:0,phase:0}});c.restore();
+ c.save();c.translate(heroX,HERO.y);c.scale(heroFacing===-1?-1:1,1);drawButterMotion(c,images.butter,{size:HERO.size,time:reduced?0:g.time,action:reduced?null:g.action,gait:{amount:0,phase:0}});c.restore();
  const enemy=ENCOUNTERS[g.stage].enemy,src=STAGE_ART.monsters[enemy],p=g.pending,dying=g.enemyHp===0;
  const key=dying?'die':phase==='resolve'&&p?.applied?'attack':'idle',clip=src.clips[key],img=images.monsters[enemy]?.[key];
  let t=dying?Math.max(0,(p?.clock||0)-(p?.hitAt||0)):key==='attack'?Math.max(0,p.clock-p.hitAt):g.time;
@@ -23,11 +23,11 @@ export function renderDiceScene(c,g,images,{reduced=false,roundLabel=null,enemyL
  if(img?.naturalWidth)c.drawImage(img,frame%clip.columns*clip.width,Math.floor(frame/clip.columns)*clip.height,clip.width,clip.height,-clip.origin[0]*scale,-clip.origin[1]*scale,clip.width*scale,clip.height*scale);
  else{text(c,enemy==='ghost'?'☁':'♟',0,-25,80,'#c4a5dd');}
  c.restore();
- drawDiceEffects(c,g,images.effects,{reduced});
+ drawDiceEffects(c,g,images.effects,{reduced,heroFacing,heroX});
  if(phase==='resolve'&&p){
   if(p.applied){const fade=Math.max(0,1-(p.clock-p.hitAt)/.55);c.save();c.globalAlpha=fade;text(c,'−'+p.result.damage,810,73-(1-fade)*30,50,'#ffdea2');c.restore();}
  }
- text(c,'버터',190,277,18);text(c,enemyLabel||(ENCOUNTERS[g.stage].enemy==='ghost'?'아공간의 이불령':'셰이디의 시험'),810,277,18,'#d6c9e4');
+ text(c,'버터',heroX,277,18);text(c,enemyLabel||(ENCOUNTERS[g.stage].enemy==='ghost'?'아공간의 이불령':'셰이디의 시험'),810,277,18,'#d6c9e4');
  text(c,roundLabel||(g.stage===3?'LAST BET':'ROUND 0'+(g.stage+1)),500,phase==='resolve'?50:97,14,'#d9c59b');
  text(c,phase==='resolve'?g.lastResult.name:idleTitle,500,phase==='resolve'?80:145,phase==='resolve'?23:29);
  text(c,phase==='resolve'?String(g.lastResult.damage)+' DAMAGE':idleSubtitle,500,phase==='resolve'?115:185,phase==='resolve'?30:16,phase==='resolve'?'#ffdaa0':'#baafc8');

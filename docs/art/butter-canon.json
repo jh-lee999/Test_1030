@@ -1,5 +1,14 @@
 {
-  "version": 7,
+  "version": 8,
+  "cardFacingDecision67": {
+    "date": "2026-11-05",
+    "choice": "버터가 반대로 봐야지",
+    "scope": "Current card game: intact original poses horizontally mirrored toward the enemy, including weapon and bag",
+    "anchor": {"x":220,"y":220,"size":80,"heroFacing":-1,"sceneWidth":1000,"sceneHeight":300},
+    "muzzleTransform": "Same heroX + sourceOffsetX * heroFacing as the whole-pose drawing",
+    "reasonForAnchorX": "The mirrored high-skill full cell clips at X190; shared X220 keeps all clips inside the canvas without auto-fit",
+    "archives": "Shared renderer/effects default to legacy unmirrored X190; original files and hashes unchanged"
+  },
   "diceDecision52": {
     "date": "2026-11-04",
     "genre": "Small dice roguelike prototype",

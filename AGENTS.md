@@ -1,5 +1,18 @@
 # Project instructions
 
+## ACTIVE v67: Butter must face the enemy in the card game
+
+Latest explicit user correction supersedes the old unmirrored card presentation.
+Current poker.js opts into heroFacing:-1 and heroX:220. Flip ONLY the whole
+original Butter pose around the shared foot origin, not the scene/enemy/text.
+Use the SAME facing/X transform for source muzzle markers and projectile VFX.
+All idle/shoot/high/fallback poses retain size80/Y220; X220 (not legacy190)
+keeps the entire mirrored high-skill cell inside1000x300 without auto-fit/crop.
+Source images/checksums and combat/save timing are unchanged. Shared renderer/
+effects defaults stay unflipped/X190 for archived games. Main/renderer/effects
+cache67; existing gameplay/profile helpers remain65. Run facing67 unit/browser,
+canon/source/art, current poker and archived regression checks. See canon record.
+
 v66 presentation follow-up: root/alias load poker.js66 and release CSS66.
 Helpers/engine remain65. The attack dock repeats the exact committed/live counter
 and lethal safety from tacticalView; do not predict kill from post-hit remaining

@@ -3,15 +3,15 @@ import {butterMuzzleOffset,butterReleasePoint} from './butter-original-motion.js
 export const EFFECT_ATLAS='./assets/dice-fx54/particles.png';
 export const EFFECT_REGIONS={rock:[42,42,43,43],star:[136,8,112,112],flare:[264,8,112,112],muzzle:[392,8,112,112],ring:[8,136,112,112],dust:[136,136,112,112],bolt:[264,136,112,112],trace:[392,136,112,112]};
 const TAU=Math.PI*2,clamp=v=>Math.max(0,Math.min(1,v));
-export function shotGeometry(g){
+export function shotGeometry(g,{heroFacing=1,heroX=190}={}){
  const type=g.action?.type||'normal',duration=g.action?.duration||(type==='high'?1.1:.75),release=butterReleasePoint(type)*duration;
  const muzzle=butterMuzzleOffset({size:80,action:{type,time:release,duration}});
- return {release,hitAt:g.pending?.hitAt??release+.3,from:{x:190+muzzle.x,y:220+muzzle.y},to:{x:810,y:185},arc:type==='high'?42:28,large:type==='high'};
+ return {release,hitAt:g.pending?.hitAt??release+.3,from:{x:heroX+muzzle.x*(heroFacing===-1?-1:1),y:220+muzzle.y},to:{x:810,y:185},arc:type==='high'?42:28,large:type==='high'};
 }
 export function flightPoint(geometry,progress){const f=clamp(progress),{from,to,arc}=geometry;return {x:from.x+(to.x-from.x)*f,y:from.y+(to.y-from.y)*f-Math.sin(f*Math.PI)*arc,angle:Math.atan2(to.y-from.y-Math.PI*arc*Math.cos(f*Math.PI),to.x-from.x)};}
-export function sampleDiceEffects(g,{reduced=false}={}){
+export function sampleDiceEffects(g,{reduced=false,heroFacing=1,heroX=190}={}){
  const p=g.pending,phase=g.phase==='paused'?g.returnPhase:g.phase;if(phase!=='resolve'||!p)return [];
- const geometry=shotGeometry(g),{release,hitAt,large}=geometry,t=p.clock,age=t-hitAt,sprites=[];
+ const geometry=shotGeometry(g,{heroFacing,heroX}),{release,hitAt,large}=geometry,t=p.clock,age=t-hitAt,sprites=[];
  const add=(id,x,y,size,alpha=1,angle=0,blend='source-over',height=size)=>{if(alpha>.001)sprites.push({id,x,y,width:size,height,alpha:clamp(alpha),angle,blend});};
  const weather=p.result.steps.some(s=>s.source==='weather'),rage=p.result.rageSpent;
  if(reduced){if(p.applied&&age>=0&&age<.28)add('ring',810,185,large?75:55,.35);return sprites;}
