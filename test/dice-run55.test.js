@@ -27,7 +27,7 @@ test('normal/elite routes change enemy and reward stakes; route selection resets
 });
 test('all six encounters must be cleared; boss bans repeat and safe pass always clears a dead-end',()=>{
  const g=ready();for(let depth=0;depth<6;depth++){assert.equal(g.depth,depth);clear(g);if(depth===5){assert.equal(g.phase,'won');break;}assert.notEqual(g.phase,'won');E.camp(g,'train',Object.keys(g.training).find(id=>g.training[id]<3));E.leaveCamp(g);E.chooseRoute(g,g.routes[0].id);settle(g);}
- const b=ready();b.foe=E.makeFoe(5,3);b.depth=5;b.stage=3;b.lastPattern='free';b.rerolls=0;b.dice=[1,2,3,4,6];assert.ok(E.canPass(b));assert.ok(E.pass(b));assert.equal(b.lastPattern,null);assert.equal(b.hp,36);
+ const b=ready();b.foe=E.makeFoe(5,3);b.enemyHp=b.foe.maxHp;b.depth=5;b.stage=3;b.lastPattern='free';b.rerolls=0;b.dice=[1,2,3,4,6];assert.ok(E.canPass(b));assert.ok(E.pass(b));assert.equal(b.lastPattern,null);assert.equal(b.hp,36);
 });
 test('menus freeze, once-only settlement survives repeated ticks, and fresh runs reset growth/history',()=>{
  const g=ready();g.dice=[1,1,2,3,4];g.enemyHp=1000;const r=E.evaluate(g,'free');E.attack(g,'free');E.pause(g);const before=JSON.stringify(g);for(let n=0;n<100;n++)E.tick(g,1);assert.equal(JSON.stringify(g),before);E.resume(g);settle(g);assert.equal(g.enemyHp,1000-r.damage);assert.equal(g.attacks,1);const fresh=E.createGame(55);assert.equal(fresh.history.length,0);assert.deepEqual(Object.values(fresh.training),[0,0,0,0]);assert.equal(fresh.depth,0);

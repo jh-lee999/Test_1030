@@ -1,5 +1,34 @@
 # Project instructions
 
+## ACTIVE v56: player agency and less menu friction
+
+Root retains dice55.js / dice-run-engine.js filenames with v56 cache keys and
+adds dice56.css. The legacy __dice55 test hook remains intentional. v54 archive
+and all source Butter/monster/particle files are unchanged. RNG streams keep
+their v55 labels; manual edits consume no game RNG, but naturally alter play.
+
+Two ±1 pip edits per FIGHT, not per turn. nudgeDie is pick-only, validates index,
+delta/bounds/budget, auto-holds and invalidates kept on the edited die. It cannot
+farm the pillow bonus or add reroll pressure. Suggestions are read-only, show
+new combos/tier upgrades, never auto-fire, and disappear if a legal lethal hand
+already exists. Last-clicked die is the editing target; [ / ] are keyboard controls.
+Synergy hints describe existing relic mechanics, never grant hidden multipliers.
+Optional SVG symbol inlining prevents intermittent missing dice icons; it must
+never block start and must keep the existing external sprite fallback.
+
+When campPoints hits0, show route choices immediately. travelFromCamp validates
+everything before atomically saving camp history and beginning the selected room.
+Old leaveCamp/chooseRoute APIs remain for tests; no extra confirmation in the UI.
+Enemy HP now210/300/430/560/740/1800 (elites ×1.6). Boss at ≤50% HP gains counter+3
+and permanent exposure ×1.35. Store enemy intent/counter at attack commitment:
+crossing50% at impact MUST NOT retroactively raise that attack's counter. Both
+resolution and paused resolution previews keep the committed intent/result.
+
+Run agency56 tests/browser plus updated v55 UI/resource check, all classic/old
+checks and source/canon checks. See docs/agency56.md for manual browser decisions,
+sampled policy results, scope and limitations. Never treat bot wins as proof of
+fun or describe the manual two-encounter inspection as a full human playthrough.
+
 ## ACTIVE v55: six-room dice run with meaningful opportunity costs
 
 User explicitly asked to improve fun by learning from other roguelites. Root
