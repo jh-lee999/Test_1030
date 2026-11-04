@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox']});
 const root=process.argv[2]||'http://127.0.0.1:4192',errors=[];
-async function open(page){page.on('pageerror',e=>errors.push(e.message));await page.goto(root+'/?test=1&seed=61');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();await page.locator('[data-starter="echo"]').click();}
+async function open(page){page.on('pageerror',e=>errors.push(e.message));await page.goto(root+'/cards67.html?test=1&seed=61');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();await page.locator('[data-starter="echo"]').click();}
 const exceptSelection=page=>page.evaluate(()=>{const {time,selected,...g}=window.__poker58.game;return JSON.stringify(g);});
 try{
  const page=await browser.newPage({viewport:{width:1440,height:1100}});await open(page);const initial=await exceptSelection(page),old=await page.evaluate(()=>window.__poker58.game.hand.map(c=>c.id));

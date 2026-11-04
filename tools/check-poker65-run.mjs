@@ -5,7 +5,7 @@ const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTA
 const root=process.argv[2]||'http://127.0.0.1:4192',errors=[];
 try{
  const page=await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'});page.on('pageerror',e=>errors.push(e.message));
- await page.goto(root+'/?test=1&persist=1&seed=poker58-0&mode=deep');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();await page.locator('[data-starter="echo"]').click();
+ await page.goto(root+'/cards67.html?test=1&persist=1&seed=poker58-0&mode=deep');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();await page.locator('[data-starter="echo"]').click();
  await page.evaluate(async()=>{window.policy=await import('./tools/playtest-poker58.mjs');});let attacks=0,discards=0,shops=0,wardObserved=false;
  for(let i=0;i<180;i++){
   const phase=await page.evaluate(()=>window.__poker58.game.phase);if(['won','dead'].includes(phase))break;

@@ -16,7 +16,7 @@ async function open(page,{fallback=false}={}){
    return original.call(this,image,...args);
   };
  });
- await page.goto(root+'/?test=1&seed=61');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();await page.locator('[data-starter="echo"]').click();
+ await page.goto(root+'/cards67.html?test=1&seed=61');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();await page.locator('[data-starter="echo"]').click();
  await page.waitForFunction(()=>window.facingCalls.some(c=>c.src.includes('butter-original36/')));
  const poses=await page.evaluate(()=>window.facingCalls.filter(c=>c.src.includes('butter-original36/')));assert(poses.every(c=>c.a===-1&&c.d===1&&c.x===220&&c.y===220));
 }

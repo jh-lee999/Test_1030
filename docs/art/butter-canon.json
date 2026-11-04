@@ -1,5 +1,16 @@
 {
-  "version": 8,
+  "version": 9,
+  "survivorDecision68": {
+    "date": "2026-11-05",
+    "choice": "발라트로 포기하고, 그냥 뱀서로 돌아가는데, 그냥 포켓봉크처럼 만들자",
+    "entry": "survivor68.js",
+    "archive": "cards67.html",
+    "sourcePolicy": "Unchanged original single-view whole poses; whole-pose horizontal flip allowed. No regenerated, cutout or recolored art.",
+    "anchor": {"size":80,"playerCoordinates":"Shared world foot position","rendererYOffset":-22.4},
+    "muzzleTransform": "World foot + source offset with the SAME action facing and -22.4 Y adjustment",
+    "motion": "Original idle/walk/shoot/high plus previously baked same-rig walkShoot; attack release follows source marker",
+    "referenceLimit": "Direct pokebonk.com access blocked by environment. Public descriptions informed an independent adaptation; no Pokemon assets or game source imported."
+  },
   "cardFacingDecision67": {
     "date": "2026-11-05",
     "choice": "버터가 반대로 봐야지",

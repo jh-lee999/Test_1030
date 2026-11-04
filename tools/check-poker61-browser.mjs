@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox']});
 const root=process.argv[2]||'http://127.0.0.1:4190',errors=[];
-async function open(page){page.on('pageerror',e=>errors.push(e.message));await page.goto(root+'/?test=1&seed=61');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();await page.locator('[data-starter="echo"]').click();}
+async function open(page){page.on('pageerror',e=>errors.push(e.message));await page.goto(root+'/cards67.html?test=1&seed=61');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();await page.locator('[data-starter="echo"]').click();}
 async function useThree(page,touch=false){for(const left of [2,1,0]){const card=page.locator('[data-card]').first();if(touch)await card.tap();else await card.click();if(touch)await page.locator('#discard').tap();else await page.locator('#discard').click();assert.equal(await page.evaluate(()=>window.__poker58.game.discards),left);}assert.equal(await page.locator('#discard').isDisabled(),true);}
 try{
  const page=await browser.newPage({viewport:{width:1440,height:1100}});await open(page);await useThree(page);assert.equal(await page.evaluate(()=>window.__poker58.game.turn),1);assert.equal(await page.evaluate(()=>window.__poker58.game.hands),4);

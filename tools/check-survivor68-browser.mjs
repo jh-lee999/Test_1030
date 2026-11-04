@@ -1,0 +1,51 @@
+import assert from 'node:assert/strict';
+const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
+const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox']});
+const root=process.argv[2]||'http://127.0.0.1:4194',errors=[],reports={};
+async function open(options={},query='',fallback=false){
+ const page=await browser.newPage(options);page.on('pageerror',e=>errors.push(e.message));
+ if(fallback===true)await page.route('**/assets/**',r=>r.request().resourceType()==='image'?r.abort():r.continue());
+ if(fallback==='slow')await page.route('**/butter-original36/walkShoot.webp',async r=>{await new Promise(resolve=>setTimeout(resolve,8200));await r.continue();});
+ await page.addInitScript(()=>{window.poseCalls=[];const draw=CanvasRenderingContext2D.prototype.drawImage;CanvasRenderingContext2D.prototype.drawImage=function(im,...args){if(this.canvas.id==='world'&&im?.currentSrc?.includes('butter-original36/')){const m=this.getTransform();window.poseCalls.push({src:im.currentSrc,a:m.a,d:m.d,e:m.e,f:m.f,args});if(window.poseCalls.length>500)window.poseCalls.shift();}return draw.call(this,im,...args);};});
+ await page.goto(root+'/?test=1&seed=68'+query);await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();return page;
+}
+async function fixture(page,fn){await page.evaluate(fn);await page.evaluate(()=>window.__survivor68.sync());}
+try{
+ // Real browser time, normal DOM/keyboard only: no granted XP, moved enemies or HP edits.
+ const p=await open({viewport:{width:1366,height:768}});const held=new Set();let ticks=0;
+ while(await p.evaluate(()=>window.__survivor68.game.time)<32&&ticks++<180){
+  const info=await p.evaluate(()=>{const g=window.__survivor68.game;return {phase:g.phase,time:g.time,p:g.player,gems:g.gems,offers:g.offers.map(o=>o.id)};});
+  if(info.phase==='dead')break;
+  if(info.phase==='upgrade'){for(const key of held)await p.keyboard.up(key);held.clear();await p.locator('[data-upgrade]').first().click();continue;}
+  const nearest=info.gems.filter(j=>Math.hypot(j.x-info.p.x,j.y-info.p.y)<420).sort((a,b)=>Math.hypot(a.x-info.p.x,a.y-info.p.y)-Math.hypot(b.x-info.p.x,b.y-info.p.y))[0],target=nearest||{x:1300+340*Math.cos(info.time*.14),y:1000+340*Math.sin(info.time*.14)},want=new Set();
+  if(Math.abs(target.x-info.p.x)>15)want.add(target.x>info.p.x?'d':'a');if(Math.abs(target.y-info.p.y)>15)want.add(target.y>info.p.y?'s':'w');for(const k of held)if(!want.has(k)){await p.keyboard.up(k);held.delete(k);}for(const k of want)if(!held.has(k)){await p.keyboard.down(k);held.add(k);}
+  await p.waitForTimeout(220);
+ }
+ for(const key of held)await p.keyboard.up(key);
+ const native=await p.evaluate(()=>{const g=window.__survivor68.game;return {phase:g.phase,time:g.time,level:g.level,kills:g.kills,x:g.player.x,y:g.player.y,clips:[...new Set(window.poseCalls.map(c=>c.src.split('/').at(-1)))],whole:window.poseCalls.every(c=>Math.abs(c.a-c.d)<.001||Math.abs(c.a+c.d)<.001)};});
+ assert(native.time>=25);assert(native.kills>0);assert(native.level>1);assert(native.clips.includes('walkShoot.webp'));assert(native.whole);assert(Math.hypot(native.x-1300,native.y-1000)>20);reports.native32seconds=native;console.log('Native input segment:',JSON.stringify(native));
+ await p.keyboard.press('p');assert.equal(await p.evaluate(()=>window.__survivor68.game.phase),'paused');const clock=await p.evaluate(()=>window.__survivor68.game.time);await p.waitForTimeout(120);assert.equal(await p.evaluate(()=>window.__survivor68.game.time),clock);await p.locator('#resume').click();
+ await p.locator('#build').click();assert(await p.locator('#dialog-title').innerText()==='이번 탐사의 기술');await p.waitForTimeout(80);const frozen=await p.evaluate(()=>window.__survivor68.game.time);await p.waitForTimeout(80);assert.equal(await p.evaluate(()=>window.__survivor68.game.time),frozen);await p.locator('[data-close]').click();await p.keyboard.press('e');assert(await p.evaluate(()=>window.__survivor68.game.player.ultCooldown>0));
+ await p.screenshot({path:'/tmp/survivor68-desktop.png'});
+ // Explicit fixture for overflow, impact and read-only rendering; not the native run above.
+ await fixture(p,()=>{const a=window.__survivor68,g=a.game;a.engine.grantXp(g,300);});
+ const pending=await p.evaluate(()=>window.__survivor68.game.pendingLevels);assert(pending>=3);for(let i=0;i<pending;i++){assert.equal(await p.evaluate(()=>window.__survivor68.game.pendingLevels),pending-i);await p.locator('[data-upgrade]').first().click();}
+ await fixture(p,()=>{const a=window.__survivor68;a.engine.pause(a.game);a.engine.spawnEnemy(a.game,'ghost',{x:2500,y:55,final:true});});const pure=await p.evaluate(()=>{const a=window.__survivor68,b=JSON.stringify(a.game);a.render();a.render();return b===JSON.stringify(a.game);});assert(pure);reports.overflowChoices=pending;reports.rendererReadOnly=true;await p.close();
+ for(const [width,height]of [[320,740],[390,844],[844,390],[568,320]]){
+  const mobile=await open({viewport:{width,height},isMobile:true,hasTouch:true,reducedMotion:'reduce'});assert.equal(await mobile.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  const box=await mobile.locator('#joystick').boundingBox(),x=box.x+box.width/2,y=box.y+box.height/2;
+  const session=await mobile.context().newCDPSession(mobile),before=await mobile.evaluate(()=>window.__survivor68.game.player.x);
+  await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x,y}]});await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{id:1,x:x+48,y}]});await mobile.waitForTimeout(250);
+  const ult=await mobile.locator('#ultimate').boundingBox();await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:x+48,y},{id:2,x:ult.x+ult.width/2,y:ult.y+ult.height/2}]});await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[{id:1,x:x+48,y}]});await mobile.waitForTimeout(150);assert(await mobile.evaluate(()=>window.__survivor68.game.player.x)>before+30);assert(await mobile.evaluate(()=>window.__survivor68.game.player.ultCooldown)>0);await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  await fixture(mobile,()=>window.__survivor68.engine.grantXp(window.__survivor68.game,8));const buttons=await mobile.locator('[data-upgrade]').count();assert.equal(buttons,3);for(let i=0;i<buttons;i++){await mobile.locator('[data-upgrade]').nth(i).scrollIntoViewIfNeeded();const b=await mobile.locator('[data-upgrade]').nth(i).boundingBox();assert(b.width>=44&&b.height>=44);assert(b.x>=0&&b.x+b.width<=width+1);assert(b.y>=0&&b.y+b.height<=height+1);}
+  await mobile.screenshot({path:'/tmp/survivor68-mobile-'+width+'.png'});await mobile.locator('[data-upgrade]').last().tap();assert.equal(await mobile.evaluate(()=>window.__survivor68.game.phase),'playing');await mobile.close();
+ }
+ reports.touchMultitouchReducedAndLayouts=[320,390,844,568];
+ for(const viewport of [{width:844,height:390},{width:568,height:320}]){const short=await open({viewport});await short.keyboard.press('e');await short.waitForTimeout(500);assert(await short.evaluate(()=>{const calls=window.poseCalls.filter(c=>c.src.endsWith('/high.webp')),canvas=document.querySelector('#world');return calls.length>0&&calls.every(c=>{const [x,y,w,h]=c.args.slice(4),xs=[c.e+x*c.a,c.e+(x+w)*c.a],ys=[c.f+y*c.d,c.f+(y+h)*c.d];return Math.min(...xs)>=0&&Math.max(...xs)<=canvas.width&&Math.min(...ys)>=0&&Math.max(...ys)<=canvas.height;});}),'intact ultimate cells fit short landscape without pose-specific fitting');await short.close();}reports.highSkillUnclipped=true;
+ const saved=await open({viewport:{width:1000,height:800}},'&persist=1');await saved.waitForFunction(()=>window.__survivor68.game.bullets.length>0);await saved.keyboard.press('p');const inFlight=await saved.evaluate(()=>JSON.stringify(window.__survivor68.game));await saved.reload();await saved.waitForSelector('body[data-ready="true"]');await saved.locator('#continue').click();assert.equal(await saved.evaluate(()=>JSON.stringify(window.__survivor68.game)),inFlight);await saved.locator('#resume').click();reports.nativeInFlightSaveExactlyPreserved=true;
+ await fixture(saved,()=>{const a=window.__survivor68;a.engine.grantXp(a.game,80);});await saved.locator('[data-upgrade]').first().click();const budget=await saved.evaluate(()=>window.__survivor68.game.pendingLevels);await saved.reload();await saved.waitForSelector('body[data-ready="true"]');await saved.locator('#continue').click();assert.equal(await saved.evaluate(()=>window.__survivor68.game.pendingLevels),budget);assert.equal(await saved.evaluate(()=>window.__survivor68.game.phase),'paused');assert.equal(await saved.evaluate(()=>window.__survivor68.game.returnPhase),'upgrade');await saved.locator('#resume').click();assert.equal(await saved.evaluate(()=>window.__survivor68.game.phase),'upgrade');assert.equal(await saved.evaluate(()=>window.__survivor68.game.pendingLevels),budget);await saved.close();reports.pendingSaveResume=true;
+ const fallback=await open({viewport:{width:390,height:844}},'',true);await fallback.waitForTimeout(1200);assert(await fallback.evaluate(()=>window.__survivor68.game.time)>1);await fallback.screenshot({path:'/tmp/survivor68-fallback.png'});await fallback.close();reports.allImageFailurePlayable=true;
+ const slow=await open({},'','slow');await slow.waitForFunction(()=>Boolean(window.__survivor68.images.butter.walkShoot),{timeout:5000});assert(await slow.evaluate(()=>window.__survivor68.game.time)>0);await slow.close();reports.lateMotionImageRecovers=true;
+ const denied=await browser.newPage();denied.on('pageerror',e=>errors.push(e.message));await denied.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw new DOMException('Denied','SecurityError');}}));await denied.goto(root+'/?test=1&persist=1');await denied.waitForSelector('body[data-ready="true"]');await denied.locator('#start').click();await denied.keyboard.press('p');assert(await denied.locator('.save-warning').isVisible());await denied.close();reports.storageDenied=true;
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({...reports,errors},null,2));
+}finally{await browser.close();}

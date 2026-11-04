@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox']});
 const root=process.argv[2]||'http://127.0.0.1:4190',errors=[];
-async function open(page){page.on('pageerror',e=>errors.push(e.message));await page.goto(root+'/?test=1&seed=58');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();await page.locator('[data-starter="echo"]').click();}
+async function open(page){page.on('pageerror',e=>errors.push(e.message));await page.goto(root+'/cards67.html?test=1&seed=58');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();await page.locator('[data-starter="echo"]').click();}
 const state=page=>page.evaluate(()=>{const {time,...g}=window.__poker58.game;return JSON.stringify(g);});
 async function fullHouse(page,boss=false){await page.evaluate(boss=>{const a=window.__poker58,g=a.game;Object.assign(g,{phase:'pick',pending:null,action:null,relics:[],hand:[9,9,9,4,4,2,7,14].map((rank,i)=>({id:'fixture'+i,rank,suit:Object.keys(a.engine.SUITS)[i%4]})),selected:[],enemyHp:10000,turn:1,lastPattern:boss?'fullHouse':null,discards:3});g.foe.boss=boss;a.sync();},boss);}
 try{

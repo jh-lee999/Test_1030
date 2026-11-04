@@ -1,5 +1,22 @@
 # Project instructions
 
+## ACTIVE v68: survivor replaces cards at the user's request
+
+Root index.html now runs survivor68.js. The previous root is preserved verbatim
+as cards67.html; all v58–67 card requirements below apply to that archive, NOT
+the new real-time survivor. Existing card saves and engines stay unchanged.
+PocketBonk reference: https://pokebonk.com/?lang=ko (duplicate URL normalized).
+Direct access was blocked by this environment; public descriptions informed an
+independent adaptation, not a verified clone or copied source. See docs/survivor68.md.
+Keep intact original Butter poses, source size80/foot origin and one shared facing
+for pose/muzzle. No recoloring, per-frame fit, fake four-direction source or cutouts.
+Preserve all approved source hashes. Gameplay moves automatically; player moves
+and optionally uses E/Space ultimate. Four move slots, levels and core awakenings
+must change actual attacks. XP overflow queues every level selection. Menus freeze
+all clocks; persistence uses a separate survivor key. Renderer is read-only.
+Run survivor68 unit/browser, npm test, canon/original/art and archive regressions.
+Preserve unrelated tools/sprite-sources/butter-chibi-release.webp.
+
 ## ACTIVE v67: Butter must face the enemy in the card game
 
 Latest explicit user correction supersedes the old unmirrored card presentation.

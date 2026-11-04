@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox']});
 const root=process.argv[2]||'http://127.0.0.1:4190',errors=[];
-async function open(page){page.on('pageerror',e=>errors.push(e.message));await page.goto(root+'/?test=1&seed=order59');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();await page.locator('[data-starter="echo"]').click();}
+async function open(page){page.on('pageerror',e=>errors.push(e.message));await page.goto(root+'/cards67.html?test=1&seed=order59');await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();await page.locator('[data-starter="echo"]').click();}
 async function fixture(page){await page.evaluate(()=>{const a=window.__poker58,g=a.game;Object.assign(g,{phase:'pick',pending:null,action:null,relics:['pillow','rubber'],hand:[{id:'fixture-a',rank:5,suit:'hearts'},{id:'fixture-b',rank:5,suit:'hearts'}],enemyHp:10000,turn:1,lastPattern:null,discards:3});a.sync();});await page.waitForFunction(()=>document.querySelector('#preview-damage').textContent==='90');}
 const invariant=page=>page.evaluate(()=>{const {relics,...g}=window.__poker58.game;delete g.time;return JSON.stringify(g);});
 try{

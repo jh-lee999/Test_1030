@@ -1,25 +1,13 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#251d33"><title>버터의 수상한 카드놀이</title><link rel="icon" href="./assets/butter-original36/poster.png"><link rel="stylesheet" href="./dice.css?v=53"><link rel="stylesheet" href="./poker.css?v=63"><link rel="stylesheet" href="./poker-feedback.css?v=64"><link rel="stylesheet" href="./poker-release.css?v=66"><script type="module" src="./poker.js?v=67"></script></head>
-<body><div id="app">
-<header><a class="brand" href="./"><span class="brand-mark">♠</span><span>버터의 수상한 카드놀이<small>BUILD YOUR DECK. MAKE YOUR LUCK.</small></span></a><nav><button id="map-open" aria-label="여정 보기">여정</button><button id="deck-open">덱 보기</button><button id="help" aria-label="도움말">?</button><button id="sound" aria-pressed="true">소리 켬</button><button id="settings-open" aria-label="설정">⚙</button><button id="pause" aria-label="일시정지" disabled>Ⅱ</button></nav></header>
-<main><section class="play-column">
-<div class="run-status"><div class="hp-status"><span>버터의 체력</span><b id="hp">48 / 48</b><div class="track"><i id="hp-bar"></i></div></div><div class="route" id="route" aria-label="전투 진행"></div><div class="turn-status"><small id="round">첫 번째 내기</small><b id="gold">12 G</b></div></div>
-<section class="arena" aria-label="버터와 상대"><div class="enemy-heading"><span id="enemy-name"></span><b id="enemy-hp"></b></div><div class="enemy-track"><i id="enemy-bar"></i></div><canvas id="scene" width="1000" height="300" aria-label="원작 버터와 몬스터 모션"></canvas><div class="enemy-intent"><span id="rule"></span><b id="incoming"></b></div></section>
-<section class="table" id="table" tabindex="-1" aria-label="보유 카드와 공격 족보">
-<div class="table-heading"><div><span class="eyebrow">A DECK YOU SHAPE</span><h1 id="phase-label">패를 만들고, 운을 바꿔.</h1></div><span id="resources" title="공격은 전투당 4회 · 버리기는 턴마다 3회">공격 4 · 버리기 3</span></div>
-<section class="coach" id="coach" aria-label="시작 안내" hidden></section>
-<div class="hand-key"><span><i class="key-score"></i> 금색 테두리 = 자동 득점 카드</span><span><i class="key-discard"></i> 붉은 표시 = 버릴 카드</span></div>
-<div id="hand" class="hand" role="group" aria-label="보유 카드 8장 · 누르면 버리기 선택"></div>
-<section id="completed-hands-panel" class="completed-hands-panel" aria-label="현재 패로 완성한 족보" hidden></section>
-<div class="decision-row"><div class="hand-actions"><div class="selection-actions"><button id="select-all" aria-pressed="false">전체 선택</button><button id="clear-selection">선택 해제</button></div><small id="pile-count"></small><button id="discard">선택한 카드 버리기 <kbd>R</kbd></button></div>
-
-
-<div class="attack-dock"><div><small id="attack-name">자동 최대 피해</small><span><b id="preview-damage">0</b><em>예상 피해</em></span><small id="dock-risk"></small></div><button id="attack" class="primary">최강 족보로 공격 →</button><button id="pass" hidden>빈손으로 넘기기 · 반격 받음</button></div></div>
-<p id="attack-effect" class="artifact-feedback" role="status"></p><p id="notice" role="status" aria-live="polite"></p>
-<details class="handbook"><summary>족보 사전 · 현재 패의 피해와 성장</summary><div id="patterns" class="poker-patterns"></div><p>카드 최대 5장으로 가능한 모든 족보를 계산해 실제 최대 피해를 자동 선택해요. A는 A2345 또는 10JQKA에만 연결돼요. 로열은 같은 무늬의 10JQKA예요.</p></details>
-</section></section>
-<aside><section id="tactical" class="tactical" aria-label="전투 판단"></section><div id="draw-hints" class="draw-hints" aria-label="한 장 부족한 족보 · 누르면 버릴 카드만 선택"></div><section class="score-card"><div class="section-title"><span class="eyebrow">THE WINNING HAND</span><b id="score-caption">자동 최대 피해</b></div><div class="score-formula"><div><span>칩</span><b id="chips">0</b></div><i>×</i><div><span>배수</span><b id="mult">1</b></div></div><div class="score-total"><span>예상 피해</span><b id="score-total">0</b></div><div id="chain" class="chain" aria-label="카드와 유물 계산 순서"></div></section>
-<section class="relic-note"><div class="section-title"><h2>유물 연쇄</h2><span id="relic-count">0 / 4</span></div><section id="relic-order" class="relic-order-panel" aria-label="유물 발동 순서 편집"></section><details class="relics-detail"><summary>유물 효과 자세히</summary><div id="relics"></div></details><p id="artifact-state" class="artifact-feedback"></p></section>
-<section class="deck-note"><div class="section-title"><h2>내가 만드는 덱</h2><b id="deck-count">52장</b></div><div id="deck-suits"></div><p>상점에서 제거 · 복제 · 무늬/숫자 변경.<br>족보를 강화하고 이자를 모아 빌드를 완성해요.</p><span>최고의 한 방 <b id="best">0</b> · 공격 <b id="attacks">0</b></span><small id="seed-label"></small></section></aside>
-</main><footer>비공식 트릭컬 팬 프로토타입 · 원작 에셋 권리는 원 권리자에게 있습니다. <a href="./assets/trickcal-stage37/CREDITS.md">모션 출처</a> · <a href="./assets/trickcal-artifacts53/CREDITS.md">아티팩트 출처</a> · <a href="./assets/dice-fx54/CREDITS.md">탄환 출처</a> · <a href="./dice57.html">이전 주사위 게임</a></footer>
-</div><div id="screen" class="modal" role="dialog" aria-modal="true" aria-labelledby="screen-title"><div id="screen-panel" class="modal-panel"><h2 id="screen-title">버터의 수상한 카드놀이</h2><p>준비 중이에요.</p></div></div></body></html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#183037"><title>버터의 말썽 대탈출</title><link rel="icon" href="./assets/butter-original36/poster.png"><link rel="stylesheet" href="./survivor68.css?v=68"><script type="module" src="./survivor68.js?v=68"></script></head>
+<body><main class="shell" id="field">
+<header><div class="brand"><span>✦</span><div>버터의 말썽 대탈출<small>MOVE. GROW. BONK.</small></div></div><nav><button id="build" disabled aria-label="기술과 성장 보기">기술</button><button id="help" aria-label="게임 방법">?</button><button id="sound" aria-pressed="true">소리 켬</button><button id="pause" disabled aria-label="일시정지">Ⅱ</button></nav></header>
+<canvas id="world" tabindex="0" aria-label="이동하며 경험치를 모으는 자동 공격 생존 전투">자동 공격 생존 게임입니다. WASD 또는 방향키로 이동하고 E로 왕새총을 사용합니다.</canvas>
+<section class="hud" aria-label="현재 탐사 상태"><div class="health"><div><span>버터의 체력</span><b id="hp">100 / 100</b></div><div class="track"><i id="hp-bar"></i></div><div class="level-row"><b id="level">Lv 1</b><span id="xp">0 / 8</span></div><div class="track xp-track"><i id="xp-bar"></i></div></div><div class="clock"><small>SURVIVAL</small><b id="timer">00:00</b><span id="next-event">수호자 01:30</span></div><div class="score"><b id="kills">0</b>처치<span id="cores">각성 핵 0</span></div></section>
+<section id="bossbar" hidden aria-label="수호자 체력"><b id="boss-name"></b><div class="track"><i id="boss-hp"></i></div></section>
+<p id="notice" role="status" aria-live="polite"></p>
+<div id="moves" class="bottom" aria-label="습득한 자동 공격 기술"></div>
+<div class="hint">WASD / 방향키 이동<br>공격은 자동 · E 왕새총 · B 기술 보기</div>
+<div id="joystick" class="joystick" aria-label="터치 이동 스틱"><i id="knob"></i></div>
+<button id="ultimate" class="ultimate" disabled><b>왕새총 <kbd>E</kbd></b><small id="ultimate-time">준비 완료</small></button>
+</main><div id="dialog" class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><section id="panel" class="panel"><h1 id="dialog-title">숲으로 가는 중…</h1></section></div></body></html>

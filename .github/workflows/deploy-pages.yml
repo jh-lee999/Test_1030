@@ -38,6 +38,10 @@ jobs:
       - name: Check game, sprite bounds and approved art
         run: |
           node --check app.js
+          node --check survivor68.js
+          node --check survivor68-engine.js
+          node --check survivor68-renderer.js
+          node --check survivor68-save.js
           node --check dice.js
           node --check dice55.js
           node --check dice-selection.js
