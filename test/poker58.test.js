@@ -72,7 +72,7 @@ test('boss enrage does not retroactively increase a committed counter, no death 
  const h=started();h.hp=1;h.relics=['komi'];h.enemyHp=10000;h.hand=cards([2,2,3,3,4,4,5,5]);assert(E.attack(h));settle(h);assert.equal(h.phase,'dead');assert.equal(h.hp,0);
 });
 test('previous root is preserved verbatim, new root loads finite-card engine',()=>{
- assert.equal(createHash('sha256').update(readFileSync(new URL('../dice57.html',import.meta.url))).digest('hex'),'16a8e425bba9ef28f17078fe3447dc6b5d0de801eef3000e68aa8f7fc387d066');assert.match(readFileSync(new URL('../index.html',import.meta.url),'utf8'),/poker\.js\?v=58/);
+ assert.equal(createHash('sha256').update(readFileSync(new URL('../dice57.html',import.meta.url))).digest('hex'),'16a8e425bba9ef28f17078fe3447dc6b5d0de801eef3000e68aa8f7fc387d066');assert.match(readFileSync(new URL('../index.html',import.meta.url),'utf8'),/poker\.js\?v=59/);
 });
 test('near-complete hints count unseen candidates without reading order or changing state',()=>{
  const g=started();g.hand=cards([10,11,12,13,2,4,7,9],['hearts','hearts','hearts','hearts','clubs','clubs','clubs','spades']).map(c=>({...g.deck.find(d=>d.rank===c.rank&&d.suit===c.suit)}));g.drawPile=g.deck.filter(c=>!g.hand.some(h=>h.id===c.id)).map(c=>c.id);const before=serialized(g),h=E.drawHints(g);assert(h.some(x=>x.text.includes('플러시')&&x.text.includes('더미 9장')));assert(h.every(x=>x.discard.length<=5&&x.discard.every(id=>g.hand.some(c=>c.id===id))));assert.equal(serialized(g),before);g.drawPile.reverse();assert.deepEqual(E.drawHints(g),h);g.discards=0;assert.deepEqual(E.drawHints(g),[]);

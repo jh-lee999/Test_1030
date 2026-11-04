@@ -1,4 +1,4 @@
-// v58: finite, persistent cards. All previews are pure; only actions consume RNG.
+// v59: finite cards and ordered relic passes. Previews never consume RNG.
 import {butterReleasePoint} from './butter-original-motion.js';
 import {RELICS as OLD_RELICS,seedNumber} from './dice-engine.js';
 
@@ -23,9 +23,9 @@ export const PATTERNS={
 const DESCRIPTIONS={
  echo:'득점 카드에 같은 숫자가 2장 이상이면 그 카드들을 한 번 더 발동. 번개·별사탕도 재발동.',
  candy:'득점한 A 또는 그림 카드(J/Q/K)가 발동할 때마다 칩 +8.',
- pillow:'하트 카드가 득점할 때마다 배수 +0.5. 리본 재발동에도 적용.',
- empty:'이번 전투의 버리기를 모두 소모한 공격은 배수 +3.',
- rubber:'모든 카드·유물 계산 뒤 최종 배수 ×1.5.',
+ pillow:'이 유물 위치에서 하트 총 발동 1회당 배수 +0.5. 리본 재발동 포함. 곱배수 앞에 두면 함께 증폭돼요.',
+ empty:'버리기를 모두 소모했다면 이 유물 위치에서 배수 +3. 뒤에 놓인 곱배수로 증폭 가능.',
+ rubber:'이 유물 위치에서 현재 배수 ×1.5. 뒤에 오는 +배수까지 미리 곱하지 않아요.',
  bell:'이번 전투에 남긴 버리기 1회마다 칩 +10.',
  yellow:'트리플 이상 족보 배수 ×1.35. 실제 HP 피해로 분노 3을 모으면 추가 ×2 후 소모.',
  komi:'반격 후 살아 있고 HP가 30% 이하면 8 회복. 전투마다 한 번.',
@@ -38,9 +38,10 @@ const DESCRIPTIONS={
 };
 export const RELICS=Object.fromEntries(Object.entries(OLD_RELICS).map(([id,r])=>[id,{...r,text:DESCRIPTIONS[id]}]));
 Object.assign(RELICS,{
- paint:{name:'한 가지 색의 꿈',color:'#d99fae',icon:'pillow',tag:'플러시 빌드',text:'플러시 계열 족보 최종 배수 ×1.8. 상점에서 무늬를 통일해요.'},
- ladder:{name:'이어 붙인 사다리',color:'#9fbeb0',icon:'book-low',tag:'스트레이트 빌드',text:'스트레이트 계열 족보 최종 배수 ×2. 상점에서 낮은 패를 압축해요.'}
+ paint:{name:'한 가지 색의 꿈',color:'#d99fae',icon:'pillow',tag:'플러시 빌드',text:'플러시 계열이면 이 유물 위치에서 배수 ×1.8. 앞의 +배수도 함께 증폭.'},
+ ladder:{name:'이어 붙인 사다리',color:'#9fbeb0',icon:'book-low',tag:'스트레이트 빌드',text:'스트레이트 계열이면 이 유물 위치에서 배수 ×2. 앞의 +배수도 함께 증폭.'}
 });
+export const RELIC_STAGES={echo:'card',candy:'card',weather:'card',pillow:'relic',empty:'relic',rubber:'relic',bell:'relic',yellow:'relic',rust:'relic',mace:'relic',paint:'relic',ladder:'relic',belt:'passive',komi:'passive',scythe:'impact',lucky:'impact'};
 export const RUN_LENGTH=6,MAX_RELICS=4,MIN_DECK=20;
 const small=id=>['high','pair','twoPair'].includes(id),flushes=id=>['flush','straightFlush','royal','flushHouse','flushFive'].includes(id),straights=id=>['straight','straightFlush','royal'].includes(id);
 const score=(c,m)=>Math.floor(Number((c*m).toFixed(8)));
@@ -67,31 +68,51 @@ export function enemyIntent(g){
 }
 function scoreCards(g,id,indices){
  const def=PATTERNS[id],level=g.training[id]||0,intent=enemyIntent(g),has=k=>g.relics.includes(k),steps=[],cards=indices.map(i=>g.hand[i]),counts={};for(const c of cards)counts[c.rank]=(counts[c.rank]||0)+1;
- let chips=def.chips+level*def.growth[0],mult=def.mult+level*def.growth[1],strikes=g.strikes;
- const record=(label,source,die=null)=>steps.push({label,source,die,chips,mult,total:score(chips,mult)});
- record(def.name+' Lv'+(level+1),'pattern');
+ let chips=def.chips+level*def.growth[0],mult=def.mult+level*def.growth[1],strikes=g.strikes,heartTriggers=0;
+ const record=(label,source,die=null,phase='relic',active=true)=>steps.push({label,source,die,phase,slot:g.relics.indexOf(source),active,chips,mult,total:score(chips,mult)});
+ record(def.name+' Lv'+(level+1),'pattern',null,'base');
+ // Card scoring is a separate pass, as in poker deck-builders. Retriggers are
+ // finite and still fire card-stage effects, regardless of echo's slot.
  for(const [j,c]of cards.entries())for(let t=0;t<(has('echo')&&counts[c.rank]>=2?2:1);t++){
-  const value=c.rank===14?11:Math.min(10,c.rank);chips+=value;record((t?'리본 재발동 · ':'')+cardName(c)+' 칩 +'+value,t?'echo':'card',indices[j]);
-  if(has('candy')&&c.rank>=11){chips+=8;record('별사탕 칩 +8','candy',indices[j]);}
-  if(has('pillow')&&c.suit==='hearts'){mult+=.5;record('하트 · 배수 +0.5','pillow',indices[j]);}
-  if(has('weather')&&++strikes>=3){strikes-=3;chips+=18;record('날씨는 맑음 · 번개 칩 +18','weather',indices[j]);}
+  const value=c.rank===14?11:Math.min(10,c.rank);chips+=value;record((t?'리본 재발동 · ':'')+cardName(c)+' 칩 +'+value,t?'echo':'card',indices[j],'card');
+  if(c.suit==='hearts')heartTriggers++;
+  for(const key of g.relics){
+   if(key==='candy'&&c.rank>=11){chips+=8;record('별사탕 칩 +8','candy',indices[j],'card');}
+   if(key==='weather'&&++strikes>=3){strikes-=3;chips+=18;record('날씨는 맑음 · 번개 칩 +18','weather',indices[j],'card');}
+  }
  }
- if(has('bell')&&g.discards){chips+=g.discards*10;record('황금 방울 · 남은 버리기 칩 +'+g.discards*10,'bell');}
- if(has('empty')&&!g.discards){mult+=3;record('빈 주머니 · 배수 +3','empty');}
  const rageSpent=has('yellow')&&!small(id)&&g.rage===3,stun=has('mace')&&small(id)&&g.maceHits===3;
- if(has('yellow')&&!small(id)){mult*=1.35;record('옐로카드 · ×1.35','yellow');if(rageSpent){mult*=2;record('분노 3 소모 · ×2','yellow');}}
- if(has('rust')&&g.hp<g.maxHp){mult*=1.2;record('상처 · ×1.2','rust');}
- if(stun){mult*=1.5;record('참회의 메이스 · ×1.5 / 기절','mace');}
- if(has('paint')&&flushes(id)){mult*=1.8;record('한 가지 색의 꿈 · ×1.8','paint');}
- if(has('ladder')&&straights(id)){mult*=2;record('사다리 · ×2','ladder');}
- if(has('rubber')){mult*=1.5;record('고무줄 · ×1.5','rubber');}
- if(intent.exposed){mult*=1.35;record('적의 빈틈 · ×1.35','exposed');}
+ // Do not regroup additions before multiplications: visible slot order IS the
+ // actual fold. Inactive/card/impact/passive relics do not acquire extra procs.
+ for(const key of g.relics){
+  let active=true;
+  if(key==='pillow'&&heartTriggers){mult+=heartTriggers*.5;record('하트 '+heartTriggers+'회 · 배수 +'+heartTriggers*.5,key);}
+  else if(key==='empty'&&!g.discards){mult+=3;record('빈 주머니 · 배수 +3',key);}
+  else if(key==='rubber'){mult*=1.5;record('고무줄 · ×1.5',key);}
+  else if(key==='bell'&&g.discards){chips+=g.discards*10;record('황금 방울 · 칩 +'+g.discards*10,key);}
+  else if(key==='yellow'&&!small(id)){mult*=1.35;record('옐로카드 · ×1.35',key);if(rageSpent){mult*=2;record('분노 3 소모 · ×2',key);}}
+  else if(key==='rust'&&g.hp<g.maxHp){mult*=1.2;record('상처 · ×1.2',key);}
+  else if(key==='mace'&&stun){mult*=1.5;record('참회의 메이스 · ×1.5 / 기절',key);}
+  else if(key==='paint'&&flushes(id)){mult*=1.8;record('한 가지 색의 꿈 · ×1.8',key);}
+  else if(key==='ladder'&&straights(id)){mult*=2;record('사다리 · ×2',key);}
+  else {active=false;const phase=RELIC_STAGES[key];if(phase==='relic')record(RELICS[key].name+' · 이번 패 조건 미충족',key,null,'relic',active);}
+ }
+ if(intent.exposed){mult*=1.35;record('적의 빈틈 · ×1.35','exposed',null,'enemy');}
  const breakArmor=id==='pair'&&intent.armor>0,raw=score(chips,mult),armor=breakArmor?0:intent.armor;let damage=Math.max(1,raw-armor);
- if(armor)record('방패 −'+armor,'guard');if(breakArmor)record('원페어 · 방패 파괴','break');
+ if(armor)record('방패 −'+armor,'guard',null,'enemy');if(breakArmor)record('원페어 · 방패 파괴','break',null,'enemy');
  const remain=g.enemyHp-damage,execute=has('scythe')&&small(id)&&!g.foe.boss&&remain>0&&remain<=g.foe.maxHp*.18;
- if(execute){damage=g.enemyHp;record('림의 낫 · 처형','scythe');}
+ if(execute){damage=g.enemyHp;record('림의 낫 · 처형','scythe',null,'impact');}
  const heal=has('lucky')&&small(id)?Math.min(4,Math.floor(Math.min(g.enemyHp,damage)*.05),g.maxHp-g.hp):0;
- return {id,name:def.name,indices,cardIds:cards.map(c=>c.id),chips,mult,raw,damage,steps,strikes,stun,rageSpent,heal,execute,breakArmor,guard:Math.max(0,5-indices.length)*2,blocked:g.foe.boss&&g.lastPattern===id};
+ return {id,name:def.name,indices,cardIds:cards.map(c=>c.id),relicOrder:[...g.relics],chips,mult,raw,damage,steps,strikes,stun,rageSpent,heal,execute,breakArmor,guard:Math.max(0,5-indices.length)*2,blocked:g.foe.boss&&g.lastPattern===id};
+}
+export function canReorder(g){return ['pick','shop','draft'].includes(g.phase);}
+export function moveRelic(g,from,to){
+ if(!canReorder(g)||!Number.isInteger(from)||!Number.isInteger(to)||from<0||to<0||from>=g.relics.length||to>=g.relics.length||from===to)return false;
+ const [id]=g.relics.splice(from,1);g.relics.splice(to,0,id);return true;
+}
+export function reorderPreview(g,from,to){
+ const relics=[...g.relics],preview={...g,relics};if(!moveRelic(preview,from,to))return null;
+ const before=bestHand(g),after=bestHand(preview);return {order:relics,before:before?.damage||0,after:after?.damage||0,delta:(after?.damage||0)-(before?.damage||0),pattern:after?.id||null};
 }
 // Search every scoring subset, not just the highest nominal poker rank.
 // A trained pair or a relic-amplified flush may beat a higher nominal hand.

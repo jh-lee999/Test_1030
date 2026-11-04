@@ -43,6 +43,7 @@ jobs:
           node --check dice-selection.js
           node --check poker-engine.js
           node --check poker.js
+          node --check poker-order-ui.js
           node --check dice-run-engine.js
           node --check dice-engine.js
           node --check trickcal-artifacts.js

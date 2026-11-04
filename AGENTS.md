@@ -1,5 +1,38 @@
 # Project instructions
 
+## ACTIVE v59: relic slot order is real scoring order
+
+User explicitly requested Balatro-like order-dependent relic damage. Preserve
+v58 finite-deck/run rules; do NOT restore a fixed additions-first/final-rubber
+order. poker.js/engine/css now use cache59; poker58.html remains a CURRENT entry
+alias, not a frozen v58 engine archive. dice57 and all earlier archives unchanged.
+
+Scoring phases: base/training -> each card's chips/finite echo, card-stage candy
+and weather in slot order -> hand-stage relics strictly g.relics left-to-right
+-> enemy exposure/armor -> on-hit effects. Pillow now aggregates scoring heart
+ACTIVATIONS (including echo) and adds .5 each AT ITS HAND-STAGE SLOT, not during
+card scoring. Empty adds3 at its slot when discards0. Rubber/paint/ladder/yellow/
+rust/mace multiply at their slots, never silently moved after additions. Card,
+passive and impact badges are explicit; NOT every swap changes damage. Weather
+and echo never proc an extra time merely because they were moved. Previews and
+reorderPreview must remain pure/no RNG/no charge changes. Trace phase/slot/active
+and result.relicOrder are frozen in a committed shot; existing hit timing stays.
+
+moveRelic validates integer source/destination, bounds and distinct positions;
+allow only pick/shop/draft. No moving during resolve OR ANY paused phase, dead
+or won. Move is insertion, not swapping identities/charges. Preserve order across
+fights; purchases append or replace the exact chosen slot; new run resets.
+Never auto-sort the player's relics. bestHand and UI must fully re-search after
+order change (a different hand can become strongest), not just change a label.
+
+poker-order-ui.js is read-only markup with exact current-hand neighbor deltas.
+Main/shop rails: desktop drag/drop and keyboard/touch arrows; disabled boundary
+controls and phase locks. Restore focus inside the visible modal after a move,
+never to hidden/inert main UI. Source images/art transforms are unchanged.
+Run order59 unit/browser, poker58 native six-room browser and required archives,
+all npm/art checks. Order fixtures are explicit, NOT a genuine resource run.
+See docs/order59.md. Preserve unrelated chibi WebP.
+
 ## ACTIVE v58: finite poker deck and run deck-building
 
 User explicitly requested Balatro-like deck thinning and full poker mechanics.
