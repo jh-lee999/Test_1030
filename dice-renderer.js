@@ -1,6 +1,7 @@
-import {drawButterMotion,butterReleasePoint} from './butter-original-motion.js';
+import {drawButterMotion} from './butter-original-motion.js';
 import {STAGE_ART} from './platformer-art.js?v=43';
-import {ENCOUNTERS} from './dice-engine.js?v=52';
+import {ENCOUNTERS} from './dice-engine.js?v=53.1';
+import {drawDiceEffects} from './dice-effects.js?v=54';
 export const HERO={x:190,y:220,size:80};
 export const ENEMY_SCALE={fan:.9,archer:.9,guard:.52,ghost:1};
 const TAU=Math.PI*2;
@@ -22,13 +23,12 @@ export function renderDiceScene(c,g,images,{reduced=false}={}){
  if(img?.naturalWidth)c.drawImage(img,frame%clip.columns*clip.width,Math.floor(frame/clip.columns)*clip.height,clip.width,clip.height,-clip.origin[0]*scale,-clip.origin[1]*scale,clip.width*scale,clip.height*scale);
  else{text(c,enemy==='ghost'?'☁':'♟',0,-25,80,'#c4a5dd');}
  c.restore();
+ drawDiceEffects(c,g,images.effects,{reduced});
  if(phase==='resolve'&&p){
-  const release=butterReleasePoint(g.action?.type||'normal')*(g.action?.duration||.75),f=(p.clock-release)/(p.hitAt-release);
-  if(f>=0&&f<1){const x=250+f*535,y=155-Math.sin(f*Math.PI)*55;c.strokeStyle='#f7d38c88';c.lineWidth=6;c.beginPath();c.moveTo(x-35,y+6);c.lineTo(x,y);c.stroke();c.fillStyle='#ffe8ac';c.beginPath();c.arc(x,y,p.result.damage>=200?17:10,0,TAU);c.fill();}
   if(p.applied){const fade=Math.max(0,1-(p.clock-p.hitAt)/.55);c.save();c.globalAlpha=fade;text(c,'−'+p.result.damage,810,73-(1-fade)*30,50,'#ffdea2');c.restore();}
  }
  text(c,'버터',190,277,18);text(c,ENCOUNTERS[g.stage].enemy==='ghost'?'아공간의 이불령':'셰이디의 시험',810,277,18,'#d6c9e4');
- text(c,g.stage===3?'LAST BET':'ROUND 0'+(g.stage+1),500,97,14,'#d9c59b');
- text(c,phase==='resolve'?g.lastResult.name:'한 번 더 굴릴까?',500,145,29);
- text(c,phase==='resolve'?String(g.lastResult.damage)+' DAMAGE':'행운은, 만드는 거야.',500,185,phase==='resolve'?40:16,phase==='resolve'?'#ffdaa0':'#baafc8');
+ text(c,g.stage===3?'LAST BET':'ROUND 0'+(g.stage+1),500,phase==='resolve'?50:97,14,'#d9c59b');
+ text(c,phase==='resolve'?g.lastResult.name:'한 번 더 굴릴까?',500,phase==='resolve'?80:145,phase==='resolve'?23:29);
+ text(c,phase==='resolve'?String(g.lastResult.damage)+' DAMAGE':'행운은, 만드는 거야.',500,phase==='resolve'?115:185,phase==='resolve'?30:16,phase==='resolve'?'#ffdaa0':'#baafc8');
 }

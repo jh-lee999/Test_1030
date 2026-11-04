@@ -1,5 +1,20 @@
 # Project instructions
 
+## ACTIVE v54: sourced projectile VFX, presentation only
+
+dice-effects.js samples deterministic sprites from the existing pending clock.
+Never change combat timing, HP, charges, RNG or source Butter files to animate a
+shot. The original release marker gives the muzzle; impact is the existing hitAt.
+The atlas combines original Butter rock with seven explicitly credited Kenney
+CC0 particles; see assets/dice-fx54/CREDITS.md / atlas.json. Do not claim all VFX
+are original Trickcal animations. Weather bolt requires a real weather trace
+entry, not ownership. Menus freeze effects. Reduced motion removes flying shots,
+flash, rotating stars and lightning; a small static hit ring remains. Atlas load
+is optional/nonblocking and failure retains a basic stone. Source whole poses,
+uniform scale/anchor and all archives are unchanged. Run effects54 unit/browser,
+v53/v52 checks, original art checks and all archived required checks. Screenshots
+must clip each 1000x300 filmstrip panel; background overscan isn't sprite damage.
+
 ## ACTIVE v53: original artifact references in the dice game
 
 Eight unchanged source PNGs and Korean names/effect summaries are pinned in

@@ -1,5 +1,6 @@
 import {createGame,FACES,PATTERNS,RELICS,ENCOUNTERS,evaluate,toggleHold,reroll,attack,chooseRelic,counterPreview,canPass,pass,pause,resume,tick} from './dice-engine.js?v=53.1';
-import {renderDiceScene} from './dice-renderer.js?v=52';
+import {renderDiceScene} from './dice-renderer.js?v=54';
+import {EFFECT_ATLAS} from './dice-effects.js?v=54';
 import {BUTTER_ORIGINAL,BUTTER_POSTER} from './butter-original-motion.js';
 import {STAGE_ART} from './platformer-art.js?v=43';
 import {createGameAudio} from './platformer-audio.js?v=46';
@@ -107,6 +108,6 @@ function sync(){
 }
 function frame(now){const dt=last?Math.min((now-last)/1000,1/30):0;last=now;if(started){const hit=g.pending?.applied;tick(g,dt);if(!hit&&g.pending?.applied)audio.play(['hit']);sync();}renderDiceScene(ctx,g,images,{reduced:reduced.matches});requestAnimationFrame(frame);}
 function load(src,target,id){return new Promise(resolve=>{const img=new Image();let done=false;const finish=ok=>{if(done)return;done=true;clearTimeout(timeout);if(ok)target[id]=img;resolve(ok);},timeout=setTimeout(()=>finish(false),8000);img.onload=()=>finish(true);img.onerror=()=>finish(false);img.src=src;});}
-async function boot(){const tasks=[load(BUTTER_POSTER,images.butter,'poster')];for(const key of ['idle','shoot','high'])tasks.push(load(BUTTER_ORIGINAL.clips[key].image,images.butter,key));for(const id of Object.keys(images.monsters))for(const key of ['idle','attack','die'])tasks.push(load(STAGE_ART.monsters[id].clips[key].image,images.monsters[id],key));for(const [id,b]of Object.entries(STAGE_ART.backgrounds))tasks.push(load(b.image,images.backgrounds,id));await Promise.all(tasks);ready=true;document.body.dataset.ready='true';sync();}
+async function boot(){load(EFFECT_ATLAS,images,'effects');const tasks=[load(BUTTER_POSTER,images.butter,'poster')];for(const key of ['idle','shoot','high'])tasks.push(load(BUTTER_ORIGINAL.clips[key].image,images.butter,key));for(const id of Object.keys(images.monsters))for(const key of ['idle','attack','die'])tasks.push(load(STAGE_ART.monsters[id].clips[key].image,images.monsters[id],key));for(const [id,b]of Object.entries(STAGE_ART.backgrounds))tasks.push(load(b.image,images.backgrounds,id));await Promise.all(tasks);ready=true;document.body.dataset.ready='true';sync();}
 if(params.get('test')==='1')window.__dice52={get game(){return g;},start,tick,reroll,toggleHold,attack,chooseRelic,evaluate,pass,images};
 sync();requestAnimationFrame(frame);boot().catch(e=>{console.error(e);ready=true;document.body.dataset.ready='true';sync();});

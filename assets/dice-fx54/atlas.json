@@ -1,0 +1,137 @@
+{
+  "version": 54,
+  "image": "./assets/dice-fx54/particles.png",
+  "width": 512,
+  "height": 256,
+  "sha256": "4ec792884d6df3b5d84969ecfce4e1ea97fa97ff09782ff6c29fdf9d971677a4",
+  "gutter": 8,
+  "regions": {
+    "rock": {
+      "x": 42,
+      "y": 42,
+      "width": 43,
+      "height": 43
+    },
+    "star": {
+      "x": 136,
+      "y": 8,
+      "width": 112,
+      "height": 112
+    },
+    "flare": {
+      "x": 264,
+      "y": 8,
+      "width": 112,
+      "height": 112
+    },
+    "muzzle": {
+      "x": 392,
+      "y": 8,
+      "width": 112,
+      "height": 112
+    },
+    "ring": {
+      "x": 8,
+      "y": 136,
+      "width": 112,
+      "height": 112
+    },
+    "dust": {
+      "x": 136,
+      "y": 136,
+      "width": 112,
+      "height": 112
+    },
+    "bolt": {
+      "x": 264,
+      "y": 136,
+      "width": 112,
+      "height": 112
+    },
+    "trace": {
+      "x": 392,
+      "y": 136,
+      "width": 112,
+      "height": 112
+    }
+  },
+  "sources": [
+    {
+      "id": "rock",
+      "url": "https://viewer.dclnslde.com/spine/battle/butter/Butter.png",
+      "sha256": "3f0b809ecab4f6560e7a7d035b2e4fbb27d8493a2ff3a8bd4eb9c588de080613",
+      "license": "Trickcal original; redistribution permission not separately verified",
+      "region": [
+        529,
+        63,
+        43,
+        43
+      ],
+      "color": null,
+      "pma": true
+    },
+    {
+      "id": "star",
+      "url": "https://raw.githubusercontent.com/Calinou/kenney-particle-pack/ab7086639ee73be31abd87feb21bf1402d4e8144/addons/kenney_particle_pack/symbol_02.png",
+      "sha256": "1a8a8508868d789f695ce8183dec75ef634d77c796594b727d564b3bd65d08cb",
+      "license": "CC0-1.0",
+      "region": null,
+      "color": "#ffe6a8",
+      "pma": false
+    },
+    {
+      "id": "flare",
+      "url": "https://raw.githubusercontent.com/Calinou/kenney-particle-pack/ab7086639ee73be31abd87feb21bf1402d4e8144/addons/kenney_particle_pack/star_04.png",
+      "sha256": "76a6414a7689b9e7a86095cb0085a3a9f078e2e3c361abddf70d3117eba226b5",
+      "license": "CC0-1.0",
+      "region": null,
+      "color": "#ffe6b0",
+      "pma": false
+    },
+    {
+      "id": "muzzle",
+      "url": "https://raw.githubusercontent.com/Calinou/kenney-particle-pack/ab7086639ee73be31abd87feb21bf1402d4e8144/addons/kenney_particle_pack/muzzle_01.png",
+      "sha256": "1e7da51836e4d703fbc336808e2f9b9570ccb149d340cbac1de15b7b0f4d6c2a",
+      "license": "CC0-1.0",
+      "region": null,
+      "color": "#ffe6ac",
+      "pma": false
+    },
+    {
+      "id": "ring",
+      "url": "https://raw.githubusercontent.com/Calinou/kenney-particle-pack/ab7086639ee73be31abd87feb21bf1402d4e8144/addons/kenney_particle_pack/circle_02.png",
+      "sha256": "71b208a2aa392f4cc53a422ef09bb9b54e1732fd440fa4d989b098a5fb6451cc",
+      "license": "CC0-1.0",
+      "region": null,
+      "color": "#f8d68c",
+      "pma": false
+    },
+    {
+      "id": "dust",
+      "url": "https://raw.githubusercontent.com/Calinou/kenney-particle-pack/ab7086639ee73be31abd87feb21bf1402d4e8144/addons/kenney_particle_pack/smoke_01.png",
+      "sha256": "89df665bb2e9a021edad2a9077d2651c44e6c6cd28f3fd38f800c41a5febd2a2",
+      "license": "CC0-1.0",
+      "region": null,
+      "color": "#d7b8aa",
+      "pma": false
+    },
+    {
+      "id": "bolt",
+      "url": "https://raw.githubusercontent.com/Calinou/kenney-particle-pack/ab7086639ee73be31abd87feb21bf1402d4e8144/addons/kenney_particle_pack/spark_06.png",
+      "sha256": "ff6739dd4ad5a52e92f34309184fa5e1e0a1f42bbb04679e61fc856777b0c2f4",
+      "license": "CC0-1.0",
+      "region": null,
+      "color": "#a9e7ff",
+      "pma": false
+    },
+    {
+      "id": "trace",
+      "url": "https://raw.githubusercontent.com/Calinou/kenney-particle-pack/ab7086639ee73be31abd87feb21bf1402d4e8144/addons/kenney_particle_pack/trace_01.png",
+      "sha256": "83744f00d8f1983703f1ab8f22bb6f8d59300ea699a0f42f4beb329ca6bcb378",
+      "license": "CC0-1.0",
+      "region": null,
+      "color": "#fbd59b",
+      "pma": false
+    }
+  ]
+}
