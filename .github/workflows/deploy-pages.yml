@@ -43,6 +43,7 @@ jobs:
           node --check dice-selection.js
           node --check poker-engine.js
           node --check poker.js
+          node --check poker-feedback.js
           node --check poker-order-ui.js
           node --check poker-hand-ui.js
           node --check dice-run-engine.js

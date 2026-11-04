@@ -1,5 +1,18 @@
 # Project instructions
 
+## ACTIVE v64: event-driven button and card feedback
+
+User requested game-like button animation. poker-feedback.js/css are presentation
+only: no engine imports/state/RNG/action timers. Keep keyed card nodes so selection
+transitions/focus survive sync. Discard ghosts are inert/aria-hidden/pointer-free,
+removed on finish/cancel; deals stagger without blocking input. Attack busy state,
+committed-card/trace motion and real-impact button label follow existing engine
+events, never move hit timing or defer actions. Reduced-motion disables JS/CSS
+motion and changing the preference cancels existing UI animations. Menus cancel
+background flourishes. Source art/renderer and all v63 rules remain unchanged.
+Root/current alias load poker.js64 plus feedback64; engine/order/hand remain63.
+Run check-poker64-browser.mjs and existing required checks. See docs/feedback64.md.
+
 ## ACTIVE v63: allow discarding the entire hand, not only5
 
 Latest user request overrides the old1..5 discard limit. toggleCard may select

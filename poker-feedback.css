@@ -1,0 +1,25 @@
+/* v64. Short, event-driven UI motion. No engine timing or source-art transforms. */
+button:not(.playing-card){position:relative;isolation:isolate;transition:background .16s,border-color .16s,box-shadow .16s,translate .16s,scale .12s;box-shadow:0 3px 0 #100c1c80,inset 0 1px 0 #ffffff0b}
+button:not(.playing-card):active:not(:disabled){transform:none;translate:0 2px;scale:.97;box-shadow:0 1px 0 #100c1c80,inset 0 1px 4px #100c1c33}
+button:focus-visible{outline-offset:4px}
+button:disabled{box-shadow:none}
+button.primary{border-color:#fce2b4;border-bottom-color:#ad804d;box-shadow:0 4px 0 #805d40,0 6px 12px #100c1c40,inset 0 1px #fff0ce;color:#513a29;text-shadow:0 1px #fff4d977}
+button.primary::after{content:'';position:absolute;inset:1px;pointer-events:none;border-radius:inherit;background:linear-gradient(115deg,transparent 15%,#fff7d33d 45%,transparent 75%);opacity:0;transition:opacity .16s}
+button.primary:hover:not(:disabled)::after,button.primary:focus-visible::after{opacity:1}
+button.primary:disabled{box-shadow:inset 0 1px #fff1cd33}
+#attack[aria-busy=true]{opacity:.8;background:linear-gradient(110deg,#aa8595,#6c526e);border-color:#b28ba1;color:#fce9d1;box-shadow:inset 0 2px 6px #23162a55;text-shadow:none}
+#attack[aria-busy=true]::after{inset:auto auto 5px 10px;width:28%;height:2px;border-radius:2px;opacity:1;background:#f6d797;animation:attack-progress .85s ease-in-out infinite alternate}
+body[data-phase=paused] #attack::after{animation-play-state:paused}
+#select-all[aria-pressed=true]{box-shadow:inset 0 2px 5px #23162a66,0 1px #c78b9c44}
+#discard:not(:disabled){border-color:#d79da9;box-shadow:0 3px #3d2638,inset 0 1px #e4a7b52b}
+.playing-card{background-color:#efe3cd;transition:transform .19s cubic-bezier(.2,.8,.2,1),border-color .16s,background-color .16s,box-shadow .16s;will-change:auto}
+.playing-card:active:not(:disabled){transform:translateY(-2px)}
+.playing-card[aria-pressed=true]:active:not(:disabled){transform:translateY(-7px)}
+.playing-card[aria-pressed=true]{box-shadow:0 5px #9c5f75,0 8px 12px #100c1c33}
+.discard-ghost{position:fixed!important;z-index:30;margin:0;pointer-events:none!important;min-height:0!important;transform:none!important}
+#preview-damage,#score-total,#gold,#hp,#resources,#enemy-hp{display:inline-block;transform-origin:center;font-variant-numeric:tabular-nums}
+.order-slot{transition:border-color .16s,box-shadow .16s}.order-slot[draggable=true]:hover{border-color:#d3b792;box-shadow:0 0 0 2px #d3b79218}
+.modal-panel{transform-origin:50% 30%}
+@media(hover:hover) and (pointer:fine){button:not(.playing-card):hover:not(:disabled){translate:0 -2px}button.primary:hover:not(:disabled){box-shadow:0 5px 0 #805d40,0 8px 16px #100c1c55,inset 0 1px #fff0ce}.playing-card:hover:not(:disabled):not([aria-pressed=true]){transform:translateY(-3px)}}
+@keyframes attack-progress{from{translate:0 0}to{translate:200% 0}}
+@media(prefers-reduced-motion:reduce){button,.playing-card{transition:none!important;animation:none!important}button:not(.playing-card):hover:not(:disabled),button:not(.playing-card):active:not(:disabled){translate:none;scale:1}#attack[aria-busy=true]::after{animation:none;translate:0 0}.discard-ghost{display:none}}
