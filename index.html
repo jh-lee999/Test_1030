@@ -1,15 +1,13 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#fff5df"><title>버터의 말썽 대탈출</title><link rel="icon" href="./assets/butter-original36/poster.png"><link rel="stylesheet" href="./survivor72.css?v=72"><script type="module" src="./survivor72.js?v=72"></script></head>
-<body><main class="shell" id="field">
-<header><div class="brand"><span>✦</span><div>버터의 말썽 대탈출<small>셰이디의 아공간</small></div></div><nav><button id="build" disabled aria-label="기술과 성장 보기">기술</button><button id="help" aria-label="게임 방법">?</button><button id="sound" aria-pressed="true">소리 켬</button><button id="pause" disabled aria-label="일시정지">Ⅱ</button></nav></header>
-<canvas id="world" tabindex="0" aria-label="이동하며 경험치를 모으는 자동 공격 생존 전투">자동 공격 생존 게임입니다. WASD 또는 방향키로 이동하고 E로 왕새총을 사용합니다.</canvas>
-<section class="hud" aria-label="현재 탐사 상태"><div class="health"><div><span>버터의 체력</span><b id="hp">100 / 100</b></div><div class="track"><i id="hp-bar"></i></div><div class="level-row"><b id="level">Lv 1</b><span id="xp">0 / 8</span></div><div class="track xp-track"><i id="xp-bar"></i></div></div><div class="clock"><small>탐사 시간</small><b id="timer">00:00</b><span id="next-event">수호자 01:30</span></div><div class="score"><b id="kills">0</b>처치<span id="cores">융합 핵 0</span></div></section>
-<section id="bossbar" hidden aria-label="수호자 체력"><b id="boss-name"></b><div class="track"><i id="boss-hp"></i></div></section>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#193a36"><title>버터의 아공간 소풍</title><link rel="icon" href="./assets/butter-original36/poster.png"><link rel="stylesheet" href="./dungeon73.css?v=73"><script type="module" src="./dungeon73.js?v=73"></script></head>
+<body><canvas id="world" tabindex="0" aria-label="버터의 방 탐험. WASD 이동, 방향키 또는 마우스로 사격, F 상호작용, E 왕새총, Q 폭탄."></canvas>
+<main id="game-ui">
+<header class="hud"><section class="vitals"><div class="portrait"><img src="./assets/butter-original36/poster.png" alt="버터"></div><div class="health-info"><div><b>버터</b><span id="hp">70 / 70</span></div><div class="health-track"><i id="hp-fill"></i></div><div class="resources"><span title="동전"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v10m-4-8h7m-7 6h7"/></svg><b id="coins">5</b></span><span title="열쇠"><svg viewBox="0 0 24 24"><circle cx="7" cy="7" r="4"/><path d="m10 10 10 10m-5-5 3-3m0 6 3-3"/></svg><b id="keys">1</b></span><span title="폭탄"><svg viewBox="0 0 24 24"><circle cx="10" cy="14" r="7"/><path d="m13 8 2-3 4 1m0-4 2 2"/></svg><b id="bombs">2</b></span></div></div></section><section class="chapter"><small>01 · 이끼빛 숲</small><b id="room-name">작은 쉼터</b><span id="timer">00:00</span></section><nav><button data-view="inventory" title="I · 주머니">주머니</button><button data-view="help" aria-label="조작 방법">?</button><button id="sound" aria-pressed="true">소리 켬</button><button id="pause" aria-label="일시정지">Ⅱ</button></nav></header>
+<button class="minimap" data-view="map" aria-label="M · 탐험 지도"><canvas id="mini" width="160" height="110" aria-hidden="true"></canvas><span>M · 탐험 지도</span></button>
+<section id="boss-bar" hidden><b id="boss-phase">셰이디</b><div><i id="boss-fill"></i></div></section>
 <p id="notice" role="status" aria-live="polite"></p>
-<button id="map-open" class="mini-map" disabled aria-label="전체 지도 열기"><canvas id="mini-map" width="136" height="104" aria-hidden="true"></canvas><span>M · 지도</span></button>
-<button id="interact" class="interact" hidden><kbd>F</kbd> <span id="interact-label"></span></button>
-<div id="moves" class="bottom" aria-label="습득한 자동 공격 기술"></div>
-<div class="hint">WASD 이동 · 공격은 자동<br>F 상호작용 · E 왕새총 · M 지도</div>
-<div id="joystick" class="joystick" aria-label="터치 이동 스틱"><i id="knob"></i></div>
-<button id="ultimate" class="ultimate" disabled><b>왕새총 <kbd>E</kbd></b><small id="ultimate-time">준비 완료</small></button>
-</main><div id="dialog" class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><section id="panel" class="panel"><h1 id="dialog-title">숲으로 가는 중…</h1></section></div></body></html>
+<div class="bottom-left"><span class="control-hint">WASD 이동 · 방향키 / 마우스 사격<br>F 살펴보기 · Q 폭탄 · E 왕새총</span><div id="inventory-strip" aria-label="획득한 선물"></div></div>
+<div class="actions"><button id="bomb-button" title="Q · 폭탄">폭탄 <kbd>Q</kbd></button><button id="ultimate" class="gold" title="E · 왕새총"><b>왕새총 <kbd>E</kbd></b><span id="charge">3/3</span></button></div>
+<button id="interact" hidden><kbd>F</kbd><span id="interact-text">살펴보기</span></button>
+<div id="move-stick" class="stick move-stick" aria-label="이동 스틱"><i id="move-knob"></i><span>이동</span></div><div id="aim-stick" class="stick aim-stick" aria-label="사격 스틱"><i id="aim-knob"></i><span>사격</span></div><span class="rotate-hint">가로로 돌리면 방이 더 크게 보여요.</span>
+</main><div id="overlay" role="dialog" aria-modal="true" aria-label="탐험 메뉴"><section id="panel" class="panel"><h1>숲으로 가는 중…</h1></section></div></body></html>

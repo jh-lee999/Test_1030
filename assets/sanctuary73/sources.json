@@ -1,0 +1,89 @@
+{
+  "version": 73,
+  "date": "2026-11-05",
+  "provenance": "AI-generated fan environment, not original Trickcal or PokeIsaac assets",
+  "styleReference": "assets/trickcal-stage37/forest.webp",
+  "generatedSources": {
+    "room": "exec-b14ba771-2118-4b41-af17-98c4572a7645.png",
+    "objects": "exec-ac55a4ee-3808-42a5-baa5-5d1c46ce2ee0.png"
+  },
+  "encoding": {
+    "room": "WebP quality94",
+    "objects": "WebP quality96 alpha-quality100"
+  },
+  "props": {
+    "columns": 4,
+    "rows": 2,
+    "names": [
+      "open",
+      "closed",
+      "treasure",
+      "boss",
+      "chest",
+      "pedestal",
+      "shop",
+      "secret"
+    ],
+    "feet": [
+      [
+        222.5,
+        406
+      ],
+      [
+        222.5,
+        406
+      ],
+      [
+        222.5,
+        406
+      ],
+      [
+        222.5,
+        406
+      ],
+      [
+        219.5,
+        354
+      ],
+      [
+        223,
+        369
+      ],
+      [
+        221,
+        398
+      ],
+      [
+        226,
+        390
+      ]
+    ],
+    "minimumGutter": 33
+  },
+  "files": {
+    "assets/sanctuary73/room.png": {
+      "sha256": "400cd9270377cc8a983f3e457e59344d7e3fcd5e79fef6742936a5cc70a9bca7",
+      "bytes": 2073188,
+      "width": 1586,
+      "height": 992
+    },
+    "assets/sanctuary73/room.webp": {
+      "sha256": "42f9b8d3d6853e258b5dde423865088db79d2581c03d51b9d0153665b0fc12be",
+      "bytes": 277486,
+      "width": 1586,
+      "height": 992
+    },
+    "assets/sanctuary73/objects.png": {
+      "sha256": "d3e65588a89b3a8d5a79eacce0c1cc4a2d798bb0ded58a9c13edec3a2decb9ed",
+      "bytes": 1677674,
+      "width": 1774,
+      "height": 887
+    },
+    "assets/sanctuary73/objects.webp": {
+      "sha256": "4e56f72af2865048b18f36ffccdd39cdae2fa3805a5da20048cb3bed9d2cf669",
+      "bytes": 463148,
+      "width": 1774,
+      "height": 887
+    }
+  }
+}

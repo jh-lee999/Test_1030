@@ -16,7 +16,7 @@ const quiet=g=>{g.spawnTimer=g.eliteAt=g.burstAt=999;g.championSpawned=true;g.mo
 function card(g){const p=g.world.points.find(p=>p.artifact==='yellow');Object.assign(g.player,{x:p.x,y:p.y});E.interact(g);assert(E.chooseUpgrade(g,'relic:yellow'));return g;}
 test('root pins v72 while v71 is preserved verbatim and diagnostics match combat sources',()=>{
  const read=f=>readFileSync(new URL('../'+f,import.meta.url));
- assert.match(read('index.html').toString(),/survivor72\.js\?v=72/);
+ assert.match(read('survivor72.html').toString(),/survivor72\.js\?v=72/);
  assert.equal(createHash('sha256').update(read('survivor71.html')).digest('hex'),'060202a0abfa959350b62eb06114fb0efe23231722864faaf8a61c9ef64eb45e');
  const data=JSON.parse(read('docs/survivor72-balance.json')),hash=createHash('sha256').update(['survivor72-engine.js','survivor71-world.js','survivor72-content.js','survivor72-camera.js','survivor72-boulder.js'].map(read).join('\n')).digest('hex');
  assert.equal(data.runs.reduce((n,r)=>n+r.results.length,0),48);for(const r of data.runs)assert.equal(r.sourceSHA256,hash);assert(data.native.nativeOnly);assert.deepEqual(data.native.errors,[]);

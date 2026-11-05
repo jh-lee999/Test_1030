@@ -1,5 +1,41 @@
 # Project instructions
 
+## ACTIVE v73: PokeIsaac-inspired room crawl and coherent asset-led presentation
+
+User chose PokeIsaac as the desired style and requested professional-looking
+asset-based implementation. Root now runs dungeon73.js/content/world/engine/save/
+renderer/css. survivor72.html is byte-identical previous root; all old engines,
+source art and balance pins remain untouched. Read docs/dungeon73.md and
+assets/sanctuary73/CREDITS.md. PokeIsaac was played/read as a reference; NO game
+code, Pokémon art, map data or UI was copied into the repository.
+Scope is ONE complete seeded13-room floor, not a claim of a whole commercial game.
+Movement and fire are independent; arrows or mouse held fire, twin touch sticks.
+Committed pointer targets/keyboard directions, source muzzle/facing/release clocks
+must agree. No pointer inertia. Whole Butter poses still size80, shared foot,
+-22.4Y, uniform flip including muzzle. Never fake four source directions/cutouts.
+New AI-generated room and isolated object sheet are FAN environment art, not
+original Trickcal extraction. Keep PNG sources/hash pins/33px gutter/foot anchors.
+Dark green/honey UI, actual original monsters/artifact icons/VFX, quiet floor and
+legible tells. Renderer/map stay read-only. Reduced motion keeps a static pose.
+Tree floor graph guarantees start,7 fights,2 key treasure rooms,shop,boss,secret.
+Normal doors open on clear; keys pay once; secret wall opens only from nearby
+real bomb. Rewards/battery charge once per enemy room; safe rooms never charge.
+Eight unique items with real return/split/homing A-B-A/lightning/fire/parry/gun
+mechanics and3 automatic pair synergies. Cancel/revisit never rerolls offers.
+When another room grants an offered item, remove only owned choices, no RNG use.
+Shop requires proximity, stock and funds. Save/choice/pause/room transitions
+preserve pending source casts; Yellow Card still stronger gun and two8s rocks.
+One shared fixed room view bounds whole stone inside visible scene; no gravity.
+Shady teleports to a committed warned point then slashes; below-half patterns
+add radial shots/ground warnings, never retroactively change an existing tell.
+Save key butter.dungeon73.v1 NEVER migrates/writes survivor keys. Previous growth
+and runs remain in survivor72.html. New records/discoveries settle once; no new
+permanent stats or paid/gacha/online progression claimed. Menus freeze all clocks.
+Run npm/art/canon/source checks, new unit/browser and archived72 browser. Keep
+real DOM/input-only exploration separate from fixtures/full-information policies;
+neither win rate nor tests establish fun or aesthetic approval. Preserve unrelated
+tools/sprite-sources/butter-chibi-release.webp. Do not delegate without authority.
+
 ## ACTIVE v72: stronger gun, viewport boulders and painted map
 
 Root runs survivor72.js/engine/content/profile/renderer/art/scenery/camera/boulder;

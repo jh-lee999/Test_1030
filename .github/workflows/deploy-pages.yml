@@ -72,6 +72,13 @@ jobs:
           node --check survivor72-camera.js
           node --check survivor72-boulder.js
           node tools/check-art72.mjs
+          node --check dungeon73.js
+          node --check dungeon73-engine.js
+          node --check dungeon73-world.js
+          node --check dungeon73-content.js
+          node --check dungeon73-save.js
+          node --check dungeon73-renderer.js
+          node tools/check-art73.mjs
           node --check dice.js
           node --check dice55.js
           node --check dice-selection.js

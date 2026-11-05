@@ -1,0 +1,188 @@
+{
+  "version": 73,
+  "sourceSHA256": "be21807674b1ed009977744b3baeea754dd3e73e1bf37c29fec7b8a23c31278e",
+  "sourceFiles": [
+    "dungeon73-engine.js",
+    "dungeon73-world.js",
+    "dungeon73-content.js",
+    "tools/dungeon73-policy.mjs"
+  ],
+  "limits": "Small full-information automated policy sample, not human difficulty, aesthetics, optimality or evidence of fun. Native DOM run is separate.",
+  "results": [
+    {
+      "seed": "diagnostic-0",
+      "phase": "won",
+      "time": 121.86666666670972,
+      "hp": 70,
+      "room": 11,
+      "clears": 8,
+      "kills": 28,
+      "items": [
+        "weather",
+        "yellow",
+        "scythe",
+        "komi",
+        "mace"
+      ],
+      "damageTaken": 25,
+      "telemetry": {
+        "shots": 110,
+        "gun": 100,
+        "ricochet": 27,
+        "lightning": 56,
+        "split": 0,
+        "fire": 0,
+        "parry": 2,
+        "boulder": 5,
+        "bounce": 36,
+        "damageBy": {
+          "stone": 143.6,
+          "boulder": 231.4,
+          "gun": 1483.8,
+          "lightning": 126,
+          "chain": 429.2,
+          "impact": 192
+        }
+      }
+    },
+    {
+      "seed": "diagnostic-1",
+      "phase": "playing",
+      "time": 599.7999999996189,
+      "hp": 70,
+      "room": 8,
+      "clears": 2,
+      "kills": 11,
+      "items": [
+        "weather",
+        "yellow",
+        "rust"
+      ],
+      "damageTaken": 0,
+      "telemetry": {
+        "shots": 1698,
+        "gun": 1689,
+        "ricochet": 0,
+        "lightning": 7,
+        "split": 0,
+        "fire": 9,
+        "parry": 0,
+        "boulder": 1,
+        "bounce": 7,
+        "damageBy": {
+          "boulder": 85,
+          "stone": 98,
+          "gun": 320.19999999999993,
+          "lightning": 48,
+          "fire": 61.800000000000004
+        }
+      }
+    },
+    {
+      "seed": "diagnostic-2",
+      "phase": "won",
+      "time": 103.80000000002867,
+      "hp": 70,
+      "room": 11,
+      "clears": 8,
+      "kills": 26,
+      "items": [
+        "weather",
+        "yellow",
+        "lucky",
+        "scythe",
+        "belt"
+      ],
+      "damageTaken": 12,
+      "telemetry": {
+        "shots": 97,
+        "gun": 89,
+        "ricochet": 22,
+        "lightning": 49,
+        "split": 63,
+        "fire": 0,
+        "parry": 0,
+        "boulder": 5,
+        "bounce": 36,
+        "damageBy": {
+          "stone": 82.5,
+          "boulder": 210,
+          "gun": 1553.4,
+          "lightning": 182.5,
+          "chain": 357.6
+        }
+      }
+    },
+    {
+      "seed": "diagnostic-3",
+      "phase": "won",
+      "time": 145.23333333336558,
+      "hp": 26,
+      "room": 10,
+      "clears": 8,
+      "kills": 25,
+      "items": [
+        "weather",
+        "komi",
+        "scythe",
+        "lucky"
+      ],
+      "damageTaken": 58,
+      "telemetry": {
+        "shots": 150,
+        "gun": 0,
+        "ricochet": 41,
+        "lightning": 70,
+        "split": 90,
+        "fire": 0,
+        "parry": 4,
+        "boulder": 3,
+        "bounce": 21,
+        "damageBy": {
+          "boulder": 195.4,
+          "stone": 1493.6000000000001,
+          "lightning": 182,
+          "chain": 562
+        }
+      }
+    }
+  ],
+  "native": {
+    "nativeOnly": true,
+    "seed": "diagnostic-0",
+    "phase": "won",
+    "time": 143.61150000000308,
+    "kills": 28,
+    "clears": 8,
+    "hp": 70,
+    "damageTaken": 22,
+    "items": [
+      "weather",
+      "yellow",
+      "scythe",
+      "komi",
+      "mace"
+    ],
+    "telemetry": {
+      "shots": 112,
+      "gun": 103,
+      "ricochet": 25,
+      "lightning": 57,
+      "split": 0,
+      "fire": 0,
+      "parry": 1,
+      "boulder": 5,
+      "bounce": 38,
+      "damageBy": {
+        "stone": 95.6,
+        "lightning": 166,
+        "boulder": 345.4,
+        "gun": 1338.6,
+        "chain": 468.4,
+        "impact": 192
+      }
+    },
+    "records": 1,
+    "errors": []
+  }
+}

@@ -1,5 +1,15 @@
 {
-  "version": 13,
+  "version": 14,
+  "roomCrawl73": {
+    "date":"2026-11-05",
+    "request":"PokeIsaac-like room exploration with coherent professional-looking asset-led presentation",
+    "entry":"dungeon73.js",
+    "archive":"survivor72.html",
+    "preserved":"Original single-view whole Butter poses, size80 shared foot/-22.4 Y/facing/muzzle and source release markers",
+    "environment":"AI-generated fan room and object atlas; NOT original Trickcal or PokeIsaac extraction",
+    "sources":"assets/sanctuary73/CREDITS.md",
+    "status":"User-requested implementation candidate, not aesthetic approval or a new approved Butter master"
+  },
   "combatPresentation72": {
     "date":"2026-11-05",
     "request":"Stronger gun, finite king rock bouncing inside current visible gameplay viewport, prettier map",
