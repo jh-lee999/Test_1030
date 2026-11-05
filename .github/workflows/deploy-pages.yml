@@ -52,6 +52,16 @@ jobs:
           node --check survivor70-art.js
           node --check survivor70-scenery.js
           node --check survivor70-renderer.js
+          node --check survivor71.js
+          node --check survivor71-engine.js
+          node --check survivor71-world.js
+          node --check survivor71-content.js
+          node --check survivor71-profile.js
+          node --check survivor71-renderer.js
+          node --check survivor71-scenery.js
+          node --check survivor71-art.js
+          node --check butter-gun-motion71.js
+          node tools/check-source71.mjs
           node --check dice.js
           node --check dice55.js
           node --check dice-selection.js

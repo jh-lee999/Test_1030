@@ -1,5 +1,17 @@
 {
-  "version": 11,
+  "version": 12,
+  "gunDecision71": {
+    "date":"2026-11-05",
+    "request":"Yellow Card: normal gun attack and two ultimate casts",
+    "source":"battle/butter / Normal / OW1_Attack2_1, original same rig",
+    "window":[1.2,1.85],
+    "releaseSourceSeconds":1.4333334,
+    "atlas":"assets/butter-gun71/atlas.json",
+    "renderer":"butter-gun-motion71.js",
+    "movingGun":"Move lower body/constraints + original gun upper body, whole-rig baked composition; not a named original clip",
+    "preserved":"All approved/old source files and shared size80 foot/-22.4 Y/facing/muzzle transform",
+    "status":"User-requested feature; derived motion candidate, no new approved master"
+  },
   "presentationDecision70": {
     "date":"2026-11-05",
     "request":"맵이나 소스들을 트릭컬에 맞춰서 이쁘게 수정",

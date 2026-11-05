@@ -1,5 +1,39 @@
 # Project instructions
 
+## ACTIVE v71: larger map, apostle elites and Yellow Card
+
+Latest user explicitly authorized map/population/combat changes. Root now runs
+survivor71.js and its engine/world/content/profile/renderer/scenery/art modules;
+survivor70.html is the verbatim previous root. v69/v70 preservation rules below
+protect those archives, not a prohibition on new v71 rules. Read docs/survivor71.md.
+World3800x2800, ten reachable POIs, two mandatory seals within1100 of spawn.
+One marked chest guarantees Yellow Card as a CHOICE, never grants it silently.
+Ordinary wave groups1/2/3/4, MAX_ENEMIES240, hostile shots140; six regular roles
+plus Shady/Velvet/Erpin original whole-pose elite echoes. No retarget after tell.
+Elite AI/attack radii, source-pose timing and visual tells must agree. Shady's
+collision-checked teleport is six stationary slashes; Velvet132px moving spin;
+Erpin four committed, nonhoming magic shots. Source skills vs fan rules are in
+assets/trickcal-elites71/REFERENCE.md. Do not claim original boss AI or live balance.
+Yellow Card: E spends one18s cooldown for two1.1s casts, each with its own source
+release and cast-only immunity. Pending second cast must persist/freeze exactly
+once. Primary gun inherits rank2 return/ricochet, rank3 fragments and fusions.
+Gun motion uses original OW1_Attack2_1 aim/fire/recoil1.2..1.85, event1.4333334;
+walkGun is SAME-rig Move composition, not a discovered named clip. Shared80px
+Butter foot/-22.4 Y/facing/muzzle stay intact. No replacement cutouts/art35.
+New original-source atlases/credits/hash pins are separate; old art is untouched.
+Five exact Shady source frames are transparent teleport transitions, not cropping;
+check-source71 allows only those identities, never arbitrary missing silhouettes.
+Only10 elite clips are decoded; scenery LRU stays48tiles/12MiB, not total memory.
+SAVE_KEY butter.survivor71.v1 imports only valid old PROFILE once when absent;
+old active runs/key remain untouched and playable in survivor70.html. No gameplay
+snapshot migration or reward for importing/continuing. New snapshots validate
+new roles/queues/world geometry/card fields. Preserve original volume preference.
+Run npm test, source71, canon/original/platformer art, new browser71 plus old
+browser69/70 at survivor70.html, and source/archive regressions. Keep a native
+input-only run separate from fixtures and multi-seed policy diagnostics. Neither
+technical success nor policy win rate proves fun/aesthetic approval. Balance
+records carry source hash and per30s telemetry. Preserve unrelated chibi WebP.
+
 ## ACTIVE v70: storybook presentation, v69 rules/save unchanged
 
 User requested prettier Trickcal-aligned maps/assets. Root now loads survivor70.js/

@@ -8,7 +8,7 @@ import {artwork,artURL,icon,ART_KINDS,PALETTES} from '../survivor70-art.js';
 import {sceneLayout,cacheInfo,clearSceneCache} from '../survivor70-scenery.js';
 const read=f=>readFileSync(new URL('../'+f,import.meta.url)),sha=f=>createHash('sha256').update(read(f)).digest('hex');
 test('v70 changes presentation only, preserves the complete v69 entry and original renderer anchor',()=>{
- assert.equal(sha('survivor69.html'),'e10cc864a4ed0dd09fd57ee2b22d7320e0df7529609bc470757d7eefbb367632');assert.match(read('index.html').toString(),/survivor70\.js\?v=70/);
+ assert.equal(sha('survivor69.html'),'e10cc864a4ed0dd09fd57ee2b22d7320e0df7529609bc470757d7eefbb367632');assert.match(read('survivor70.html').toString(),/survivor70\.js\?v=70/);
  const main=read('survivor70.js').toString(),renderer=read('survivor70-renderer.js').toString();assert.match(main,/survivor69-engine\.js\?v=69/);assert.match(main,/survivor69-profile\.js\?v=69/);assert.match(renderer,/size:80/);assert.match(renderer,/translate\(0,-22\.4\)/);assert.match(renderer,/scale\(p.action\?\.facing\?\?p.facing,1\)/);assert.doesNotMatch(main,/localStorage\.clear|survivor70\.v1|Math\.random/);
 });
 test('storybook vector assets are complete, self-contained and safely whitelisted',()=>{

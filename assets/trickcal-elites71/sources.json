@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://viewer.dclnslde.com/spine/battle/shady/Shady.skel",
+    "bytes": 423044,
+    "sha256": "01e4d009e4228619d968f958a15d28827d3152f85a1a41bd2573a85fc12a4172"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/battle/shady/Shady.atlas",
+    "bytes": 4631,
+    "sha256": "7497b63a4530de43037c235c672013aacfb070769601ed619c25fbdac36d9600"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/battle/shady/Shady.png",
+    "bytes": 504781,
+    "sha256": "41c3fe91fb704729d1fb0241fc068a036b04745914f335f347559a8e552c132a"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/battle/velvet/Velvet.atlas",
+    "bytes": 4737,
+    "sha256": "5c32ac2ecf8a83b86eff83eaabc58c0b8e7d906910615dd8eea9ead9280eda89"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/battle/velvet/Velvet.skel",
+    "bytes": 310763,
+    "sha256": "536332b8980ab268c0614cce3cc6073ad0c84daf83640bad76a507ceb00ebae7"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/battle/velvet/Velvet.png",
+    "bytes": 223124,
+    "sha256": "8a78dd11331741b4471e97a7f277a4d4925dd0fd7c8e0d8fc58d1ba5da860396"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/battle/erpin/Erpin.atlas",
+    "bytes": 7708,
+    "sha256": "21731ab85a5516f57fbc3ffc736bbaa9a061881bfa09cc108b86cac26085c12c"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/battle/erpin/Erpin.skel",
+    "bytes": 731657,
+    "sha256": "defbc371b9f3193c904f23097cce266b9f1c2c2705c1cb38ca364d3e07bac894"
+  },
+  {
+    "url": "https://viewer.dclnslde.com/spine/battle/erpin/Erpin.png",
+    "bytes": 423062,
+    "sha256": "fb3d28d6674ae19bf55a2eb273e86452a714148ab68f20806069d6e2a59ad64e"
+  }
+]

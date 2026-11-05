@@ -1,0 +1,8 @@
+@import url('./survivor70.css?v=70');
+.title-hero p{max-width:410px}
+.ultimate .art-icon{width:24px;height:29px}.ultimate>b{font-size:16px;gap:2px}.ultimate>b>span{white-space:nowrap}
+@media(max-width:600px){.ultimate>b{font-size:14px}}
+#bossbar{top:202px}
+body:has(#bossbar:not([hidden])) #notice{top:238px}
+@media(max-width:600px){#bossbar{top:176px;left:12px;translate:0;width:calc(100% - 135px);max-width:300px;font-size:11px}body:has(#bossbar:not([hidden])) #notice{top:224px}}
+@media(max-height:500px) and (orientation:landscape){#bossbar{top:76px;left:auto;right:12px;translate:0;width:120px}body:has(#bossbar:not([hidden])) #notice{top:143px}}
