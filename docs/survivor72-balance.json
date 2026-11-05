@@ -1,0 +1,6369 @@
+{
+  "version": 72,
+  "date": "2026-11-05",
+  "limits": "Fixed full-information automated policies and small seed sample; not human win rates, optimal difficulty or proof of fun. Gameplay viewport affects boulder coverage.",
+  "native": {
+    "nativeOnly": true,
+    "seed": "balance-0",
+    "viewport": {
+      "width": 1366,
+      "height": 702
+    },
+    "phase": "won",
+    "time": 233.06024999991274,
+    "level": 24,
+    "seals": 2,
+    "fusions": [
+      "thunderweb",
+      "firefly"
+    ],
+    "kills": 772,
+    "shards": 33,
+    "damageTaken": 117,
+    "damageBy": {
+      "stone": 271.01833714285715,
+      "boulder": 5731.489006121763,
+      "gun": 13323.231932141836,
+      "storm": 7016.358165407388,
+      "chain": 3435.561719625576,
+      "seed": 1538.6218771428003,
+      "discharge": 100.7042678571416,
+      "cloud": 2024.371485713958,
+      "mine": 715.9289092856807,
+      "web": 6723.061112277833,
+      "vortex": 136,
+      "fragment": 996.6000585713819,
+      "firefly": 6195.501042856748,
+      "parry": 349.1632699999681,
+      "decoy": 65,
+      "pillow": 213.15691285708425,
+      "bowling": 20
+    },
+    "procs": {
+      "stoneShot": 23,
+      "ultimateShot": 19,
+      "boulderBounce": 200,
+      "gunShot": 569,
+      "hoarder": 57,
+      "chainSeed": 61,
+      "discharge": 6,
+      "mine": 20,
+      "fusion:thunderweb": 1,
+      "fusion:thunderweb:trigger": 278,
+      "returnCatch": 350,
+      "fracture": 239,
+      "fusion:firefly": 1,
+      "fusion:firefly:trigger": 304,
+      "parry": 21,
+      "harvest": 2,
+      "bowling": 1
+    },
+    "samples": [
+      {
+        "time": 30,
+        "level": 4,
+        "hp": 100,
+        "kills": 29,
+        "damageTaken": 0,
+        "enemies": 14,
+        "seals": 1,
+        "fusions": []
+      },
+      {
+        "time": 60,
+        "level": 6,
+        "hp": 90,
+        "kills": 91,
+        "damageTaken": 22,
+        "enemies": 16,
+        "seals": 2,
+        "fusions": []
+      },
+      {
+        "time": 90,
+        "level": 9,
+        "hp": 100,
+        "kills": 162,
+        "damageTaken": 22,
+        "enemies": 17,
+        "seals": 2,
+        "fusions": [
+          "thunderweb"
+        ]
+      },
+      {
+        "time": 120,
+        "level": 14,
+        "hp": 80,
+        "kills": 264,
+        "damageTaken": 66,
+        "enemies": 20,
+        "seals": 2,
+        "fusions": [
+          "thunderweb",
+          "firefly"
+        ]
+      },
+      {
+        "time": 150,
+        "level": 17,
+        "hp": 48,
+        "kills": 377,
+        "damageTaken": 98,
+        "enemies": 16,
+        "seals": 2,
+        "fusions": [
+          "thunderweb",
+          "firefly"
+        ]
+      },
+      {
+        "time": 180,
+        "level": 19,
+        "hp": 100,
+        "kills": 510,
+        "damageTaken": 98,
+        "enemies": 30,
+        "seals": 2,
+        "fusions": [
+          "thunderweb",
+          "firefly"
+        ]
+      },
+      {
+        "time": 210,
+        "level": 22,
+        "hp": 100,
+        "kills": 649,
+        "damageTaken": 98,
+        "enemies": 55,
+        "seals": 2,
+        "fusions": [
+          "thunderweb",
+          "firefly"
+        ]
+      }
+    ],
+    "errors": []
+  },
+  "runs": [
+    {
+      "version": 72,
+      "viewport": {
+        "width": 1120,
+        "height": 630
+      },
+      "sourceSHA256": "41044521439c29417e8b9589674ceaf8f7d80db34a741403eb7f679702fd1ef4",
+      "map": "forest",
+      "tier": 0,
+      "limits": "Full-information automation, fixed policy/seed sample, not humans or evidence of fun. Kite does not interact, so cannot win by design.",
+      "groups": [
+        {
+          "mode": "idle",
+          "meta": "new",
+          "n": 4,
+          "wins": 0,
+          "sealedBoth": 0,
+          "medianSeconds": 28,
+          "medianDamageTaken": 100,
+          "medianLevel": 2,
+          "fusionRuns": 0
+        },
+        {
+          "mode": "idle",
+          "meta": "max",
+          "n": 4,
+          "wins": 0,
+          "sealedBoth": 0,
+          "medianSeconds": 30,
+          "medianDamageTaken": 115,
+          "medianLevel": 2,
+          "fusionRuns": 0
+        },
+        {
+          "mode": "kite",
+          "meta": "new",
+          "n": 4,
+          "wins": 0,
+          "sealedBoth": 0,
+          "medianSeconds": 420,
+          "medianDamageTaken": 268,
+          "medianLevel": 40,
+          "fusionRuns": 4
+        },
+        {
+          "mode": "kite",
+          "meta": "max",
+          "n": 4,
+          "wins": 0,
+          "sealedBoth": 0,
+          "medianSeconds": 420,
+          "medianDamageTaken": 232,
+          "medianLevel": 41,
+          "fusionRuns": 4
+        },
+        {
+          "mode": "objective",
+          "meta": "new",
+          "n": 4,
+          "wins": 4,
+          "sealedBoth": 4,
+          "medianSeconds": 226,
+          "medianDamageTaken": 136,
+          "medianLevel": 24,
+          "fusionRuns": 4
+        },
+        {
+          "mode": "objective",
+          "meta": "max",
+          "n": 4,
+          "wins": 3,
+          "sealedBoth": 4,
+          "medianSeconds": 221,
+          "medianDamageTaken": 197,
+          "medianLevel": 23,
+          "fusionRuns": 4
+        }
+      ],
+      "results": [
+        {
+          "mode": "idle",
+          "meta": "new",
+          "seed": 0,
+          "family": 0,
+          "phase": "dead",
+          "time": 26,
+          "level": 1,
+          "kills": 9,
+          "seals": 0,
+          "fusions": [],
+          "hp": 0,
+          "damageTaken": 100,
+          "firstLevelAt": null,
+          "damageBy": {
+            "stone": 430.14412698412696
+          },
+          "procs": {
+            "stoneShot": 39
+          },
+          "samples": []
+        },
+        {
+          "mode": "idle",
+          "meta": "new",
+          "seed": 1,
+          "family": 1,
+          "phase": "dead",
+          "time": 30,
+          "level": 2,
+          "kills": 16,
+          "seals": 0,
+          "fusions": [],
+          "hp": 0,
+          "damageTaken": 100,
+          "firstLevelAt": 26.055555555557074,
+          "damageBy": {
+            "stone": 522.9749206349206,
+            "pillow": 56
+          },
+          "procs": {
+            "stoneShot": 45
+          },
+          "samples": []
+        },
+        {
+          "mode": "idle",
+          "meta": "new",
+          "seed": 2,
+          "family": 2,
+          "phase": "dead",
+          "time": 33,
+          "level": 2,
+          "kills": 17,
+          "seals": 0,
+          "fusions": [],
+          "hp": 0,
+          "damageTaken": 100,
+          "firstLevelAt": 28.544444444446352,
+          "damageBy": {
+            "stone": 573.0098412698414,
+            "pillow": 42
+          },
+          "procs": {
+            "stoneShot": 50
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 2,
+              "hp": 35,
+              "kills": 16,
+              "damageTaken": 65,
+              "enemies": 21,
+              "seals": 0,
+              "fusions": []
+            }
+          ]
+        },
+        {
+          "mode": "idle",
+          "meta": "new",
+          "seed": 3,
+          "family": 0,
+          "phase": "dead",
+          "time": 28,
+          "level": 2,
+          "kills": 16,
+          "seals": 0,
+          "fusions": [],
+          "hp": 0,
+          "damageTaken": 100,
+          "firstLevelAt": 23.644444444445586,
+          "damageBy": {
+            "stone": 453.2769841269842,
+            "chain": 139.39999999999998
+          },
+          "procs": {
+            "stoneShot": 43
+          },
+          "samples": []
+        },
+        {
+          "mode": "idle",
+          "meta": "max",
+          "seed": 0,
+          "family": 0,
+          "phase": "dead",
+          "time": 27,
+          "level": 1,
+          "kills": 9,
+          "seals": 0,
+          "fusions": [],
+          "hp": 0,
+          "damageTaken": 115,
+          "firstLevelAt": null,
+          "damageBy": {
+            "stone": 458.14412698412696
+          },
+          "procs": {
+            "stoneShot": 41
+          },
+          "samples": []
+        },
+        {
+          "mode": "idle",
+          "meta": "max",
+          "seed": 1,
+          "family": 1,
+          "phase": "dead",
+          "time": 30,
+          "level": 2,
+          "kills": 16,
+          "seals": 0,
+          "fusions": [],
+          "hp": 0,
+          "damageTaken": 115,
+          "firstLevelAt": 24.20000000000123,
+          "damageBy": {
+            "stone": 536.9749206349206,
+            "pillow": 56
+          },
+          "procs": {
+            "stoneShot": 46
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 2,
+              "hp": 10,
+              "kills": 16,
+              "damageTaken": 105,
+              "enemies": 21,
+              "seals": 0,
+              "fusions": []
+            }
+          ]
+        },
+        {
+          "mode": "idle",
+          "meta": "max",
+          "seed": 2,
+          "family": 2,
+          "phase": "dead",
+          "time": 33,
+          "level": 2,
+          "kills": 18,
+          "seals": 0,
+          "fusions": [],
+          "hp": 0,
+          "damageTaken": 115,
+          "firstLevelAt": 26.733333333334958,
+          "damageBy": {
+            "stone": 570.1907936507938,
+            "pillow": 70
+          },
+          "procs": {
+            "stoneShot": 51
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 2,
+              "hp": 50,
+              "kills": 16,
+              "damageTaken": 65,
+              "enemies": 21,
+              "seals": 0,
+              "fusions": []
+            }
+          ]
+        },
+        {
+          "mode": "idle",
+          "meta": "max",
+          "seed": 3,
+          "family": 0,
+          "phase": "dead",
+          "time": 42,
+          "level": 4,
+          "kills": 47,
+          "seals": 0,
+          "fusions": [],
+          "hp": 0,
+          "damageTaken": 115,
+          "firstLevelAt": 20.1111111111117,
+          "damageBy": {
+            "stone": 679.7792063492076,
+            "chain": 666.1109523809569,
+            "storm": 240.9492063492085
+          },
+          "procs": {
+            "stoneShot": 65
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 3,
+              "hp": 102,
+              "kills": 22,
+              "damageTaken": 13,
+              "enemies": 15,
+              "seals": 0,
+              "fusions": []
+            }
+          ]
+        },
+        {
+          "mode": "kite",
+          "meta": "new",
+          "seed": 0,
+          "family": 0,
+          "phase": "playing",
+          "time": 420,
+          "level": 40,
+          "kills": 1892,
+          "seals": 0,
+          "fusions": [
+            "thunderweb",
+            "firefly"
+          ],
+          "hp": 100,
+          "damageTaken": 268,
+          "firstLevelAt": 11.711111111111073,
+          "damageBy": {
+            "stone": 136.0984126984127,
+            "boulder": 17450.802857145856,
+            "mine": 945.9563492065141,
+            "gun": 30975.534126988703,
+            "storm": 14291.391587303111,
+            "chain": 10245.883333334812,
+            "discharge": 184.17857142859867,
+            "pillow": 1164.3246031748984,
+            "seed": 3183.7644444447283,
+            "cloud": 7378.391746033458,
+            "web": 31447.44968254746,
+            "fragment": 2937.1987301588906,
+            "firefly": 17868.20190476435,
+            "parry": 772.7871428573344,
+            "decoy": 195,
+            "vortex": 459.7485714286532,
+            "bowling": 200
+          },
+          "procs": {
+            "stoneShot": 15,
+            "ultimateShot": 41,
+            "mine": 25,
+            "boulderBounce": 411,
+            "gunShot": 1052,
+            "discharge": 10,
+            "chainSeed": 115,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 909,
+            "returnCatch": 781,
+            "fracture": 581,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 699,
+            "hoarder": 139,
+            "parry": 58,
+            "bowling": 10
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 3,
+              "hp": 100,
+              "kills": 25,
+              "damageTaken": 0,
+              "enemies": 12,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 89,
+              "kills": 82,
+              "damageTaken": 11,
+              "enemies": 19,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 76,
+              "kills": 159,
+              "damageTaken": 35,
+              "enemies": 14,
+              "seals": 0,
+              "fusions": [
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 15,
+              "hp": 80,
+              "kills": 258,
+              "damageTaken": 55,
+              "enemies": 20,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 58,
+              "kills": 365,
+              "damageTaken": 77,
+              "enemies": 19,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 62,
+              "kills": 482,
+              "damageTaken": 85,
+              "enemies": 52,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 23,
+              "hp": 100,
+              "kills": 661,
+              "damageTaken": 85,
+              "enemies": 36,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 240,
+              "level": 26,
+              "hp": 100,
+              "kills": 825,
+              "damageTaken": 104,
+              "enemies": 40,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 270,
+              "level": 28,
+              "hp": 100,
+              "kills": 992,
+              "damageTaken": 123,
+              "enemies": 56,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 300,
+              "level": 31,
+              "hp": 87,
+              "kills": 1193,
+              "damageTaken": 166,
+              "enemies": 34,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 330,
+              "level": 34,
+              "hp": 100,
+              "kills": 1366,
+              "damageTaken": 195,
+              "enemies": 44,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 360,
+              "level": 36,
+              "hp": 100,
+              "kills": 1540,
+              "damageTaken": 230,
+              "enemies": 49,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 390,
+              "level": 38,
+              "hp": 89,
+              "kills": 1721,
+              "damageTaken": 249,
+              "enemies": 51,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 420,
+              "level": 40,
+              "hp": 100,
+              "kills": 1892,
+              "damageTaken": 268,
+              "enemies": 63,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "kite",
+          "meta": "new",
+          "seed": 1,
+          "family": 1,
+          "phase": "dead",
+          "time": 93,
+          "level": 12,
+          "kills": 158,
+          "seals": 0,
+          "fusions": [
+            "dreamoven"
+          ],
+          "hp": 0,
+          "damageTaken": 112,
+          "firstLevelAt": 16.644444444444492,
+          "damageBy": {
+            "stone": 1159.596190476198,
+            "boulder": 1780.7317460317731,
+            "mine": 312.01365079365166,
+            "bomb": 507.91904761905323,
+            "pillow": 189.50380952381084,
+            "chain": 914.3869841269905,
+            "parry": 228.0853968254006,
+            "gun": 2271.7342857143203,
+            "fire": 141.9885714285711,
+            "spread": 10,
+            "ovenTouch": 24
+          },
+          "procs": {
+            "stoneShot": 83,
+            "ultimateShot": 10,
+            "boulderBounce": 85,
+            "mine": 9,
+            "returnCatch": 118,
+            "parry": 12,
+            "gunShot": 82,
+            "wildfire": 5,
+            "fusion:dreamoven": 1,
+            "at:fusion:dreamoven:trigger": 93.64444444443853,
+            "fusion:dreamoven:trigger": 3,
+            "ovenTouch": 4
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 3,
+              "hp": 100,
+              "kills": 19,
+              "damageTaken": 0,
+              "enemies": 18,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 23,
+              "kills": 75,
+              "damageTaken": 77,
+              "enemies": 26,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 2,
+              "kills": 153,
+              "damageTaken": 110,
+              "enemies": 20,
+              "seals": 0,
+              "fusions": [
+                "dreamoven"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "kite",
+          "meta": "new",
+          "seed": 2,
+          "family": 2,
+          "phase": "playing",
+          "time": 420,
+          "level": 40,
+          "kills": 1896,
+          "seals": 0,
+          "fusions": [
+            "tempest",
+            "firefly"
+          ],
+          "hp": 79,
+          "damageTaken": 349,
+          "firstLevelAt": 17.788888888889115,
+          "damageBy": {
+            "stone": 550.036031746033,
+            "mine": 1182.2844444447333,
+            "pillow": 2678.1966666677827,
+            "boulder": 34989.97746032389,
+            "storm": 13366.644603176379,
+            "chain": 13938.733492065343,
+            "gun": 32591.43269841739,
+            "parry": 52,
+            "cloud": 5514.325396826493,
+            "tempest": 7355.167619048938,
+            "fragment": 2895.568730159086,
+            "discharge": 241.1711111112997,
+            "seed": 4512.181904762469,
+            "firefly": 18316.45888889222,
+            "decoy": 318.08253968268815,
+            "bowling": 1061.3822222223855,
+            "vortex": 1164.493650794073
+          },
+          "procs": {
+            "stoneShot": 53,
+            "mine": 33,
+            "ultimateShot": 59,
+            "boulderBounce": 600,
+            "gunShot": 928,
+            "returnCatch": 859,
+            "parry": 158,
+            "fusion:tempest": 1,
+            "fusion:tempest:trigger": 156,
+            "fracture": 568,
+            "discharge": 10,
+            "chainSeed": 158,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 653,
+            "hoarder": 143,
+            "bowling": 56,
+            "frost": 2
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 100,
+              "kills": 25,
+              "damageTaken": 0,
+              "enemies": 12,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 92,
+              "kills": 84,
+              "damageTaken": 8,
+              "enemies": 17,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 92,
+              "kills": 158,
+              "damageTaken": 8,
+              "enemies": 15,
+              "seals": 0,
+              "fusions": [
+                "tempest"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 14,
+              "hp": 100,
+              "kills": 257,
+              "damageTaken": 8,
+              "enemies": 21,
+              "seals": 0,
+              "fusions": [
+                "tempest"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 87,
+              "kills": 361,
+              "damageTaken": 21,
+              "enemies": 23,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 86,
+              "kills": 474,
+              "damageTaken": 34,
+              "enemies": 60,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 22,
+              "hp": 42,
+              "kills": 654,
+              "damageTaken": 119,
+              "enemies": 43,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 240,
+              "level": 26,
+              "hp": 100,
+              "kills": 808,
+              "damageTaken": 130,
+              "enemies": 57,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 270,
+              "level": 29,
+              "hp": 89,
+              "kills": 980,
+              "damageTaken": 173,
+              "enemies": 68,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 300,
+              "level": 32,
+              "hp": 100,
+              "kills": 1173,
+              "damageTaken": 222,
+              "enemies": 54,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 330,
+              "level": 34,
+              "hp": 100,
+              "kills": 1360,
+              "damageTaken": 241,
+              "enemies": 50,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 360,
+              "level": 37,
+              "hp": 82,
+              "kills": 1549,
+              "damageTaken": 284,
+              "enemies": 40,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 390,
+              "level": 38,
+              "hp": 81,
+              "kills": 1726,
+              "damageTaken": 303,
+              "enemies": 46,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 420,
+              "level": 40,
+              "hp": 79,
+              "kills": 1896,
+              "damageTaken": 349,
+              "enemies": 59,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "kite",
+          "meta": "new",
+          "seed": 3,
+          "family": 0,
+          "phase": "playing",
+          "time": 420,
+          "level": 40,
+          "kills": 1898,
+          "seals": 0,
+          "fusions": [
+            "thunderweb",
+            "firefly"
+          ],
+          "hp": 78,
+          "damageTaken": 326,
+          "firstLevelAt": 20.46666666666731,
+          "damageBy": {
+            "stone": 654.0000000000022,
+            "chain": 10942.634497356148,
+            "boulder": 26162.15243386759,
+            "mine": 727.9228571429942,
+            "storm": 14472.040793652282,
+            "gun": 27779.0287301629,
+            "discharge": 135.85555555557676,
+            "seed": 3486.2463492069355,
+            "cloud": 6302.433650794833,
+            "pillow": 1899.5011111116532,
+            "web": 28353.740052915975,
+            "fragment": 2785.90619047642,
+            "firefly": 15661.096190478405,
+            "parry": 1505.021746032074,
+            "decoy": 287.88380952393976,
+            "bowling": 527.2177777777893,
+            "vortex": 578.5961904762761
+          },
+          "procs": {
+            "stoneShot": 61,
+            "ultimateShot": 53,
+            "boulderBounce": 522,
+            "mine": 24,
+            "gunShot": 931,
+            "discharge": 8,
+            "chainSeed": 124,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 851,
+            "returnCatch": 755,
+            "fracture": 552,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 683,
+            "parry": 105,
+            "hoarder": 140,
+            "bowling": 27,
+            "frost": 2
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 2,
+              "hp": 100,
+              "kills": 22,
+              "damageTaken": 0,
+              "enemies": 15,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 89,
+              "kills": 85,
+              "damageTaken": 11,
+              "enemies": 16,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 89,
+              "kills": 162,
+              "damageTaken": 22,
+              "enemies": 11,
+              "seals": 0,
+              "fusions": [
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 14,
+              "hp": 77,
+              "kills": 253,
+              "damageTaken": 58,
+              "enemies": 25,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 51,
+              "kills": 366,
+              "damageTaken": 84,
+              "enemies": 18,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 63,
+              "kills": 498,
+              "damageTaken": 84,
+              "enemies": 36,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 23,
+              "hp": 100,
+              "kills": 639,
+              "damageTaken": 103,
+              "enemies": 58,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 240,
+              "level": 26,
+              "hp": 100,
+              "kills": 822,
+              "damageTaken": 111,
+              "enemies": 43,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 270,
+              "level": 29,
+              "hp": 89,
+              "kills": 1005,
+              "damageTaken": 154,
+              "enemies": 43,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 300,
+              "level": 32,
+              "hp": 100,
+              "kills": 1185,
+              "damageTaken": 181,
+              "enemies": 42,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 330,
+              "level": 33,
+              "hp": 81,
+              "kills": 1359,
+              "damageTaken": 213,
+              "enemies": 51,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 360,
+              "level": 36,
+              "hp": 92,
+              "kills": 1558,
+              "damageTaken": 229,
+              "enemies": 31,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 390,
+              "level": 38,
+              "hp": 87,
+              "kills": 1723,
+              "damageTaken": 267,
+              "enemies": 49,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 420,
+              "level": 40,
+              "hp": 78,
+              "kills": 1898,
+              "damageTaken": 326,
+              "enemies": 57,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "kite",
+          "meta": "max",
+          "seed": 0,
+          "family": 0,
+          "phase": "playing",
+          "time": 420,
+          "level": 40,
+          "kills": 1897,
+          "seals": 0,
+          "fusions": [
+            "thunderweb",
+            "firefly"
+          ],
+          "hp": 115,
+          "damageTaken": 232,
+          "firstLevelAt": 11.966666666666628,
+          "damageBy": {
+            "stone": 158.94984126984127,
+            "gun": 26847.39481481825,
+            "boulder": 22585.502222226347,
+            "chain": 10533.746349207802,
+            "storm": 14076.547460319001,
+            "mine": 1380.6677777779755,
+            "seed": 2678.0319047622784,
+            "cloud": 5648.818888890303,
+            "pillow": 1573.8638095242343,
+            "web": 32631.139153446853,
+            "fragment": 2563.3969841271246,
+            "firefly": 18016.94158730411,
+            "parry": 984.8468253969738,
+            "discharge": 118.79238095241104,
+            "vortex": 461.07650793669677,
+            "decoy": 121.90952380961585,
+            "bowling": 215.77238095241995
+          },
+          "procs": {
+            "stoneShot": 16,
+            "ultimateShot": 51,
+            "boulderBounce": 493,
+            "gunShot": 1020,
+            "mine": 33,
+            "chainSeed": 100,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 933,
+            "returnCatch": 764,
+            "fracture": 545,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 669,
+            "hoarder": 143,
+            "parry": 65,
+            "discharge": 4,
+            "bowling": 12
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 3,
+              "hp": 115,
+              "kills": 22,
+              "damageTaken": 0,
+              "enemies": 15,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 5,
+              "hp": 107,
+              "kills": 84,
+              "damageTaken": 8,
+              "enemies": 17,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 10,
+              "hp": 115,
+              "kills": 154,
+              "damageTaken": 8,
+              "enemies": 19,
+              "seals": 0,
+              "fusions": [
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 15,
+              "hp": 115,
+              "kills": 255,
+              "damageTaken": 8,
+              "enemies": 23,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 18,
+              "hp": 85,
+              "kills": 372,
+              "damageTaken": 38,
+              "enemies": 12,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 89,
+              "kills": 494,
+              "damageTaken": 46,
+              "enemies": 40,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 23,
+              "hp": 107,
+              "kills": 653,
+              "damageTaken": 86,
+              "enemies": 44,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 240,
+              "level": 26,
+              "hp": 115,
+              "kills": 822,
+              "damageTaken": 94,
+              "enemies": 43,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 270,
+              "level": 29,
+              "hp": 115,
+              "kills": 1013,
+              "damageTaken": 94,
+              "enemies": 35,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 300,
+              "level": 31,
+              "hp": 115,
+              "kills": 1183,
+              "damageTaken": 140,
+              "enemies": 44,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 330,
+              "level": 33,
+              "hp": 104,
+              "kills": 1357,
+              "damageTaken": 170,
+              "enemies": 53,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 360,
+              "level": 36,
+              "hp": 115,
+              "kills": 1529,
+              "damageTaken": 202,
+              "enemies": 60,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 390,
+              "level": 38,
+              "hp": 115,
+              "kills": 1718,
+              "damageTaken": 221,
+              "enemies": 54,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 420,
+              "level": 40,
+              "hp": 115,
+              "kills": 1897,
+              "damageTaken": 232,
+              "enemies": 58,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "kite",
+          "meta": "max",
+          "seed": 1,
+          "family": 1,
+          "phase": "playing",
+          "time": 420,
+          "level": 41,
+          "kills": 1877,
+          "seals": 0,
+          "fusions": [
+            "dreamoven",
+            "popcorn"
+          ],
+          "hp": 78,
+          "damageTaken": 367,
+          "firstLevelAt": 17.61111111111131,
+          "damageBy": {
+            "stone": 1150.7298412698485,
+            "boulder": 37305.294285719974,
+            "mine": 1523.0622222224629,
+            "pillow": 2137.5361904767196,
+            "bomb": 2237.950687831143,
+            "chain": 15834.402698414884,
+            "gun": 28968.667354501707,
+            "fire": 5954.962063493598,
+            "parry": 1937.1406349210038,
+            "ovenTouch": 1367.877619047826,
+            "spread": 3632.1287301595557,
+            "fusionBlast": 27571.838624343938,
+            "fragment": 2687.5585714288377,
+            "seed": 4769.77777777828,
+            "decoy": 254.7612698414277,
+            "vortex": 828.689523809809,
+            "bowling": 182.51682539691774
+          },
+          "procs": {
+            "stoneShot": 82,
+            "ultimateShot": 59,
+            "boulderBounce": 600,
+            "mine": 42,
+            "returnCatch": 874,
+            "gunShot": 877,
+            "parry": 132,
+            "wildfire": 541,
+            "fusion:dreamoven": 1,
+            "at:fusion:dreamoven:trigger": 421.36666666687506,
+            "fusion:dreamoven:trigger": 169,
+            "ovenTouch": 100,
+            "fusion:explosion": 713,
+            "fracture": 622,
+            "chainSeed": 162,
+            "fusion:popcorn": 1,
+            "fusion:popcorn:ignite": 1290,
+            "hoarder": 149,
+            "harvest": 1,
+            "bowling": 12
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 115,
+              "kills": 24,
+              "damageTaken": 0,
+              "enemies": 13,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 8,
+              "hp": 93,
+              "kills": 81,
+              "damageTaken": 22,
+              "enemies": 20,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 92,
+              "kills": 151,
+              "damageTaken": 35,
+              "enemies": 22,
+              "seals": 0,
+              "fusions": [
+                "dreamoven"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 15,
+              "hp": 75,
+              "kills": 252,
+              "damageTaken": 64,
+              "enemies": 26,
+              "seals": 0,
+              "fusions": [
+                "dreamoven"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 18,
+              "hp": 51,
+              "kills": 358,
+              "damageTaken": 100,
+              "enemies": 26,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 21,
+              "hp": 66,
+              "kills": 494,
+              "damageTaken": 122,
+              "enemies": 40,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 24,
+              "hp": 106,
+              "kills": 641,
+              "damageTaken": 157,
+              "enemies": 56,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 240,
+              "level": 27,
+              "hp": 115,
+              "kills": 816,
+              "damageTaken": 173,
+              "enemies": 49,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 270,
+              "level": 29,
+              "hp": 115,
+              "kills": 985,
+              "damageTaken": 186,
+              "enemies": 63,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 300,
+              "level": 33,
+              "hp": 115,
+              "kills": 1185,
+              "damageTaken": 213,
+              "enemies": 42,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 330,
+              "level": 35,
+              "hp": 107,
+              "kills": 1362,
+              "damageTaken": 256,
+              "enemies": 48,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 360,
+              "level": 37,
+              "hp": 96,
+              "kills": 1546,
+              "damageTaken": 294,
+              "enemies": 43,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 390,
+              "level": 39,
+              "hp": 115,
+              "kills": 1713,
+              "damageTaken": 305,
+              "enemies": 59,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 420,
+              "level": 41,
+              "hp": 78,
+              "kills": 1877,
+              "damageTaken": 367,
+              "enemies": 78,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "kite",
+          "meta": "max",
+          "seed": 2,
+          "family": 2,
+          "phase": "playing",
+          "time": 420,
+          "level": 41,
+          "kills": 1884,
+          "seals": 0,
+          "fusions": [
+            "tempest",
+            "firefly"
+          ],
+          "hp": 115,
+          "damageTaken": 424,
+          "firstLevelAt": 17.677777777777987,
+          "damageBy": {
+            "stone": 561.3911111111114,
+            "pillow": 3116.564444445155,
+            "boulder": 34460.98619048236,
+            "mine": 2062.484920635325,
+            "storm": 13897.229365081272,
+            "chain": 11370.74412698608,
+            "gun": 31070.407248682117,
+            "parry": 79.48380952380982,
+            "cloud": 5734.484021165203,
+            "fragment": 3501.7193650796194,
+            "tempest": 5689.235079365895,
+            "bowling": 991.678730158805,
+            "discharge": 83.21841269844151,
+            "seed": 4642.342698413302,
+            "firefly": 20028.375238098895,
+            "decoy": 568.9638095241838,
+            "vortex": 1458.6638095241444
+          },
+          "procs": {
+            "stoneShot": 54,
+            "ultimateShot": 59,
+            "mine": 48,
+            "boulderBounce": 611,
+            "gunShot": 923,
+            "returnCatch": 856,
+            "parry": 126,
+            "fusion:tempest": 1,
+            "fracture": 591,
+            "fusion:tempest:trigger": 122,
+            "bowling": 53,
+            "discharge": 3,
+            "chainSeed": 158,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 634,
+            "hoarder": 146
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 3,
+              "hp": 115,
+              "kills": 19,
+              "damageTaken": 0,
+              "enemies": 18,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 93,
+              "kills": 83,
+              "damageTaken": 22,
+              "enemies": 18,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 68,
+              "kills": 156,
+              "damageTaken": 59,
+              "enemies": 17,
+              "seals": 0,
+              "fusions": [
+                "tempest"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 14,
+              "hp": 51,
+              "kills": 252,
+              "damageTaken": 100,
+              "enemies": 26,
+              "seals": 0,
+              "fusions": [
+                "tempest"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 18,
+              "hp": 40,
+              "kills": 367,
+              "damageTaken": 111,
+              "enemies": 17,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 6,
+              "kills": 490,
+              "damageTaken": 157,
+              "enemies": 44,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 23,
+              "hp": 70,
+              "kills": 647,
+              "damageTaken": 168,
+              "enemies": 50,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 240,
+              "level": 27,
+              "hp": 115,
+              "kills": 824,
+              "damageTaken": 192,
+              "enemies": 41,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 270,
+              "level": 29,
+              "hp": 94,
+              "kills": 1004,
+              "damageTaken": 246,
+              "enemies": 44,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 300,
+              "level": 32,
+              "hp": 115,
+              "kills": 1173,
+              "damageTaken": 257,
+              "enemies": 54,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 330,
+              "level": 34,
+              "hp": 70,
+              "kills": 1374,
+              "damageTaken": 352,
+              "enemies": 36,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 360,
+              "level": 37,
+              "hp": 115,
+              "kills": 1543,
+              "damageTaken": 371,
+              "enemies": 46,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 390,
+              "level": 38,
+              "hp": 107,
+              "kills": 1722,
+              "damageTaken": 400,
+              "enemies": 50,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            },
+            {
+              "time": 420,
+              "level": 41,
+              "hp": 115,
+              "kills": 1884,
+              "damageTaken": 424,
+              "enemies": 71,
+              "seals": 0,
+              "fusions": [
+                "tempest",
+                "firefly"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "kite",
+          "meta": "max",
+          "seed": 3,
+          "family": 0,
+          "phase": "playing",
+          "time": 420,
+          "level": 41,
+          "kills": 1905,
+          "seals": 0,
+          "fusions": [
+            "thunderweb",
+            "firefly"
+          ],
+          "hp": 115,
+          "damageTaken": 228,
+          "firstLevelAt": 21.08888888888963,
+          "damageBy": {
+            "stone": 633.8393650793671,
+            "chain": 10927.443650794828,
+            "mine": 1730.0306349209698,
+            "storm": 14179.373068784522,
+            "boulder": 21250.12984127375,
+            "gun": 26693.779470903424,
+            "discharge": 172.31746031749438,
+            "seed": 2851.1938095241553,
+            "cloud": 5327.940158731329,
+            "pillow": 1633.4939682545648,
+            "web": 33351.11380953154,
+            "fragment": 2852.520317460679,
+            "firefly": 17779.087460319846,
+            "parry": 1179.3211111113856,
+            "decoy": 378.38460317471527,
+            "bowling": 494.39873015876987,
+            "vortex": 773.0482539684424
+          },
+          "procs": {
+            "stoneShot": 62,
+            "ultimateShot": 42,
+            "boulderBounce": 427,
+            "mine": 49,
+            "gunShot": 968,
+            "discharge": 11,
+            "chainSeed": 109,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 918,
+            "returnCatch": 790,
+            "fracture": 552,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 681,
+            "parry": 68,
+            "hoarder": 147,
+            "bowling": 25
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 115,
+              "kills": 24,
+              "damageTaken": 0,
+              "enemies": 13,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 71,
+              "kills": 88,
+              "damageTaken": 44,
+              "enemies": 13,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 83,
+              "kills": 157,
+              "damageTaken": 44,
+              "enemies": 16,
+              "seals": 0,
+              "fusions": [
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 14,
+              "hp": 84,
+              "kills": 258,
+              "damageTaken": 55,
+              "enemies": 20,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 85,
+              "kills": 360,
+              "damageTaken": 66,
+              "enemies": 24,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 78,
+              "kills": 504,
+              "damageTaken": 85,
+              "enemies": 30,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 23,
+              "hp": 104,
+              "kills": 643,
+              "damageTaken": 115,
+              "enemies": 54,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 240,
+              "level": 26,
+              "hp": 115,
+              "kills": 815,
+              "damageTaken": 142,
+              "enemies": 50,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 270,
+              "level": 29,
+              "hp": 115,
+              "kills": 1010,
+              "damageTaken": 158,
+              "enemies": 38,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 300,
+              "level": 32,
+              "hp": 104,
+              "kills": 1189,
+              "damageTaken": 169,
+              "enemies": 38,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 330,
+              "level": 34,
+              "hp": 115,
+              "kills": 1352,
+              "damageTaken": 177,
+              "enemies": 58,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 360,
+              "level": 36,
+              "hp": 115,
+              "kills": 1551,
+              "damageTaken": 177,
+              "enemies": 38,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 390,
+              "level": 38,
+              "hp": 115,
+              "kills": 1701,
+              "damageTaken": 190,
+              "enemies": 71,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 420,
+              "level": 41,
+              "hp": 115,
+              "kills": 1905,
+              "damageTaken": 228,
+              "enemies": 50,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "objective",
+          "meta": "new",
+          "seed": 0,
+          "family": 0,
+          "phase": "won",
+          "time": 226,
+          "level": 23,
+          "kills": 737,
+          "seals": 2,
+          "fusions": [
+            "thunderweb",
+            "firefly"
+          ],
+          "hp": 100,
+          "damageTaken": 136,
+          "firstLevelAt": 15.077777777777728,
+          "damageBy": {
+            "stone": 235.3111111111111,
+            "boulder": 5215.187936508304,
+            "mine": 416.02746031745767,
+            "gun": 11367.60904761917,
+            "storm": 6326.292222222229,
+            "chain": 3915.8877777778216,
+            "seed": 999.9744444444437,
+            "cloud": 2216.8236507936435,
+            "discharge": 171.7420634920614,
+            "vortex": 102,
+            "web": 8554.890634920885,
+            "fragment": 882.0676190476348,
+            "firefly": 5540.9201587302905,
+            "pillow": 230.93301587302716,
+            "bowling": 20,
+            "parry": 369.2514285714353
+          },
+          "procs": {
+            "stoneShot": 20,
+            "ultimateShot": 26,
+            "boulderBounce": 249,
+            "mine": 13,
+            "gunShot": 533,
+            "chainSeed": 50,
+            "hoarder": 53,
+            "discharge": 9,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 268,
+            "returnCatch": 306,
+            "fracture": 205,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 244,
+            "parry": 18,
+            "bowling": 1,
+            "harvest": 2
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 100,
+              "kills": 28,
+              "damageTaken": 0,
+              "enemies": 15,
+              "seals": 1,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 6,
+              "hp": 90,
+              "kills": 90,
+              "damageTaken": 22,
+              "enemies": 17,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 10,
+              "hp": 100,
+              "kills": 161,
+              "damageTaken": 22,
+              "enemies": 18,
+              "seals": 2,
+              "fusions": [
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 13,
+              "hp": 91,
+              "kills": 257,
+              "damageTaken": 43,
+              "enemies": 27,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 16,
+              "hp": 91,
+              "kills": 372,
+              "damageTaken": 55,
+              "enemies": 18,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 19,
+              "hp": 67,
+              "kills": 517,
+              "damageTaken": 96,
+              "enemies": 23,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 23,
+              "hp": 100,
+              "kills": 650,
+              "damageTaken": 128,
+              "enemies": 54,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "objective",
+          "meta": "new",
+          "seed": 1,
+          "family": 1,
+          "phase": "won",
+          "time": 234,
+          "level": 25,
+          "kills": 767,
+          "seals": 2,
+          "fusions": [
+            "dreamoven",
+            "popcorn"
+          ],
+          "hp": 100,
+          "damageTaken": 173,
+          "firstLevelAt": 14.866666666666617,
+          "damageBy": {
+            "mine": 1024.5979365079572,
+            "stone": 1182.7487301587335,
+            "boulder": 10307.50555555596,
+            "bomb": 1771.0436507936522,
+            "pillow": 978.495873015894,
+            "chain": 4839.659206349253,
+            "parry": 942.340158730165,
+            "gun": 12244.125925926097,
+            "fire": 2773.1496825397876,
+            "fragment": 1120.1330158730302,
+            "vortex": 329.11380952380784,
+            "spread": 605.8939682540115,
+            "ovenTouch": 399.26566137564555,
+            "fusionBlast": 9124.462539682954,
+            "seed": 1229.5993650793778,
+            "bowling": 50.13333333334099,
+            "decoy": 172.93777777778269
+          },
+          "procs": {
+            "stoneShot": 81,
+            "mine": 28,
+            "ultimateShot": 29,
+            "boulderBounce": 279,
+            "returnCatch": 467,
+            "parry": 55,
+            "gunShot": 438,
+            "hoarder": 58,
+            "fracture": 303,
+            "wildfire": 166,
+            "fusion:dreamoven": 1,
+            "at:fusion:dreamoven:trigger": 235.94444444450528,
+            "fusion:dreamoven:trigger": 67,
+            "ovenTouch": 31,
+            "fusion:popcorn": 1,
+            "fusion:popcorn:ignite": 555,
+            "fusion:explosion": 297,
+            "chainSeed": 42,
+            "bowling": 3,
+            "harvest": 2
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 100,
+              "kills": 24,
+              "damageTaken": 0,
+              "enemies": 19,
+              "seals": 1,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 6,
+              "hp": 66,
+              "kills": 73,
+              "damageTaken": 46,
+              "enemies": 34,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 67,
+              "kills": 157,
+              "damageTaken": 57,
+              "enemies": 22,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 120,
+              "level": 14,
+              "hp": 46,
+              "kills": 258,
+              "damageTaken": 78,
+              "enemies": 26,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 48,
+              "kills": 373,
+              "damageTaken": 100,
+              "enemies": 17,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 100,
+              "kills": 497,
+              "damageTaken": 124,
+              "enemies": 43,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 24,
+              "hp": 100,
+              "kills": 656,
+              "damageTaken": 143,
+              "enemies": 48,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "objective",
+          "meta": "new",
+          "seed": 2,
+          "family": 2,
+          "phase": "won",
+          "time": 232,
+          "level": 24,
+          "kills": 765,
+          "seals": 2,
+          "fusions": [
+            "tempest",
+            "thunderweb"
+          ],
+          "hp": 100,
+          "damageTaken": 175,
+          "firstLevelAt": 11.377777777777741,
+          "damageBy": {
+            "stone": 681.1144444444465,
+            "mine": 630.8665079365176,
+            "boulder": 10833.753968254334,
+            "pillow": 1108.2122222222424,
+            "storm": 6452.444814815055,
+            "chain": 5575.598253968319,
+            "gun": 11581.002962963119,
+            "decoy": 205.198095238093,
+            "parry": 80.71428571429476,
+            "vortex": 355.3639682539754,
+            "bowling": 120,
+            "fragment": 962.972539682542,
+            "cloud": 2473.1444444445697,
+            "tempest": 1102.3565079365233,
+            "seed": 1402.571111111104,
+            "discharge": 84.18650793650077,
+            "web": 4718.960158730354
+          },
+          "procs": {
+            "stoneShot": 63,
+            "ultimateShot": 32,
+            "boulderBounce": 308,
+            "mine": 18,
+            "gunShot": 450,
+            "returnCatch": 400,
+            "hoarder": 56,
+            "parry": 32,
+            "bowling": 6,
+            "fracture": 250,
+            "fusion:tempest": 1,
+            "fusion:tempest:trigger": 25,
+            "chainSeed": 49,
+            "discharge": 5,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 162,
+            "harvest": 3
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 100,
+              "kills": 24,
+              "damageTaken": 0,
+              "enemies": 19,
+              "seals": 1,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 6,
+              "hp": 79,
+              "kills": 78,
+              "damageTaken": 33,
+              "enemies": 29,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 10,
+              "hp": 66,
+              "kills": 149,
+              "damageTaken": 88,
+              "enemies": 30,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 120,
+              "level": 14,
+              "hp": 55,
+              "kills": 252,
+              "damageTaken": 99,
+              "enemies": 32,
+              "seals": 2,
+              "fusions": [
+                "tempest"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 79,
+              "kills": 365,
+              "damageTaken": 99,
+              "enemies": 25,
+              "seals": 2,
+              "fusions": [
+                "tempest",
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 89,
+              "kills": 507,
+              "damageTaken": 121,
+              "enemies": 33,
+              "seals": 2,
+              "fusions": [
+                "tempest",
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 22,
+              "hp": 81,
+              "kills": 652,
+              "damageTaken": 148,
+              "enemies": 52,
+              "seals": 2,
+              "fusions": [
+                "tempest",
+                "thunderweb"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "objective",
+          "meta": "new",
+          "seed": 3,
+          "family": 0,
+          "phase": "won",
+          "time": 224,
+          "level": 24,
+          "kills": 726,
+          "seals": 2,
+          "fusions": [
+            "firefly",
+            "thunderweb"
+          ],
+          "hp": 100,
+          "damageTaken": 79,
+          "firstLevelAt": 12.255555555555516,
+          "damageBy": {
+            "stone": 630.9052380952392,
+            "mine": 445.0987301587447,
+            "boulder": 6795.535925926061,
+            "chain": 4368.908571428609,
+            "storm": 6372.485873015896,
+            "gun": 10305.80825396825,
+            "vortex": 198.67793650793402,
+            "fragment": 856.4961904761999,
+            "decoy": 89.78857142857231,
+            "discharge": 143.6468253968267,
+            "parry": 391.3249735449556,
+            "seed": 1078.04428571428,
+            "pillow": 212.75841269841774,
+            "firefly": 5046.248253968348,
+            "cloud": 1989.6849206352463,
+            "web": 6898.458783069029
+          },
+          "procs": {
+            "stoneShot": 61,
+            "mine": 18,
+            "ultimateShot": 24,
+            "boulderBounce": 224,
+            "gunShot": 458,
+            "hoarder": 53,
+            "returnCatch": 393,
+            "fracture": 228,
+            "discharge": 7,
+            "parry": 26,
+            "chainSeed": 39,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 246,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 212,
+            "harvest": 2,
+            "frost": 1
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 89,
+              "kills": 27,
+              "damageTaken": 11,
+              "enemies": 16,
+              "seals": 1,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 68,
+              "kills": 95,
+              "damageTaken": 44,
+              "enemies": 12,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 10,
+              "hp": 68,
+              "kills": 147,
+              "damageTaken": 44,
+              "enemies": 32,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 120,
+              "level": 14,
+              "hp": 89,
+              "kills": 263,
+              "damageTaken": 55,
+              "enemies": 21,
+              "seals": 2,
+              "fusions": [
+                "firefly",
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 89,
+              "kills": 371,
+              "damageTaken": 55,
+              "enemies": 19,
+              "seals": 2,
+              "fusions": [
+                "firefly",
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 19,
+              "hp": 100,
+              "kills": 495,
+              "damageTaken": 55,
+              "enemies": 45,
+              "seals": 2,
+              "fusions": [
+                "firefly",
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 23,
+              "hp": 100,
+              "kills": 654,
+              "damageTaken": 63,
+              "enemies": 50,
+              "seals": 2,
+              "fusions": [
+                "firefly",
+                "thunderweb"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "objective",
+          "meta": "max",
+          "seed": 0,
+          "family": 0,
+          "phase": "won",
+          "time": 221,
+          "level": 23,
+          "kills": 721,
+          "seals": 2,
+          "fusions": [
+            "thunderweb",
+            "firefly"
+          ],
+          "hp": 95,
+          "damageTaken": 92,
+          "firstLevelAt": 18.688888888889256,
+          "damageBy": {
+            "stone": 267.75619047619045,
+            "boulder": 5565.486243386394,
+            "mine": 615.8336507936502,
+            "gun": 11047.675132275415,
+            "chain": 3703.8177777778437,
+            "storm": 6108.413968253991,
+            "seed": 987.327142857152,
+            "discharge": 133,
+            "cloud": 2075.4719047619346,
+            "web": 8197.028783068954,
+            "fragment": 744.9949206349254,
+            "firefly": 5071.044603174651,
+            "pillow": 262.44968253969097,
+            "parry": 260,
+            "bowling": 13.22444444444642,
+            "decoy": 129.9109523809573,
+            "vortex": 34
+          },
+          "procs": {
+            "stoneShot": 26,
+            "ultimateShot": 21,
+            "boulderBounce": 205,
+            "mine": 14,
+            "gunShot": 521,
+            "hoarder": 50,
+            "chainSeed": 43,
+            "discharge": 7,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 248,
+            "returnCatch": 297,
+            "fracture": 199,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 236,
+            "parry": 17,
+            "harvest": 2,
+            "bowling": 1
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 115,
+              "kills": 30,
+              "damageTaken": 0,
+              "enemies": 13,
+              "seals": 1,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 6,
+              "hp": 104,
+              "kills": 89,
+              "damageTaken": 22,
+              "enemies": 18,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 9,
+              "hp": 104,
+              "kills": 161,
+              "damageTaken": 22,
+              "enemies": 18,
+              "seals": 2,
+              "fusions": [
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 14,
+              "hp": 115,
+              "kills": 256,
+              "damageTaken": 38,
+              "enemies": 28,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 115,
+              "kills": 370,
+              "damageTaken": 38,
+              "enemies": 20,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 115,
+              "kills": 497,
+              "damageTaken": 60,
+              "enemies": 43,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 23,
+              "hp": 115,
+              "kills": 670,
+              "damageTaken": 60,
+              "enemies": 34,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "objective",
+          "meta": "max",
+          "seed": 1,
+          "family": 1,
+          "phase": "won",
+          "time": 233,
+          "level": 26,
+          "kills": 760,
+          "seals": 2,
+          "fusions": [
+            "dreamoven",
+            "popcorn"
+          ],
+          "hp": 115,
+          "damageTaken": 233,
+          "firstLevelAt": 12.033333333333294,
+          "damageBy": {
+            "mine": 1056.7028571428539,
+            "stone": 949.9141269841308,
+            "bomb": 1775.0500000002412,
+            "pillow": 954.4161904762104,
+            "chain": 5794.260793650934,
+            "boulder": 9783.03116402148,
+            "parry": 685.9393650793661,
+            "gun": 11903.015449735583,
+            "fire": 2467.8287301587875,
+            "vortex": 381.10888888889485,
+            "fragment": 1299.168095238104,
+            "ovenTouch": 414.46142857144946,
+            "spread": 1087.668571428614,
+            "fusionBlast": 8683.368148148294,
+            "seed": 1289.5466666667007,
+            "decoy": 65,
+            "bowling": 69.9015873015924
+          },
+          "procs": {
+            "stoneShot": 64,
+            "mine": 30,
+            "ultimateShot": 31,
+            "boulderBounce": 303,
+            "returnCatch": 465,
+            "parry": 45,
+            "gunShot": 454,
+            "hoarder": 61,
+            "fracture": 296,
+            "wildfire": 162,
+            "fusion:dreamoven": 1,
+            "at:fusion:dreamoven:trigger": 233.93333333339257,
+            "fusion:dreamoven:trigger": 62,
+            "ovenTouch": 31,
+            "fusion:popcorn": 1,
+            "fusion:popcorn:ignite": 507,
+            "fusion:explosion": 254,
+            "chainSeed": 46,
+            "harvest": 2,
+            "bowling": 4
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 5,
+              "hp": 115,
+              "kills": 23,
+              "damageTaken": 0,
+              "enemies": 20,
+              "seals": 1,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 8,
+              "hp": 94,
+              "kills": 76,
+              "damageTaken": 33,
+              "enemies": 31,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 12,
+              "hp": 65,
+              "kills": 157,
+              "damageTaken": 74,
+              "enemies": 22,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 120,
+              "level": 14,
+              "hp": 61,
+              "kills": 241,
+              "damageTaken": 108,
+              "enemies": 43,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 18,
+              "hp": 80,
+              "kills": 368,
+              "damageTaken": 168,
+              "enemies": 22,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 21,
+              "hp": 115,
+              "kills": 502,
+              "damageTaken": 168,
+              "enemies": 38,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 24,
+              "hp": 104,
+              "kills": 663,
+              "damageTaken": 214,
+              "enemies": 41,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "objective",
+          "meta": "max",
+          "seed": 2,
+          "family": 2,
+          "phase": "won",
+          "time": 232,
+          "level": 24,
+          "kills": 762,
+          "seals": 2,
+          "fusions": [
+            "tempest",
+            "thunderweb"
+          ],
+          "hp": 115,
+          "damageTaken": 197,
+          "firstLevelAt": 13.622222222222177,
+          "damageBy": {
+            "stone": 652.2144444444457,
+            "mine": 660.3109523809602,
+            "boulder": 10233.057301587589,
+            "pillow": 611.0871957671957,
+            "storm": 6223.129788359992,
+            "chain": 6010.55952380963,
+            "gun": 12826.408888889042,
+            "vortex": 256.252857142873,
+            "discharge": 192.18380952380548,
+            "parry": 112.66730158730176,
+            "fragment": 960.4230158730179,
+            "tempest": 1009.360317460314,
+            "cloud": 1481.1579365080083,
+            "web": 5608.514603174919,
+            "seed": 1411.1580952381137,
+            "decoy": 116.19047619047635
+          },
+          "procs": {
+            "stoneShot": 60,
+            "ultimateShot": 28,
+            "boulderBounce": 291,
+            "mine": 18,
+            "gunShot": 470,
+            "returnCatch": 409,
+            "hoarder": 57,
+            "parry": 32,
+            "discharge": 9,
+            "fracture": 238,
+            "fusion:tempest": 1,
+            "fusion:tempest:trigger": 25,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 192,
+            "chainSeed": 45,
+            "harvest": 2
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 115,
+              "kills": 25,
+              "damageTaken": 0,
+              "enemies": 18,
+              "seals": 1,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 6,
+              "hp": 94,
+              "kills": 81,
+              "damageTaken": 33,
+              "enemies": 26,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 10,
+              "hp": 74,
+              "kills": 159,
+              "damageTaken": 65,
+              "enemies": 20,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 120,
+              "level": 14,
+              "hp": 78,
+              "kills": 260,
+              "damageTaken": 115,
+              "enemies": 24,
+              "seals": 2,
+              "fusions": [
+                "tempest"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 67,
+              "kills": 364,
+              "damageTaken": 126,
+              "enemies": 26,
+              "seals": 2,
+              "fusions": [
+                "tempest",
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 21,
+              "hp": 115,
+              "kills": 511,
+              "damageTaken": 152,
+              "enemies": 29,
+              "seals": 2,
+              "fusions": [
+                "tempest",
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 23,
+              "hp": 115,
+              "kills": 653,
+              "damageTaken": 163,
+              "enemies": 51,
+              "seals": 2,
+              "fusions": [
+                "tempest",
+                "thunderweb"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "objective",
+          "meta": "max",
+          "seed": 3,
+          "family": 0,
+          "phase": "dead",
+          "time": 207,
+          "level": 19,
+          "kills": 644,
+          "seals": 2,
+          "fusions": [
+            "firefly",
+            "thunderweb"
+          ],
+          "hp": 0,
+          "damageTaken": 250,
+          "firstLevelAt": 16.1333333333333,
+          "damageBy": {
+            "stone": 563.8012698412722,
+            "mine": 399.132380952384,
+            "boulder": 5499.940529100564,
+            "chain": 5147.478253968295,
+            "storm": 4964.913968253966,
+            "gun": 8943.445396825393,
+            "discharge": 68,
+            "decoy": 79.16095238096207,
+            "pillow": 312.14174603175127,
+            "fragment": 864.3084126984043,
+            "seed": 1267.7561904761835,
+            "firefly": 3061.2053968253554,
+            "parry": 369.398888888897,
+            "web": 4199.997248677292,
+            "cloud": 1540.8212698413138,
+            "bowling": 40,
+            "vortex": 88.63111111111758
+          },
+          "procs": {
+            "stoneShot": 60,
+            "mine": 12,
+            "ultimateShot": 22,
+            "boulderBounce": 210,
+            "gunShot": 416,
+            "hoarder": 32,
+            "discharge": 4,
+            "returnCatch": 363,
+            "fracture": 197,
+            "chainSeed": 43,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 221,
+            "parry": 22,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 154,
+            "harvest": 1,
+            "frost": 10,
+            "bowling": 2
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 115,
+              "kills": 26,
+              "damageTaken": 11,
+              "enemies": 17,
+              "seals": 1,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 93,
+              "kills": 92,
+              "damageTaken": 44,
+              "enemies": 15,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 70,
+              "kills": 153,
+              "damageTaken": 79,
+              "enemies": 26,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 120,
+              "level": 12,
+              "hp": 63,
+              "kills": 244,
+              "damageTaken": 116,
+              "enemies": 40,
+              "seals": 2,
+              "fusions": [
+                "firefly"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 16,
+              "hp": 68,
+              "kills": 355,
+              "damageTaken": 135,
+              "enemies": 35,
+              "seals": 2,
+              "fusions": [
+                "firefly",
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 19,
+              "hp": 69,
+              "kills": 502,
+              "damageTaken": 181,
+              "enemies": 38,
+              "seals": 2,
+              "fusions": [
+                "firefly",
+                "thunderweb"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 72,
+      "viewport": {
+        "width": 1120,
+        "height": 630
+      },
+      "sourceSHA256": "41044521439c29417e8b9589674ceaf8f7d80db34a741403eb7f679702fd1ef4",
+      "map": "night",
+      "tier": 0,
+      "limits": "Full-information automation, fixed policy/seed sample, not humans or evidence of fun. Kite does not interact, so cannot win by design.",
+      "groups": [
+        {
+          "mode": "idle",
+          "meta": "new",
+          "n": 2,
+          "wins": 0,
+          "sealedBoth": 0,
+          "medianSeconds": 26,
+          "medianDamageTaken": 100,
+          "medianLevel": 2,
+          "fusionRuns": 0
+        },
+        {
+          "mode": "idle",
+          "meta": "max",
+          "n": 2,
+          "wins": 0,
+          "sealedBoth": 0,
+          "medianSeconds": 30,
+          "medianDamageTaken": 115,
+          "medianLevel": 2,
+          "fusionRuns": 0
+        },
+        {
+          "mode": "kite",
+          "meta": "new",
+          "n": 2,
+          "wins": 0,
+          "sealedBoth": 0,
+          "medianSeconds": 111,
+          "medianDamageTaken": 112,
+          "medianLevel": 14,
+          "fusionRuns": 2
+        },
+        {
+          "mode": "kite",
+          "meta": "max",
+          "n": 2,
+          "wins": 0,
+          "sealedBoth": 0,
+          "medianSeconds": 138,
+          "medianDamageTaken": 151,
+          "medianLevel": 17,
+          "fusionRuns": 2
+        },
+        {
+          "mode": "objective",
+          "meta": "new",
+          "n": 2,
+          "wins": 2,
+          "sealedBoth": 2,
+          "medianSeconds": 231,
+          "medianDamageTaken": 109,
+          "medianLevel": 23,
+          "fusionRuns": 2
+        },
+        {
+          "mode": "objective",
+          "meta": "max",
+          "n": 2,
+          "wins": 2,
+          "sealedBoth": 2,
+          "medianSeconds": 233,
+          "medianDamageTaken": 144,
+          "medianLevel": 25,
+          "fusionRuns": 2
+        }
+      ],
+      "results": [
+        {
+          "mode": "idle",
+          "meta": "new",
+          "seed": 0,
+          "family": 0,
+          "phase": "dead",
+          "time": 26,
+          "level": 2,
+          "kills": 11,
+          "seals": 0,
+          "fusions": [],
+          "hp": 0,
+          "damageTaken": 100,
+          "firstLevelAt": 25.444444444445868,
+          "damageBy": {
+            "stone": 434.5736507936507,
+            "gun": 42
+          },
+          "procs": {
+            "stoneShot": 39,
+            "gunShot": 1
+          },
+          "samples": []
+        },
+        {
+          "mode": "idle",
+          "meta": "new",
+          "seed": 1,
+          "family": 1,
+          "phase": "dead",
+          "time": 30,
+          "level": 2,
+          "kills": 16,
+          "seals": 0,
+          "fusions": [],
+          "hp": 0,
+          "damageTaken": 100,
+          "firstLevelAt": 26.055555555557074,
+          "damageBy": {
+            "stone": 522.9749206349206,
+            "pillow": 84
+          },
+          "procs": {
+            "stoneShot": 45
+          },
+          "samples": []
+        },
+        {
+          "mode": "idle",
+          "meta": "max",
+          "seed": 0,
+          "family": 0,
+          "phase": "dead",
+          "time": 39,
+          "level": 4,
+          "kills": 44,
+          "seals": 0,
+          "fusions": [],
+          "hp": 0,
+          "damageTaken": 115,
+          "firstLevelAt": 22.95555555555659,
+          "damageBy": {
+            "stone": 384.16698412698406,
+            "gun": 960.0174603174647,
+            "storm": 172.64571428571577,
+            "chain": 100.61206349206444
+          },
+          "procs": {
+            "stoneShot": 35,
+            "gunShot": 47
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 40,
+              "kills": 25,
+              "damageTaken": 75,
+              "enemies": 12,
+              "seals": 0,
+              "fusions": []
+            }
+          ]
+        },
+        {
+          "mode": "idle",
+          "meta": "max",
+          "seed": 1,
+          "family": 1,
+          "phase": "dead",
+          "time": 30,
+          "level": 2,
+          "kills": 16,
+          "seals": 0,
+          "fusions": [],
+          "hp": 0,
+          "damageTaken": 115,
+          "firstLevelAt": 24.20000000000123,
+          "damageBy": {
+            "stone": 536.9749206349206,
+            "pillow": 84
+          },
+          "procs": {
+            "stoneShot": 46
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 2,
+              "hp": 10,
+              "kills": 16,
+              "damageTaken": 105,
+              "enemies": 21,
+              "seals": 0,
+              "fusions": []
+            }
+          ]
+        },
+        {
+          "mode": "kite",
+          "meta": "new",
+          "seed": 0,
+          "family": 0,
+          "phase": "playing",
+          "time": 420,
+          "level": 40,
+          "kills": 1902,
+          "seals": 0,
+          "fusions": [
+            "thunderweb",
+            "firefly"
+          ],
+          "hp": 100,
+          "damageTaken": 216,
+          "firstLevelAt": 9.644444444444414,
+          "damageBy": {
+            "stone": 150.69079365079364,
+            "boulder": 20514.059312173293,
+            "gun": 28993.556666670895,
+            "chain": 10065.33619047758,
+            "storm": 14258.728888890446,
+            "mine": 880.9828571430161,
+            "discharge": 132.21825396828592,
+            "seed": 2849.722857143059,
+            "cloud": 6252.837460318622,
+            "web": 31461.59349207107,
+            "fragment": 2902.4888888891346,
+            "firefly": 19484.634656087615,
+            "parry": 1014.0379365081013,
+            "pillow": 1054.81682539699,
+            "vortex": 718.6342857144731,
+            "bowling": 252.9009523810168,
+            "decoy": 63.84888888891563
+          },
+          "procs": {
+            "stoneShot": 13,
+            "ultimateShot": 41,
+            "gunShot": 1060,
+            "boulderBounce": 420,
+            "mine": 24,
+            "discharge": 6,
+            "chainSeed": 105,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 950,
+            "returnCatch": 795,
+            "fracture": 571,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 716,
+            "parry": 60,
+            "hoarder": 139,
+            "bowling": 14
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 2,
+              "hp": 100,
+              "kills": 26,
+              "damageTaken": 0,
+              "enemies": 11,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 89,
+              "kills": 89,
+              "damageTaken": 11,
+              "enemies": 12,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 100,
+              "kills": 159,
+              "damageTaken": 11,
+              "enemies": 14,
+              "seals": 0,
+              "fusions": [
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 15,
+              "hp": 100,
+              "kills": 264,
+              "damageTaken": 23,
+              "enemies": 14,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 79,
+              "kills": 365,
+              "damageTaken": 44,
+              "enemies": 19,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 91,
+              "kills": 505,
+              "damageTaken": 44,
+              "enemies": 29,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 23,
+              "hp": 100,
+              "kills": 653,
+              "damageTaken": 63,
+              "enemies": 44,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 240,
+              "level": 26,
+              "hp": 100,
+              "kills": 824,
+              "damageTaken": 82,
+              "enemies": 41,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 270,
+              "level": 28,
+              "hp": 81,
+              "kills": 1014,
+              "damageTaken": 101,
+              "enemies": 34,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 300,
+              "level": 31,
+              "hp": 100,
+              "kills": 1178,
+              "damageTaken": 112,
+              "enemies": 49,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 330,
+              "level": 33,
+              "hp": 89,
+              "kills": 1353,
+              "damageTaken": 131,
+              "enemies": 57,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 360,
+              "level": 35,
+              "hp": 70,
+              "kills": 1549,
+              "damageTaken": 183,
+              "enemies": 40,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 390,
+              "level": 37,
+              "hp": 98,
+              "kills": 1704,
+              "damageTaken": 205,
+              "enemies": 68,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 420,
+              "level": 40,
+              "hp": 100,
+              "kills": 1901,
+              "damageTaken": 216,
+              "enemies": 54,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "kite",
+          "meta": "new",
+          "seed": 1,
+          "family": 1,
+          "phase": "dead",
+          "time": 111,
+          "level": 14,
+          "kills": 222,
+          "seals": 0,
+          "fusions": [
+            "dreamoven"
+          ],
+          "hp": 0,
+          "damageTaken": 112,
+          "firstLevelAt": 16.266666666666655,
+          "damageBy": {
+            "stone": 951.4406349206395,
+            "mine": 664.0479365079316,
+            "boulder": 2279.0536507936445,
+            "pillow": 343.33396825396824,
+            "bomb": 720.7261904761941,
+            "chain": 1112.5914285714393,
+            "parry": 179.99793650793922,
+            "gun": 4258.4966666666705,
+            "fire": 122.9771428571396,
+            "spread": 70,
+            "ovenTouch": 77.2644444444438,
+            "fusionBlast": 187.09126984126792,
+            "fragment": 48.48111111111085
+          },
+          "procs": {
+            "stoneShot": 72,
+            "ultimateShot": 11,
+            "boulderBounce": 107,
+            "mine": 20,
+            "returnCatch": 165,
+            "parry": 12,
+            "gunShot": 151,
+            "wildfire": 8,
+            "fusion:dreamoven": 1,
+            "at:fusion:dreamoven:trigger": 111.72222222220758,
+            "fusion:dreamoven:trigger": 15,
+            "ovenTouch": 7,
+            "fusion:explosion": 4,
+            "fracture": 16
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 3,
+              "hp": 100,
+              "kills": 19,
+              "damageTaken": 0,
+              "enemies": 18,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 23,
+              "kills": 82,
+              "damageTaken": 77,
+              "enemies": 19,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 22,
+              "kills": 148,
+              "damageTaken": 90,
+              "enemies": 25,
+              "seals": 0,
+              "fusions": [
+                "dreamoven"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "kite",
+          "meta": "max",
+          "seed": 0,
+          "family": 0,
+          "phase": "playing",
+          "time": 420,
+          "level": 40,
+          "kills": 1902,
+          "seals": 0,
+          "fusions": [
+            "thunderweb",
+            "firefly"
+          ],
+          "hp": 91,
+          "damageTaken": 249,
+          "firstLevelAt": 9.533333333333303,
+          "damageBy": {
+            "stone": 122.69079365079364,
+            "mine": 945.2011111111516,
+            "gun": 29203.446666671192,
+            "boulder": 21701.992222226258,
+            "chain": 12578.078571429925,
+            "storm": 14330.902063493872,
+            "pillow": 1676.8820634925903,
+            "discharge": 135.32253968259067,
+            "seed": 3323.440634920914,
+            "cloud": 4935.284444445658,
+            "web": 31186.62862434567,
+            "fragment": 2630.0134920637647,
+            "firefly": 16241.225185187774,
+            "parry": 1197.1112698414806,
+            "decoy": 250.31523809531097,
+            "bowling": 381.057777777821,
+            "vortex": 499.00539682559423
+          },
+          "procs": {
+            "stoneShot": 13,
+            "ultimateShot": 44,
+            "boulderBounce": 429,
+            "mine": 25,
+            "gunShot": 1047,
+            "discharge": 7,
+            "chainSeed": 117,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 936,
+            "returnCatch": 784,
+            "fracture": 560,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 700,
+            "parry": 70,
+            "hoarder": 145,
+            "bowling": 20
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 3,
+              "hp": 115,
+              "kills": 26,
+              "damageTaken": 0,
+              "enemies": 11,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 69,
+              "kills": 90,
+              "damageTaken": 46,
+              "enemies": 11,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 10,
+              "hp": 59,
+              "kills": 154,
+              "damageTaken": 68,
+              "enemies": 19,
+              "seals": 0,
+              "fusions": [
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 14,
+              "hp": 83,
+              "kills": 260,
+              "damageTaken": 68,
+              "enemies": 18,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 75,
+              "kills": 360,
+              "damageTaken": 76,
+              "enemies": 24,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 57,
+              "kills": 497,
+              "damageTaken": 106,
+              "enemies": 37,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 23,
+              "hp": 115,
+              "kills": 651,
+              "damageTaken": 117,
+              "enemies": 46,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 240,
+              "level": 26,
+              "hp": 115,
+              "kills": 825,
+              "damageTaken": 117,
+              "enemies": 40,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 270,
+              "level": 29,
+              "hp": 115,
+              "kills": 1009,
+              "damageTaken": 136,
+              "enemies": 39,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 300,
+              "level": 32,
+              "hp": 115,
+              "kills": 1187,
+              "damageTaken": 136,
+              "enemies": 40,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 330,
+              "level": 34,
+              "hp": 115,
+              "kills": 1338,
+              "damageTaken": 149,
+              "enemies": 72,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 360,
+              "level": 36,
+              "hp": 115,
+              "kills": 1527,
+              "damageTaken": 160,
+              "enemies": 62,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 390,
+              "level": 38,
+              "hp": 104,
+              "kills": 1732,
+              "damageTaken": 203,
+              "enemies": 40,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 420,
+              "level": 40,
+              "hp": 91,
+              "kills": 1902,
+              "damageTaken": 249,
+              "enemies": 53,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "kite",
+          "meta": "max",
+          "seed": 1,
+          "family": 1,
+          "phase": "dead",
+          "time": 138,
+          "level": 17,
+          "kills": 319,
+          "seals": 0,
+          "fusions": [
+            "dreamoven",
+            "popcorn"
+          ],
+          "hp": 0,
+          "damageTaken": 151,
+          "firstLevelAt": 16.666666666666718,
+          "damageBy": {
+            "stone": 952.2126984127027,
+            "boulder": 3868.9633333332995,
+            "bomb": 760.3759259259106,
+            "pillow": 388.4374603174611,
+            "mine": 289.75492063492254,
+            "chain": 1934.9993650793347,
+            "gun": 5297.25555555545,
+            "parry": 430.41523809523505,
+            "fire": 486.85989417986525,
+            "fusionBlast": 1711.3696825396141,
+            "bowling": 60,
+            "ovenTouch": 60,
+            "fragment": 265.66999999999325,
+            "spread": 20,
+            "seed": 290.99238095237536
+          },
+          "procs": {
+            "stoneShot": 76,
+            "ultimateShot": 13,
+            "boulderBounce": 131,
+            "mine": 11,
+            "returnCatch": 226,
+            "gunShot": 215,
+            "parry": 22,
+            "wildfire": 31,
+            "fusion:dreamoven": 1,
+            "fusion:explosion": 66,
+            "bowling": 3,
+            "at:fusion:dreamoven:trigger": 138.6222222222056,
+            "fusion:dreamoven:trigger": 20,
+            "ovenTouch": 7,
+            "fracture": 59,
+            "fusion:popcorn": 1,
+            "fusion:popcorn:ignite": 121,
+            "chainSeed": 10,
+            "hoarder": 3
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 102,
+              "kills": 21,
+              "damageTaken": 13,
+              "enemies": 16,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 58,
+              "kills": 87,
+              "damageTaken": 57,
+              "enemies": 14,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 48,
+              "kills": 146,
+              "damageTaken": 79,
+              "enemies": 27,
+              "seals": 0,
+              "fusions": [
+                "dreamoven"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 15,
+              "hp": 15,
+              "kills": 252,
+              "damageTaken": 124,
+              "enemies": 26,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "objective",
+          "meta": "new",
+          "seed": 0,
+          "family": 0,
+          "phase": "won",
+          "time": 231,
+          "level": 23,
+          "kills": 757,
+          "seals": 2,
+          "fusions": [
+            "thunderweb",
+            "firefly"
+          ],
+          "hp": 77,
+          "damageTaken": 157,
+          "firstLevelAt": 14.78888888888884,
+          "damageBy": {
+            "stone": 233.44412698412697,
+            "mine": 121.97523809523808,
+            "boulder": 3515.3990476191743,
+            "gun": 12647.702539682621,
+            "storm": 7133.640634920675,
+            "chain": 3942.0396825397656,
+            "discharge": 106,
+            "seed": 1731.2198412698674,
+            "cloud": 2148.165714285761,
+            "web": 8508.118095238373,
+            "fragment": 997.118253968266,
+            "firefly": 5940.122539682921,
+            "parry": 407.8555555555564,
+            "vortex": 102,
+            "pillow": 162.8736507936652,
+            "decoy": 65,
+            "bowling": 40
+          },
+          "procs": {
+            "stoneShot": 20,
+            "mine": 5,
+            "ultimateShot": 16,
+            "boulderBounce": 147,
+            "gunShot": 576,
+            "discharge": 6,
+            "hoarder": 52,
+            "chainSeed": 60,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 305,
+            "returnCatch": 391,
+            "fracture": 244,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 321,
+            "parry": 26,
+            "harvest": 2,
+            "bowling": 2
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 100,
+              "kills": 34,
+              "damageTaken": 0,
+              "enemies": 9,
+              "seals": 1,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 90,
+              "kills": 93,
+              "damageTaken": 33,
+              "enemies": 14,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 79,
+              "kills": 165,
+              "damageTaken": 44,
+              "enemies": 14,
+              "seals": 2,
+              "fusions": [
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 15,
+              "hp": 78,
+              "kills": 264,
+              "damageTaken": 66,
+              "enemies": 20,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 41,
+              "kills": 372,
+              "damageTaken": 103,
+              "enemies": 18,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 19,
+              "hp": 100,
+              "kills": 509,
+              "damageTaken": 103,
+              "enemies": 31,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 22,
+              "hp": 100,
+              "kills": 664,
+              "damageTaken": 122,
+              "enemies": 40,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "objective",
+          "meta": "new",
+          "seed": 1,
+          "family": 1,
+          "phase": "won",
+          "time": 235,
+          "level": 25,
+          "kills": 769,
+          "seals": 2,
+          "fusions": [
+            "dreamoven",
+            "popcorn"
+          ],
+          "hp": 100,
+          "damageTaken": 109,
+          "firstLevelAt": 12.999999999999957,
+          "damageBy": {
+            "stone": 1201.3400000000056,
+            "mine": 877.745449735441,
+            "boulder": 9516.208412698827,
+            "bomb": 1918.4249206349264,
+            "chain": 5524.374285714449,
+            "pillow": 876.8346031746233,
+            "parry": 638.728730158747,
+            "gun": 12818.112433862823,
+            "fire": 2716.246984127027,
+            "vortex": 263.55238095238695,
+            "fragment": 1155.2134920634992,
+            "spread": 1574.4533333333547,
+            "decoy": 202.88190476190366,
+            "ovenTouch": 358.90523809527116,
+            "fusionBlast": 7994.050370370463,
+            "seed": 1447.6803174603656,
+            "bowling": 20
+          },
+          "procs": {
+            "stoneShot": 78,
+            "ultimateShot": 25,
+            "mine": 26,
+            "boulderBounce": 250,
+            "returnCatch": 465,
+            "parry": 39,
+            "gunShot": 452,
+            "hoarder": 56,
+            "fracture": 297,
+            "wildfire": 179,
+            "fusion:dreamoven": 1,
+            "at:fusion:dreamoven:trigger": 235.54444444450496,
+            "fusion:dreamoven:trigger": 63,
+            "ovenTouch": 31,
+            "fusion:explosion": 262,
+            "fusion:popcorn": 1,
+            "fusion:popcorn:ignite": 538,
+            "chainSeed": 53,
+            "harvest": 2,
+            "bowling": 1
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 100,
+              "kills": 22,
+              "damageTaken": 11,
+              "enemies": 18,
+              "seals": 1,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 8,
+              "hp": 90,
+              "kills": 90,
+              "damageTaken": 33,
+              "enemies": 17,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 100,
+              "kills": 159,
+              "damageTaken": 33,
+              "enemies": 20,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 120,
+              "level": 15,
+              "hp": 92,
+              "kills": 260,
+              "damageTaken": 41,
+              "enemies": 24,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 18,
+              "hp": 100,
+              "kills": 364,
+              "damageTaken": 41,
+              "enemies": 26,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 100,
+              "kills": 465,
+              "damageTaken": 41,
+              "enemies": 75,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 24,
+              "hp": 100,
+              "kills": 652,
+              "damageTaken": 87,
+              "enemies": 52,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "objective",
+          "meta": "max",
+          "seed": 0,
+          "family": 0,
+          "phase": "won",
+          "time": 235,
+          "level": 25,
+          "kills": 776,
+          "seals": 2,
+          "fusions": [
+            "thunderweb",
+            "firefly"
+          ],
+          "hp": 115,
+          "damageTaken": 144,
+          "firstLevelAt": 15.966666666666613,
+          "damageBy": {
+            "stone": 260.8336507936508,
+            "mine": 372.9866666666672,
+            "boulder": 6894.241111111326,
+            "gun": 11471.561746031872,
+            "chain": 4353.08142857155,
+            "storm": 6422.369047619167,
+            "seed": 1383.1568253968549,
+            "web": 9496.900158730467,
+            "cloud": 1993.9222222224578,
+            "discharge": 149.85317460318862,
+            "vortex": 220.27539682540305,
+            "decoy": 156.5917460317501,
+            "fragment": 858.866190476198,
+            "firefly": 4744.516507936551,
+            "parry": 338.69142857143925,
+            "pillow": 100.25111111112388,
+            "bowling": 20
+          },
+          "procs": {
+            "stoneShot": 22,
+            "mine": 12,
+            "ultimateShot": 23,
+            "boulderBounce": 220,
+            "gunShot": 563,
+            "hoarder": 62,
+            "chainSeed": 57,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 280,
+            "discharge": 6,
+            "returnCatch": 365,
+            "fracture": 213,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 260,
+            "parry": 19,
+            "harvest": 2,
+            "bowling": 1
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 104,
+              "kills": 29,
+              "damageTaken": 11,
+              "enemies": 14,
+              "seals": 1,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 8,
+              "hp": 72,
+              "kills": 94,
+              "damageTaken": 55,
+              "enemies": 13,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 10,
+              "hp": 71,
+              "kills": 161,
+              "damageTaken": 68,
+              "enemies": 18,
+              "seals": 2,
+              "fusions": [
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 13,
+              "hp": 76,
+              "kills": 255,
+              "damageTaken": 87,
+              "enemies": 29,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 65,
+              "kills": 363,
+              "damageTaken": 98,
+              "enemies": 27,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 104,
+              "kills": 494,
+              "damageTaken": 109,
+              "enemies": 46,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 23,
+              "hp": 115,
+              "kills": 649,
+              "damageTaken": 122,
+              "enemies": 55,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "objective",
+          "meta": "max",
+          "seed": 1,
+          "family": 1,
+          "phase": "won",
+          "time": 233,
+          "level": 25,
+          "kills": 761,
+          "seals": 2,
+          "fusions": [
+            "dreamoven",
+            "popcorn"
+          ],
+          "hp": 115,
+          "damageTaken": 165,
+          "firstLevelAt": 10.622222222222188,
+          "damageBy": {
+            "stone": 946.8911111111167,
+            "mine": 1063.4153968254159,
+            "boulder": 10348.00333333362,
+            "pillow": 660.9307936507901,
+            "bomb": 1615.3190476190753,
+            "chain": 5739.898888889039,
+            "parry": 315.75428571428586,
+            "gun": 12615.265714286092,
+            "fire": 2858.0461375662067,
+            "fragment": 1057.611746031763,
+            "spread": 1572.7309523809927,
+            "bowling": 17.54476190476049,
+            "vortex": 272.28968253968833,
+            "decoy": 359.8219047619086,
+            "fusionBlast": 7304.160370370545,
+            "ovenTouch": 234.4515873015861,
+            "seed": 1863.5428571428768
+          },
+          "procs": {
+            "stoneShot": 75,
+            "ultimateShot": 27,
+            "boulderBounce": 258,
+            "mine": 31,
+            "returnCatch": 469,
+            "parry": 22,
+            "gunShot": 453,
+            "hoarder": 56,
+            "fracture": 292,
+            "wildfire": 154,
+            "bowling": 1,
+            "fusion:dreamoven": 1,
+            "at:fusion:dreamoven:trigger": 233.4000000000588,
+            "fusion:dreamoven:trigger": 65,
+            "fusion:explosion": 245,
+            "ovenTouch": 21,
+            "fusion:popcorn": 1,
+            "fusion:popcorn:ignite": 528,
+            "chainSeed": 62,
+            "harvest": 2
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 115,
+              "kills": 20,
+              "damageTaken": 0,
+              "enemies": 20,
+              "seals": 1,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 8,
+              "hp": 94,
+              "kills": 87,
+              "damageTaken": 33,
+              "enemies": 20,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 106,
+              "kills": 155,
+              "damageTaken": 33,
+              "enemies": 24,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 120,
+              "level": 15,
+              "hp": 70,
+              "kills": 261,
+              "damageTaken": 81,
+              "enemies": 23,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 39,
+              "kills": 353,
+              "damageTaken": 124,
+              "enemies": 37,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 104,
+              "kills": 496,
+              "damageTaken": 146,
+              "enemies": 44,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 23,
+              "hp": 115,
+              "kills": 637,
+              "damageTaken": 154,
+              "enemies": 67,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 72,
+      "viewport": {
+        "width": 1120,
+        "height": 630
+      },
+      "sourceSHA256": "41044521439c29417e8b9589674ceaf8f7d80db34a741403eb7f679702fd1ef4",
+      "map": "ember",
+      "tier": 0,
+      "limits": "Full-information automation, fixed policy/seed sample, not humans or evidence of fun. Kite does not interact, so cannot win by design.",
+      "groups": [
+        {
+          "mode": "idle",
+          "meta": "new",
+          "n": 2,
+          "wins": 0,
+          "sealedBoth": 0,
+          "medianSeconds": 25,
+          "medianDamageTaken": 100,
+          "medianLevel": 1,
+          "fusionRuns": 0
+        },
+        {
+          "mode": "idle",
+          "meta": "max",
+          "n": 2,
+          "wins": 0,
+          "sealedBoth": 0,
+          "medianSeconds": 30,
+          "medianDamageTaken": 115,
+          "medianLevel": 2,
+          "fusionRuns": 0
+        },
+        {
+          "mode": "kite",
+          "meta": "new",
+          "n": 2,
+          "wins": 0,
+          "sealedBoth": 0,
+          "medianSeconds": 420,
+          "medianDamageTaken": 290,
+          "medianLevel": 40,
+          "fusionRuns": 2
+        },
+        {
+          "mode": "kite",
+          "meta": "max",
+          "n": 2,
+          "wins": 0,
+          "sealedBoth": 0,
+          "medianSeconds": 373,
+          "medianDamageTaken": 342,
+          "medianLevel": 36,
+          "fusionRuns": 2
+        },
+        {
+          "mode": "objective",
+          "meta": "new",
+          "n": 2,
+          "wins": 2,
+          "sealedBoth": 2,
+          "medianSeconds": 224,
+          "medianDamageTaken": 65,
+          "medianLevel": 22,
+          "fusionRuns": 2
+        },
+        {
+          "mode": "objective",
+          "meta": "max",
+          "n": 2,
+          "wins": 2,
+          "sealedBoth": 2,
+          "medianSeconds": 227,
+          "medianDamageTaken": 146,
+          "medianLevel": 24,
+          "fusionRuns": 2
+        }
+      ],
+      "results": [
+        {
+          "mode": "idle",
+          "meta": "new",
+          "seed": 0,
+          "family": 0,
+          "phase": "dead",
+          "time": 25,
+          "level": 1,
+          "kills": 10,
+          "seals": 0,
+          "fusions": [],
+          "hp": 0,
+          "damageTaken": 100,
+          "firstLevelAt": null,
+          "damageBy": {
+            "stone": 410.5507936507936
+          },
+          "procs": {
+            "stoneShot": 38
+          },
+          "samples": []
+        },
+        {
+          "mode": "idle",
+          "meta": "new",
+          "seed": 1,
+          "family": 1,
+          "phase": "dead",
+          "time": 29,
+          "level": 2,
+          "kills": 15,
+          "seals": 0,
+          "fusions": [],
+          "hp": 0,
+          "damageTaken": 100,
+          "firstLevelAt": 24.20000000000123,
+          "damageBy": {
+            "stone": 513.8960317460317,
+            "pillow": 42
+          },
+          "procs": {
+            "stoneShot": 44
+          },
+          "samples": []
+        },
+        {
+          "mode": "idle",
+          "meta": "max",
+          "seed": 0,
+          "family": 0,
+          "phase": "dead",
+          "time": 32,
+          "level": 4,
+          "kills": 30,
+          "seals": 0,
+          "fusions": [],
+          "hp": 0,
+          "damageTaken": 115,
+          "firstLevelAt": 24.20000000000123,
+          "damageBy": {
+            "stone": 396.5507936507936,
+            "gun": 528.6711111111126,
+            "chain": 127.69523809523844,
+            "storm": 40.69904761904795
+          },
+          "procs": {
+            "stoneShot": 37,
+            "gunShot": 23
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 1,
+              "kills": 24,
+              "damageTaken": 114,
+              "enemies": 13,
+              "seals": 0,
+              "fusions": []
+            }
+          ]
+        },
+        {
+          "mode": "idle",
+          "meta": "max",
+          "seed": 1,
+          "family": 1,
+          "phase": "dead",
+          "time": 30,
+          "level": 2,
+          "kills": 16,
+          "seals": 0,
+          "fusions": [],
+          "hp": 0,
+          "damageTaken": 115,
+          "firstLevelAt": 24.20000000000123,
+          "damageBy": {
+            "stone": 527.8960317460317,
+            "pillow": 65.07888888888895
+          },
+          "procs": {
+            "stoneShot": 45
+          },
+          "samples": []
+        },
+        {
+          "mode": "kite",
+          "meta": "new",
+          "seed": 0,
+          "family": 0,
+          "phase": "playing",
+          "time": 420,
+          "level": 40,
+          "kills": 1897,
+          "seals": 0,
+          "fusions": [
+            "thunderweb",
+            "firefly"
+          ],
+          "hp": 100,
+          "damageTaken": 290,
+          "firstLevelAt": 9.377777777777748,
+          "damageBy": {
+            "stone": 122.0984126984127,
+            "boulder": 26293.73634921067,
+            "gun": 27470.02925926345,
+            "chain": 10863.544021165333,
+            "storm": 13918.770793652437,
+            "discharge": 244.25015873031313,
+            "seed": 2926.0360317462937,
+            "pillow": 1736.499841270209,
+            "mine": 949.0966666668869,
+            "cloud": 5891.321111112199,
+            "web": 29773.99576720268,
+            "fragment": 2660.9857142859814,
+            "firefly": 16289.063174605848,
+            "parry": 697.3453968256049,
+            "vortex": 563.8425396827204,
+            "bowling": 259.8952380952651,
+            "decoy": 264.82095238106325
+          },
+          "procs": {
+            "stoneShot": 11,
+            "ultimateShot": 49,
+            "gunShot": 1031,
+            "boulderBounce": 492,
+            "discharge": 7,
+            "chainSeed": 115,
+            "mine": 22,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 875,
+            "returnCatch": 784,
+            "fracture": 530,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 679,
+            "hoarder": 138,
+            "parry": 47,
+            "harvest": 1,
+            "bowling": 13
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 2,
+              "hp": 100,
+              "kills": 24,
+              "damageTaken": 0,
+              "enemies": 13,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 6,
+              "hp": 87,
+              "kills": 84,
+              "damageTaken": 13,
+              "enemies": 17,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 73,
+              "kills": 158,
+              "damageTaken": 39,
+              "enemies": 15,
+              "seals": 0,
+              "fusions": [
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 14,
+              "hp": 85,
+              "kills": 263,
+              "damageTaken": 51,
+              "enemies": 15,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 72,
+              "kills": 371,
+              "damageTaken": 64,
+              "enemies": 13,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 72,
+              "kills": 503,
+              "damageTaken": 64,
+              "enemies": 31,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 23,
+              "hp": 100,
+              "kills": 645,
+              "damageTaken": 75,
+              "enemies": 52,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 240,
+              "level": 25,
+              "hp": 76,
+              "kills": 823,
+              "damageTaken": 110,
+              "enemies": 42,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 270,
+              "level": 28,
+              "hp": 84,
+              "kills": 1003,
+              "damageTaken": 151,
+              "enemies": 45,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 300,
+              "level": 31,
+              "hp": 100,
+              "kills": 1155,
+              "damageTaken": 183,
+              "enemies": 72,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 330,
+              "level": 33,
+              "hp": 100,
+              "kills": 1367,
+              "damageTaken": 212,
+              "enemies": 43,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 360,
+              "level": 35,
+              "hp": 85,
+              "kills": 1540,
+              "damageTaken": 252,
+              "enemies": 49,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 390,
+              "level": 37,
+              "hp": 78,
+              "kills": 1709,
+              "damageTaken": 274,
+              "enemies": 63,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 420,
+              "level": 40,
+              "hp": 100,
+              "kills": 1897,
+              "damageTaken": 290,
+              "enemies": 58,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "kite",
+          "meta": "new",
+          "seed": 1,
+          "family": 1,
+          "phase": "playing",
+          "time": 420,
+          "level": 41,
+          "kills": 1902,
+          "seals": 0,
+          "fusions": [
+            "dreamoven",
+            "firefly"
+          ],
+          "hp": 100,
+          "damageTaken": 330,
+          "firstLevelAt": 18.011111111111372,
+          "damageBy": {
+            "stone": 938.0204761904811,
+            "mine": 2029.8623809528715,
+            "boulder": 37292.550634927095,
+            "pillow": 3094.2915873021175,
+            "bomb": 3308.0097354503478,
+            "chain": 14324.284761906949,
+            "parry": 2575.11492063551,
+            "gun": 32031.676402121386,
+            "fire": 2130.8866666671156,
+            "ovenTouch": 2592.737301588035,
+            "fusionBlast": 7082.777354498727,
+            "spread": 2699.3919047628724,
+            "fragment": 3529.8566666669153,
+            "seed": 4793.503968254548,
+            "firefly": 20052.712857145907,
+            "vortex": 954.4222222226309,
+            "bowling": 394.28523809533124,
+            "decoy": 491.83936507953825
+          },
+          "procs": {
+            "stoneShot": 73,
+            "ultimateShot": 64,
+            "boulderBounce": 651,
+            "mine": 54,
+            "returnCatch": 861,
+            "parry": 166,
+            "gunShot": 874,
+            "wildfire": 197,
+            "fusion:dreamoven": 1,
+            "fusion:explosion": 114,
+            "at:fusion:dreamoven:trigger": 421.52222222243074,
+            "fusion:dreamoven:trigger": 165,
+            "ovenTouch": 137,
+            "fracture": 609,
+            "chainSeed": 160,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 653,
+            "hoarder": 149,
+            "bowling": 21
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 3,
+              "hp": 100,
+              "kills": 17,
+              "damageTaken": 0,
+              "enemies": 20,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 78,
+              "kills": 74,
+              "damageTaken": 22,
+              "enemies": 27,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 90,
+              "kills": 147,
+              "damageTaken": 22,
+              "enemies": 26,
+              "seals": 0,
+              "fusions": [
+                "dreamoven"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 13,
+              "hp": 45,
+              "kills": 249,
+              "damageTaken": 67,
+              "enemies": 29,
+              "seals": 0,
+              "fusions": [
+                "dreamoven"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 61,
+              "kills": 359,
+              "damageTaken": 75,
+              "enemies": 25,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "firefly"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 49,
+              "kills": 496,
+              "damageTaken": 99,
+              "enemies": 38,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "firefly"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 23,
+              "hp": 100,
+              "kills": 652,
+              "damageTaken": 120,
+              "enemies": 45,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "firefly"
+              ]
+            },
+            {
+              "time": 240,
+              "level": 26,
+              "hp": 89,
+              "kills": 803,
+              "damageTaken": 131,
+              "enemies": 62,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "firefly"
+              ]
+            },
+            {
+              "time": 270,
+              "level": 29,
+              "hp": 81,
+              "kills": 1007,
+              "damageTaken": 185,
+              "enemies": 41,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "firefly"
+              ]
+            },
+            {
+              "time": 300,
+              "level": 32,
+              "hp": 98,
+              "kills": 1161,
+              "damageTaken": 212,
+              "enemies": 66,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "firefly"
+              ]
+            },
+            {
+              "time": 330,
+              "level": 34,
+              "hp": 84,
+              "kills": 1367,
+              "damageTaken": 252,
+              "enemies": 43,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "firefly"
+              ]
+            },
+            {
+              "time": 360,
+              "level": 37,
+              "hp": 100,
+              "kills": 1543,
+              "damageTaken": 295,
+              "enemies": 46,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "firefly"
+              ]
+            },
+            {
+              "time": 390,
+              "level": 38,
+              "hp": 100,
+              "kills": 1693,
+              "damageTaken": 295,
+              "enemies": 79,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "firefly"
+              ]
+            },
+            {
+              "time": 420,
+              "level": 41,
+              "hp": 100,
+              "kills": 1902,
+              "damageTaken": 330,
+              "enemies": 53,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "firefly"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "kite",
+          "meta": "max",
+          "seed": 0,
+          "family": 0,
+          "phase": "dead",
+          "time": 373,
+          "level": 36,
+          "kills": 1616,
+          "seals": 0,
+          "fusions": [
+            "thunderweb",
+            "firefly"
+          ],
+          "hp": 0,
+          "damageTaken": 342,
+          "firstLevelAt": 9.29999999999997,
+          "damageBy": {
+            "stone": 122.0984126984127,
+            "boulder": 14856.666402119004,
+            "gun": 26056.842380955,
+            "chain": 9034.743809524953,
+            "storm": 11749.58989418101,
+            "discharge": 205.66730158738645,
+            "mine": 1054.255396825537,
+            "pillow": 1253.7653968256875,
+            "seed": 2832.0365079367625,
+            "cloud": 4547.064814815606,
+            "web": 23694.88746032193,
+            "fragment": 2492.369682539831,
+            "firefly": 13710.381587303189,
+            "parry": 1040.0014285715997,
+            "vortex": 292.5777777778525,
+            "decoy": 119.6857142857594,
+            "bowling": 154.55047619049256
+          },
+          "procs": {
+            "stoneShot": 12,
+            "ultimateShot": 39,
+            "boulderBounce": 400,
+            "gunShot": 922,
+            "discharge": 8,
+            "mine": 29,
+            "chainSeed": 104,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 757,
+            "returnCatch": 661,
+            "fracture": 456,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 570,
+            "parry": 61,
+            "hoarder": 114,
+            "bowling": 8
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 2,
+              "hp": 115,
+              "kills": 24,
+              "damageTaken": 0,
+              "enemies": 13,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 82,
+              "kills": 82,
+              "damageTaken": 33,
+              "enemies": 19,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 94,
+              "kills": 153,
+              "damageTaken": 33,
+              "enemies": 20,
+              "seals": 0,
+              "fusions": [
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 14,
+              "hp": 95,
+              "kills": 266,
+              "damageTaken": 56,
+              "enemies": 12,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 68,
+              "kills": 368,
+              "damageTaken": 83,
+              "enemies": 16,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 69,
+              "kills": 499,
+              "damageTaken": 94,
+              "enemies": 35,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 23,
+              "hp": 104,
+              "kills": 657,
+              "damageTaken": 113,
+              "enemies": 40,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 240,
+              "level": 26,
+              "hp": 115,
+              "kills": 829,
+              "damageTaken": 137,
+              "enemies": 36,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 270,
+              "level": 29,
+              "hp": 115,
+              "kills": 991,
+              "damageTaken": 159,
+              "enemies": 57,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 300,
+              "level": 31,
+              "hp": 113,
+              "kills": 1182,
+              "damageTaken": 194,
+              "enemies": 45,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 330,
+              "level": 34,
+              "hp": 107,
+              "kills": 1368,
+              "damageTaken": 202,
+              "enemies": 42,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 360,
+              "level": 36,
+              "hp": 59,
+              "kills": 1529,
+              "damageTaken": 283,
+              "enemies": 60,
+              "seals": 0,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "kite",
+          "meta": "max",
+          "seed": 1,
+          "family": 1,
+          "phase": "playing",
+          "time": 420,
+          "level": 41,
+          "kills": 1898,
+          "seals": 0,
+          "fusions": [
+            "dreamoven",
+            "popcorn"
+          ],
+          "hp": 102,
+          "damageTaken": 411,
+          "firstLevelAt": 17.400000000000166,
+          "damageBy": {
+            "stone": 1164.629047619051,
+            "boulder": 34198.7354497414,
+            "mine": 1433.51904761917,
+            "bomb": 3146.733809524457,
+            "pillow": 3042.2428571433406,
+            "chain": 14430.298253970344,
+            "gun": 29306.659841274442,
+            "parry": 1789.5146031748957,
+            "fire": 6180.12661375787,
+            "spread": 4340.140000000581,
+            "fusionBlast": 30059.07111111686,
+            "fragment": 2855.3482539685915,
+            "ovenTouch": 1824.1296825403722,
+            "seed": 4548.96761904805,
+            "vortex": 842.2676190478066,
+            "bowling": 295.8323809524129,
+            "decoy": 462.640317460498
+          },
+          "procs": {
+            "stoneShot": 76,
+            "ultimateShot": 56,
+            "boulderBounce": 567,
+            "mine": 44,
+            "returnCatch": 866,
+            "gunShot": 897,
+            "parry": 128,
+            "wildfire": 581,
+            "fusion:dreamoven": 1,
+            "at:fusion:dreamoven:trigger": 421.6666666668753,
+            "fusion:dreamoven:trigger": 162,
+            "fusion:explosion": 720,
+            "fracture": 618,
+            "ovenTouch": 125,
+            "fusion:popcorn": 1,
+            "fusion:popcorn:ignite": 1366,
+            "chainSeed": 154,
+            "hoarder": 152,
+            "bowling": 15,
+            "harvest": 1
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 3,
+              "hp": 115,
+              "kills": 20,
+              "damageTaken": 0,
+              "enemies": 17,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 93,
+              "kills": 74,
+              "damageTaken": 22,
+              "enemies": 27,
+              "seals": 0,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 12,
+              "hp": 68,
+              "kills": 149,
+              "damageTaken": 59,
+              "enemies": 24,
+              "seals": 0,
+              "fusions": [
+                "dreamoven"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 15,
+              "hp": 69,
+              "kills": 256,
+              "damageTaken": 70,
+              "enemies": 22,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 65,
+              "kills": 363,
+              "damageTaken": 86,
+              "enemies": 21,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 21,
+              "hp": 50,
+              "kills": 500,
+              "damageTaken": 138,
+              "enemies": 34,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 24,
+              "hp": 87,
+              "kills": 655,
+              "damageTaken": 176,
+              "enemies": 42,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 240,
+              "level": 27,
+              "hp": 107,
+              "kills": 818,
+              "damageTaken": 197,
+              "enemies": 47,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 270,
+              "level": 30,
+              "hp": 115,
+              "kills": 1003,
+              "damageTaken": 216,
+              "enemies": 45,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 300,
+              "level": 33,
+              "hp": 115,
+              "kills": 1175,
+              "damageTaken": 232,
+              "enemies": 52,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 330,
+              "level": 35,
+              "hp": 99,
+              "kills": 1366,
+              "damageTaken": 293,
+              "enemies": 44,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 360,
+              "level": 37,
+              "hp": 99,
+              "kills": 1546,
+              "damageTaken": 336,
+              "enemies": 43,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 390,
+              "level": 39,
+              "hp": 111,
+              "kills": 1719,
+              "damageTaken": 374,
+              "enemies": 53,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 420,
+              "level": 41,
+              "hp": 102,
+              "kills": 1898,
+              "damageTaken": 411,
+              "enemies": 57,
+              "seals": 0,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "objective",
+          "meta": "new",
+          "seed": 0,
+          "family": 0,
+          "phase": "won",
+          "time": 224,
+          "level": 22,
+          "kills": 732,
+          "seals": 2,
+          "fusions": [
+            "thunderweb",
+            "firefly"
+          ],
+          "hp": 100,
+          "damageTaken": 65,
+          "firstLevelAt": 10.977777777777742,
+          "damageBy": {
+            "stone": 156.82238095238097,
+            "mine": 664.1687301587338,
+            "boulder": 4532.550793651159,
+            "gun": 11954.218095238195,
+            "chain": 4155.63984126988,
+            "storm": 6755.903968253985,
+            "seed": 1415.168253968265,
+            "discharge": 101.44047619047555,
+            "cloud": 1879.5233862434,
+            "web": 8436.359735449943,
+            "vortex": 170,
+            "fragment": 677.1221164021092,
+            "firefly": 4740.672698412805,
+            "parry": 161.5341269841308,
+            "pillow": 300,
+            "decoy": 130,
+            "bowling": 20
+          },
+          "procs": {
+            "stoneShot": 13,
+            "mine": 19,
+            "ultimateShot": 23,
+            "boulderBounce": 218,
+            "gunShot": 542,
+            "hoarder": 45,
+            "chainSeed": 51,
+            "discharge": 6,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 287,
+            "returnCatch": 312,
+            "fracture": 210,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 246,
+            "parry": 11,
+            "harvest": 2,
+            "bowling": 1,
+            "frost": 1
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 100,
+              "kills": 33,
+              "damageTaken": 0,
+              "enemies": 10,
+              "seals": 1,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 6,
+              "hp": 100,
+              "kills": 93,
+              "damageTaken": 11,
+              "enemies": 14,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 10,
+              "hp": 100,
+              "kills": 161,
+              "damageTaken": 22,
+              "enemies": 18,
+              "seals": 2,
+              "fusions": [
+                "thunderweb"
+              ]
+            },
+            {
+              "time": 120,
+              "level": 13,
+              "hp": 100,
+              "kills": 256,
+              "damageTaken": 30,
+              "enemies": 28,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 15,
+              "hp": 92,
+              "kills": 371,
+              "damageTaken": 38,
+              "enemies": 19,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 19,
+              "hp": 100,
+              "kills": 492,
+              "damageTaken": 38,
+              "enemies": 48,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 22,
+              "hp": 100,
+              "kills": 666,
+              "damageTaken": 65,
+              "enemies": 38,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "objective",
+          "meta": "new",
+          "seed": 1,
+          "family": 1,
+          "phase": "won",
+          "time": 234,
+          "level": 25,
+          "kills": 758,
+          "seals": 2,
+          "fusions": [
+            "dreamoven",
+            "popcorn"
+          ],
+          "hp": 100,
+          "damageTaken": 115,
+          "firstLevelAt": 7.899999999999975,
+          "damageBy": {
+            "stone": 1055.7777777777815,
+            "boulder": 12515.363333333638,
+            "pillow": 752.5968253968716,
+            "bomb": 1940.6647619047735,
+            "mine": 807.3293650793707,
+            "chain": 5509.794656084817,
+            "parry": 527.65809523813,
+            "gun": 11303.039682539775,
+            "fire": 2537.7532275135054,
+            "vortex": 128.12349206349634,
+            "fragment": 930.3558730158809,
+            "decoy": 181.7803174603238,
+            "fusionBlast": 6948.1614814816185,
+            "ovenTouch": 263.7977777777931,
+            "spread": 955.7847619047859,
+            "seed": 2020.3085714285999,
+            "bowling": 20
+          },
+          "procs": {
+            "stoneShot": 66,
+            "ultimateShot": 31,
+            "boulderBounce": 291,
+            "returnCatch": 462,
+            "mine": 29,
+            "parry": 33,
+            "gunShot": 457,
+            "hoarder": 56,
+            "fracture": 267,
+            "fusion:dreamoven": 1,
+            "at:fusion:dreamoven:trigger": 235.37777777783816,
+            "fusion:dreamoven:trigger": 61,
+            "fusion:explosion": 225,
+            "ovenTouch": 32,
+            "wildfire": 140,
+            "fusion:popcorn": 1,
+            "fusion:popcorn:ignite": 469,
+            "chainSeed": 65,
+            "harvest": 2,
+            "bowling": 1
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 100,
+              "kills": 23,
+              "damageTaken": 0,
+              "enemies": 20,
+              "seals": 1,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 8,
+              "hp": 88,
+              "kills": 82,
+              "damageTaken": 24,
+              "enemies": 25,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 10,
+              "hp": 88,
+              "kills": 142,
+              "damageTaken": 24,
+              "enemies": 37,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 120,
+              "level": 14,
+              "hp": 99,
+              "kills": 248,
+              "damageTaken": 37,
+              "enemies": 36,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 71,
+              "kills": 354,
+              "damageTaken": 66,
+              "enemies": 36,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 21,
+              "hp": 100,
+              "kills": 498,
+              "damageTaken": 77,
+              "enemies": 42,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 24,
+              "hp": 100,
+              "kills": 656,
+              "damageTaken": 104,
+              "enemies": 48,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "objective",
+          "meta": "max",
+          "seed": 0,
+          "family": 0,
+          "phase": "won",
+          "time": 227,
+          "level": 24,
+          "kills": 743,
+          "seals": 2,
+          "fusions": [
+            "thunderweb",
+            "firefly"
+          ],
+          "hp": 104,
+          "damageTaken": 219,
+          "firstLevelAt": 11.399999999999963,
+          "damageBy": {
+            "stone": 132.5542857142857,
+            "mine": 853.2325396825399,
+            "boulder": 6925.080582010776,
+            "gun": 12278.377777777918,
+            "storm": 6023.716984127045,
+            "chain": 4249.651269841593,
+            "seed": 1583.7887301587652,
+            "discharge": 181.77380952380852,
+            "vortex": 373.42619047620445,
+            "parry": 353.53809523810213,
+            "cloud": 1475.9017460317507,
+            "pillow": 404.3238095238076,
+            "web": 6624.066243386393,
+            "decoy": 45.20888888889227,
+            "fragment": 736.0266666666819,
+            "firefly": 4743.982539682582
+          },
+          "procs": {
+            "stoneShot": 13,
+            "mine": 23,
+            "ultimateShot": 23,
+            "boulderBounce": 232,
+            "gunShot": 551,
+            "hoarder": 52,
+            "chainSeed": 57,
+            "discharge": 9,
+            "parry": 30,
+            "fusion:thunderweb": 1,
+            "fusion:thunderweb:trigger": 242,
+            "returnCatch": 279,
+            "fracture": 202,
+            "fusion:firefly": 1,
+            "fusion:firefly:trigger": 234,
+            "harvest": 2
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 115,
+              "kills": 32,
+              "damageTaken": 11,
+              "enemies": 11,
+              "seals": 1,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 104,
+              "kills": 87,
+              "damageTaken": 33,
+              "enemies": 20,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 9,
+              "hp": 115,
+              "kills": 152,
+              "damageTaken": 33,
+              "enemies": 27,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 120,
+              "level": 14,
+              "hp": 69,
+              "kills": 263,
+              "damageTaken": 103,
+              "enemies": 21,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 17,
+              "hp": 61,
+              "kills": 369,
+              "damageTaken": 111,
+              "enemies": 21,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 107,
+              "kills": 505,
+              "damageTaken": 152,
+              "enemies": 35,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 22,
+              "hp": 107,
+              "kills": 653,
+              "damageTaken": 171,
+              "enemies": 51,
+              "seals": 2,
+              "fusions": [
+                "thunderweb",
+                "firefly"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "objective",
+          "meta": "max",
+          "seed": 1,
+          "family": 1,
+          "phase": "won",
+          "time": 241,
+          "level": 26,
+          "kills": 786,
+          "seals": 2,
+          "fusions": [
+            "dreamoven",
+            "popcorn"
+          ],
+          "hp": 115,
+          "damageTaken": 146,
+          "firstLevelAt": 7.533333333333309,
+          "damageBy": {
+            "stone": 1004.6557142857176,
+            "boulder": 12016.015714286425,
+            "pillow": 849.2590476190608,
+            "mine": 963.3636507936567,
+            "bomb": 1914.3017460317683,
+            "chain": 4906.295079365243,
+            "parry": 783.4793650793924,
+            "gun": 12305.844444444552,
+            "fire": 2362.082222222332,
+            "vortex": 442.60841269841325,
+            "fragment": 1119.3085714285867,
+            "ovenTouch": 412.3392063492066,
+            "decoy": 168.18142857142894,
+            "fusionBlast": 7854.913492063601,
+            "spread": 2030.599841269909,
+            "seed": 1391.8277777778537,
+            "bowling": 20
+          },
+          "procs": {
+            "stoneShot": 67,
+            "ultimateShot": 30,
+            "boulderBounce": 291,
+            "returnCatch": 486,
+            "mine": 30,
+            "parry": 50,
+            "gunShot": 478,
+            "hoarder": 62,
+            "fracture": 300,
+            "fusion:dreamoven": 1,
+            "wildfire": 156,
+            "at:fusion:dreamoven:trigger": 241.06666666673158,
+            "fusion:dreamoven:trigger": 67,
+            "ovenTouch": 30,
+            "fusion:popcorn": 1,
+            "fusion:popcorn:ignite": 545,
+            "fusion:explosion": 266,
+            "chainSeed": 47,
+            "harvest": 2,
+            "bowling": 1
+          },
+          "samples": [
+            {
+              "time": 30,
+              "level": 4,
+              "hp": 115,
+              "kills": 18,
+              "damageTaken": 0,
+              "enemies": 25,
+              "seals": 1,
+              "fusions": []
+            },
+            {
+              "time": 60,
+              "level": 7,
+              "hp": 105,
+              "kills": 79,
+              "damageTaken": 22,
+              "enemies": 28,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 90,
+              "level": 11,
+              "hp": 115,
+              "kills": 161,
+              "damageTaken": 22,
+              "enemies": 18,
+              "seals": 2,
+              "fusions": []
+            },
+            {
+              "time": 120,
+              "level": 15,
+              "hp": 105,
+              "kills": 264,
+              "damageTaken": 56,
+              "enemies": 20,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 150,
+              "level": 18,
+              "hp": 111,
+              "kills": 359,
+              "damageTaken": 75,
+              "enemies": 31,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 180,
+              "level": 20,
+              "hp": 93,
+              "kills": 490,
+              "damageTaken": 124,
+              "enemies": 50,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 210,
+              "level": 24,
+              "hp": 115,
+              "kills": 636,
+              "damageTaken": 135,
+              "enemies": 68,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            },
+            {
+              "time": 240,
+              "level": 26,
+              "hp": 115,
+              "kills": 783,
+              "damageTaken": 146,
+              "enemies": 29,
+              "seals": 2,
+              "fusions": [
+                "dreamoven",
+                "popcorn"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -6,7 +6,7 @@ async function open(options={},fallback=false){
  const p=await browser.newPage(options);p.on('pageerror',e=>errors.push(e.message));
  if(fallback)await p.route('**/assets/**',r=>['image','font'].includes(r.request().resourceType())?r.abort():r.continue());
  await p.addInitScript(()=>{window.sourceFrames=[];const draw=CanvasRenderingContext2D.prototype.drawImage;CanvasRenderingContext2D.prototype.drawImage=function(im,...args){if(this.canvas.id==='world'&&/butter-(gun71|original36)\//.test(im?.currentSrc||'')){const m=this.getTransform();window.sourceFrames.push({src:im.currentSrc,a:m.a,d:m.d,alpha:this.globalAlpha,args});if(window.sourceFrames.length>500)window.sourceFrames.shift();}return draw.call(this,im,...args);};});
- await p.goto(root+'/?test=1&persist=1&seed=elite71');await p.waitForSelector('body[data-ready="true"]');return p;
+ await p.goto(root+'/survivor71.html?test=1&persist=1&seed=elite71');await p.waitForSelector('body[data-ready="true"]');return p;
 }
 async function start(p){await p.locator('#start').click();await p.locator('[data-upgrade="relic:comet"]').click();}
 try{

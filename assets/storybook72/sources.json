@@ -1,0 +1,120 @@
+{
+  "version": 72,
+  "date": "2026-11-05",
+  "creation": "Image generation; candidate fan environment/prop art, not extracted original Trickcal art",
+  "reference": "assets/trickcal-stage37/forest.webp used as a style reference; its credits and original hash remain unchanged",
+  "encoding": "PNG generation output preserved; WebP quality92 floors /95 transparent props, alpha-quality100, no resizing or recoloring by the build",
+  "macroTileWorldSize": 1024,
+  "props": {
+    "keys": [
+      "tree",
+      "bush",
+      "rock",
+      "mushroom",
+      "stump",
+      "flowers",
+      "log",
+      "fern"
+    ],
+    "grid": [
+      4,
+      2
+    ],
+    "feet": [
+      [
+        236,
+        400
+      ],
+      [
+        224.5,
+        386
+      ],
+      [
+        219.5,
+        386
+      ],
+      [
+        226.5,
+        384
+      ],
+      [
+        231,
+        364
+      ],
+      [
+        220,
+        361
+      ],
+      [
+        218,
+        346
+      ],
+      [
+        218.5,
+        363
+      ]
+    ]
+  },
+  "files": {
+    "assets/storybook72/boulder.png": {
+      "sha256": "adaf77f095f35d180dab4869d37b2a70852f9d2a5bd73eae3709f66b81f0db97",
+      "bytes": 1416927,
+      "width": 1254,
+      "height": 1254
+    },
+    "assets/storybook72/boulder.webp": {
+      "sha256": "6296b4ac5c7f6a230b263cbf922a32a3342397e419532b7e09aae3e12cdf09b2",
+      "bytes": 336034,
+      "width": 1254,
+      "height": 1254
+    },
+    "assets/storybook72/ember.png": {
+      "sha256": "d7d53a89e994cbb64e1f2c6b61e64a3f8e453a99daada90e5975c8ab16154727",
+      "bytes": 2604918,
+      "width": 1254,
+      "height": 1254
+    },
+    "assets/storybook72/ember.webp": {
+      "sha256": "2affdd3ce4bf945d4f4a2792f52e6de90209e7b9d4a045ad5eadb718215c8a5a",
+      "bytes": 365986,
+      "width": 1254,
+      "height": 1254
+    },
+    "assets/storybook72/forest.png": {
+      "sha256": "063ddc153d9ef77a5e67c881bdd49b44e0bac57b8964d3ffa039bf0de0f1a87a",
+      "bytes": 2239888,
+      "width": 1254,
+      "height": 1254
+    },
+    "assets/storybook72/forest.webp": {
+      "sha256": "682f450f61a2b0298f5eb4c80bbfe8bbc513850e538f485f58332be80cc08448",
+      "bytes": 261328,
+      "width": 1254,
+      "height": 1254
+    },
+    "assets/storybook72/night.png": {
+      "sha256": "d71e7e52ac968ca9f860a2ff7dd20c5e2978d97690f9bc0c03070a17e73e9765",
+      "bytes": 2674401,
+      "width": 1254,
+      "height": 1254
+    },
+    "assets/storybook72/night.webp": {
+      "sha256": "7587e370ac760eaae9d39d331fc7fcacc63809926edca8fb60e3a40a80b59027",
+      "bytes": 356530,
+      "width": 1254,
+      "height": 1254
+    },
+    "assets/storybook72/props.png": {
+      "sha256": "90ba2bbc417b3751b96a02c038a4c2e747f80eafbfdc2d98834572a6052e0d03",
+      "bytes": 1501763,
+      "width": 1774,
+      "height": 887
+    },
+    "assets/storybook72/props.webp": {
+      "sha256": "f58ef424c789ef6f047663178f80a6907e98eb7f86678d64803d6304bf66f8b1",
+      "bytes": 527604,
+      "width": 1774,
+      "height": 887
+    }
+  }
+}

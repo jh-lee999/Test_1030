@@ -13,7 +13,7 @@ function card(g){const p=g.world.points.find(q=>q.artifact==='yellow');Object.as
 function step(g,seconds,input={}){for(let t=0;t<seconds-1e-6&&g.phase==='playing';t+=1/90)E.tick(g,1/90,input);}
 const quiet=g=>{g.spawnTimer=999;g.eliteAt=999;g.burstAt=999;g.championSpawned=true;g.player.invuln=999;};
 test('v70 remains byte-identical and the new main uses independent v71 rules',()=>{
- const read=f=>readFileSync(new URL('../'+f,import.meta.url));assert.equal(createHash('sha256').update(read('survivor70.html')).digest('hex'),'110aa5372ae7935967de025508da82b574fefc3a0b9a19c6426596149b397e39');assert.match(read('index.html').toString(),/survivor71\.js\?v=71/);
+ const read=f=>readFileSync(new URL('../'+f,import.meta.url));assert.equal(createHash('sha256').update(read('survivor70.html')).digest('hex'),'110aa5372ae7935967de025508da82b574fefc3a0b9a19c6426596149b397e39');assert.match(read('survivor71.html').toString(),/survivor71\.js\?v=71/);
 });
 test('the recorded balance diagnostics are pinned to the exact current combat sources',()=>{
  const read=f=>readFileSync(new URL('../'+f,import.meta.url));const report=JSON.parse(read('docs/survivor71-balance.json'));

@@ -1,5 +1,14 @@
 {
-  "version": 12,
+  "version": 13,
+  "combatPresentation72": {
+    "date":"2026-11-05",
+    "request":"Stronger gun, finite king rock bouncing inside current visible gameplay viewport, prettier map",
+    "entry":"survivor72.js",
+    "archive":"survivor71.html",
+    "preserved":"Original whole-pose Butter art, gun/movement clips, size80 shared foot/-22.4 Y/facing/muzzle transform",
+    "newArt":"Separate AI-generated fan terrain, eight scenery props and king boulder; not original Trickcal extraction or a new approved Butter master",
+    "sources":"assets/storybook72/CREDITS.md"
+  },
   "gunDecision71": {
     "date":"2026-11-05",
     "request":"Yellow Card: normal gun attack and two ultimate casts",

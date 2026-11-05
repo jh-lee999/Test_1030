@@ -1,5 +1,33 @@
 # Project instructions
 
+## ACTIVE v72: stronger gun, viewport boulders and painted map
+
+Root runs survivor72.js/engine/content/profile/renderer/art/scenery/camera/boulder;
+survivor71-world.js and butter-gun-motion71.js are reused unchanged. Previous root
+is verbatim survivor71.html. Read docs/survivor72.md and new storybook72 credits.
+Gun primaryStats is the single source: same-rank slingshot damage times1.5 rounded,
+interval .34s, extra penetration, prior return/ricochet/fragments/fusions retained.
+King rock uses original release/muzzle but direction from combat foot; speed640,
+radius36, life8 LIVE seconds, no gravity/world/cover bounce. Reflect within CURRENT
+gameplay canvas camera bounds, accounting for full painted silhouette and ring.
+Shared cameraFor/arenaFor must match render and simulation in CSS logical pixels.
+Camera translation retains screen-local stone position; resize remaps normalized
+position; do not create damage sweeps across resize/warp. Exact corner reflects
+both axes and residual distance is preserved. Renderer projection is pure and
+works during paused resize. Yellow Card still two source-clock casts per one18s
+cooldown; no changes to Butter whole-pose art, anchors, facing or muzzle transform.
+New painted floors/props/stone are explicitly AI-generated FAN art, not extracted
+originals. Keep PNG sources, WebP hash pins and measured shared prop foot anchors.
+Terrain48tile/12MiB cache limit and depth sorting remain. World/RNG not mutated
+by scenery. Original art/engines/balance pins stay untouched for archived games.
+SAVE_KEY butter.survivor72.v1 imports valid71 PROFILE and ACTIVE once when absent.
+Migration preserves identity/RNG/HP/resources/queues/cooldowns; caps existing
+boulder remaining lifetime at8s without refill; refreshes offer text by same ID.
+Do not grant rewards or write old keys. Run npm/source/art/canon/browser72 and
+archive71 regressions. Separate native input-only run, fixtures and48-run policy
+diagnostics; screen viewport affects boulder coverage, not a human balance claim.
+Preserve unrelated tools/sprite-sources/butter-chibi-release.webp.
+
 ## ACTIVE v71: larger map, apostle elites and Yellow Card
 
 Latest user explicitly authorized map/population/combat changes. Root now runs
