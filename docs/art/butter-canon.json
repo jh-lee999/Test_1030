@@ -1,5 +1,14 @@
 {
-  "version": 10,
+  "version": 11,
+  "presentationDecision70": {
+    "date":"2026-11-05",
+    "request":"맵이나 소스들을 트릭컬에 맞춰서 이쁘게 수정",
+    "entry":"survivor70.js",
+    "archive":"survivor69.html",
+    "scope":"Presentation only; original art/anchors and v69 rules, world, save and balance unchanged",
+    "sources":"assets/storybook70/CREDITS.md",
+    "newArt":"Fan-code vector props/terrain; original forest/night/pillow/weather reused unchanged; no new approved Butter master"
+  },
   "survivorDecision69": {
     "date":"2026-11-05",
     "request":"Mechanic-changing ranks/fusions, random map elements, permanent progression and measured difficulty",

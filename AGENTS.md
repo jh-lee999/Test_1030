@@ -1,5 +1,28 @@
 # Project instructions
 
+## ACTIVE v70: storybook presentation, v69 rules/save unchanged
+
+User requested prettier Trickcal-aligned maps/assets. Root now loads survivor70.js/
+survivor70.css and survivor70-renderer.js. Previous root is verbatim survivor69.html.
+Keep survivor69 engine/world/content/profile, balance data hash and save envelope
+unchanged; __survivor69 remains the intentional compatibility test hook (70 alias).
+Read docs/art/STORYBOOK70.md for palette, asset provenance, layering and limits.
+Original character/monster/artifact/effect files, source frame geometry, shared
+size80 foot/-22.4 Y/facing/muzzle and release clocks are unchanged. No art35 fallback.
+survivor70-art.js contains clearly labeled fan-code vector props/icons, NOT newly
+extracted original assets. Original pillow/weather icons and forest/night pictures
+are reused unchanged. Jua is local/pinned, OFL included; no runtime remote requests.
+Scenery roads follow v69 pathTo; decorations/caches must NEVER modify world/RNG.
+Cover footprints come from actual obstacle AABBs; bodies depth-sort with actors.
+Hazard/rift/zone radii stay exact and phase clocks stay frozen in menus. Original
+hero draw remains uniform, opaque and unfiltered. Terrain LRU max48 tiles (12MiB),
+not a claim about total memory including original atlases. Short-landscape HUD
+keeps the center clear; all major controls/choice text remain reachable.
+Run npm/art/canon, check-survivor69-browser (CURRENT rules under new UI), new
+check-survivor70-browser and source/archive regressions. Native real-input run
+also exercises new UI. Screenshots are candidates, not new approved Butter art.
+Preserve unrelated tools/sprite-sources/butter-chibi-release.webp.
+
 ## ACTIVE v69: mechanical builds, seeded exploration and authorized meta growth
 
 The user explicitly requested mechanic-changing upgrades/fusions, varied seeded
