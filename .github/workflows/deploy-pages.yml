@@ -79,6 +79,13 @@ jobs:
           node --check dungeon73-save.js
           node --check dungeon73-renderer.js
           node tools/check-art73.mjs
+          node --check dungeon74.js
+          node --check dungeon74-engine.js
+          node --check dungeon74-world.js
+          node --check dungeon74-content.js
+          node --check dungeon74-save.js
+          node --check dungeon74-renderer.js
+          node tools/check-art74.mjs
           node --check dice.js
           node --check dice55.js
           node --check dice-selection.js

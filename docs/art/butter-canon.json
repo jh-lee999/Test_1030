@@ -1,5 +1,16 @@
 {
-  "version": 14,
+  "version": 15,
+  "expedition74": {
+    "date":"2026-11-06",
+    "timezone":"Asia/Seoul",
+    "request":"Multiple seeded maps, normal-combat-only treasure/shop leaves, shared physical terrain and deeper room-crawl rules",
+    "entry":"dungeon74.js",
+    "archive":"dungeon73.html",
+    "preserved":"Original whole Butter poses, size80 shared foot/-22.4Y, uniform source flip/muzzle/release clocks unchanged",
+    "environment":"New library/moon backdrops, props and4fan icons are AI-generated FAN art, NOT original extraction",
+    "sources":"assets/sanctuary74/CREDITS.md",
+    "status":"Implementation candidate, not user aesthetic approval or a newly approved Butter master"
+  },
   "roomCrawl73": {
     "date":"2026-11-05",
     "request":"PokeIsaac-like room exploration with coherent professional-looking asset-led presentation",

@@ -1,5 +1,37 @@
 # Project instructions
 
+## ACTIVE v74: three-floor expedition, legal leaf rooms and shared random terrain
+
+Root now runs dungeon74 client/content/world/engine/save/renderer/css. Read
+docs/dungeon74.md and assets/sanctuary74/CREDITS.md. dungeon73.html is the
+byte-identical previous root; old rules, diagnostic source pins and original art
+remain unchanged. Do not delegate without explicit authority.
+Each seeded floor has15 rooms. Gold2/shop1 must each have EXACTLY ONE geometric
+neighbor of type combat, NEVER boss/challenge/secret/start. Build core then legal
+terminal leaves; do not merely hide illegal doors. Three themes/three bosses;
+boss gift must be taken before descent, only third floor wins. No descent heal,
+charge/resource reset, permanent stat inflation or adaptive build punishment.
+Random obstacle AABBs and slowdown apply identically to player/enemies/dashes/
+spin/knockback. Max actor radius29, navigation grid safety32. Keep all door aprons
+clear and the free graph connected. Gaps block all actors but not projectiles;
+shots break chests, bombs break non-gap cover. Never let enemies phase through
+geometry to fix navigation. Renderer/map are read-only and consume no RNG.
+Challenge is opt-in2waves; confirmation/pause freezes all clocks, one reward/
+battery charge after both waves. Restock proximity/cost3 then5/max2, never refill
+service stock. Twelve unique artifacts, six real pair mechanics, finite proc and
+projectile budgets; no recursive fragment splitting. Keep UI/rules consistent.
+Keep original whole Butter poses size80/shared foot/-22.4Y/uniform flip/source
+muzzle and release clocks. No generated character replacement or fake4views.
+New backdrops/atlas are AI FAN environment art; PNGs/hash pins/17px alpha24 gutter
+and foot anchors preserved. Existing original monsters/bosses/icons stay intact.
+Save butter.dungeon74.v1 imports valid73 PROFILE only when absent. Never write73
+keys or migrate its active run; archive provides continue. All floors, source
+queues, trial waves, destroyed cover and resources survive valid save/resume.
+Run npm tests, art74/73, canon/original/source71, current browser and archived73
+browser. Separate native DOM-only runs, presentation fixtures and full-information
+policy reports. Neither automated wins nor tests establish human difficulty/fun.
+Preserve unrelated tools/sprite-sources/butter-chibi-release.webp.
+
 ## ACTIVE v73: PokeIsaac-inspired room crawl and coherent asset-led presentation
 
 User chose PokeIsaac as the desired style and requested professional-looking

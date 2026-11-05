@@ -1,0 +1,127 @@
+{
+  "version": 74,
+  "date": "2026-11-06",
+  "timezone": "Asia/Seoul",
+  "provenance": "AI-generated fan environment/props/icons, NOT original Trickcal or PokeIsaac assets",
+  "styleReference": [
+    "assets/sanctuary73/room.png",
+    "assets/sanctuary73/objects.png"
+  ],
+  "generatedSources": {
+    "library": "exec-17b33ada-79ef-4144-918f-88a93ccf57d2.png",
+    "moon": "exec-1197ff16-020c-4da7-8671-3533dfe82c1b.png",
+    "objects": "exec-9fe8f25b-7fff-430e-bde9-15f0c62cbcc7.png"
+  },
+  "encoding": {
+    "backdrops": "WebP quality94",
+    "objects": "WebP quality96 alpha-quality100"
+  },
+  "props": {
+    "columns": 4,
+    "rows": 3,
+    "alphaThreshold": 24,
+    "minimumGutter": 17,
+    "names": [
+      "libraryOpen",
+      "libraryClosed",
+      "libraryGold",
+      "shelf",
+      "moonOpen",
+      "moonClosed",
+      "moonGold",
+      "crystal",
+      "mirror",
+      "frost",
+      "bell",
+      "fireworks"
+    ],
+    "feet": [
+      [
+        183,
+        335
+      ],
+      [
+        182.5,
+        335
+      ],
+      [
+        182,
+        335
+      ],
+      [
+        180.5,
+        328
+      ],
+      [
+        182,
+        333
+      ],
+      [
+        182,
+        333
+      ],
+      [
+        182,
+        333
+      ],
+      [
+        180.5,
+        321
+      ],
+      [
+        181.5,
+        332
+      ],
+      [
+        180.5,
+        259
+      ],
+      [
+        178.5,
+        308
+      ],
+      [
+        180.5,
+        312
+      ]
+    ]
+  },
+  "files": {
+    "assets/sanctuary74/library.png": {
+      "sha256": "b677ce65742a4b7aa0b569d9c12be6ce9a832b1d52d086971877681264bd43f7",
+      "bytes": 2173200,
+      "width": 1585,
+      "height": 992
+    },
+    "assets/sanctuary74/library.webp": {
+      "sha256": "c05234a06537d93854502b9a0f9a8f283de478fef9c90c1e26f0b42de07d43d7",
+      "bytes": 324606,
+      "width": 1585,
+      "height": 992
+    },
+    "assets/sanctuary74/moon.png": {
+      "sha256": "d804babcadbfc4fdc12aec6f0a6b0031a7d74571e3a1b5add37f23cf67a4ad3e",
+      "bytes": 2038170,
+      "width": 1585,
+      "height": 992
+    },
+    "assets/sanctuary74/moon.webp": {
+      "sha256": "33d8da7c8ba0ba6d0b6f3c9f4101372716872d186bd523e289aef1952225a483",
+      "bytes": 235134,
+      "width": 1585,
+      "height": 992
+    },
+    "assets/sanctuary74/objects.png": {
+      "sha256": "517035ee39b1e09a8a16c1b0c5965616dac13af7b6bbc9e769359cd393d90496",
+      "bytes": 2196712,
+      "width": 1448,
+      "height": 1086
+    },
+    "assets/sanctuary74/objects.webp": {
+      "sha256": "e1125c17c1a1acbdc796eb039f545d8320136cbda5608a3e5d8e13d8907e9558",
+      "bytes": 695066,
+      "width": 1448,
+      "height": 1086
+    }
+  }
+}

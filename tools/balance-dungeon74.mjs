@@ -1,0 +1,8 @@
+import * as E from '../dungeon74-engine.js';
+import {pilot,choose} from './dungeon74-policy.mjs';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+const count=Number(process.argv[2]||4);if(!Number.isInteger(count)||count<1||count>100)throw Error('count1..100');
+const files=['dungeon74-engine.js','dungeon74-world.js','dungeon74-content.js','tools/dungeon74-policy.mjs'],sourceSHA256=createHash('sha256').update(files.map(f=>readFileSync(new URL('../'+f,import.meta.url))).join('\n')).digest('hex'),results=[];
+for(let seed=0;seed<count;seed++){const g=E.createGame('diagnostic-'+seed),state={};for(let i=0;i<36000&&['playing','choice','trial'].includes(g.phase);i++){if(g.phase==='choice'){E.chooseItem(g,choose(g));continue;}if(g.phase==='trial'){E.acceptTrial(g);continue;}const p=pilot(g,state);if(p.interact)E.interact(g);if(p.ultimate)E.useUltimate(g);E.tick(g,1/30,p.input);}results.push({seed:g.seed,phase:g.phase,time:g.time,hp:g.player.hp,floor:g.floorIndex+1,history:g.history,room:g.room,clears:g.clears,kills:g.kills,items:g.items,damageTaken:g.damageTaken,telemetry:g.telemetry,unfinished:g.phase==='playing'?{player:{x:g.player.x,y:g.player.y},roomType:E.current(g).type,pickups:E.current(g).pickups,enemies:E.current(g).enemies.map(e=>({role:e.role,x:e.x,y:e.y,hp:e.hp,state:e.state})),obstacles:E.current(g).obstacles,policy:pilot(g,state)}:null});}
+console.log(JSON.stringify({version:74,sourceSHA256,sourceFiles:files,limits:'Small full-information automated policy sample, not human difficulty, aesthetics, optimality or evidence of fun. Native DOM run is separate.',results},null,2));

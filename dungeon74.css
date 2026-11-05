@@ -1,0 +1,13 @@
+@import url('./dungeon73.css?v=73');
+.fan-icon{display:inline-block;flex-shrink:0;background-image:url('./assets/sanctuary74/objects.webp');background-size:400% 300%;background-repeat:no-repeat;vertical-align:middle;pointer-events:none}
+#inventory-strip{max-width:min(65vw,720px);flex-wrap:wrap}.inventory .fan-icon{margin-top:2px}.result-items{align-items:center}
+.chapter small{letter-spacing:1px}.combos{grid-template-columns:repeat(3,1fr)}.choice small{letter-spacing:1px}
+@media(max-width:600px){.combos{grid-template-columns:1fr}#inventory-strip{max-width:88vw}}
+@media(max-height:560px){#inventory-strip{max-width:37vw}.bottom-left{bottom:9px}.chapter small{font-size:8px}}
+@media(pointer:coarse){#inventory-strip{display:none}.hud nav button,.actions button,#interact{min-width:44px;min-height:44px}}
+@media(pointer:coarse) and (max-width:600px) and (min-height:561px){
+ .hud nav{width:100%;max-width:none;justify-content:flex-end;flex-wrap:nowrap;margin-top:2px}
+ .chapter{top:148px;left:0;transform:none;width:100%}
+ .minimap{top:16px;right:10px;width:73px;padding:4px}
+ .minimap canvas{width:63px;height:44px}.minimap>span{font-size:6px}
+}

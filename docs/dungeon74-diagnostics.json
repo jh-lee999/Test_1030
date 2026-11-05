@@ -1,0 +1,347 @@
+{
+  "version": 74,
+  "sourceSHA256": "22924d47f8990118489a89c57bd1bae79c768b4557847d4bc8ec49d79e02e632",
+  "sourceFiles": [
+    "dungeon74-engine.js",
+    "dungeon74-world.js",
+    "dungeon74-content.js",
+    "tools/dungeon74-policy.mjs"
+  ],
+  "limits": "Small full-information automated policy sample, not human difficulty, aesthetics, optimality or evidence of fun. Native DOM run is separate.",
+  "results": [
+    {
+      "seed": "diagnostic-0",
+      "phase": "dead",
+      "time": 56.558333333330765,
+      "hp": 0,
+      "floor": 1,
+      "history": [],
+      "room": 5,
+      "clears": 2,
+      "kills": 9,
+      "items": [
+        "lucky"
+      ],
+      "damageTaken": 80,
+      "telemetry": {
+        "shots": 83,
+        "gun": 0,
+        "ricochet": 0,
+        "lightning": 0,
+        "split": 36,
+        "fire": 0,
+        "parry": 0,
+        "boulder": 1,
+        "bounce": 7,
+        "wallBounce": 0,
+        "frozen": 0,
+        "pulse": 0,
+        "fragments": 0,
+        "terrainBroken": 0,
+        "trials": 0,
+        "damageBy": {
+          "stone": 453.40000000000003
+        }
+      },
+      "unfinished": null
+    },
+    {
+      "seed": "diagnostic-1",
+      "phase": "dead",
+      "time": 52.241666666664344,
+      "hp": 0,
+      "floor": 1,
+      "history": [],
+      "room": 2,
+      "clears": 2,
+      "kills": 9,
+      "items": [
+        "lucky",
+        "komi"
+      ],
+      "damageTaken": 77,
+      "telemetry": {
+        "shots": 59,
+        "gun": 0,
+        "ricochet": 0,
+        "lightning": 0,
+        "split": 38,
+        "fire": 0,
+        "parry": 2,
+        "boulder": 1,
+        "bounce": 7,
+        "wallBounce": 0,
+        "frozen": 0,
+        "pulse": 0,
+        "fragments": 0,
+        "terrainBroken": 0,
+        "trials": 0,
+        "damageBy": {
+          "stone": 473.00000000000006
+        }
+      },
+      "unfinished": null
+    },
+    {
+      "seed": "diagnostic-2",
+      "phase": "won",
+      "time": 476.6999999997308,
+      "hp": 69,
+      "floor": 3,
+      "history": [
+        {
+          "floor": 0,
+          "time": 161.9333333333504,
+          "clears": 10,
+          "visited": 14,
+          "items": [
+            "rust",
+            "yellow",
+            "scythe",
+            "weather",
+            "lucky",
+            "mace",
+            "belt",
+            "frost"
+          ]
+        },
+        {
+          "floor": 1,
+          "time": 135.56666666654337,
+          "clears": 10,
+          "visited": 14,
+          "items": [
+            "rust",
+            "yellow",
+            "scythe",
+            "weather",
+            "lucky",
+            "mace",
+            "belt",
+            "frost",
+            "mirror",
+            "komi",
+            "bell",
+            "fireworks"
+          ]
+        },
+        {
+          "floor": 2,
+          "time": 179.19999999983702,
+          "clears": 10,
+          "visited": 14,
+          "items": [
+            "rust",
+            "yellow",
+            "scythe",
+            "weather",
+            "lucky",
+            "mace",
+            "belt",
+            "frost",
+            "mirror",
+            "komi",
+            "bell",
+            "fireworks"
+          ]
+        }
+      ],
+      "room": 9,
+      "clears": 30,
+      "kills": 161,
+      "items": [
+        "rust",
+        "yellow",
+        "scythe",
+        "weather",
+        "lucky",
+        "mace",
+        "belt",
+        "frost",
+        "mirror",
+        "komi",
+        "bell",
+        "fireworks"
+      ],
+      "damageTaken": 143,
+      "telemetry": {
+        "shots": 440,
+        "gun": 420,
+        "ricochet": 140,
+        "lightning": 574,
+        "split": 159,
+        "fire": 355,
+        "parry": 3,
+        "boulder": 19,
+        "bounce": 140,
+        "wallBounce": 418,
+        "frozen": 49,
+        "pulse": 101,
+        "fragments": 0,
+        "terrainBroken": 0,
+        "trials": 3,
+        "damageBy": {
+          "stone": 325.1,
+          "fire": 2259.7,
+          "boulder": 1603,
+          "gun": 3651.700000000001,
+          "chain": 1304.1000000000001,
+          "lightning": 3346,
+          "impact": 842.4,
+          "melt": 618,
+          "bell": 172,
+          "pillow": 24
+        }
+      },
+      "unfinished": null
+    },
+    {
+      "seed": "diagnostic-3",
+      "phase": "dead",
+      "time": 121.81666666670968,
+      "hp": 0,
+      "floor": 1,
+      "history": [],
+      "room": 8,
+      "clears": 7,
+      "kills": 27,
+      "items": [
+        "lucky",
+        "yellow",
+        "rust"
+      ],
+      "damageTaken": 98,
+      "telemetry": {
+        "shots": 135,
+        "gun": 66,
+        "ricochet": 0,
+        "lightning": 0,
+        "split": 77,
+        "fire": 34,
+        "parry": 0,
+        "boulder": 5,
+        "bounce": 35,
+        "wallBounce": 0,
+        "frozen": 0,
+        "pulse": 0,
+        "fragments": 0,
+        "terrainBroken": 0,
+        "trials": 0,
+        "damageBy": {
+          "stone": 548,
+          "boulder": 219,
+          "gun": 548,
+          "fire": 124
+        }
+      },
+      "unfinished": null
+    }
+  ],
+  "date": "2026-11-06",
+  "timezone": "Asia/Seoul",
+  "native": {
+    "nativeOnly": true,
+    "seed": "diagnostic-2",
+    "phase": "won",
+    "time": 531.4941999995386,
+    "floors": 3,
+    "clears": 30,
+    "hp": 60,
+    "kills": 161,
+    "items": [
+      "rust",
+      "yellow",
+      "scythe",
+      "weather",
+      "lucky",
+      "mace",
+      "belt",
+      "frost",
+      "mirror",
+      "komi",
+      "bell",
+      "fireworks"
+    ],
+    "history": [
+      {
+        "floor": 0,
+        "time": 181.34229999999738,
+        "clears": 10,
+        "visited": 14,
+        "items": [
+          "rust",
+          "yellow",
+          "scythe",
+          "weather",
+          "lucky",
+          "mace",
+          "belt",
+          "frost"
+        ]
+      },
+      {
+        "floor": 1,
+        "time": 159.7762999998532,
+        "clears": 10,
+        "visited": 14,
+        "items": [
+          "rust",
+          "yellow",
+          "scythe",
+          "weather",
+          "lucky",
+          "mace",
+          "belt",
+          "frost",
+          "mirror",
+          "komi",
+          "bell",
+          "fireworks"
+        ]
+      },
+      {
+        "floor": 2,
+        "time": 190.37559999968806,
+        "clears": 10,
+        "visited": 14,
+        "items": [
+          "rust",
+          "yellow",
+          "scythe",
+          "weather",
+          "lucky",
+          "mace",
+          "belt",
+          "frost",
+          "mirror",
+          "komi",
+          "bell",
+          "fireworks"
+        ]
+      }
+    ],
+    "records": 1,
+    "errors": [],
+    "preFinalSpawnGuard": true,
+    "limits": "DOM/keyboard/mouse only. Run launched before final reachable-spawn guard, mobile CSS and exhausted-gift label fixes; not represented as an exact final-source native replay. Final spawn rules independently regression-tested and four policy seeds rerun on the pinned final sources."
+  },
+  "browser": {
+    "nativeStartChoiceMoveFirePause": true,
+    "fixtureRoomArt": true,
+    "saveResume": true,
+    "mobile": [
+      390,
+      320,
+      844,
+      568
+    ],
+    "renderReadOnly": true,
+    "imagesAndFontFailPlayable": true,
+    "errors": []
+  },
+  "regressions": {
+    "isolatedPocket": "diagnostic-3 floorIndex1 room1 point440,375: collision-free but disconnected. Never use collision alone for spawns; require radius-safe link into connected graph.",
+    "nativeDriver": "First diagnostic-0 native attempt interrupted after direction quantization dropped a small vertical component at cover; not counted as success. Threshold reduced, then separate diagnostic-2 native run completed.",
+    "earlierPolicyStalls": "Pre-fix policy runs exposed real isolated-spawn pocket and a separate bot boundary-door steering issue. Final pinned four samples all terminated; 1 win/3 deaths is NOT a human win-rate estimate."
+  }
+}
