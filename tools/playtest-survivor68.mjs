@@ -4,7 +4,7 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox']});
 const root=process.argv[2]||'http://127.0.0.1:4194',seed=process.argv[3]||'3',errors=[],held=new Set(),priority=['awake:stone','awake:chain','awake:pillow','awake:storm','move:stone','move:chain','move:pillow','move:storm','passive:power','passive:haste','passive:heart'];
 try{
- const page=await browser.newPage({viewport:{width:1366,height:768}});page.on('pageerror',e=>errors.push(e.message));await page.goto(root+'/?test=1&seed='+encodeURIComponent(seed));await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();let lastReport=-30,iterations=0;
+ const page=await browser.newPage({viewport:{width:1366,height:768}});page.on('pageerror',e=>errors.push(e.message));await page.goto(root+'/survivor68.html?test=1&seed='+encodeURIComponent(seed));await page.waitForSelector('body[data-ready="true"]');await page.locator('#start').click();let lastReport=-30,iterations=0;
  while(iterations++<2600){
   const s=await page.evaluate(()=>{const g=window.__survivor68.game;return {time:g.time,phase:g.phase,p:g.player,level:g.level,kills:g.kills,offers:g.offers.map(o=>o.id),gems:g.gems,enemies:g.enemies.map(e=>({x:e.x,y:e.y,boss:e.boss}))};});
   if(s.time-lastReport>=30){lastReport=s.time;console.log(JSON.stringify({time:Math.round(s.time),phase:s.phase,hp:s.p.hp,level:s.level,kills:s.kills}));}

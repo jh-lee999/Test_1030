@@ -22,6 +22,7 @@
     "check:butter-canon": "node tools/check-butter-canon.mjs",
     "check:butter-original": "node tools/check-butter-original.mjs",
     "check:platformer-art": "node tools/check-platformer-art.mjs",
+    "balance:survivor": "node tools/balance-survivor69.mjs",
     "test": "node --test"
   }
 }

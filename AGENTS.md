@@ -1,5 +1,37 @@
 # Project instructions
 
+## ACTIVE v69: mechanical builds, seeded exploration and authorized meta growth
+
+The user explicitly requested mechanic-changing upgrades/fusions, varied seeded
+map objectives, permanent progression and measured difficulty. This supersedes
+v68's no-meta rule for the current game ONLY. Root runs survivor69.js; previous
+root is byte-identical survivor68.html. All old engines/source artwork stay intact.
+Read docs/survivor69.md for formulas, scope and diagnostic limits. New content/
+world/engine/profile/renderer modules separate RNG, rules, persistence and view.
+Each move has3 ranks, every rank adds an actual mechanic; no flat-stat run offers.
+Five explicit two-Lv3/core fusions, max2 per run. Recipe pin never rerolls current
+offers/consumes RNG; it guarantees a future ingredient/ready target fusion.
+XP overflow and map reward choices each spend exactly once. Menus freeze all
+clocks, world hazards, rift progress and shots. Renderers/map views are read-only.
+Two reachable rifts must be sealed: final guardian normally spawns at210s, or the
+player may explicitly summon at a completed seal during120..165s. The extra3
+shards are WIN-only, never paid for calling/abandoning. Only real boss death wins.
+Cover collides with player/enemies and both sides' shots.
+Six POIs (2 rifts/chest/spring/thief/shrine) and hazards are seeded separately from
+combat/loot. Same seed/map reproduces routes, all POIs must remain reachable.
+Meta: HP+15/speed+6%/magnet+24/rerolls+2 hard caps, NO permanent damage bonus.
+Maps/loadouts unlock through seals/fusion discoveries; harder tiers through wins.
+Profile and active run share ONE versioned localStorage envelope. Rewards apply
+once by runId, profile+active clearing saved together. Paused/in-flight/queued
+choices restore without grants. Blocked/corrupt storage remains playable with
+honest warnings. Existing v68/card keys/saves are never migrated or overwritten.
+Do not equate policy wins/test counts with fun. Keep per30s damage/level/pressure
+samples, mechanic proc/damage totals, terminal records and diagnostic methodology.
+Run npm/art/canon, new engine/profile/world/browser tests, native DOM/keyboard
+run and multi-seed balance scenarios; protect old v68/card/source regressions.
+Intact original whole-pose art, source release/facing, shared80px foot anchor and
+short-screen camera bounds remain unchanged. Preserve unrelated chibi WebP.
+
 ## ACTIVE v68: survivor replaces cards at the user's request
 
 Root index.html now runs survivor68.js. The previous root is preserved verbatim

@@ -10,7 +10,7 @@ const sandbox=()=>{const g=E.createGame('test');g.spawnTimer=1e6;return g;};
 const enemy=(g,x=1450,y=1000)=>{const e=E.spawnEnemy(g,'fan',{x,y});e.hp=e.maxHp=10000;e.speed=0;e.damage=0;e.timer=1e6;return e;};
 function pick(g,id){g.offers=E.eligibleUpgrades(g).filter(o=>o.id===id);g.phase='upgrade';g.pendingLevels=1;assert(E.chooseUpgrade(g,id));}
 test('root is the survivor; archived card entry remains unchanged',()=>{
- assert.match(readFileSync(new URL('../index.html',import.meta.url),'utf8'),/survivor68\.js\?v=68/);
+ assert.match(readFileSync(new URL('../survivor68.html',import.meta.url),'utf8'),/survivor68\.js\?v=68/);
  assert.equal(createHash('sha256').update(readFileSync(new URL('../cards67.html',import.meta.url))).digest('hex'),'2ab738b1056819422baeed5fc8e040980152b120b7cbf12744ab7fdf9cb16ee5');
 });
 test('seeded simulation is deterministic and uses independent loot RNG',()=>{

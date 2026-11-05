@@ -1,13 +1,15 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#183037"><title>버터의 말썽 대탈출</title><link rel="icon" href="./assets/butter-original36/poster.png"><link rel="stylesheet" href="./survivor68.css?v=68"><script type="module" src="./survivor68.js?v=68"></script></head>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#183037"><title>버터의 말썽 대탈출</title><link rel="icon" href="./assets/butter-original36/poster.png"><link rel="stylesheet" href="./survivor69.css?v=69"><script type="module" src="./survivor69.js?v=69"></script></head>
 <body><main class="shell" id="field">
 <header><div class="brand"><span>✦</span><div>버터의 말썽 대탈출<small>MOVE. GROW. BONK.</small></div></div><nav><button id="build" disabled aria-label="기술과 성장 보기">기술</button><button id="help" aria-label="게임 방법">?</button><button id="sound" aria-pressed="true">소리 켬</button><button id="pause" disabled aria-label="일시정지">Ⅱ</button></nav></header>
 <canvas id="world" tabindex="0" aria-label="이동하며 경험치를 모으는 자동 공격 생존 전투">자동 공격 생존 게임입니다. WASD 또는 방향키로 이동하고 E로 왕새총을 사용합니다.</canvas>
 <section class="hud" aria-label="현재 탐사 상태"><div class="health"><div><span>버터의 체력</span><b id="hp">100 / 100</b></div><div class="track"><i id="hp-bar"></i></div><div class="level-row"><b id="level">Lv 1</b><span id="xp">0 / 8</span></div><div class="track xp-track"><i id="xp-bar"></i></div></div><div class="clock"><small>SURVIVAL</small><b id="timer">00:00</b><span id="next-event">수호자 01:30</span></div><div class="score"><b id="kills">0</b>처치<span id="cores">각성 핵 0</span></div></section>
 <section id="bossbar" hidden aria-label="수호자 체력"><b id="boss-name"></b><div class="track"><i id="boss-hp"></i></div></section>
 <p id="notice" role="status" aria-live="polite"></p>
+<button id="map-open" class="mini-map" disabled aria-label="전체 지도 열기"><canvas id="mini-map" width="136" height="104" aria-hidden="true"></canvas><span>M · 지도</span></button>
+<button id="interact" class="interact" hidden><kbd>F</kbd> <span id="interact-label"></span></button>
 <div id="moves" class="bottom" aria-label="습득한 자동 공격 기술"></div>
-<div class="hint">WASD / 방향키 이동<br>공격은 자동 · E 왕새총 · B 기술 보기</div>
+<div class="hint">WASD 이동 · 공격은 자동<br>F 상호작용 · E 왕새총 · M 지도</div>
 <div id="joystick" class="joystick" aria-label="터치 이동 스틱"><i id="knob"></i></div>
 <button id="ultimate" class="ultimate" disabled><b>왕새총 <kbd>E</kbd></b><small id="ultimate-time">준비 완료</small></button>
 </main><div id="dialog" class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><section id="panel" class="panel"><h1 id="dialog-title">숲으로 가는 중…</h1></section></div></body></html>

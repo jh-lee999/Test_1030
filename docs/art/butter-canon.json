@@ -1,5 +1,13 @@
 {
-  "version": 9,
+  "version": 10,
+  "survivorDecision69": {
+    "date":"2026-11-05",
+    "request":"Mechanic-changing ranks/fusions, random map elements, permanent progression and measured difficulty",
+    "entry":"survivor69.js",
+    "archive":"survivor68.html",
+    "art":"All original source files/hashes and the shared size80 foot/muzzle transform unchanged; new procedural terrain/areas are fan-game mechanics, not extracted original art",
+    "meta":"Explicitly authorized now; capped stats plus map/loadout/difficulty unlocks, separate versioned save"
+  },
   "survivorDecision68": {
     "date": "2026-11-05",
     "choice": "발라트로 포기하고, 그냥 뱀서로 돌아가는데, 그냥 포켓봉크처럼 만들자",
