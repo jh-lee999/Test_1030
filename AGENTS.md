@@ -1,5 +1,30 @@
 # Project instructions
 
+## ACTIVE v77:42 artifacts, real rarity, plain stats and explicit troll tradeoffs
+
+Root loads dungeon77 client/content/build/economy/engine/shots/save/UI/renderer.
+World/biomes/bosses/encounters/progress/art76 stay unchanged and reused.
+Read docs/dungeon77.md and assets/items77/CREDITS.md. Exact76 root is archived
+as dungeon76.html (SHA256641423d17c136fedc096eceeeb19505b79101873ee8e2e0422fe5d4defb39789).
+Old76 engines, source/diagnostic hashes, canon art and policies remain unchanged.
+42 unique artifacts,24 new (12 stat,6 mechanic/rarity,6 troll);4 rarities0..3.
+Grade-first sampling prevents item count from biasing tier odds. Eligible/unowned/
+unlocked pools, safe first gift, separate loot/reward RNG and no reroll on inspection.
+Stats derive from all held items. Source-release floor applies to attack interval;
+never redraw/recolor/split original characters or alter their anchors.
+Rarity count effects and drawbacks must match actual damage/rate/HP/speed/price.
+Troll warnings and actual preview precede radius38 auto-pick. Shops remain F-only,
+display/base-discount/charged cost agree. Contracts must charge real10 maxHP.
+Bomb radius/damage snapshot at placement; warning/self-harm match radius.
+Echo queues preserve frozen origin/plan/time through menus/save; children never
+split recursively, source projectile/fire limits remain. UI/preview/map is pure.
+New SAVE_KEY butter.dungeon77.v1 imports76 profile only, old active stays archived.
+SVG24 icons are independent fan-code art; preserve hash/cells/gutter. No SVG
+external references, scripts or new dependency needed. Original art stays intact.
+Run npm tests/art77/canon/original and browser77 plus archived76. Separate actual
+DOM3-room input from explicit troll/price/boss fixtures and full-information policy.
+Never equate test wins with fun. No delegation. Preserve unrelated chibi WebP.
+
 ## ACTIVE v76: tactical room crawl, compositional builds and replay unlocks
 
 Root runs dungeon76 modules. Read docs/dungeon76.md and assets/sanctuary76/CREDITS.md.

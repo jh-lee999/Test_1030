@@ -1,0 +1,14 @@
+@import url('./dungeon76.css?v=76');
+.r0{--grade:#c9d3bf}.r1{--grade:#80cce4}.r2{--grade:#c5a0e9}.r3{--grade:#f3cd75}
+.rarity-icon{display:inline-flex;vertical-align:middle;border:1px solid var(--grade);border-radius:9px;background:#17342b88}
+.rarity-badge{display:inline-block;border:1px solid var(--grade);border-radius:6px;color:var(--grade);padding:3px 7px;font-size:11px;margin:0 7px 6px 0}
+.item77-icon{background-image:url('./assets/items77/icons.svg')!important;background-size:600% 400%!important}
+.grade-counts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:14px 0}.grade-counts>span{color:var(--grade);border:1px solid var(--grade);border-radius:8px;padding:7px 12px;font-size:13px}.grade-effects{color:#e3d29e!important}
+.catalog-grade{text-align:left;margin:12px 0;border:1px solid #a8bda744;border-radius:12px;padding:12px}.catalog-grade>summary{color:var(--grade);cursor:pointer;min-height:32px;line-height:32px}
+.catalog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}.catalog-grid article{padding:13px;background:#102c2c77;border-radius:10px;border:1px solid #adbda533}.catalog-grid b,.catalog-grid small{display:block}.catalog-grid small{margin-top:5px;color:#bfceb5}.catalog-grid p{font-size:12px!important;margin-bottom:0}.catalog-grid .troll-item{border-color:#df9c8b88;background:#553c3a33}
+#item-peek{position:absolute;bottom:128px;left:50%;transform:translateX(-50%);width:min(650px,86vw);padding:11px 16px;border:1px solid #e3c77f88;background:#173b35ed;border-radius:14px;text-align:center;pointer-events:none;color:#f0e4c3;font-size:13px;line-height:1.6}
+#item-peek>span:not(.rarity-badge),#item-peek>small{display:block}#item-peek>small{font-size:11px;color:#ccdabd}
+.title-foot{flex-wrap:wrap}.title-foot>button{font-size:12px}.inventory article .rarity-badge{font-size:10px}
+#interact-desc{color:#655640}.catalog-grid article>.rarity-icon{float:right;margin-left:8px}
+@media(max-width:600px){.catalog-grid{grid-template-columns:1fr}#item-peek{bottom:220px;font-size:11px;padding:9px 11px}#item-peek>small{font-size:10px}}
+@media(max-height:520px){#item-peek{bottom:75px;width:55vw;font-size:10px;padding:6px 10px}#item-peek>small{font-size:9px}}

@@ -1,4 +1,14 @@
-# 현재 버전 v76 · 버터의 아공간 소풍
+# 현재 버전 v77 · 42종 아이템과 레어도
+
+[바로 플레이](https://jh-lee999.github.io/Test_1030/?v=items77) ·
+[새 효과와 검증 범위](docs/dungeon77.md) · [새 아이콘 출처](assets/items77/CREDITS.md).
+
+일반/희귀/영웅/전설 등급과 등급별 추첨·상점 가격, 순수 스탯템12종,
+기믹·등급 연동템6종, 장단점이 있는 트롤템6종을 추가했습니다.
+아이템 도감에서42종을 보고, 바닥 아이템은 줍기 전 효과와 대가를 확인하세요.
+새 소풍부터 적용되며 기존76 탐사는 dungeon76.html에 보존합니다.
+
+# 이전 버전 v76 · 버터의 아공간 소풍
 
 [바로 플레이](https://jh-lee999.github.io/Test_1030/?v=expedition76) ·
 [규칙과 검증 범위](docs/dungeon76.md) · [에셋 출처](assets/sanctuary76/CREDITS.md).

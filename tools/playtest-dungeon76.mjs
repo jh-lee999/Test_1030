@@ -5,7 +5,7 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox']});
 const root=process.argv[2]||'http://127.0.0.1:4196',seed=process.argv[3]||'diagnostic-0',errors=[],held=new Set(),state={};let firing=false;
 try{
- const p=await browser.newPage({viewport:{width:1366,height:850}});p.on('pageerror',e=>errors.push(e.message));await p.goto(root+'/?test=1&persist=1&seed='+encodeURIComponent(seed));await p.waitForSelector('body[data-ready="true"]');await p.locator('#start').click();let last=-30,seen=new Set();
+ const p=await browser.newPage({viewport:{width:1366,height:850}});p.on('pageerror',e=>errors.push(e.message));await p.goto(root+'/dungeon76.html?test=1&persist=1&seed='+encodeURIComponent(seed));await p.waitForSelector('body[data-ready="true"]');await p.locator('#start').click();let last=-30,seen=new Set();
  for(let i=0;i<2000;i++){
   const g=await p.evaluate(()=>window.__dungeon76.game);if(g.time-last>=30){last=g.time;await writeFile('/tmp/dungeon76-native-progress.json',JSON.stringify({game:g,policy:pilot(g,state)},null,2));console.log(JSON.stringify({time:Math.round(g.time),hp:g.player.hp,floor:g.floorIndex+1,room:g.room,clears:g.clears,items:g.items}));}
   if(['won','dead'].includes(g.phase)||g.clears>=3)break;

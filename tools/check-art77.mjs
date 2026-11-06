@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {ITEMS} from '../dungeon77-content.js';
+const root=new URL('../',import.meta.url),d=JSON.parse(readFileSync(new URL('assets/items77/sources.json',root))),svg=readFileSync(new URL(d.file,root),'utf8');
+assert.equal(createHash('sha256').update(svg).digest('hex'),d.sha256);
+assert(svg.includes('width="576" height="384" viewBox="0 0 576 384"'));
+assert(!/<script|foreignObject|<image|href=|@import|url\(/i.test(svg));
+assert.equal((svg.match(/<g id="item-/g)||[]).length,24);
+for(let i=0;i<24;i++)assert(svg.includes('id="item-'+i+'" transform="translate('+i%6*96+' '+Math.floor(i/6)*96+')"'));
+assert.deepEqual(Object.values(ITEMS).filter(v=>v.icon77!==undefined).map(v=>v.icon77).sort((a,b)=>a-b),Array.from({length:24},(_,i)=>i));
+console.log('v77: pinned self-contained SVG,24 complete96px cells, browser-measured6px geometry /4.5px stroke gutter. No hero art changed.');
