@@ -31,9 +31,19 @@ jobs:
           node-version: 24
 
       - name: Install sprite inspection tools
+        timeout-minutes: 5
         run: |
-          sudo apt-get update
-          sudo apt-get install --yes imagemagick
+          if command -v identify >/dev/null && command -v convert >/dev/null; then
+            identify -version
+            exit 0
+          fi
+          # Hosted images normally have usable package indexes. Refresh only on
+          # failure; unrelated apt feeds must not leave Pages waiting indefinitely.
+          apt_network=(-o Acquire::Retries=1 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30)
+          if ! sudo apt-get "${apt_network[@]}" install --yes imagemagick; then
+            sudo apt-get "${apt_network[@]}" update
+            sudo apt-get "${apt_network[@]}" install --yes imagemagick
+          fi
 
       - name: Check game, sprite bounds and approved art
         run: |
