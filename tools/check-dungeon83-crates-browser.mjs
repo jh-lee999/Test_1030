@@ -3,7 +3,7 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox']});
 const root=process.env.GAME_URL||'http://127.0.0.1:4196',errors=[],results=[];
 try{
- const p=await browser.newPage({viewport:{width:1366,height:850}});p.on('pageerror',e=>errors.push(e.message));await p.goto(root+'/?test=1&seed=1793941607142');await p.waitForSelector('body[data-ready="true"]');await p.locator('#start').click();
+ const p=await browser.newPage({viewport:{width:1366,height:850}});p.on('pageerror',e=>errors.push(e.message));await p.goto(root+'/dungeon83.html?test=1&seed=1793941607142');await p.waitForSelector('body[data-ready="true"]');await p.locator('#start').click();
  for(const mode of ['standard','inside','yellow','fan','charge','prism','velvet']){
   const target=await p.evaluate(async mode=>{
    const a=__dungeon83,g=a.game,E=a.engine,{shotBounds,firstShotHit}=await import('./dungeon82-collision.js'),{blocked,links}=await import('./dungeon80-world.js'),{butterMuzzleOffset,butterReleasePoint}=await import('./butter-gun-motion71.js');
@@ -24,6 +24,6 @@ try{
  await p.keyboard.press('Escape');const exact=await p.evaluate(()=>{delete __dungeon83.game.fixtureCrateIndex;__dungeon83.checkpoint();return structuredClone(__dungeon83.game);});
  await p.screenshot({path:'/tmp/dungeon83-crates.png'});assert(exact.rooms.some(r=>r.obstacles.some(o=>o.kind==='pot'&&o.hp===0)));
  // Separate real81 save ->82 entry with no state injections.
- const c=await browser.newPage({viewport:{width:1366,height:850}});c.on('pageerror',e=>errors.push(e.message));await c.goto(root+'/dungeon81.html?test=1&persist=1&seed=resume82');await c.waitForSelector('body[data-ready="true"]');await c.locator('#start').click();await c.keyboard.press('Escape');const old=await c.evaluate(()=>structuredClone(__dungeon81.game));await c.goto(root+'/?test=1&persist=1');await c.waitForSelector('body[data-ready="true"]');await c.locator('[data-continue]').click();assert.deepEqual(await c.evaluate(()=>structuredClone(__dungeon83.game)),old);await c.close();assert.deepEqual(errors,[]);
+ const c=await browser.newPage({viewport:{width:1366,height:850}});c.on('pageerror',e=>errors.push(e.message));await c.goto(root+'/dungeon81.html?test=1&persist=1&seed=resume82');await c.waitForSelector('body[data-ready="true"]');await c.locator('#start').click();await c.keyboard.press('Escape');const old=await c.evaluate(()=>structuredClone(__dungeon81.game));await c.goto(root+'/dungeon83.html?test=1&persist=1');await c.waitForSelector('body[data-ready="true"]');await c.locator('[data-continue]').click();assert.deepEqual(await c.evaluate(()=>structuredClone(__dungeon83.game)),old);await c.close();assert.deepEqual(errors,[]);
  console.log(JSON.stringify({explicitGeneratedRoomFixture:true,realMouseFire:results,exact81To83Continue:true,errors},null,2));
 }finally{await browser.close();}

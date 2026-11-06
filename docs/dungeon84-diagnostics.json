@@ -1,0 +1,470 @@
+{
+  "version": 84,
+  "recordedAtUTC": "2026-11-06T08:38:02.152Z",
+  "reference": {
+    "site": "https://pokeisaac.com/",
+    "observedPublicOfflineVersion": "v1.1.1",
+    "scope": "Bounded offline observations documented in dungeon83.md; independent algorithms, no copied code/art/layout/UI. Not all campaign/shop/items verified."
+  },
+  "verification": {
+    "fullUnit": {
+      "tests": 608,
+      "pass": 608,
+      "fail": 0,
+      "duration_ms": 63243.259298
+    },
+    "newCoreAndManualCombatRegressions": {
+      "tests": 33,
+      "pass": 33,
+      "fail": 0,
+      "duration_ms": 18594.502819
+    },
+    "procedural": {
+      "generatedFloors": 3000,
+      "layoutRosterFloors": 90,
+      "treasurePresentationRuns": 500,
+      "portalLandingFloors": 60,
+      "explicitActiveSwaps": 120
+    },
+    "browser": {
+      "nativeStartFireAndExactResume": true,
+      "fixtureEveryQueuedLessonAndReload": true,
+      "fixtureRealKeyActiveAndChargedSwap": true,
+      "catalog54": true,
+      "fixtureBossAndBranchExit": true,
+      "fixtureLargeRoomMouseAndExactSave": true,
+      "fixturePuzzleForgeAndRemixUnlock": true,
+      "mobileDualTouch": [
+        390,
+        568
+      ],
+      "imageStorageFailurePlayable": true,
+      "renderReadOnly": true,
+      "errors": []
+    },
+    "rulesAndOriginalGuardian": {
+      "explicitGuardianFixture": true,
+      "actualHeroAssetLoaded": true,
+      "correctBossLabel": true,
+      "noAutoActiveSwap": true,
+      "realKeyboardChargedSwap": true,
+      "exactChargedResume": true,
+      "exactWaveDelayResume": true,
+      "noPrematureReward": true,
+      "renderPure": true,
+      "errors": []
+    },
+    "crateMouseModes": {
+      "explicitGeneratedRoomFixture": true,
+      "realMouseFire": [
+        {
+          "mode": "standard",
+          "destroyed": true
+        },
+        {
+          "mode": "inside",
+          "destroyed": true
+        },
+        {
+          "mode": "yellow",
+          "destroyed": true
+        },
+        {
+          "mode": "fan",
+          "destroyed": true
+        },
+        {
+          "mode": "charge",
+          "destroyed": true
+        },
+        {
+          "mode": "prism",
+          "destroyed": true
+        },
+        {
+          "mode": "velvet",
+          "destroyed": true
+        }
+      ],
+      "exact81To83Continue": true,
+      "errors": []
+    },
+    "decisions": {
+      "explicitVisitedShopFixture": true,
+      "previewAndRealKeyboardPurchase": true,
+      "actualPriceAndNoAutoSpend": true,
+      "journalAndWaypointDOM": true,
+      "noAutoMovement": true,
+      "renderPure": true,
+      "legacy82UnchangedIn83Archive": true,
+      "mobileMapNoOverflow": true,
+      "errors": []
+    },
+    "archive83": {
+      "nativeStartFireAndExactResume": true,
+      "fixtureEveryQueuedLessonAndReload": true,
+      "fixtureRealKeyActiveAndChargedSwap": true,
+      "catalog54": true,
+      "fixtureBossAndBranchExit": true,
+      "fixtureLargeRoomMouseAndExactSave": true,
+      "fixturePuzzleForgeAndRemixUnlock": true,
+      "mobileDualTouch": [
+        390,
+        568
+      ],
+      "imageStorageFailurePlayable": true,
+      "renderReadOnly": true,
+      "errors": []
+    },
+    "nativeDOMOnly": {
+      "fullInformationReadOnlyController": true,
+      "stateWrites": false,
+      "seed": "native80-0",
+      "phase": "lesson",
+      "simulationSeconds": 65.2055000000027,
+      "clears": 3,
+      "kills": 9,
+      "hp": 34,
+      "items": [
+        "juniorBook"
+      ],
+      "school": {
+        "level": 3,
+        "xp": 2,
+        "junior": 1,
+        "senior": 1,
+        "pending": [
+          3
+        ]
+      },
+      "errors": []
+    },
+    "pressure": {
+      "explicitMatchedFixtures": true,
+      "fullInformationController": true,
+      "humanDifficultyOrFunClaim": false,
+      "summary": {
+        "holdRight": {
+          "runs": 24,
+          "clears": 0,
+          "deaths": 24,
+          "meanHP": 0,
+          "medianSeconds": 9.98
+        },
+        "aimOnly": {
+          "runs": 24,
+          "clears": 15,
+          "deaths": 5,
+          "meanHP": 33.75,
+          "medianSeconds": 12.1
+        },
+        "evade": {
+          "runs": 24,
+          "clears": 24,
+          "deaths": 0,
+          "meanHP": 64.375,
+          "medianSeconds": 9.1
+        }
+      }
+    },
+    "campaign": {
+      "fullInformationController": true,
+      "humanWinRateClaim": false,
+      "maxSimulationSeconds": 1200,
+      "extraInvulnerability": false,
+      "results": [
+        {
+          "seed": "balance84-0",
+          "phase": "won",
+          "time": 691.4666666662022,
+          "hp": 43,
+          "floor": 3,
+          "clears": 36,
+          "kills": 177,
+          "damageTaken": 125,
+          "school": {
+            "level": 16,
+            "xp": 27,
+            "junior": 4,
+            "senior": 3,
+            "pending": []
+          },
+          "items": [
+            "fireworks",
+            "rust",
+            "thickGloves",
+            "mirror",
+            "runningRibbon",
+            "bell",
+            "longString",
+            "juniorBook",
+            "seekingStar",
+            "seniorBook",
+            "frost"
+          ],
+          "invalid": null
+        },
+        {
+          "seed": "balance84-1",
+          "phase": "dead",
+          "time": 127.04166666671384,
+          "hp": 0,
+          "floor": 1,
+          "clears": 6,
+          "kills": 26,
+          "damageTaken": 70,
+          "school": {
+            "level": 5,
+            "xp": 28,
+            "junior": 2,
+            "senior": 1,
+            "pending": []
+          },
+          "items": [
+            "luckyClover",
+            "belt"
+          ],
+          "invalid": null
+        },
+        {
+          "seed": "balance84-2",
+          "phase": "dead",
+          "time": 517.2666666663606,
+          "hp": 0,
+          "floor": 3,
+          "clears": 27,
+          "kills": 134,
+          "damageTaken": 204,
+          "school": {
+            "level": 13,
+            "xp": 126,
+            "junior": 4,
+            "senior": 2,
+            "pending": []
+          },
+          "items": [
+            "mace",
+            "runningRibbon",
+            "juniorBook",
+            "rust",
+            "fan",
+            "charge",
+            "belt",
+            "damageFocus",
+            "schoolBell",
+            "fastRibbon"
+          ],
+          "invalid": null
+        },
+        {
+          "seed": "balance84-3",
+          "phase": "dead",
+          "time": 691.0999999995358,
+          "hp": 0,
+          "floor": 3,
+          "clears": 28,
+          "kills": 135,
+          "damageTaken": 168,
+          "school": {
+            "level": 13,
+            "xp": 134,
+            "junior": 4,
+            "senior": 2,
+            "pending": []
+          },
+          "items": [
+            "schoolBell",
+            "mace",
+            "juniorBook",
+            "rust",
+            "frost",
+            "charge",
+            "fan",
+            "fireworks",
+            "belt",
+            "ironLunch",
+            "longString",
+            "bell",
+            "afterImage"
+          ],
+          "invalid": null
+        },
+        {
+          "seed": "balance84-4",
+          "phase": "dead",
+          "time": 353.5583333331761,
+          "hp": 0,
+          "floor": 2,
+          "clears": 15,
+          "kills": 63,
+          "damageTaken": 132,
+          "school": {
+            "level": 9,
+            "xp": 31,
+            "junior": 4,
+            "senior": 1,
+            "pending": []
+          },
+          "items": [
+            "longSight",
+            "fireworks",
+            "luckyClover",
+            "juniorBook",
+            "fastRibbon",
+            "seniorBook",
+            "bell"
+          ],
+          "invalid": null
+        },
+        {
+          "seed": "balance84-5",
+          "phase": "dead",
+          "time": 350.72499999984535,
+          "hp": 0,
+          "floor": 2,
+          "clears": 15,
+          "kills": 59,
+          "damageTaken": 148,
+          "school": {
+            "level": 8,
+            "xp": 89,
+            "junior": 3,
+            "senior": 1,
+            "pending": []
+          },
+          "items": [
+            "rust",
+            "fan",
+            "juniorBook",
+            "thickGloves",
+            "seniorBook"
+          ],
+          "invalid": null
+        }
+      ],
+      "wins": 1,
+      "deaths": 5,
+      "timeLimits": 0,
+      "invalidSaves": 0
+    },
+    "performance": {
+      "method": "Two fresh headless Chromium1366x850/DPR1 instances, normal/grand legal-room invulnerability fixtures,7s cold-entry sample, no profiler/throttling/concurrent tests. CPU submission time and headless rAF intervals, NOT user-device FPS/GPU memory.",
+      "reports": [
+        {
+          "entryMs": 59,
+          "shape": "normal",
+          "enemies": 3,
+          "obstacles": 6,
+          "frames": {
+            "frames": 343,
+            "meanMs": 21.13586005830904,
+            "p95Ms": 33.20000000000073,
+            "over33": 11
+          },
+          "long": [
+            91,
+            260,
+            161,
+            117,
+            71,
+            69
+          ],
+          "render120ms": 46.29999999701977,
+          "cache": {
+            "bytes": 25083612,
+            "entries": 184,
+            "hits": 5004,
+            "misses": 440,
+            "limit": 25165824
+          }
+        },
+        {
+          "entryMs": 71.29999999701977,
+          "shape": "grand",
+          "enemies": 3,
+          "obstacles": 8,
+          "frames": {
+            "frames": 326,
+            "meanMs": 21.88067484662577,
+            "p95Ms": 50.099999999998545,
+            "over33": 27
+          },
+          "long": [
+            63,
+            58,
+            50,
+            56,
+            127,
+            52,
+            62,
+            61,
+            66,
+            84,
+            77,
+            72,
+            63,
+            61,
+            75,
+            56,
+            83,
+            55,
+            75
+          ],
+          "render120ms": 27.099999994039536,
+          "cache": {
+            "bytes": 25144516,
+            "entries": 185,
+            "hits": 6603,
+            "misses": 373,
+            "limit": 25165824
+          }
+        }
+      ],
+      "errors": []
+    },
+    "guardianScreenshotInspected": true
+  },
+  "limitations": [
+    "Automated invariants/controllers do not prove subjective fun or commercial readiness.",
+    "Native DOM run covers3 actual fights, not a native-input campaign win.",
+    "Matched room entries and guardian/item/transition tests are explicit fixtures, not organically earned runs.",
+    "Full-information policy does not optimally use bombs/secondary actives; its death rate is not a human win-rate estimate.",
+    "Headless cold-entry rAF and CPU submission measurements are not user-device FPS/GPU memory claims.",
+    "Legacy80 run and volume keys remain unchanged;84 imports profile only, old active continues in exact83 archive."
+  ],
+  "sourceHashes": {
+    "index.html": "8f20d51a3cbc25f89d8021405c28f9f99b2707610141e7f852b18a73740d9543",
+    "dungeon83.html": "d806d4f62ea59256f6d3c1c0d62b09dd61520305978b8bb16a6647b832ff2773",
+    "dungeon83.css": "1f0f128317f4061aebf8bd8f7a372848242a8f0611b08145b14bab01b6072a6a",
+    "dungeon81-cache.js": "53140b44701cc303a77188a563f9be0bd0f0465ff3300de56fb4c29e93a2dda2",
+    "dungeon81-nav.js": "4526b45ddfb6034bbae12bc0052f961dfb571731c9080dbd7d254d96edbd8fb1",
+    "dungeon84-biome.js": "772bb5fc474f692b56200c3e1ccc99ca3a7639933d4848067718776b93dea339",
+    "dungeon84-build.js": "dfa0b8b2ac204dd583e102acfefb4aa3999a3ed89441fce76e3a590315b60e80",
+    "dungeon84-collision.js": "ddd8bac90e64b34731360efaeb1070ae3e2c7cc7f5c1505cbef68b7cb35e1252",
+    "dungeon84-content.js": "475fb8c02f9bf1a1e8c44570c3c94a7afe036fc05d47d7355390082617789605",
+    "dungeon84-economy.js": "fef6cc213092e2b3a8be0c3534c2fb0b871a6521fe45a111577704ba90df58b6",
+    "dungeon84-encounters.js": "45233c4fa84792a13cf24b9b01dbb27c51ee6f997d9ed3769d0ac22ce6b16913",
+    "dungeon84-engine.js": "ed736d9829c5f6cf08e5111cf3a88d574f99035d056605315fe95c84605a184d",
+    "dungeon84-exploration.js": "095ffc949e7c6e14666881e5a598d442ddc55b299ddc76042b3ad5f112ad05f7",
+    "dungeon84-items-ui.js": "db7d146b76fa9c0ec3ddc67c2b088676d6ecd2f9ccfb94afca517f64f6fdaa30",
+    "dungeon84-loot.js": "7b3f65e54dab3a729cdc2d6fbb04ca566e16cefdd54bdd1e2600db32411f6801",
+    "dungeon84-renderer.js": "81ede5b658cb610b75d8949ec1cdc7fdadcacc04454bc75a697727a2b2c00c06",
+    "dungeon84-save.js": "3c646afc63d8d406cf7945f320de20be5ce31de4c28f0ba8eb1d349cf7010887",
+    "dungeon84-shots.js": "9ff74281187a95884cf95e57bf48212372d28d60811c5a052b2f47143cda44f2",
+    "dungeon84-systems.js": "b0a61dde6f3b2f48067cf5f173b275670ff6302c9d9d4f8e4ac40432c5609968",
+    "dungeon84-ui.js": "a255638f7259d2bec45dd202c3aa7e1e5590cd1d50d94003589920015deeeb7a",
+    "dungeon84-world.js": "82f5330257288e440ce2c1017646aba6f962dc13c02d3f2fb56822b41fb8ebc4",
+    "dungeon84.js": "12dd80529e81cf81d3f25a521143515b08e8f9ff75547deb2af7d0a6c3ce75e4",
+    "test/dungeon84-regressions.test.js": "7501a63d4c952287c8694c6639c42d17088bd8679423c0ec04447ff4230816b2",
+    "test/dungeon84.test.js": "d936be3aab9f72520f23b7c4e4538f4dc5dbba1187bd5ce2b54f796ab60a6c0d",
+    "tools/balance-dungeon84.mjs": "5ae38bfc94c006de1b889efd6a9a1f84937e0f36274f01e21a4f1cc6fe12788a",
+    "tools/check-dungeon84-browser.mjs": "fa17952ae0827a095347ea440557b3b921bf2f3e649b48b227d1cb4162b3b658",
+    "tools/check-dungeon84-crates-browser.mjs": "342746839478215f6c59985d855acbf6232469f17dd8b67e70de435f0c3a780f",
+    "tools/check-dungeon84-decisions-browser.mjs": "ea5894c99d2f2b1741b1975fe33c5b885cbf1d73de9e5df6d75ce5460280f93a",
+    "tools/check-dungeon84-performance.mjs": "e3e19af95620d1176a4195a323556c31bbcd2c10d301a5cdbef32775c37bef05",
+    "tools/check-dungeon84-pressure.mjs": "a385c4e3dd41aa88dc7b37a03f1b3cf058072120debe41d4fa3329848eaf5952",
+    "tools/check-dungeon84-rules-browser.mjs": "f04638aa4213346431a0c0506a80b7d1cd2771f220811ca8932d83a2735e3d21",
+    "tools/dungeon84-policy.mjs": "37bd4d9f9d68de463015f190f7975468b8df1a34ba048fdad56c7721b2ac713d",
+    "tools/playtest-dungeon84.mjs": "80787d47604732f7dc3dca82f4ad00fa0ce2afd9d6c8a2a3ed498a42ecacf185"
+  }
+}

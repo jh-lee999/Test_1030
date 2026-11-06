@@ -1,5 +1,31 @@
 # Project instructions
 
+## ACTIVE v84: co-planned floors, encounters and reward pacing
+
+Read docs/dungeon84.md. This is the user's authorized core rules revision, not
+a GUI-only patch. Reference observations are bounded by83's offline evidence;
+never claim PokeIsaac internal distributions or copy its code/art/UI. No delegation.
+84 topology enforces boss depths6/7/8, real loop styles,2gold/1shop combat-only
+geometric leaves, early treasure/mid shop, support+risk quotas, max-adjacency secret.
+Room archetypes/cover/rosters, connected32px navigation and door85px clearance must
+agree. Large ordinary rooms2waves:1.15s break, ONE reward/charge and final coin+1.
+Optional source-hero guardians must load their actual art/name; no boss artifact.
+Keep fixed stage HP/damage curves, manual launch/delayed seeker/random-on-hit
+ricochet and ordered83 contacts; no DPS-adaptive enemies or auto aim/movement.
+Reserve every cached unpaid offer. First2treasure presentations/floor contain a
+real combat mechanic if available; stats/luck/books don't satisfy that guarantee.
+New combos use finite wall/parent-only return/fire caps, no recursive children.
+Reward/chest/resource landings must stay reachable32 and >=70px from portals.
+Normal items auto-collect, replacement actives require F and preserve old charge.
+Prune consumed swap records; never auto-chain active swaps or refill charges.
+New save84 key imports profile ONLY. Keep old80 run+volume intact and exact root83
+in dungeon83.html. Old modules/assets/diagnostics immutable; old test URLs only
+redirect to archive83, normalize only those redirects in83 pin checks.
+Run full tests,3000floor invariants,84 browser/rules/crate/decision/mobile failures,
+archive83, actual DOM-input play and isolated performance. Distinguish fixtures,
+full-information controllers, headless CPU/rAF measures and human fun evidence.
+Preserve unrelated tools/sprite-sources/butter-chibi-release.webp.
+
 ## ACTIVE v83: two review iterations, honest hits and exploration decisions
 
 Read docs/dungeon83.md. Compare PokeIsaac by observed offline gameplay only;
