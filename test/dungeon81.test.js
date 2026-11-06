@@ -22,7 +22,7 @@ test('CPU canvas fallback cache has a hard budget, hits, eviction and real clear
 });
 test('81 archives exact80, retains same rules/save/art, changes only steering import',()=>{
  assert.equal(createHash('sha256').update(read('dungeon80.html')).digest('hex'),'825e86ecf8767636e390d0092b57cb122cb80cba65379954a110a93fd2fc28d3');
- assert.match(read('index.html'),/dungeon81.js\?v=81/);
+ assert.match(read('dungeon81.html'),/dungeon81.js\?v=81/);
  const normalized=read('dungeon81-engine.js').replace(/^\/\/[^\n]*\nimport \{steer\} from '\.\/dungeon81-nav.js';\n/,'').replace('moveBody,nearestFree','moveBody,steer,nearestFree');
  assert.equal(normalized.trimEnd(),read('dungeon80-engine.js').trimEnd());
  assert.match(read('dungeon81.js'),/dungeon80-save.js/);

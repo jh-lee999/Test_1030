@@ -1,0 +1,65 @@
+{
+  "version": 82,
+  "scope": "Manual launch, delayed seeking, random post-hit ricochet, swept wooden-crate impacts; same80 active save; no regenerated art",
+  "sourceHashes": {
+    "index.html": "e02ec7b2b6658d913843dc9ea76fb98cb6022109d8f3192a1f65d50ded0d7d7a",
+    "dungeon81.html": "355b3502e6484425aca8dba57ef7179fe77359cfdc47e1e24dc20a8f65f22d2e",
+    "dungeon81-cache.js": "53140b44701cc303a77188a563f9be0bd0f0465ff3300de56fb4c29e93a2dda2",
+    "dungeon81-nav.js": "4526b45ddfb6034bbae12bc0052f961dfb571731c9080dbd7d254d96edbd8fb1",
+    "dungeon80-save.js": "0acf10be3d797699546c5c331d40eff77a51d111a71c150352fefc3063767818",
+    "dungeon82.js": "8a388ac2f9bc8568a9ca78cec374c3d11031d9030fc3f79cc2c286abdc9fb5f5",
+    "dungeon82-engine.js": "d8817c55f3d45571f03e8fc65d27058c94fe4d0e315a9fa938a2424dfcbf8da5",
+    "dungeon82-shots.js": "9d911ddcaa1bf9fa27e201a55d923dc1ce3efb450d173fb6130a0cdbf5ae9d9d",
+    "dungeon82-collision.js": "44c584f16f9aac067c5dc49503ac495fd62e40e444c162c8a5038e621bf56831",
+    "dungeon82-content.js": "35e1b73131c8515afba4a0614d1216f9e555eff9265b052c15bbbb3a283adb8d",
+    "dungeon82-build.js": "640f7320fb368fe9bfa4d61b6892a508c33925d89d90ea99422ed2b1139d50ed",
+    "dungeon82-ui.js": "65c7258e5757d4668df1a90cdb82a35e42d7eefa864679d31bb219453655137d",
+    "dungeon82-items-ui.js": "bd2c64b5e182719521cea43a7c479eb794f390a4c33b41aeb4e98fd7912cce63",
+    "dungeon82-renderer.js": "d808f8821d483b85fc648cd57bdca2a370b36cd673824dbccc8fd2c7acc46ada",
+    "test/dungeon82.test.js": "4a22990ccfe42f19925784184271696e226e8aefbd28bd6f967a306163e87304",
+    "tools/check-dungeon82-browser.mjs": "3c15b442c94f510f5d24d94737b62a2b7c5deb6f4669499547d00de81879a443",
+    "tools/check-dungeon82-crates-browser.mjs": "f50b22603aefa94e9481aa45c39ca1949bd0a89bef2ae1ee3cb346150fe926fc",
+    "tools/playtest-dungeon82.mjs": "824073aa800a22194078b927e59fb5c9b1a51c37954d72b526000c050b8395c4"
+  },
+  "unit": {
+    "total": 547,
+    "passed": 547,
+    "version82": 14
+  },
+  "browser": {
+    "current82": true,
+    "archive81": true,
+    "explicitCrateFixtures": [
+      "standard",
+      "inside muzzle",
+      "yellow gun",
+      "fan",
+      "charge",
+      "beam",
+      "Velvet melee"
+    ],
+    "actualDOMMouseFire": true,
+    "fixtureStateWrites": true,
+    "real81To82ResumeExact": true,
+    "mobileDualTouch": [
+      390,
+      568
+    ],
+    "imageStorageFailure": true
+  },
+  "native": {
+    "fullInformationPolicy": true,
+    "stateInjection": false,
+    "seed": "native80-0",
+    "phase": "playing",
+    "time": 38.98179999999939,
+    "clears": 3,
+    "kills": 12,
+    "hp": 34,
+    "items": [
+      "mirror"
+    ],
+    "errors": []
+  },
+  "caveat": "Automated functional fixtures and native-input full-information controller, not user-device performance, human fun, or human difficulty evidence."
+}

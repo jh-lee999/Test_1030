@@ -5,7 +5,7 @@ const root=process.env.GAME_URL||'http://127.0.0.1:4196',errors=[];
 try{
  const p=await browser.newPage({viewport:{width:1366,height:850},deviceScaleFactor:2});p.on('pageerror',e=>errors.push(e.message));
  await p.goto(root+'/dungeon80.html?test=1&persist=1&seed=compat81',{waitUntil:'domcontentloaded'});await p.waitForSelector('body[data-ready="true"]');await p.locator('#start').click();await p.keyboard.down('ArrowLeft');await p.waitForFunction(()=>__dungeon80.game.shots>0);await p.keyboard.up('ArrowLeft');await p.keyboard.press('Escape');const old=await p.evaluate(()=>structuredClone(__dungeon80.game));
- await p.goto(root+'/?test=1&persist=1');await p.waitForSelector('body[data-ready="true"]');await p.locator('[data-continue]').click();assert.deepEqual(await p.evaluate(()=>structuredClone(__dungeon81.game)),old);
+ await p.goto(root+'/dungeon81.html?test=1&persist=1');await p.waitForSelector('body[data-ready="true"]');await p.locator('[data-continue]').click();assert.deepEqual(await p.evaluate(()=>structuredClone(__dungeon81.game)),old);
  await p.evaluate(()=>{__dungeon81.engine.takeItem(__dungeon81.game,'yellow');__dungeon81.sync();});await p.waitForFunction(()=>__dungeon81.images.butter.walkGun?.naturalWidth>0);
  const pixels=await p.evaluate(async()=>{
   const {drawButterMotion,selectButterFrame}=await import('./butter-gun-motion71.js'),{cachedContext,cacheStats}=await import('./dungeon81-cache.js');

@@ -1,5 +1,24 @@
 # Project instructions
 
+## ACTIVE v82: manual launch, delayed homing, random hit ricochet and wooden crates
+
+Read docs/dungeon82.md. User clarified: launch along manual aim, homing only
+after flight; ricochet chooses a random direction ONLY after an actual hit.
+No nearest-target steering for plain junior/scythe. Seeking-item grace0.12s,
+forward visible target, bounded turn; post-ricochet grace too. Use combatRng,
+never loot/reward RNG; preserve finite ranks/budgets and pause/save determinism.
+Shots share collision82 visible crate bounds, body/nav retain ground footprint.
+Sweep nearest solid with the real radius, including inside starts; beam/melee/
+king stone can break crates. No shooting rocks/gaps/gold chests open. Preserve
+3%/30% drop rates, key/F rules, one reward per crate and existing save80 key.
+Root82 reuses unchanged81 cache/art/animations/feet/muzzles/release markers and
+nav81; exact81 root is dungeon81.html. Old engines/art/diagnostic JSON stay intact.
+Old81 test/browser/perf entry URLs redirect to archive81 only; normalize those
+URL-only changes when verifying old81 hashes, do not rewrite diagnostic pins.
+Run full tests, browser82, generated-room mouse crate fixtures,81->82 exact
+continue, archived81 and source checks. Fixture is not natural earned gameplay.
+Preserve unrelated chibi WebP. No delegation.
+
 ## ACTIVE v81: performance only; same80 combat and exact active save
 
 Read docs/dungeon81.md. Root81 reuses unchanged80 content/save/audio/art and
