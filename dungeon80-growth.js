@@ -1,0 +1,5 @@
+export const xpNeed=level=>20+10*level;
+export const schoolRanks=g=>({junior:Math.min(6,(g.school?.junior||1)+Number(g.items.includes('juniorBook'))),senior:Math.min(4,(g.school?.senior||1)+Number(g.items.includes('seniorBook')))});
+export function awardXP(g,amount){if(!(amount>0))return 0;g.school.xp+=amount;let n=0;while(g.school.level<20&&g.school.xp>=xpNeed(g.school.level)){g.school.xp-=xpNeed(g.school.level);g.school.level++;n++;if(g.school.level%3===0)g.school.pending.push(g.school.level);}if(g.school.level===20)g.school.xp=0;return n;}
+export function openLesson(g){if(g.phase!=='playing'||!g.school.pending.length)return false;g.phase='lesson';g.player.charge=0;return true;}
+export function chooseLesson(g,kind){if(g.phase!=='lesson'||!g.school.pending.length||!['junior','senior'].includes(kind))return false;const cap=kind==='junior'?6:4;if(schoolRanks(g)[kind]>=cap)return false;g.school[kind]++;g.school.pending.shift();g.phase=g.school.pending.length?'lesson':'playing';if(schoolRanks(g).junior>=6&&schoolRanks(g).senior>=4){g.school.pending=[];g.phase='playing';}return true;}

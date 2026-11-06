@@ -3,14 +3,14 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox']});
 const root=process.argv[2]||'http://127.0.0.1:4196',errors=[];
 async function ready(p){await p.waitForSelector('body[data-ready="true"]');}
-async function start(p){await p.goto(root+'/?test=1&persist=1&seed=crate79');await ready(p);await p.locator('#start').click();}
+async function start(p){await p.goto(root+'/dungeon79.html?test=1&persist=1&seed=crate79');await ready(p);await p.locator('#start').click();}
 // Explicit room fixtures below isolate rewards, not native earned wins/drops.
 async function roomFixture(p,type){await p.evaluate(type=>{const a=__dungeon79,g=a.game,E=a.engine,r=g.rooms.find(r=>r.type===type),from=g.rooms.find(q=>E.links(g,q).some(l=>l.to===r.id));g.room=from.id;from.cleared=true;g.transition=0;g.phase='playing';g.keys=10;if(type==='secret')r.unlocked=true;E.enterRoom(g,E.links(g).find(l=>l.to===r.id).dir);g.player.invuln=999;a.sync();},type);}
 try{
  const context=await browser.newContext({viewport:{width:1366,height:850}}),p=await context.newPage();p.on('pageerror',e=>errors.push(e.message));
  // Native78 save first; new79 imports only profile and never overwrites it.
  await p.goto(root+'/dungeon78.html?test=1&persist=1&seed=old78');await ready(p);await p.locator('#start').click();await p.keyboard.down('w');await p.waitForFunction(()=>__dungeon78.game.items.length===1);await p.keyboard.up('w');await p.keyboard.press('Escape');const old=await p.evaluate(()=>localStorage.getItem('butter.dungeon77.v1'));
- await p.goto(root+'/?test=1&persist=1&seed=crate79');await ready(p);assert.equal(await p.locator('[data-continue]').count(),0);assert((await p.locator('#panel').innerText()).includes('이전 진행'));assert.equal(await p.locator('#loadout-select').count(),0);await p.locator('#start').click();
+ await p.goto(root+'/dungeon79.html?test=1&persist=1&seed=crate79');await ready(p);assert.equal(await p.locator('[data-continue]').count(),0);assert((await p.locator('#panel').innerText()).includes('이전 진행'));assert.equal(await p.locator('#loadout-select').count(),0);await p.locator('#start').click();
  await p.keyboard.down('w');await p.waitForTimeout(450);await p.keyboard.up('w');assert.deepEqual(await p.evaluate(()=>__dungeon79.game.items),[]);assert.equal(await p.evaluate(()=>__dungeon79.game.rooms[0].pedestal),null);await p.keyboard.down('ArrowRight');await p.waitForFunction(()=>__dungeon79.game.shots>0);await p.keyboard.up('ArrowRight');await p.screenshot({path:'/tmp/dungeon79-empty-start.png'});
  await p.keyboard.press('Escape');const native=await p.evaluate(()=>structuredClone(__dungeon79.game));await p.reload();await ready(p);await p.locator('[data-continue]').click();assert.deepEqual(await p.evaluate(()=>structuredClone(__dungeon79.game)),native);assert.equal(await p.evaluate(()=>localStorage.getItem('butter.dungeon77.v1')),old);await p.locator('[data-resume]').click();
  // Genuine keyboard-only transition into the first generated fight, without a gift.

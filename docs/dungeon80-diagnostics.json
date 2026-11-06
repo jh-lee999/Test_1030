@@ -1,0 +1,1396 @@
+{
+  "version": 80,
+  "scope": "Independent fan-game implementations of the23 comparison topics; not a PokeIsaac clone or human fun claim",
+  "sourceHashes": {
+    "dungeon80-base-build.js": "0960f83f08473a5024ce900443fb9428da213ca0c05197940375823d0f6ae5b6",
+    "dungeon80-biome.js": "74458329d41edc5b00d05e6c2515501a38965f7763e875b4ef84090bbcdef3ea",
+    "dungeon80-bosses.js": "6b72b6b332cbeb45e345e15d1975c782f33607f8708818cd5e2a90cedb968ae2",
+    "dungeon80-build.js": "d47409299fafe26c9576f193493ff838d8d7273b2a4a66b17e661f3006a9fdb2",
+    "dungeon80-content.js": "d9e4ebf61771a5c6a9704d361c74674c5eaaa19f262e557ef19d0cefdcecf419",
+    "dungeon80-economy.js": "a0756ddf106f728d92200c39101e7ec5a74911fd4345f2966682462b8fcb44a1",
+    "dungeon80-encounters.js": "75af661780d8801f204307a49583c440ec8d6753bafda648e845904e95d9452d",
+    "dungeon80-engine.js": "da1a2782d0d8f9970b1ad9ea5fe2dcd24a58f9ff8030ae531e108433a143670b",
+    "dungeon80-growth.js": "c6b23e2dc45a80d5701a13b310d0f0d32eb2aae116566b92caf47737495c3aae",
+    "dungeon80-hints.js": "004df5e977f9e31b9151b7dbf65b04fdd0f1568dbe920a3190fbc37fb214bf57",
+    "dungeon80-items-ui.js": "0d85ab5791035014ed08501356b1fce8f6f5722e03991aff31ed1f0aa48c3add",
+    "dungeon80-loot.js": "428f00a5b9cdd86d8e5384eb6b3248e23e7110fdfbdc6361daac4a5efb45e95f",
+    "dungeon80-nav.js": "59d4ed637fc38ffdf018d7d381779e0d4ece1840cc624cd2b896bbc4f0f058ba",
+    "dungeon80-progress.js": "0fa9e90072e9b5d1399fcbc6e04c7715178be898c685b3f629be5cecd2d7d308",
+    "dungeon80-renderer.js": "07ffadfccf5717e2a8093e313995d8c65305db9c0c8ce5f6db513b4eab7c5a0f",
+    "dungeon80-save.js": "0acf10be3d797699546c5c331d40eff77a51d111a71c150352fefc3063767818",
+    "dungeon80-shots.js": "599eaaf4b85925aaba63bd177a90c6a70ca17e5299327de1a860342b82afff97",
+    "dungeon80-systems.js": "ed6c281292ce73b04bdd308b8c4e093a23a5c9682c9429a70fd51a38cebaf038",
+    "dungeon80-ui.js": "9e127b0d45c0523261370b1ecf8a19dc662eaf12cbb3aecdbd604d6342fe9c0f",
+    "dungeon80-world.js": "95e911d7a41b3f386e9db151b08424b950db37b23989465db600534951de5da8",
+    "dungeon80.js": "84edcb928a2676805383a40a10a08c0f22712504e233ab077c9c85a9e98e65e8",
+    "index.html": "825e86ecf8767636e390d0092b57cb122cb80cba65379954a110a93fd2fc28d3",
+    "dungeon80.css": "bfe82aa4587e9aa6c9a2f8cff53fd30363f09e913679d5b27132520a4d8475c8",
+    "dungeon79.html": "392301c393c8640866e9665511aaa6c5c5e9d2b93cdcf051fb70021d96f73960",
+    "tools/dungeon80-policy.mjs": "86f2d02b53338a6ba5f999cb86632ffadc709a68e4b68ff58bf78aaafa78cb0b"
+  },
+  "unit": {
+    "tests": 529,
+    "pass": 529,
+    "fail": 0
+  },
+  "browser": {
+    "nativeStartFireAndExactResume": true,
+    "fixtureEveryQueuedLessonAndReload": true,
+    "fixtureRealKeyActiveAndChargedSwap": true,
+    "catalog54": true,
+    "fixtureBossAndBranchExit": true,
+    "fixtureLargeRoomMouseAndExactSave": true,
+    "fixturePuzzleForgeAndRemixUnlock": true,
+    "mobileDualTouch": [
+      390,
+      568
+    ],
+    "imageStorageFailurePlayable": true,
+    "renderReadOnly": true,
+    "errors": []
+  },
+  "archive79": {
+    "nativeNoGiftMovementFireAndFirstDoor": true,
+    "old78SaveUntouched": true,
+    "exact79Resume": true,
+    "fixtureGoldRoomWalkover": true,
+    "fixtureExplicitKeyChestAndCachedDrop": true,
+    "fixtureBossArtifactPlusAugment": true,
+    "mobileDualTouch": [
+      390,
+      568
+    ],
+    "imageStorageFailurePlayable": true,
+    "renderReadOnly": true,
+    "errors": []
+  },
+  "native": {
+    "nativeInputOnly": true,
+    "fullInformationController": true,
+    "seed": "native80-0",
+    "phase": "playing",
+    "time": 48.047999999998844,
+    "clears": 3,
+    "kills": 12,
+    "hp": 60,
+    "items": [
+      "mirror"
+    ],
+    "school": {
+      "level": 3,
+      "xp": 26,
+      "junior": 2,
+      "senior": 1,
+      "pending": []
+    },
+    "combatLog": [
+      {
+        "floor": 0,
+        "room": 8,
+        "template": "pincer:0",
+        "shape": "normal",
+        "seconds": 8.356212222222236,
+        "hits": 1,
+        "shots": 8,
+        "damageTaken": 10,
+        "items": [],
+        "school": {
+          "junior": 1,
+          "senior": 1
+        }
+      },
+      {
+        "floor": 0,
+        "room": 2,
+        "template": "gates:0",
+        "shape": "normal",
+        "seconds": 9.418966666666696,
+        "hits": 0,
+        "shots": 13,
+        "damageTaken": 0,
+        "items": [
+          "mirror"
+        ],
+        "school": {
+          "junior": 1,
+          "senior": 1
+        }
+      },
+      {
+        "floor": 0,
+        "room": 4,
+        "template": "switchback:0",
+        "shape": "tall",
+        "seconds": 8.669108333333417,
+        "hits": 0,
+        "shots": 14,
+        "damageTaken": 0,
+        "items": [
+          "mirror"
+        ],
+        "school": {
+          "junior": 2,
+          "senior": 1
+        }
+      }
+    ],
+    "errors": []
+  },
+  "policy": {
+    "fullInformationPolicy": true,
+    "humanBalanceClaim": false,
+    "results": [
+      {
+        "seed": "balance80-0",
+        "phase": "won",
+        "time": 477.04999999973046,
+        "hp": 26,
+        "floor": 3,
+        "clears": 21,
+        "kills": 86,
+        "damageTaken": 176,
+        "school": {
+          "level": 11,
+          "xp": 49,
+          "junior": 4,
+          "senior": 1,
+          "pending": []
+        },
+        "items": [
+          "juniorBook",
+          "fan",
+          "ironLunch",
+          "frost",
+          "bell",
+          "scythe",
+          "komi"
+        ],
+        "invalid": null,
+        "rooms": [
+          {
+            "floor": 0,
+            "room": 1,
+            "template": "switchback:0",
+            "shape": "normal",
+            "seconds": 7.416666666666825,
+            "hits": 1,
+            "shots": 10,
+            "damageTaken": 10,
+            "items": [],
+            "school": {
+              "junior": 1,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 2,
+            "template": "lane:0",
+            "shape": "normal",
+            "seconds": 11.549999999999985,
+            "hits": 1,
+            "shots": 19,
+            "damageTaken": 10,
+            "items": [
+              "juniorBook"
+            ],
+            "school": {
+              "junior": 2,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 3,
+            "template": "breach:0",
+            "shape": "tall",
+            "seconds": 6.308333333333437,
+            "hits": 0,
+            "shots": 10,
+            "damageTaken": 0,
+            "items": [
+              "juniorBook"
+            ],
+            "school": {
+              "junior": 3,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 4,
+            "template": "diagonal:0",
+            "shape": "normal",
+            "seconds": 5.083333333333376,
+            "hits": 0,
+            "shots": 6,
+            "damageTaken": 0,
+            "items": [
+              "juniorBook"
+            ],
+            "school": {
+              "junior": 3,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 8,
+            "template": "crescent:0",
+            "shape": "tall",
+            "seconds": 8.258333333333505,
+            "hits": 0,
+            "shots": 13,
+            "damageTaken": 0,
+            "items": [
+              "juniorBook"
+            ],
+            "school": {
+              "junior": 3,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 9,
+            "template": "pressure:0",
+            "shape": "wide",
+            "seconds": 7.483333333333495,
+            "hits": 1,
+            "shots": 12,
+            "damageTaken": 10,
+            "items": [
+              "juniorBook"
+            ],
+            "school": {
+              "junior": 3,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 5,
+            "template": "pincer:0",
+            "shape": "tall",
+            "seconds": 12.708333333333252,
+            "hits": 0,
+            "shots": 17,
+            "damageTaken": 0,
+            "items": [
+              "juniorBook",
+              "fan"
+            ],
+            "school": {
+              "junior": 3,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 7,
+            "template": "crossfire:0",
+            "shape": "wide",
+            "seconds": 12.34999999999994,
+            "hits": 0,
+            "shots": 18,
+            "damageTaken": 0,
+            "items": [
+              "juniorBook",
+              "fan"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 6,
+            "template": "courtyard:0",
+            "shape": "normal",
+            "seconds": 10.441666666666714,
+            "hits": 5,
+            "shots": 15,
+            "damageTaken": 50,
+            "items": [
+              "juniorBook",
+              "fan"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 10,
+            "template": "islands:0",
+            "shape": "normal",
+            "seconds": 10.175000000000063,
+            "hits": 1,
+            "shots": 13,
+            "damageTaken": 10,
+            "items": [
+              "juniorBook",
+              "fan",
+              "ironLunch",
+              "frost"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 11,
+            "template": "boss",
+            "shape": "normal",
+            "seconds": 25.999999999999165,
+            "hits": 0,
+            "shots": 39,
+            "damageTaken": 0,
+            "items": [
+              "juniorBook",
+              "fan",
+              "ironLunch",
+              "frost"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 1,
+            "room": 1,
+            "template": "courtyard:0",
+            "shape": "normal",
+            "seconds": 16.324999999999715,
+            "hits": 1,
+            "shots": 24,
+            "damageTaken": 15,
+            "items": [
+              "juniorBook",
+              "fan",
+              "ironLunch",
+              "frost",
+              "bell"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 1,
+            "room": 4,
+            "template": "pressure:0",
+            "shape": "wide",
+            "seconds": 15.391666666666433,
+            "hits": 0,
+            "shots": 21,
+            "damageTaken": 0,
+            "items": [
+              "juniorBook",
+              "fan",
+              "ironLunch",
+              "frost",
+              "bell"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 1,
+            "room": 6,
+            "template": "gates:0",
+            "shape": "normal",
+            "seconds": 22.058333333332723,
+            "hits": 0,
+            "shots": 33,
+            "damageTaken": 0,
+            "items": [
+              "juniorBook",
+              "fan",
+              "ironLunch",
+              "frost",
+              "bell"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 1,
+            "room": 10,
+            "template": "breach:0",
+            "shape": "wide",
+            "seconds": 17.033333333333008,
+            "hits": 0,
+            "shots": 25,
+            "damageTaken": 0,
+            "items": [
+              "juniorBook",
+              "fan",
+              "ironLunch",
+              "frost",
+              "bell"
+            ],
+            "school": {
+              "junior": 5,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 1,
+            "room": 11,
+            "template": "boss",
+            "shape": "normal",
+            "seconds": 38.79999999999844,
+            "hits": 2,
+            "shots": 57,
+            "damageTaken": 28,
+            "items": [
+              "juniorBook",
+              "fan",
+              "ironLunch",
+              "frost",
+              "bell"
+            ],
+            "school": {
+              "junior": 5,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 2,
+            "room": 1,
+            "template": "crescent:0",
+            "shape": "normal",
+            "seconds": 8.47500000000016,
+            "hits": 1,
+            "shots": 12,
+            "damageTaken": 12,
+            "items": [
+              "juniorBook",
+              "fan",
+              "ironLunch",
+              "frost",
+              "bell",
+              "scythe"
+            ],
+            "school": {
+              "junior": 5,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 2,
+            "room": 2,
+            "template": "pressure:0",
+            "shape": "tall",
+            "seconds": 18.949999999999566,
+            "hits": 0,
+            "shots": 28,
+            "damageTaken": 0,
+            "items": [
+              "juniorBook",
+              "fan",
+              "ironLunch",
+              "frost",
+              "bell",
+              "scythe"
+            ],
+            "school": {
+              "junior": 5,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 2,
+            "room": 6,
+            "template": "switchback:0",
+            "shape": "normal",
+            "seconds": 11.56666666666665,
+            "hits": 0,
+            "shots": 15,
+            "damageTaken": 0,
+            "items": [
+              "juniorBook",
+              "fan",
+              "ironLunch",
+              "frost",
+              "bell",
+              "scythe"
+            ],
+            "school": {
+              "junior": 5,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 2,
+            "room": 8,
+            "template": "breach:0",
+            "shape": "grand",
+            "seconds": 18.38333333333293,
+            "hits": 1,
+            "shots": 27,
+            "damageTaken": 17,
+            "items": [
+              "juniorBook",
+              "fan",
+              "ironLunch",
+              "frost",
+              "bell",
+              "scythe"
+            ],
+            "school": {
+              "junior": 5,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 2,
+            "room": 11,
+            "template": "boss",
+            "shape": "normal",
+            "seconds": 27.23333333333243,
+            "hits": 1,
+            "shots": 41,
+            "damageTaken": 14,
+            "items": [
+              "juniorBook",
+              "fan",
+              "ironLunch",
+              "frost",
+              "bell",
+              "scythe"
+            ],
+            "school": {
+              "junior": 5,
+              "senior": 1
+            }
+          }
+        ]
+      },
+      {
+        "seed": "balance80-1",
+        "phase": "dead",
+        "time": 138.85000000003805,
+        "hp": 0,
+        "floor": 1,
+        "clears": 8,
+        "kills": 35,
+        "damageTaken": 84,
+        "school": {
+          "level": 6,
+          "xp": 30,
+          "junior": 3,
+          "senior": 1,
+          "pending": []
+        },
+        "items": [
+          "fan",
+          "juniorBook"
+        ],
+        "invalid": null,
+        "rooms": [
+          {
+            "floor": 0,
+            "room": 3,
+            "template": "courtyard:0",
+            "shape": "normal",
+            "seconds": 5.825000000000079,
+            "hits": 1,
+            "shots": 7,
+            "damageTaken": 10,
+            "items": [],
+            "school": {
+              "junior": 1,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 6,
+            "template": "pressure:0",
+            "shape": "wide",
+            "seconds": 7.458333333333494,
+            "hits": 0,
+            "shots": 12,
+            "damageTaken": 0,
+            "items": [],
+            "school": {
+              "junior": 1,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 5,
+            "template": "crescent:0",
+            "shape": "normal",
+            "seconds": 9.158333333333454,
+            "hits": 2,
+            "shots": 13,
+            "damageTaken": 20,
+            "items": [
+              "fan"
+            ],
+            "school": {
+              "junior": 2,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 9,
+            "template": "fortress:0",
+            "shape": "normal",
+            "seconds": 8.933333333333467,
+            "hits": 1,
+            "shots": 11,
+            "damageTaken": 10,
+            "items": [
+              "fan"
+            ],
+            "school": {
+              "junior": 2,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 1,
+            "template": "diagonal:0",
+            "shape": "normal",
+            "seconds": 12.083333333333288,
+            "hits": 0,
+            "shots": 18,
+            "damageTaken": 0,
+            "items": [
+              "fan"
+            ],
+            "school": {
+              "junior": 2,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 7,
+            "template": "islands:0",
+            "shape": "normal",
+            "seconds": 9.225000000000117,
+            "hits": 0,
+            "shots": 13,
+            "damageTaken": 0,
+            "items": [
+              "fan"
+            ],
+            "school": {
+              "junior": 2,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 2,
+            "template": "pincer:0",
+            "shape": "normal",
+            "seconds": 13.45833333333321,
+            "hits": 3,
+            "shots": 18,
+            "damageTaken": 30,
+            "items": [
+              "fan",
+              "juniorBook"
+            ],
+            "school": {
+              "junior": 3,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 4,
+            "template": "crossfire:0",
+            "shape": "normal",
+            "seconds": 10.616666666666704,
+            "hits": 1,
+            "shots": 15,
+            "damageTaken": 10,
+            "items": [
+              "fan",
+              "juniorBook"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          }
+        ]
+      },
+      {
+        "seed": "balance80-2",
+        "phase": "dead",
+        "time": 301.8416666665565,
+        "hp": 0,
+        "floor": 2,
+        "clears": 14,
+        "kills": 63,
+        "damageTaken": 126,
+        "school": {
+          "level": 9,
+          "xp": 21,
+          "junior": 4,
+          "senior": 1,
+          "pending": []
+        },
+        "items": [
+          "powerCandy",
+          "fan",
+          "juniorBook",
+          "longString",
+          "bell",
+          "featherShoes",
+          "fireworks"
+        ],
+        "invalid": null,
+        "rooms": [
+          {
+            "floor": 0,
+            "room": 3,
+            "template": "pressure:0",
+            "shape": "normal",
+            "seconds": 6.100000000000093,
+            "hits": 0,
+            "shots": 8,
+            "damageTaken": 0,
+            "items": [],
+            "school": {
+              "junior": 1,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 6,
+            "template": "fortress:0",
+            "shape": "grand",
+            "seconds": 9.358333333333443,
+            "hits": 0,
+            "shots": 15,
+            "damageTaken": 0,
+            "items": [],
+            "school": {
+              "junior": 1,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 8,
+            "template": "lane:0",
+            "shape": "normal",
+            "seconds": 5.791666666666744,
+            "hits": 1,
+            "shots": 9,
+            "damageTaken": 10,
+            "items": [
+              "powerCandy"
+            ],
+            "school": {
+              "junior": 2,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 1,
+            "template": "crossfire:0",
+            "shape": "normal",
+            "seconds": 7.6666666666668375,
+            "hits": 0,
+            "shots": 10,
+            "damageTaken": 0,
+            "items": [
+              "powerCandy"
+            ],
+            "school": {
+              "junior": 2,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 2,
+            "template": "crescent:0",
+            "shape": "tall",
+            "seconds": 10.933333333333353,
+            "hits": 1,
+            "shots": 18,
+            "damageTaken": 10,
+            "items": [
+              "powerCandy"
+            ],
+            "school": {
+              "junior": 2,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 4,
+            "template": "islands:0",
+            "shape": "wide",
+            "seconds": 7.750000000000175,
+            "hits": 0,
+            "shots": 13,
+            "damageTaken": 0,
+            "items": [
+              "powerCandy"
+            ],
+            "school": {
+              "junior": 2,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 5,
+            "template": "gates:0",
+            "shape": "normal",
+            "seconds": 6.358333333333439,
+            "hits": 0,
+            "shots": 8,
+            "damageTaken": 0,
+            "items": [
+              "powerCandy"
+            ],
+            "school": {
+              "junior": 2,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 10,
+            "template": "diagonal:0",
+            "shape": "normal",
+            "seconds": 13.766666666666525,
+            "hits": 0,
+            "shots": 23,
+            "damageTaken": 0,
+            "items": [
+              "powerCandy"
+            ],
+            "school": {
+              "junior": 3,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 9,
+            "template": "breach:0",
+            "shape": "tall",
+            "seconds": 9.066666666666793,
+            "hits": 0,
+            "shots": 13,
+            "damageTaken": 0,
+            "items": [
+              "powerCandy",
+              "fan",
+              "juniorBook",
+              "longString",
+              "bell"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 7,
+            "template": "switchback:0",
+            "shape": "normal",
+            "seconds": 9.483333333333436,
+            "hits": 0,
+            "shots": 12,
+            "damageTaken": 0,
+            "items": [
+              "powerCandy",
+              "fan",
+              "juniorBook",
+              "longString",
+              "bell",
+              "featherShoes"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 17,
+            "template": "pressure:2",
+            "shape": "normal",
+            "seconds": 22.058333333332723,
+            "hits": 1,
+            "shots": 30,
+            "damageTaken": 10,
+            "items": [
+              "powerCandy",
+              "fan",
+              "juniorBook",
+              "longString",
+              "bell",
+              "featherShoes"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 11,
+            "template": "boss",
+            "shape": "normal",
+            "seconds": 24.649999999999242,
+            "hits": 3,
+            "shots": 37,
+            "damageTaken": 42,
+            "items": [
+              "powerCandy",
+              "fan",
+              "juniorBook",
+              "longString",
+              "bell",
+              "featherShoes"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 1,
+            "room": 1,
+            "template": "fortress:0",
+            "shape": "normal",
+            "seconds": 12.23333333333328,
+            "hits": 1,
+            "shots": 16,
+            "damageTaken": 12,
+            "items": [
+              "powerCandy",
+              "fan",
+              "juniorBook",
+              "longString",
+              "bell",
+              "featherShoes",
+              "fireworks"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 1,
+            "room": 2,
+            "template": "switchback:0",
+            "shape": "tall",
+            "seconds": 16.266666666666385,
+            "hits": 1,
+            "shots": 24,
+            "damageTaken": 15,
+            "items": [
+              "powerCandy",
+              "fan",
+              "juniorBook",
+              "longString",
+              "bell",
+              "featherShoes",
+              "fireworks"
+            ],
+            "school": {
+              "junior": 5,
+              "senior": 1
+            }
+          }
+        ]
+      },
+      {
+        "seed": "balance80-3",
+        "phase": "dead",
+        "time": 332.9999999998615,
+        "hp": 0,
+        "floor": 3,
+        "clears": 18,
+        "kills": 78,
+        "damageTaken": 118,
+        "school": {
+          "level": 10,
+          "xp": 68,
+          "junior": 4,
+          "senior": 1,
+          "pending": []
+        },
+        "items": [
+          "rust",
+          "juniorBook",
+          "fan",
+          "thickGloves",
+          "seniorBook"
+        ],
+        "invalid": null,
+        "rooms": [
+          {
+            "floor": 0,
+            "room": 2,
+            "template": "gates:0",
+            "shape": "normal",
+            "seconds": 6.908333333333466,
+            "hits": 1,
+            "shots": 9,
+            "damageTaken": 10,
+            "items": [],
+            "school": {
+              "junior": 1,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 8,
+            "template": "pincer:0",
+            "shape": "tall",
+            "seconds": 8.166666666666844,
+            "hits": 0,
+            "shots": 13,
+            "damageTaken": 0,
+            "items": [],
+            "school": {
+              "junior": 1,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 1,
+            "template": "islands:0",
+            "shape": "normal",
+            "seconds": 5.841666666666747,
+            "hits": 0,
+            "shots": 9,
+            "damageTaken": 0,
+            "items": [
+              "rust"
+            ],
+            "school": {
+              "junior": 2,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 3,
+            "template": "fortress:0",
+            "shape": "grand",
+            "seconds": 8.075000000000182,
+            "hits": 0,
+            "shots": 11,
+            "damageTaken": 0,
+            "items": [
+              "rust"
+            ],
+            "school": {
+              "junior": 2,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 7,
+            "template": "diagonal:0",
+            "shape": "wide",
+            "seconds": 8.166666666666844,
+            "hits": 0,
+            "shots": 13,
+            "damageTaken": 0,
+            "items": [
+              "rust"
+            ],
+            "school": {
+              "junior": 2,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 5,
+            "template": "lane:0",
+            "shape": "normal",
+            "seconds": 3.1749999999999914,
+            "hits": 0,
+            "shots": 4,
+            "damageTaken": 0,
+            "items": [
+              "rust",
+              "juniorBook"
+            ],
+            "school": {
+              "junior": 3,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 4,
+            "template": "switchback:0",
+            "shape": "wide",
+            "seconds": 8.933333333333467,
+            "hits": 0,
+            "shots": 11,
+            "damageTaken": 0,
+            "items": [
+              "rust",
+              "juniorBook",
+              "fan"
+            ],
+            "school": {
+              "junior": 3,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 9,
+            "template": "courtyard:0",
+            "shape": "normal",
+            "seconds": 5.875000000000082,
+            "hits": 0,
+            "shots": 8,
+            "damageTaken": 0,
+            "items": [
+              "rust",
+              "juniorBook",
+              "fan"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 6,
+            "template": "breach:0",
+            "shape": "wide",
+            "seconds": 7.775000000000176,
+            "hits": 0,
+            "shots": 11,
+            "damageTaken": 0,
+            "items": [
+              "rust",
+              "juniorBook",
+              "fan"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 16,
+            "template": "gates:2",
+            "shape": "normal",
+            "seconds": 16.51666666666637,
+            "hits": 0,
+            "shots": 20,
+            "damageTaken": 0,
+            "items": [
+              "rust",
+              "juniorBook",
+              "fan"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 10,
+            "template": "crossfire:0",
+            "shape": "normal",
+            "seconds": 5.075000000000042,
+            "hits": 1,
+            "shots": 7,
+            "damageTaken": 10,
+            "items": [
+              "rust",
+              "juniorBook",
+              "fan"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 0,
+            "room": 11,
+            "template": "boss",
+            "shape": "normal",
+            "seconds": 8.983333333333464,
+            "hits": 0,
+            "shots": 13,
+            "damageTaken": 0,
+            "items": [
+              "rust",
+              "juniorBook",
+              "fan"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 1,
+            "room": 2,
+            "template": "islands:0",
+            "shape": "normal",
+            "seconds": 9.358333333333443,
+            "hits": 0,
+            "shots": 12,
+            "damageTaken": 0,
+            "items": [
+              "rust",
+              "juniorBook",
+              "fan",
+              "thickGloves"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 1,
+            "room": 3,
+            "template": "gates:0",
+            "shape": "normal",
+            "seconds": 9.87500000000008,
+            "hits": 2,
+            "shots": 14,
+            "damageTaken": 27,
+            "items": [
+              "rust",
+              "juniorBook",
+              "fan",
+              "thickGloves"
+            ],
+            "school": {
+              "junior": 4,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 1,
+            "room": 5,
+            "template": "switchback:0",
+            "shape": "normal",
+            "seconds": 16.208333333333055,
+            "hits": 2,
+            "shots": 24,
+            "damageTaken": 27,
+            "items": [
+              "rust",
+              "juniorBook",
+              "fan",
+              "thickGloves"
+            ],
+            "school": {
+              "junior": 5,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 1,
+            "room": 7,
+            "template": "breach:0",
+            "shape": "wide",
+            "seconds": 9.70000000000009,
+            "hits": 1,
+            "shots": 12,
+            "damageTaken": 15,
+            "items": [
+              "rust",
+              "juniorBook",
+              "fan",
+              "thickGloves"
+            ],
+            "school": {
+              "junior": 5,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 1,
+            "room": 11,
+            "template": "boss",
+            "shape": "normal",
+            "seconds": 14.008333333333178,
+            "hits": 0,
+            "shots": 21,
+            "damageTaken": 0,
+            "items": [
+              "rust",
+              "juniorBook",
+              "fan",
+              "thickGloves"
+            ],
+            "school": {
+              "junior": 5,
+              "senior": 1
+            }
+          },
+          {
+            "floor": 2,
+            "room": 3,
+            "template": "switchback:0",
+            "shape": "normal",
+            "seconds": 10.350000000000053,
+            "hits": 0,
+            "shots": 15,
+            "damageTaken": 0,
+            "items": [
+              "rust",
+              "juniorBook",
+              "fan",
+              "thickGloves",
+              "seniorBook"
+            ],
+            "school": {
+              "junior": 5,
+              "senior": 2
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

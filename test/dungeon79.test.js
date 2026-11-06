@@ -21,7 +21,7 @@ const low=rollSeed(x=>x<.03),medium=rollSeed(x=>x>=.03&&x<.3),miss=rollSeed(x=>x
 
 test('79 archive and root retain78 hints and whole source art',()=>{
  assert.equal(createHash('sha256').update(read('dungeon78.html')).digest('hex'),'581cdb31d9fed56dfc36501c220e55d409d2ce00d8c22db845a21ab719bf20cf');
- assert.match(read('index.html').toString(),/dungeon79.js\?v=79/);assert.match(read('dungeon79-renderer.js').toString(),/from '.\/dungeon78-hints.js'/);
+ assert.match(read('dungeon79.html').toString(),/dungeon79.js\?v=79/);assert.match(read('dungeon79-renderer.js').toString(),/from '.\/dungeon78-hints.js'/);
 });
 test('every seed and unlocked loadout starts without artifacts, chest or hidden grant',()=>{
  const progress={bestClears:20,bestKills:100,bestFloor:3,bosses:['velvet','erpin','shady'],trial:true,secret:true,bargain:true};

@@ -1,5 +1,38 @@
 # Project instructions
 
+## ACTIVE v80: connected roguelike algorithms, not a PokeIsaac code copy
+
+Read docs/dungeon80.md and its23-row acceptance map. User explicitly authorized
+implementing all comparison items until complete. Root80 has versioned80 modules;
+exact79 root is dungeon79.html. Preserve79 and every earlier engine/art/hash pin.
+Original whole Butter/Velvet/monster/boss sprites, source poses/feet/muzzles stay.
+No new rigs, split limbs, fabricated source clips or copied PokeIsaac code/assets.
+Source-specific pools, tier gates, actual-owned luck, category-history quotas,
+pending reservations and discarded IDs must remain separate. Preview/map/render
+consume no RNG. Keep3% crate/30% gold chest; no free start or normal-clear artifact.
+Gold/shop geometric leaves attach ONLY to combat. General secret maximizes core
+adjacency; supersecret is a separate terminal. Conditional omen attaches to boss,
+never invalidates gold/shop leaves. Optional rooms/styles/loops and real variable
+arena bounds share navigation, body/shot collision, doors, pointer and stone bounds.
+All teleports land reachable. No ordinary enemy may phase through cover.
+XP loops carry all excess and queue every3-level lesson; menus freeze every clock.
+Junior/senior ranks and queued plans/casts have real effects. No free active refill:
+swap drops previous charge; real cleared fight charges once. Dice keeps source
+pool and discards; paid stock/forge/deal cannot auto-pay or duplicate current active.
+Both boss exits actually choose branches. Gate eligibility uses real HP hits,
+history and deterministic seed. Never force troll pickup to leave a room/floor.
+Five source roles have regional AI variants; bosses have weighted history-aware
+four-pattern selection, committed three-stage phases and four behavior affixes.
+Only indirect cues, including new attacks; no firing rays/cones/safe wedges.
+Fixed stage curves NEVER scale enemies to a player's damage. Normal route remains
+normal after strong builds. Cleared-run-only eclipse remix changes behavior/biomes.
+Save80 imports79 profile only, leaves its active/volume keys untouched. Validate
+school/queues/actives/new rooms/progress and preserve exact resume. Keep profile
+settlement idempotent and report completed-vs-fixture/native/policy separately.
+Run all tests, browser80 and archived79, native inputs, and full-information policy
+diagnostics; record source hashes. Do not equate bots/tests with human fun or
+commercial release quality. Preserve unrelated chibi WebP. No delegation.
+
 ## ACTIVE v79: explore for loot, no free starter artifacts
 
 Read docs/dungeon79.md. Root79 uses engine/save/world/loot/renderer/UI79 with
