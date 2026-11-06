@@ -1,5 +1,24 @@
 # Project instructions
 
+## ACTIVE v86: essential animation must not freeze in reduced-motion mode
+
+Read docs/dungeon86.md.85's renderer actually forced actor frame0 under reduced
+motion;86 normal/reduced essential sequences must match. Reduce decorations,
+not player/enemy/boss/walk/attack source clocks. Preserve84 simulation/save/RNG,
+85 cache/door fixes, original cells/anchors/scale/release times. No new cutout rig.
+Fully ready selection must equal71/36 exactly. Unavailable moving-shot/gun sheets
+fall back to an animated ready walk (same gait), then time-animated idle/poster.
+Publish images only after decode; keep existing ready clips during retry/reload;
+bounded2 retries and last-request-wins. Gun prefetch only from owned/current-room
+visible gifts/stock. No hidden-room leak or gameplay upgrades from art readiness.
+Exact85 root is dungeon85.html, old85 modules/diagnostics/assets immutable. Old85
+test entry URLs redirect only; normalize only those for source pin checks.
+Run all-frame1296 audit, reduced/normal actual source traces, native walking/fire/
+high/gun/blocked-sheet/pause/resume and inspect recorded motion. Do not treat a
+single static screenshot/alpha count as proof of smooth animation. Reproduction
+of reduced-motion media is NOT proof that the user's device had that setting.
+No delegation. Preserve unrelated butter-chibi-release.webp.
+
 ## ACTIVE v85: visible sprites and open physical-looking passages
 
 Read docs/dungeon85.md. Presentation-only fix for seed1793961062183. Do not

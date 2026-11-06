@@ -9,7 +9,7 @@ import {doorState,openingFor} from '../dungeon85-doors.js';
 import {cachedContext,cacheStats,clearCaches,cachedLabel,primeImage} from '../dungeon85-cache.js';
 const read=f=>readFileSync(new URL('../'+f,import.meta.url),'utf8');
 test('85 is presentation-only and archives exact84, without modifying84 save/engine/world/source pins',()=>{
- assert.match(read('index.html'),/dungeon85.js\?v=85/);assert.match(read('dungeon85.js'),/dungeon84-save.js/);assert.match(read('dungeon85.js'),/dungeon84-engine.js\?v=84/);assert.equal(createHash('sha256').update(read('dungeon84.html')).digest('hex'),'8f20d51a3cbc25f89d8021405c28f9f99b2707610141e7f852b18a73740d9543');
+ assert.match(read('dungeon85.html'),/dungeon85.js\?v=85/);assert.match(read('dungeon85.js'),/dungeon84-save.js/);assert.match(read('dungeon85.js'),/dungeon84-engine.js\?v=84/);assert.equal(createHash('sha256').update(read('dungeon84.html')).digest('hex'),'8f20d51a3cbc25f89d8021405c28f9f99b2707610141e7f852b18a73740d9543');
  const redirected=['tools/check-dungeon84-browser.mjs','tools/check-dungeon84-rules-browser.mjs','tools/check-dungeon84-crates-browser.mjs','tools/check-dungeon84-decisions-browser.mjs','tools/playtest-dungeon84.mjs','tools/check-dungeon84-performance.mjs'];
  for(const [file,hash]of Object.entries(JSON.parse(read('docs/dungeon84-diagnostics.json')).sourceHashes)){let source=read(file==='index.html'?'dungeon84.html':file);if(file==='test/dungeon84.test.js')source=source.replace("read('dungeon84.html'),/dungeon84","read('index.html'),/dungeon84");if(redirected.includes(file))source=source.replaceAll("root+'/dungeon84.html?test=1","root+'/?test=1");assert.equal(createHash('sha256').update(source).digest('hex'),hash,file);}
 });

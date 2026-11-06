@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import {writeFile} from 'node:fs/promises';
+const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
+const version=Number(process.env.AUDIT_VERSION||86);
+const root=process.env.GAME_URL||'http://127.0.0.1:4196',browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox']});
+try{
+ const p=await browser.newPage({viewport:{width:1366,height:850},reducedMotion:'reduce'}),errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto(root+(version===85?'/dungeon85.html':'/')+'?test=1&seed=1793961062183');await p.waitForSelector('body[data-ready=true]');await p.locator('#start').click();await p.waitForFunction(v=>['idle','walk','shoot','walkShoot','high'].every(k=>window['__dungeon'+v].images.butter[k]?.naturalWidth>0),version);
+ const result=await p.evaluate(async version=>{
+  const {BUTTER_ORIGINAL}=await import('./butter-original-motion.js'),{BUTTER_GUN}=await import('./butter-gun-motion71.js'),cache=await import('./dungeon85-cache.js'),R=await import('./dungeon'+version+'-renderer.js'),E=await import('./dungeon84-engine.js');
+  const clips={...BUTTER_ORIGINAL.clips,...BUTTER_GUN.clips},canvas=document.createElement('canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true}),images={},audit={};
+  for(const [key,clip]of Object.entries(clips)){
+   const im=new Image();im.src=clip.image;await im.decode();images[key]=im;canvas.width=clip.width;canvas.height=clip.height;let empty=0,min=Infinity;const hashes=new Set();
+   for(let i=0;i<clip.count;i++){ctx.clearRect(0,0,clip.width,clip.height);ctx.drawImage(im,i%clip.columns*clip.width,Math.floor(i/clip.columns)*clip.height,clip.width,clip.height,0,0,clip.width,clip.height);const d=ctx.getImageData(0,0,clip.width,clip.height).data;let n=0,h=2166136261;for(let k=0;k<d.length;k+=4)if(d[k+3]>24){n++;h=Math.imul(h^d[k]^d[k+1]^d[k+2]^d[k+3],16777619);}if(n<100)empty++;min=Math.min(min,n);hashes.add(h);}
+   audit[key]={count:clip.count,empty,minOpaque:min,unique:hashes.size,width:im.naturalWidth,height:im.naturalHeight};
+  }
+  const a=window['__dungeon'+version],known=new Map();for(const [key,im]of Object.entries(a.images.butter))known.set(im,'butter:'+key);for(const [role,m]of Object.entries(a.images.monsters))for(const [key,im]of Object.entries(m))known.set(im,role+':'+key);
+  await Promise.all([...known.keys()].map(im=>im.decode().catch(()=>{})));const original=CanvasRenderingContext2D.prototype.drawImage;let trace=[];CanvasRenderingContext2D.prototype.drawImage=function(im,...args){if(known.has(im)&&args.length===8)trace.push(known.get(im)+':'+args.slice(0,4).join(','));return original.call(this,im,...args);};
+  const runs={},sequences={};try{for(const reduced of [false,true]){const g=E.createGame('motion-audit86'),r=E.current(g);g.player.invuln=999;for(const [i,role]of ['fan','archer','rusher','caster','guard'].entries()){const e=E.spawnEnemy(g,role,250+i*150,620);Object.assign(e,{hp:100000,maxHp:100000,appear:0,timer:999,speed:0});}const c=document.createElement('canvas');c.width=1280;c.height=800;const cc=c.getContext('2d');trace=[];for(let i=0;i<180;i++){if(i===120)E.useUltimate(g);E.tick(g,1/60,{x:i%60<30?1:-1,aim:{x:1,y:0},fire:true});cache.clearCaches();R.render(cc,g,a.images,{width:1280,height:800,reduced});}sequences[reduced?'reduce':'normal']=[...trace];const frames={};for(const line of trace){const key=line.split(':').slice(0,2).join(':');(frames[key]??=new Set()).add(line);}runs[reduced?'reduce':'normal']=Object.fromEntries(Object.entries(frames).map(([k,v])=>[k,v.size]));}}finally{CanvasRenderingContext2D.prototype.drawImage=original;cache.clearCaches();}
+  return {mediaReduced:matchMedia('(prefers-reduced-motion: reduce)').matches,audit,runs,essentialSequenceEqual:JSON.stringify(sequences.normal)===JSON.stringify(sequences.reduce)};
+ },version);
+ assert.deepEqual(errors,[]);for(const a of Object.values(result.audit)){assert.equal(a.empty,0);assert(a.unique>10);}if(version>=86){assert(result.essentialSequenceEqual);assert.deepEqual(result.runs.reduce,result.runs.normal);assert(result.runs.reduce['butter:walkShoot']>20);assert(result.runs.reduce['butter:high']>20);}else assert.equal(result.runs.reduce['butter:idle'],1);await writeFile('/tmp/animation86-audit-'+version+'.json',JSON.stringify({result,errors},null,2));console.log(JSON.stringify({result,errors},null,2));
+}finally{await browser.close();}

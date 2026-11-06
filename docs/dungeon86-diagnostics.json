@@ -1,0 +1,483 @@
+{
+  "version": 86,
+  "date": "2026-11-06",
+  "scope": "Essential animation/media preference and decoded image availability only. Same84 engine/world/save,85 cache/doors and original art.",
+  "unitTests": {
+    "passed": 628,
+    "failed": 0
+  },
+  "sourceFrameAudit": {
+    "result": {
+      "mediaReduced": true,
+      "audit": {
+        "idle": {
+          "count": 120,
+          "empty": 0,
+          "minOpaque": 5816,
+          "unique": 120,
+          "width": 1152,
+          "height": 2400
+        },
+        "walk": {
+          "count": 24,
+          "empty": 0,
+          "minOpaque": 6219,
+          "unique": 24,
+          "width": 1024,
+          "height": 480
+        },
+        "shoot": {
+          "count": 36,
+          "empty": 0,
+          "minOpaque": 5904,
+          "unique": 36,
+          "width": 1408,
+          "height": 800
+        },
+        "low": {
+          "count": 48,
+          "empty": 0,
+          "minOpaque": 5382,
+          "unique": 48,
+          "width": 1536,
+          "height": 1728
+        },
+        "high": {
+          "count": 72,
+          "empty": 0,
+          "minOpaque": 5062,
+          "unique": 72,
+          "width": 3840,
+          "height": 3600
+        },
+        "walkShoot": {
+          "count": 576,
+          "empty": 0,
+          "minOpaque": 5776,
+          "unique": 576,
+          "width": 1152,
+          "height": 11520
+        },
+        "gun": {
+          "count": 36,
+          "empty": 0,
+          "minOpaque": 5849,
+          "unique": 36,
+          "width": 1408,
+          "height": 800
+        },
+        "walkGun": {
+          "count": 384,
+          "empty": 0,
+          "minOpaque": 5790,
+          "unique": 384,
+          "width": 1280,
+          "height": 8448
+        }
+      },
+      "runs": {
+        "normal": {
+          "butter:walkShoot": 88,
+          "fan:walk": 24,
+          "archer:walk": 24,
+          "rusher:walk": 24,
+          "caster:walk": 24,
+          "guard:walk": 24,
+          "butter:walk": 12,
+          "butter:high": 60
+        },
+        "reduce": {
+          "butter:walkShoot": 88,
+          "fan:walk": 24,
+          "archer:walk": 24,
+          "rusher:walk": 24,
+          "caster:walk": 24,
+          "guard:walk": 24,
+          "butter:walk": 12,
+          "butter:high": 60
+        }
+      },
+      "essentialSequenceEqual": true
+    },
+    "errors": []
+  },
+  "prior85Reproduction": {
+    "result": {
+      "mediaReduced": true,
+      "audit": {
+        "idle": {
+          "count": 120,
+          "empty": 0,
+          "minOpaque": 5816,
+          "unique": 120,
+          "width": 1152,
+          "height": 2400
+        },
+        "walk": {
+          "count": 24,
+          "empty": 0,
+          "minOpaque": 6219,
+          "unique": 24,
+          "width": 1024,
+          "height": 480
+        },
+        "shoot": {
+          "count": 36,
+          "empty": 0,
+          "minOpaque": 5904,
+          "unique": 36,
+          "width": 1408,
+          "height": 800
+        },
+        "low": {
+          "count": 48,
+          "empty": 0,
+          "minOpaque": 5382,
+          "unique": 48,
+          "width": 1536,
+          "height": 1728
+        },
+        "high": {
+          "count": 72,
+          "empty": 0,
+          "minOpaque": 5062,
+          "unique": 72,
+          "width": 3840,
+          "height": 3600
+        },
+        "walkShoot": {
+          "count": 576,
+          "empty": 0,
+          "minOpaque": 5776,
+          "unique": 576,
+          "width": 1152,
+          "height": 11520
+        },
+        "gun": {
+          "count": 36,
+          "empty": 0,
+          "minOpaque": 5849,
+          "unique": 36,
+          "width": 1408,
+          "height": 800
+        },
+        "walkGun": {
+          "count": 384,
+          "empty": 0,
+          "minOpaque": 5790,
+          "unique": 384,
+          "width": 1280,
+          "height": 8448
+        }
+      },
+      "runs": {
+        "normal": {
+          "butter:walkShoot": 88,
+          "fan:walk": 24,
+          "archer:walk": 24,
+          "rusher:walk": 24,
+          "caster:walk": 24,
+          "guard:walk": 24,
+          "butter:walk": 12,
+          "butter:high": 60
+        },
+        "reduce": {
+          "butter:idle": 1,
+          "fan:walk": 1,
+          "archer:walk": 1,
+          "rusher:walk": 1,
+          "caster:walk": 1,
+          "guard:walk": 1
+        }
+      },
+      "essentialSequenceEqual": false
+    },
+    "errors": []
+  },
+  "nativeInput": {
+    "method": "Actual keyboard input; sampled renderer source rectangles. Yellow item granted explicitly as a weapon fixture. Cache is cleared only for frame observation, NOT an FPS benchmark.",
+    "reports": [
+      {
+        "mode": "reduce",
+        "walkFrames": 10,
+        "shootFrames": 10,
+        "highFrames": 12,
+        "gunFrames": 10,
+        "shots": 2,
+        "exactResume": true,
+        "pausedFrameStable": true,
+        "mediaToggleKeepsPose": true
+      },
+      {
+        "mode": "no-preference",
+        "walkFrames": 9,
+        "shootFrames": 10,
+        "highFrames": 12,
+        "gunFrames": 10,
+        "shots": 2,
+        "exactResume": true,
+        "pausedFrameStable": true,
+        "mediaToggleKeepsPose": true
+      },
+      {
+        "mode": "blockedSheets",
+        "walkFrames": 10,
+        "shootFrames": 10,
+        "highFrames": 12,
+        "gunFrames": 10,
+        "shots": 2,
+        "exactResume": true,
+        "pausedFrameStable": true,
+        "mediaToggleKeepsPose": true
+      }
+    ],
+    "errors": []
+  },
+  "regressions": {
+    "browser": {
+      "nativeStartFireAndExactResume": true,
+      "fixtureEveryQueuedLessonAndReload": true,
+      "fixtureRealKeyActiveAndChargedSwap": true,
+      "catalog54": true,
+      "fixtureBossAndBranchExit": true,
+      "fixtureLargeRoomMouseAndExactSave": true,
+      "fixturePuzzleForgeAndRemixUnlock": true,
+      "mobileDualTouch": [
+        390,
+        568
+      ],
+      "imageStorageFailurePlayable": true,
+      "renderReadOnly": true,
+      "errors": []
+    },
+    "rules": {
+      "explicitGuardianFixture": true,
+      "actualHeroAssetLoaded": true,
+      "correctBossLabel": true,
+      "noAutoActiveSwap": true,
+      "realKeyboardChargedSwap": true,
+      "exactChargedResume": true,
+      "exactWaveDelayResume": true,
+      "noPrematureReward": true,
+      "renderPure": true,
+      "errors": []
+    },
+    "crates": {
+      "explicitGeneratedRoomFixture": true,
+      "realMouseFire": [
+        {
+          "mode": "standard",
+          "destroyed": true
+        },
+        {
+          "mode": "inside",
+          "destroyed": true
+        },
+        {
+          "mode": "yellow",
+          "destroyed": true
+        },
+        {
+          "mode": "fan",
+          "destroyed": true
+        },
+        {
+          "mode": "charge",
+          "destroyed": true
+        },
+        {
+          "mode": "prism",
+          "destroyed": true
+        },
+        {
+          "mode": "velvet",
+          "destroyed": true
+        }
+      ],
+      "exact81To83Continue": true,
+      "errors": []
+    },
+    "decisions": {
+      "explicitVisitedShopFixture": true,
+      "previewAndRealKeyboardPurchase": true,
+      "actualPriceAndNoAutoSpend": true,
+      "journalAndWaypointDOM": true,
+      "noAutoMovement": true,
+      "renderPure": true,
+      "legacy82UnchangedIn83Archive": true,
+      "mobileMapNoOverflow": true,
+      "errors": []
+    },
+    "pixels": {
+      "originalSeed": "1793961062183",
+      "deviceScaleFactor": 1,
+      "pixels": {
+        "rows": [
+          {
+            "kind": "butter",
+            "facing": -1,
+            "opaque": 3333,
+            "sourceOpaque": 3320,
+            "differentChannels": 1151
+          },
+          {
+            "kind": "butter",
+            "facing": 1,
+            "opaque": 3333,
+            "sourceOpaque": 3320,
+            "differentChannels": 1151
+          },
+          {
+            "kind": "butter",
+            "facing": -1,
+            "opaque": 3621,
+            "sourceOpaque": 3603,
+            "differentChannels": 1560
+          },
+          {
+            "kind": "butter",
+            "facing": 1,
+            "opaque": 3621,
+            "sourceOpaque": 3603,
+            "differentChannels": 1560
+          },
+          {
+            "kind": "butter",
+            "facing": -1,
+            "opaque": 3414,
+            "sourceOpaque": 3397,
+            "differentChannels": 1401
+          },
+          {
+            "kind": "butter",
+            "facing": 1,
+            "opaque": 3414,
+            "sourceOpaque": 3397,
+            "differentChannels": 1401
+          },
+          {
+            "kind": "butter",
+            "facing": -1,
+            "opaque": 2814,
+            "sourceOpaque": 2775,
+            "differentChannels": 942
+          },
+          {
+            "kind": "butter",
+            "facing": 1,
+            "opaque": 2814,
+            "sourceOpaque": 2775,
+            "differentChannels": 942
+          },
+          {
+            "kind": "openDoor",
+            "opaque": 16928,
+            "sourceOpaque": 17055
+          }
+        ],
+        "injected": {
+          "oldBitmapOpaque": 0,
+          "newCanvasOpaque": 3333,
+          "newDoorOpaque": 16928
+        },
+        "afterEvictionOpaque": 3333,
+        "cache": {
+          "bytes": 6721024,
+          "entries": 12,
+          "hits": 115,
+          "misses": 414,
+          "limit": 25165824
+        }
+      },
+      "walkingThroughVisibleOpening": true,
+      "exact84Continue": true,
+      "errors": []
+    }
+  },
+  "isolatedPerformance": {
+    "method": "Two fresh headless Chromium1366x850/DPR1 instances, normal/grand legal-room invulnerability fixtures,7s cold-entry sample, no profiler/throttling/concurrent tests. CPU submission time and headless rAF intervals, NOT user-device FPS/GPU memory.",
+    "reports": [
+      {
+        "entryMs": 28.799999997019768,
+        "shape": "normal",
+        "enemies": 3,
+        "obstacles": 6,
+        "frames": {
+          "frames": 414,
+          "meanMs": 17.108937198067633,
+          "p95Ms": 16.799999999999272,
+          "over33": 3
+        },
+        "long": [
+          78
+        ],
+        "render120ms": 24.900000005960464,
+        "cache": {
+          "bytes": 25068508,
+          "entries": 184,
+          "hits": 5736,
+          "misses": 524,
+          "limit": 25165824
+        }
+      },
+      {
+        "entryMs": 48,
+        "shape": "grand",
+        "enemies": 3,
+        "obstacles": 8,
+        "frames": {
+          "frames": 415,
+          "meanMs": 17.22819277108435,
+          "p95Ms": 16.800000000000182,
+          "over33": 3
+        },
+        "long": [],
+        "render120ms": 23.5,
+        "cache": {
+          "bytes": 25019844,
+          "entries": 185,
+          "hits": 7966,
+          "misses": 449,
+          "limit": 25165824
+        }
+      }
+    ],
+    "errors": []
+  },
+  "visualReview": {
+    "recording": "/tmp/dungeon86-native-motion.webm",
+    "contactSheet": "/tmp/dungeon86-motion-contact.png",
+    "inspected": true
+  },
+  "limits": [
+    "Reduced-media reproduction is not proof of the user device preference.",
+    "Source frame tracing clears caches for observation; neither trace nor video is an FPS benchmark.",
+    "Yellow gun is explicitly granted in native-input weapon fixture.",
+    "Blocked-sheet test injects a loading failure; it does not prove the user had that failure.",
+    "Headless performance measures CPU submission/rAF, not user-device FPS or GPU memory.",
+    "No claim of subjective smoothness or human fun from automated results."
+  ],
+  "sourceHashes": {
+    "index.html": "7815ab6f47bf23625b67314179475b0f1ecdfabe7c1d5a2093fa6cab1cc255c8",
+    "dungeon85.html": "017787054f117efb9c6547867a5c90e7ca0f5eac72d2438c7f4284191259557c",
+    "dungeon86.js": "7e223cc72ad46b2ebe20723decebe1b845795bfd3de30a4f8fbfc24c040eb344",
+    "dungeon86-renderer.js": "95926f1f8618ed6857475a4ed99c195127465b8411cbe66b5e2688ed2ebf1ce2",
+    "dungeon86-motion.js": "7cf924f573fa759fe15356ee48eacf1fe12df18af81a5f0f9f16ea66295f193b",
+    "dungeon86-hero.js": "8de85628afe2091e96c098da705b5aa9eb9dbb3d0a9fe4cfa4b5949e57511da1",
+    "dungeon86-loader.js": "4e2a0a1e9f25de906d74a5d89480c1aa8e41b68ad859cf7ab9780fbb8e3b9b7d",
+    "dungeon84-engine.js": "ed736d9829c5f6cf08e5111cf3a88d574f99035d056605315fe95c84605a184d",
+    "dungeon84-world.js": "82f5330257288e440ce2c1017646aba6f962dc13c02d3f2fb56822b41fb8ebc4",
+    "dungeon84-save.js": "3c646afc63d8d406cf7945f320de20be5ce31de4c28f0ba8eb1d349cf7010887",
+    "dungeon85-cache.js": "409e9246cdf06ee7058ba023f0be177e2de67b449992693bcbb502a8e927290b",
+    "dungeon85-doors.js": "d3447926a94acfc389baa686fa58cc5ede3ca29811f28d869d17b614831a14af",
+    "test/dungeon86.test.js": "f62d26d45c4e37d901ba4fd271af2c4df946a8ab6639e39291a234d86e52344e",
+    "tools/audit-animation86-browser.mjs": "ae4e9edab860c8d453501763543d085487b9c1b06e17f2f344bfe92eaf0b03a8",
+    "tools/check-dungeon86-animations-browser.mjs": "ee9262259a5942333c89a33f7f1552edfe13f9d6a6614f52261a3c6783fefe6f",
+    "tools/check-dungeon86-browser.mjs": "2702b678ffacb40e7859268193ba9b32a1226684fb1d84e0fb32683c55a88cc0",
+    "tools/check-dungeon86-crates-browser.mjs": "32b561a08ad4b4c0520d935cf17cc6b5fb38d29a0e387562618acd189026f899",
+    "tools/check-dungeon86-decisions-browser.mjs": "91f0b8002325fa27d24e212601879f61cce115c714b60e74d2b1e61457647060",
+    "tools/check-dungeon86-performance.mjs": "665318506bb894bad49824367ac8bcdc431618d4713fba9c5ac64650009e1bb7",
+    "tools/check-dungeon86-pixels-browser.mjs": "f526b034279a33eb984d5179e836098b73838437130136ff285223f4d2c9eea7",
+    "tools/check-dungeon86-rules-browser.mjs": "a78ef2bffbb6a75cf1cf9f19c99c57c68ea291ded972fb80e5410cbfd1658017"
+  }
+}
