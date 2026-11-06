@@ -1,0 +1,350 @@
+{
+  "version": 85,
+  "recordedAtUTC": "2026-11-06T11:05:31.778Z",
+  "reportedSeed": "1793961062183",
+  "scope": "Presentation-only: same84 engine/world/save/rules and original assets.",
+  "tests": {
+    "tests": 617,
+    "pass": 617,
+    "fail": 0,
+    "duration_ms": 58244.815288
+  },
+  "pixelsDPR1": {
+    "originalSeed": "1793961062183",
+    "pixels": {
+      "rows": [
+        {
+          "kind": "butter",
+          "facing": -1,
+          "opaque": 3333,
+          "sourceOpaque": 3320,
+          "differentChannels": 1151
+        },
+        {
+          "kind": "butter",
+          "facing": 1,
+          "opaque": 3333,
+          "sourceOpaque": 3320,
+          "differentChannels": 1151
+        },
+        {
+          "kind": "butter",
+          "facing": -1,
+          "opaque": 3621,
+          "sourceOpaque": 3603,
+          "differentChannels": 1560
+        },
+        {
+          "kind": "butter",
+          "facing": 1,
+          "opaque": 3621,
+          "sourceOpaque": 3603,
+          "differentChannels": 1560
+        },
+        {
+          "kind": "butter",
+          "facing": -1,
+          "opaque": 3414,
+          "sourceOpaque": 3397,
+          "differentChannels": 1401
+        },
+        {
+          "kind": "butter",
+          "facing": 1,
+          "opaque": 3414,
+          "sourceOpaque": 3397,
+          "differentChannels": 1401
+        },
+        {
+          "kind": "butter",
+          "facing": -1,
+          "opaque": 2814,
+          "sourceOpaque": 2775,
+          "differentChannels": 942
+        },
+        {
+          "kind": "butter",
+          "facing": 1,
+          "opaque": 2814,
+          "sourceOpaque": 2775,
+          "differentChannels": 942
+        },
+        {
+          "kind": "openDoor",
+          "opaque": 16928,
+          "sourceOpaque": 17055
+        }
+      ],
+      "injected": {
+        "oldBitmapOpaque": 0,
+        "newCanvasOpaque": 3333,
+        "newDoorOpaque": 16928
+      },
+      "afterEvictionOpaque": 3333,
+      "cache": {
+        "bytes": 6721024,
+        "entries": 12,
+        "hits": 219,
+        "misses": 412,
+        "limit": 25165824
+      }
+    },
+    "walkingThroughVisibleOpening": true,
+    "exact84Continue": true,
+    "errors": []
+  },
+  "pixelsDPR2": {
+    "originalSeed": "1793961062183",
+    "deviceScaleFactor": 2,
+    "pixels": {
+      "rows": [
+        {
+          "kind": "butter",
+          "facing": -1,
+          "opaque": 3333,
+          "sourceOpaque": 3320,
+          "differentChannels": 1151
+        },
+        {
+          "kind": "butter",
+          "facing": 1,
+          "opaque": 3333,
+          "sourceOpaque": 3320,
+          "differentChannels": 1151
+        },
+        {
+          "kind": "butter",
+          "facing": -1,
+          "opaque": 3621,
+          "sourceOpaque": 3603,
+          "differentChannels": 1560
+        },
+        {
+          "kind": "butter",
+          "facing": 1,
+          "opaque": 3621,
+          "sourceOpaque": 3603,
+          "differentChannels": 1560
+        },
+        {
+          "kind": "butter",
+          "facing": -1,
+          "opaque": 3414,
+          "sourceOpaque": 3397,
+          "differentChannels": 1401
+        },
+        {
+          "kind": "butter",
+          "facing": 1,
+          "opaque": 3414,
+          "sourceOpaque": 3397,
+          "differentChannels": 1401
+        },
+        {
+          "kind": "butter",
+          "facing": -1,
+          "opaque": 2814,
+          "sourceOpaque": 2775,
+          "differentChannels": 942
+        },
+        {
+          "kind": "butter",
+          "facing": 1,
+          "opaque": 2814,
+          "sourceOpaque": 2775,
+          "differentChannels": 942
+        },
+        {
+          "kind": "openDoor",
+          "opaque": 16928,
+          "sourceOpaque": 17055
+        }
+      ],
+      "injected": {
+        "oldBitmapOpaque": 0,
+        "newCanvasOpaque": 3333,
+        "newDoorOpaque": 16928
+      },
+      "afterEvictionOpaque": 3333,
+      "cache": {
+        "bytes": 6721024,
+        "entries": 12,
+        "hits": 219,
+        "misses": 415,
+        "limit": 25165824
+      }
+    },
+    "walkingThroughVisibleOpening": true,
+    "exact84Continue": true,
+    "errors": []
+  },
+  "browser": {
+    "nativeStartFireAndExactResume": true,
+    "fixtureEveryQueuedLessonAndReload": true,
+    "fixtureRealKeyActiveAndChargedSwap": true,
+    "catalog54": true,
+    "fixtureBossAndBranchExit": true,
+    "fixtureLargeRoomMouseAndExactSave": true,
+    "fixturePuzzleForgeAndRemixUnlock": true,
+    "mobileDualTouch": [
+      390,
+      568
+    ],
+    "imageStorageFailurePlayable": true,
+    "renderReadOnly": true,
+    "errors": []
+  },
+  "rules": {
+    "explicitGuardianFixture": true,
+    "actualHeroAssetLoaded": true,
+    "correctBossLabel": true,
+    "noAutoActiveSwap": true,
+    "realKeyboardChargedSwap": true,
+    "exactChargedResume": true,
+    "exactWaveDelayResume": true,
+    "noPrematureReward": true,
+    "renderPure": true,
+    "errors": []
+  },
+  "crates": {
+    "explicitGeneratedRoomFixture": true,
+    "realMouseFire": [
+      {
+        "mode": "standard",
+        "destroyed": true
+      },
+      {
+        "mode": "inside",
+        "destroyed": true
+      },
+      {
+        "mode": "yellow",
+        "destroyed": true
+      },
+      {
+        "mode": "fan",
+        "destroyed": true
+      },
+      {
+        "mode": "charge",
+        "destroyed": true
+      },
+      {
+        "mode": "prism",
+        "destroyed": true
+      },
+      {
+        "mode": "velvet",
+        "destroyed": true
+      }
+    ],
+    "exact81To83Continue": true,
+    "errors": []
+  },
+  "decisions": {
+    "explicitVisitedShopFixture": true,
+    "previewAndRealKeyboardPurchase": true,
+    "actualPriceAndNoAutoSpend": true,
+    "journalAndWaypointDOM": true,
+    "noAutoMovement": true,
+    "renderPure": true,
+    "legacy82UnchangedIn83Archive": true,
+    "mobileMapNoOverflow": true,
+    "errors": []
+  },
+  "allAssetFailureFixture": {
+    "retryAttempts": [
+      1,
+      2
+    ],
+    "visiblePlayerMarkerPixels": 511
+  },
+  "performance": {
+    "method": "Two fresh headless Chromium1366x850/DPR1 instances, normal/grand legal-room invulnerability fixtures,7s cold-entry sample, no profiler/throttling/concurrent tests. CPU submission time and headless rAF intervals, NOT user-device FPS/GPU memory.",
+    "reports": [
+      {
+        "entryMs": 54.20000000298023,
+        "shape": "normal",
+        "enemies": 3,
+        "obstacles": 6,
+        "frames": {
+          "frames": 407,
+          "meanMs": 17.64889434889435,
+          "p95Ms": 16.800000000000182,
+          "over33": 4
+        },
+        "long": [
+          108
+        ],
+        "render120ms": 18.400000005960464,
+        "cache": {
+          "bytes": 25069276,
+          "entries": 184,
+          "hits": 5682,
+          "misses": 523,
+          "limit": 25165824
+        }
+      },
+      {
+        "entryMs": 535.2999999970198,
+        "shape": "grand",
+        "enemies": 3,
+        "obstacles": 8,
+        "frames": {
+          "frames": 323,
+          "meanMs": 23.941176470588236,
+          "p95Ms": 33.400000000001455,
+          "over33": 17
+        },
+        "long": [
+          105,
+          350,
+          77,
+          95,
+          153,
+          53,
+          73,
+          60,
+          60,
+          135,
+          83,
+          65,
+          67
+        ],
+        "render120ms": 24.799999997019768,
+        "cache": {
+          "bytes": 25139332,
+          "entries": 184,
+          "hits": 6589,
+          "misses": 389,
+          "limit": 25165824
+        }
+      }
+    ],
+    "errors": []
+  },
+  "evidenceLimits": [
+    "Empty ImageBitmap result is explicitly injected; exact device/GPU failure in the user screenshot was not directly observed.",
+    "Door walkthrough, asset failures and item states are explicit fixtures, not earned campaign victories.",
+    "Raw/cached raster comparisons allow bounded alpha/filtering differences; original source files/frame rectangles are unchanged.",
+    "Headless rAF/CPU timing is not user-device FPS or GPU memory proof."
+  ],
+  "sourceHashes": {
+    "index.html": "017787054f117efb9c6547867a5c90e7ca0f5eac72d2438c7f4284191259557c",
+    "dungeon84.html": "8f20d51a3cbc25f89d8021405c28f9f99b2707610141e7f852b18a73740d9543",
+    "dungeon84-engine.js": "ed736d9829c5f6cf08e5111cf3a88d574f99035d056605315fe95c84605a184d",
+    "dungeon84-world.js": "82f5330257288e440ce2c1017646aba6f962dc13c02d3f2fb56822b41fb8ebc4",
+    "dungeon84-save.js": "3c646afc63d8d406cf7945f320de20be5ce31de4c28f0ba8eb1d349cf7010887",
+    "dungeon85-cache.js": "409e9246cdf06ee7058ba023f0be177e2de67b449992693bcbb502a8e927290b",
+    "dungeon85-doors.js": "d3447926a94acfc389baa686fa58cc5ede3ca29811f28d869d17b614831a14af",
+    "dungeon85-renderer.js": "b42c8773c27f8e8c41a9d8d0da90f200c2cc07a5daa9f10dd4ac60fe8a19fc8d",
+    "dungeon85.js": "82947df9080198cbc13ba903a1aafae95d5abc8a3c570466fd4d57e4e0180a8d",
+    "test/dungeon85.test.js": "b3f952f4237ce67faebe1f184f4e147a74b2d6af6d14bd1ea047d95fe3579c16",
+    "tools/check-dungeon85-browser.mjs": "8fb453d928292841dfae7247169a4040a7ccfe76f0bb355cf5abfb8cce38b129",
+    "tools/check-dungeon85-crates-browser.mjs": "c53e4a3af5f3f88488c08d5367af24b2a5eb99d1381dda8cb055cd44a01cc5b9",
+    "tools/check-dungeon85-decisions-browser.mjs": "063e428d2135089febe61b509c552687a6c3c23c8c9b8a71352e7391621d75dc",
+    "tools/check-dungeon85-performance.mjs": "9839ecba51e4135b4f81f4c4aa29e2195c20a96c1a7473238a30c13de09ea27b",
+    "tools/check-dungeon85-pixels-browser.mjs": "dfa499b39e6028068797e5ea43c87158086326c3b7350adbecef599616246c69",
+    "tools/check-dungeon85-rules-browser.mjs": "40006ed7640032f630bbf09e467d810a4b7d6fa6200afc26b4528468ec8bf0cd"
+  }
+}

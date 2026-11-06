@@ -81,7 +81,7 @@ test('84 imports profile only, never mutates legacy run/volume, and rejects topo
  const r=visit(g,g.rooms.find(r=>r.type==='combat'));r.waves.total=9;assert(!S.validRun(g));
 });
 test('original art, source poses, manual controls and archive are retained with new rule imports',()=>{
- assert.match(read('index.html'),/dungeon84.js\?v=84/);assert.match(read('dungeon83.html'),/dungeon83.js\?v=83/);assert.match(read('dungeon84-renderer.js'),/dungeon81-cache.js/);assert.match(read('dungeon84.js'),/dungeon84-save.js/);assert.match(read('dungeon84.js'),/const id of new Set\(ids\)/);assert.match(read('dungeon84.js'),/\[boss.role\]/);assert.match(read('dungeon84-shots.js'),/guidanceAt\?\?\.12/);assert.match(read('dungeon84-shots.js'),/random\(g.combatRng\)/);assert.equal(COMBOS.filter(c=>c.parts.every(p=>ITEMS[p])).length,COMBOS.length);
+ assert.match(read('dungeon84.html'),/dungeon84.js\?v=84/);assert.match(read('dungeon83.html'),/dungeon83.js\?v=83/);assert.match(read('dungeon84-renderer.js'),/dungeon81-cache.js/);assert.match(read('dungeon84.js'),/dungeon84-save.js/);assert.match(read('dungeon84.js'),/const id of new Set\(ids\)/);assert.match(read('dungeon84.js'),/\[boss.role\]/);assert.match(read('dungeon84-shots.js'),/guidanceAt\?\?\.12/);assert.match(read('dungeon84-shots.js'),/random\(g.combatRng\)/);assert.equal(COMBOS.filter(c=>c.parts.every(p=>ITEMS[p])).length,COMBOS.length);
 });
 test('83 source/diagnostic pins are exact with only archive-entry URL normalization',()=>{
  assert.equal(createHash('sha256').update(read('dungeon83.html')).digest('hex'),'d806d4f62ea59256f6d3c1c0d62b09dd61520305978b8bb16a6647b832ff2773');

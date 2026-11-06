@@ -1,5 +1,25 @@
 # Project instructions
 
+## ACTIVE v85: visible sprites and open physical-looking passages
+
+Read docs/dungeon85.md. Presentation-only fix for seed1793961062183. Do not
+change84 generation/combat/RNG/save keys or approved original assets/anchors.
+85 uses CPU-backed DOM Canvas whole-cell cache, NOT transferable ImageBitmap.
+Keep24MiB/192 LRU budget, recreate lost/zeroed canvases, original-source fallback
+on allocation failure; oversized labels must not dispose themselves before draw.
+Only cache complete, decoded/primed images; dimensions alone aren't readiness.
+Re-priming an image invalidates its prior cached cells.
+Openings share84 door/bounds coordinates; carve the baked wall only for truly
+open links. Combat/treasure/secret locks remain. Unvisited boss art is open when
+the engine allows entry. Keep actual84 active run unchanged on continue.
+Exact84 root is dungeon84.html;84 engines/assets/diagnostic pins immutable.
+Old84 tests redirect entry URLs only; normalize only these in pin checks.
+Run full unit, walking-door corpus, pixel alpha/raw-vs-cache tests, embedded
+bitmap-failure injection, exact84 continue,85 browser/rules/crates/decisions and
+isolated performance. Fault injection is NOT proof of the user's platform cause.
+Inspect screenshots; counts alone do not prove a character/door was rendered.
+No delegation. Preserve unrelated butter-chibi-release.webp.
+
 ## ACTIVE v84: co-planned floors, encounters and reward pacing
 
 Read docs/dungeon84.md. This is the user's authorized core rules revision, not
