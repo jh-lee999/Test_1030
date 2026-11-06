@@ -1,5 +1,30 @@
 # Project instructions
 
+## ACTIVE v75: walk-over artifacts, boss-only augments and plain wooden crates
+
+Root uses dungeon75 client/content/engine/save/renderer/css; world74 and original
+artifact content74 are intentionally reused unchanged. dungeon74.html preserves
+the previous root byte-for-byte. Read docs/dungeon75.md and sanctuary75 credits.
+Ordinary/start/gold/secret/challenge pedestal stores ONE cached item ID (or null
+for4coins), never3 offers. Radius38 walk-over pickup while playing/cleared only;
+mark taken atomically before grant, duplicates give4coins once without reroll.
+Do not auto-spend in shops: purchases/restocks stay proximity-checked F actions.
+Only floor0/1 boss kills auto-open augment phase with3 cached unowned choices.
+One choice per boss,2 total; final boss opens exit, NOT a pointless final draft.
+Next floor is gated by taken augment. Pause/inventory/blur/save keep the exact
+offer and all source queues/clocks/counters; no free refill or double selection.
+Four fan augments are separate from12 artifacts: fourth-shot side children,
+finite boulder fire trail,3-crate bomb supply,2s survivor-hit repulse. Real effects
+must match descriptions, obey original source release/shared collisions/caps.
+Internal pot is now visibly a plain wooden crate, never gold-chest art, including
+missing-image fallback. Keep new PNG/WebP hash/alpha24 bounds/177px gutter/foot.
+Hero artwork/scale/foot/muzzle/source timings and old source pins stay unchanged.
+Save butter.dungeon75.v1 imports74 PROFILE only; active74 stays in archive. Never
+write old keys. Preserve old volume preference without writing74. Run npm tests,
+art75/74, canon/source checks, browser75 and archive74. Label boss/render fixtures
+separately from native auto-pickup input and policy diagnostic runs. No bot/test
+result proves fun. Preserve unrelated butter-chibi-release.webp; no delegation.
+
 ## ACTIVE v74: three-floor expedition, legal leaf rooms and shared random terrain
 
 Root now runs dungeon74 client/content/world/engine/save/renderer/css. Read

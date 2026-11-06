@@ -1,0 +1,303 @@
+{
+  "version": 75,
+  "sourceSHA256": "33d51a56434420a3c9b275c2325d5becc9c935963047027ed1fa5efa433f06c2",
+  "sourceFiles": [
+    "dungeon75-engine.js",
+    "dungeon74-world.js",
+    "dungeon75-content.js",
+    "dungeon74-content.js",
+    "tools/dungeon75-policy.mjs"
+  ],
+  "limits": "Small full-information automated policy sample, not human difficulty, aesthetics, optimality or evidence of fun. Native DOM run is separate.",
+  "results": [
+    {
+      "seed": "diagnostic-0",
+      "phase": "dead",
+      "time": 42.074999999998255,
+      "hp": 0,
+      "floor": 1,
+      "history": [],
+      "room": 5,
+      "clears": 2,
+      "kills": 7,
+      "items": [
+        "mirror"
+      ],
+      "augments": [],
+      "damageTaken": 73,
+      "telemetry": {
+        "shots": 58,
+        "gun": 0,
+        "ricochet": 0,
+        "lightning": 0,
+        "split": 0,
+        "fire": 0,
+        "parry": 0,
+        "boulder": 1,
+        "bounce": 7,
+        "wallBounce": 45,
+        "frozen": 0,
+        "pulse": 0,
+        "fragments": 0,
+        "terrainBroken": 0,
+        "trials": 0,
+        "autoItems": 1,
+        "augEcho": 0,
+        "augTrail": 0,
+        "augSalvage": 0,
+        "augRepulse": 0,
+        "damageBy": {
+          "stone": 461.6
+        }
+      },
+      "unfinished": null
+    },
+    {
+      "seed": "diagnostic-1",
+      "phase": "won",
+      "time": 465.0333333330747,
+      "hp": 68,
+      "floor": 3,
+      "history": [
+        {
+          "floor": 0,
+          "time": 160.8666666666847,
+          "clears": 10,
+          "visited": 14,
+          "items": [
+            "mirror",
+            "yellow",
+            "bell",
+            "scythe",
+            "weather",
+            "komi",
+            "rust"
+          ],
+          "augments": [
+            "echo"
+          ]
+        },
+        {
+          "floor": 1,
+          "time": 144.23333333320215,
+          "clears": 9,
+          "visited": 14,
+          "items": [
+            "mirror",
+            "yellow",
+            "bell",
+            "scythe",
+            "weather",
+            "komi",
+            "rust",
+            "lucky",
+            "frost",
+            "mace",
+            "belt",
+            "fireworks"
+          ],
+          "augments": [
+            "echo",
+            "trail"
+          ]
+        },
+        {
+          "floor": 2,
+          "time": 159.93333333318787,
+          "clears": 10,
+          "visited": 14,
+          "items": [
+            "mirror",
+            "yellow",
+            "bell",
+            "scythe",
+            "weather",
+            "komi",
+            "rust",
+            "lucky",
+            "frost",
+            "mace",
+            "belt",
+            "fireworks"
+          ],
+          "augments": [
+            "echo",
+            "trail"
+          ]
+        }
+      ],
+      "room": 9,
+      "clears": 29,
+      "kills": 141,
+      "items": [
+        "mirror",
+        "yellow",
+        "bell",
+        "scythe",
+        "weather",
+        "komi",
+        "rust",
+        "lucky",
+        "frost",
+        "mace",
+        "belt",
+        "fireworks"
+      ],
+      "augments": [
+        "echo",
+        "trail"
+      ],
+      "damageTaken": 126,
+      "telemetry": {
+        "shots": 435,
+        "gun": 419,
+        "ricochet": 92,
+        "lightning": 718,
+        "split": 100,
+        "fire": 202,
+        "parry": 0,
+        "boulder": 19,
+        "bounce": 140,
+        "wallBounce": 899,
+        "frozen": 31,
+        "pulse": 122,
+        "fragments": 0,
+        "terrainBroken": 0,
+        "trials": 2,
+        "autoItems": 6,
+        "augEcho": 122,
+        "augTrail": 175,
+        "augSalvage": 0,
+        "augRepulse": 0,
+        "damageBy": {
+          "stone": 207.5,
+          "gun": 3771.3399999999992,
+          "boulder": 1090,
+          "bell": 69,
+          "pillow": 48,
+          "chain": 758.6,
+          "lightning": 4190.200000000001,
+          "fire": 1571.56,
+          "melt": 469.8,
+          "impact": 525
+        }
+      },
+      "unfinished": null
+    },
+    {
+      "seed": "diagnostic-2",
+      "phase": "dead",
+      "time": 152.81666666669202,
+      "hp": 0,
+      "floor": 1,
+      "history": [],
+      "room": 5,
+      "clears": 6,
+      "kills": 32,
+      "items": [
+        "bell",
+        "belt",
+        "weather",
+        "rust"
+      ],
+      "augments": [],
+      "damageTaken": 106,
+      "telemetry": {
+        "shots": 199,
+        "gun": 0,
+        "ricochet": 0,
+        "lightning": 20,
+        "split": 0,
+        "fire": 42,
+        "parry": 0,
+        "boulder": 3,
+        "bounce": 23,
+        "wallBounce": 0,
+        "frozen": 0,
+        "pulse": 32,
+        "fragments": 0,
+        "terrainBroken": 0,
+        "trials": 1,
+        "autoItems": 4,
+        "augEcho": 0,
+        "augTrail": 0,
+        "augSalvage": 0,
+        "augRepulse": 0,
+        "damageBy": {
+          "stone": 1302,
+          "bell": 32,
+          "lightning": 132,
+          "fire": 231,
+          "boulder": 68
+        }
+      },
+      "unfinished": null
+    },
+    {
+      "seed": "diagnostic-3",
+      "phase": "dead",
+      "time": 132.28333333337736,
+      "hp": 0,
+      "floor": 1,
+      "history": [],
+      "room": 8,
+      "clears": 7,
+      "kills": 29,
+      "items": [
+        "rust",
+        "mace",
+        "lucky"
+      ],
+      "augments": [],
+      "damageTaken": 107,
+      "telemetry": {
+        "shots": 128,
+        "gun": 0,
+        "ricochet": 0,
+        "lightning": 0,
+        "split": 35,
+        "fire": 69,
+        "parry": 0,
+        "boulder": 3,
+        "bounce": 21,
+        "wallBounce": 0,
+        "frozen": 0,
+        "pulse": 0,
+        "fragments": 0,
+        "terrainBroken": 0,
+        "trials": 0,
+        "autoItems": 3,
+        "augEcho": 0,
+        "augTrail": 0,
+        "augSalvage": 0,
+        "augRepulse": 0,
+        "damageBy": {
+          "stone": 768.6,
+          "fire": 537.4,
+          "boulder": 186,
+          "impact": 100
+        }
+      },
+      "unfinished": null
+    }
+  ],
+  "date": "2026-11-06",
+  "timezone": "Asia/Seoul",
+  "browser": {
+    "nativeMovementAutoPickupNoDraft": true,
+    "nativeFirePause": true,
+    "fixtureBossAugmentChoiceAndDescent": true,
+    "fixturePendingChoiceSaveResume": true,
+    "fixtureWoodenCrates": true,
+    "mobileDualTouchAutoPickupAndAugment": [
+      390,
+      320,
+      844,
+      568
+    ],
+    "imagesAndStorageDeniedPlayable": true,
+    "renderReadOnly": true,
+    "errors": []
+  },
+  "nativeScope": "Only first artifact movement/fire/pause and touch auto-pickup are native input tests. Boss/menu/descent and crate scene are labeled fixtures. No v75 native full-campaign win claimed."
+}

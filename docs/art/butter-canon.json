@@ -1,5 +1,14 @@
 {
-  "version": 15,
+  "version": 16,
+  "pickup75": {
+    "date":"2026-11-06",
+    "request":"Plain breakable wooden crates, automatic single-artifact pickup, stage-boundary augment selection",
+    "entry":"dungeon75.js",
+    "archive":"dungeon74.html",
+    "preserved":"All original whole Butter poses, size80 foot/-22.4Y, uniform flip/muzzle and source release markers unchanged",
+    "newArt":"Only a separate AI-generated FAN wooden crate; no hero image generation or new approved master",
+    "sources":"assets/sanctuary75/CREDITS.md"
+  },
   "expedition74": {
     "date":"2026-11-06",
     "timezone":"Asia/Seoul",

@@ -1,0 +1,4 @@
+@import url('./dungeon74.css?v=74');
+.augment-sigil{display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border:2px solid #d3c6ed;border-radius:18px;color:#f2ddff;background:radial-gradient(circle at 35% 25%,#a17cae88,#423653);box-shadow:inset 0 0 20px #d1b6e52b;font:36px/1 system-ui,sans-serif}
+.augment-choice{border-color:#bca1d799}.augment-choice small{color:#dfc4f0}
+.augment-inventory{border-top:1px solid #bd9dc64d;margin-top:20px;padding-top:10px;text-align:left}.augment-inventory h3{font-size:17px;color:#ddc7e9;font-weight:400}.augment-inventory article{display:flex;gap:15px;padding:10px 0}.augment-inventory .augment-sigil{width:44px;height:44px;flex-shrink:0;font-size:26px}.augment-inventory p{margin:5px 0;font-size:12px}

@@ -1,0 +1,35 @@
+{
+  "version": 75,
+  "date": "2026-11-06",
+  "timezone": "Asia/Seoul",
+  "provenance": "AI-generated fan-game plain wooden crate, NOT original Trickcal extraction",
+  "generatedSource": "exec-45f021ac-cfb4-4a77-80e2-e05e18c92be9.png",
+  "styleReference": "assets/sanctuary73/objects.png",
+  "encoding": "WebP quality94 alpha-quality100",
+  "alphaThreshold": 24,
+  "crate": {
+    "width": 1261,
+    "height": 1247,
+    "bounds": [
+      230,
+      202,
+      1027,
+      1070
+    ],
+    "foot": [
+      628.5,
+      1070
+    ],
+    "minimumGutter": 177
+  },
+  "files": {
+    "assets/sanctuary75/crate.png": {
+      "sha256": "7063809305bb71c6c24bea921fa1967434effd0de5fceaa652b62ee3c6b5ddef",
+      "bytes": 1142236
+    },
+    "assets/sanctuary75/crate.webp": {
+      "sha256": "3c8420438cd0848f7d94bca6c37be6b704f9b629e4853ddfb1664a9d80553580",
+      "bytes": 192302
+    }
+  }
+}
