@@ -1,0 +1,24 @@
+import assert from 'node:assert/strict';
+const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
+const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox']});
+const root=process.argv[2]||'http://127.0.0.1:4196',errors=[];
+try{
+ const c=await browser.newContext({viewport:{width:1366,height:850}}),p=await c.newPage();p.on('pageerror',e=>errors.push(e.message));
+ // Real input creates a77 save;78 must resume it without migration/refill.
+ await p.goto(root+'/dungeon77.html?test=1&persist=1&seed=hint78');await p.waitForSelector('body[data-ready="true"]');await p.locator('#start').click();await p.keyboard.down('w');await p.waitForFunction(()=>__dungeon77.game.items.length===1);await p.keyboard.up('w');await p.keyboard.down('ArrowRight');await p.waitForFunction(()=>__dungeon77.game.shots>0);await p.keyboard.up('ArrowRight');await p.keyboard.press('Escape');const saved=await p.evaluate(()=>structuredClone(__dungeon77.game));
+ await p.goto(root+'/?test=1&persist=1');await p.waitForSelector('body[data-ready="true"]');await p.locator('[data-continue]').click();const continued=await p.evaluate(()=>structuredClone(__dungeon78.game));assert.deepEqual(continued,saved);assert(await p.locator('script[src*="dungeon78.js"]').count());await p.locator('[data-resume]').click();await p.keyboard.down('ArrowRight');await p.waitForFunction(n=>__dungeon78.game.shots>n,saved.shots);await p.keyboard.up('ArrowRight');
+ // Explicit casting fixtures for presentation, not a native battle win.
+ await p.evaluate(()=>{const a=__dungeon78,g=a.game,E=a.engine,r=E.current(g);r.pedestal.taken=true;r.cleared=false;r.enemies=[];Object.assign(g.player,{x:640,y:565,invuln:999});for(const [role,x,y]of [['archer',350,360],['rusher',650,350],['guard',900,395],['caster',450,510]]){const e=E.spawnEnemy(g,role,x,y);Object.assign(e,{appear:0,state:'tell',timer:.22,attackClock:.5,aimX:1100,aimY:590});}E.pause(g);a.sync();a.render();const canvas=document.createElement('canvas');canvas.id='hint-fixture';canvas.width=document.querySelector('#world').width;canvas.height=document.querySelector('#world').height;canvas.style.cssText='position:fixed;inset:0;width:100vw;height:100vh;z-index:99999';canvas.getContext('2d').drawImage(document.querySelector('#world'),0,0);document.body.append(canvas);});
+ await p.locator('#hint-fixture').screenshot({path:'/tmp/dungeon78-basic-hints.png'});
+ const pure=await p.evaluate(()=>{const a=__dungeon78,s=JSON.stringify(a.game);a.render();a.render();return s===JSON.stringify(a.game);});assert(pure);
+ for(const [role,pattern]of [['velvet','charge'],['erpin','fan'],['shady','rift']]){
+  await p.evaluate(async ([role,pattern])=>{const a=__dungeon78,g=a.game,r=a.engine.current(g);document.querySelector('#hint-fixture')?.remove();r.enemies=[];const e=a.engine.spawnEnemy(g,role,850,430);Object.assign(e,{appear:0,state:'tell',pattern,lockAngle:2.7,timer:.3,action:{type:role==='velvet'?'high':'skill',time:.7,duration:3.5},aimX:550,aimY:460,targets:pattern==='rift'?[{x:522,y:245,w:56,h:390},{x:205,y:434,w:870,h:52}]:[]});const art=await import('./assets/trickcal-elites71/atlas.js');await Promise.all(['idle','walk',role==='velvet'?'high':'skill',...(role==='shady'?['strike']:[])].map(key=>new Promise(resolve=>{const im=new Image();a.images.elites[role][key]=im;im.onload=im.onerror=resolve;im.src=art.ELITE_ART.heroes[role].clips[key].image;})));a.render();const canvas=document.createElement('canvas');canvas.id='hint-fixture';canvas.width=document.querySelector('#world').width;canvas.height=document.querySelector('#world').height;canvas.style.cssText='position:fixed;inset:0;width:100vw;height:100vh;z-index:99999';canvas.getContext('2d').drawImage(document.querySelector('#world'),0,0);document.body.append(canvas);},[role,pattern]);
+  await p.locator('#hint-fixture').screenshot({path:'/tmp/dungeon78-'+role+'-hint.png'});
+ }
+ await c.close();
+ for(const [width,height]of [[390,844],[568,320]]){
+  const p=await browser.newPage({viewport:{width,height},isMobile:true,hasTouch:true,reducedMotion:'reduce'});p.on('pageerror',e=>errors.push(e.message));await p.goto(root+'/?test=1&seed=mobile78');await p.waitForSelector('body[data-ready="true"]');await p.locator('#start').tap();assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  const frozen=await p.evaluate(()=>{const a=__dungeon78;a.engine.pause(a.game);a.sync();const s=JSON.stringify(a.game);a.render();a.render();return s===JSON.stringify(a.game);});assert(frozen);await p.close();
+ }
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({native77SaveResumedExactlyIn78:true,nativeFire:true,fixtureBasicAndThreeBossHints:true,renderReadOnly:pure,mobileReducedMotion:[390,568],errors},null,2));
+}finally{await browser.close();}

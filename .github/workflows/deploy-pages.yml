@@ -107,6 +107,9 @@ jobs:
           node tools/check-art76.mjs
           for module in dungeon77*.js; do node --check "$module"; done
           node tools/check-art77.mjs
+          node --check dungeon78.js
+          node --check dungeon78-renderer.js
+          node --check dungeon78-hints.js
           node --check dice.js
           node --check dice55.js
           node --check dice-selection.js

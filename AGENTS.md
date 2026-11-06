@@ -1,5 +1,21 @@
 # Project instructions
 
+## ACTIVE v78: indirect casting hints, presentation-only shared77 rules/save
+
+Root uses dungeon78 client/renderer/hints and unchanged77 CSS/engine/content/save.
+Read docs/dungeon78.md. Archive dungeon77.html is byte-identical previous root.
+User explicitly rejected exact enemy casting angles: no predictive rays, spread/
+safe wedges, dash corridors or exact windup hit footprints. Keep original whole
+poses; use small body glints/dust and fixed-size soft ground location hints.
+True ground impact may appear only once the attack is active. Do not remove
+player bomb, environmental hazards, real projectiles or player aim markers.
+Enemy facing during windup/attack follows committed aim/velocity, not live player.
+Rendering must not mutate state/RNG or alter simulation, attack timing or damage.
+Same butter.dungeon77.v1 save: continue77 exactly, no migration/refill/new run.
+Reduced motion retains static hints; pause/resume uses existing gameplay clocks.
+Run npm tests, browser78 and archive77. Label presentation fixtures honestly.
+Preserve original art/old source pins and unrelated chibi WebP. No delegation.
+
 ## ACTIVE v77:42 artifacts, real rarity, plain stats and explicit troll tradeoffs
 
 Root loads dungeon77 client/content/build/economy/engine/shots/save/UI/renderer.
