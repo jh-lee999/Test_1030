@@ -103,6 +103,8 @@ jobs:
           node --check dungeon75-save.js
           node --check dungeon75-renderer.js
           node tools/check-art75.mjs
+          for module in dungeon76*.js; do node --check "$module"; done
+          node tools/check-art76.mjs
           node --check dice.js
           node --check dice55.js
           node --check dice-selection.js

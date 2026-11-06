@@ -1,5 +1,14 @@
 {
-  "version": 16,
+  "version": 17,
+  "expedition76": {
+    "date":"2026-11-06",
+    "entry":"dungeon76.js",
+    "archive":"dungeon75.html",
+    "preserved":"All original Butter whole poses,80 scale, shared foot/-22.4Y, uniform facing/muzzle and release markers unchanged",
+    "otherHero":"Velvet uses unchanged original-source71 whole poses at one uniform0.8 scale; gameplay is a fan adaptation",
+    "newArt":"Separate AI-generated FAN props/icons only; no generated hero or new approved Butter master",
+    "sources":"assets/sanctuary76/CREDITS.md"
+  },
   "pickup75": {
     "date":"2026-11-06",
     "request":"Plain breakable wooden crates, automatic single-artifact pickup, stage-boundary augment selection",

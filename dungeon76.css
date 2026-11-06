@@ -1,0 +1,27 @@
+@import url('./dungeon74.css?v=74');
+.augment-sigil{display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border:2px solid #d3c6ed;border-radius:18px;color:#f2ddff;background:radial-gradient(circle at 35% 25%,#a17cae88,#423653);box-shadow:inset 0 0 20px #d1b6e52b;font:36px/1 system-ui,sans-serif}
+.augment-choice{border-color:#bca1d799}.augment-choice small{color:#dfc4f0}
+.augment-inventory{border-top:1px solid #bd9dc64d;margin-top:20px;padding-top:10px;text-align:left}.augment-inventory h3{font-size:17px;color:#ddc7e9;font-weight:400}.augment-inventory article{display:flex;gap:15px;padding:10px 0}.augment-inventory .augment-sigil{width:44px;height:44px;flex-shrink:0;font-size:26px}.augment-inventory p{margin:5px 0;font-size:12px}
+/* v76: compact combat information; detailed build and unlocks live in menus. */
+.start-settings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:650px;margin:18px 0}
+.start-settings label{display:grid;gap:7px;color:#dfd9bb;font-size:13px}
+.start-settings select{width:100%;min-height:44px;border:1px solid #afaa6c66;background:#173632;color:#f6e5b4;border-radius:10px;padding:8px;font:inherit}
+.start-settings option{background:#173632;color:#f6e5b4}
+.build-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0}
+.build-stats>span{display:grid;gap:5px;border:1px solid #c5bd9344;background:#0e272b77;padding:12px;border-radius:12px}
+.build-stats small{color:#bcc9b2}.build-stats b{color:#f6db9c;font-size:20px}
+.trait-summary{color:#a8e3d9!important}
+.unlock-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0}
+.unlock-list article{display:grid;gap:7px;padding:15px;border:1px solid #b8c3ad33;border-radius:12px;opacity:.65}
+.unlock-list article.open{opacity:1;background:#60836433;border-color:#dfcb8b66}
+.unlock-list span{font-size:13px;color:#c6d1bd}.event-choices{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0}
+.event-choices button{display:grid;gap:8px;min-width:170px;min-height:75px}
+.extras-icon{background-image:url('./assets/sanctuary76/objects.webp')!important;background-size:400% 300%}
+.build-summary{max-width:560px;margin:0 0 8px;padding:7px 11px;background:#102d2cba;border-radius:9px;font-size:13px;color:#e5d9ac}
+#pickup-delta{position:absolute;bottom:120px;left:50%;transform:translateX(-50%);max-width:min(640px,90vw);padding:12px 20px;background:#193c38ed;border:1px solid #f2d69b77;border-radius:14px;color:#fff0c5;text-align:center;pointer-events:none}
+.title-panel .title-art{pointer-events:none}
+.title-panel{overflow-y:auto;overflow-x:hidden}.start-equipment{position:relative;z-index:1;margin:12px 0 18px;max-width:650px;font-size:13px;color:#e7d39c}.start-equipment summary{cursor:pointer;padding:9px 0}.start-equipment .start-settings{margin-top:8px}
+#interact{max-width:min(680px,88vw)}#interact-desc{display:block;max-width:560px;font-size:12px;line-height:1.5;font-weight:400;color:#dacfa7;white-space:normal;margin-top:4px}.event-choices small{max-width:360px;line-height:1.5;white-space:normal}
+@media(max-width:700px){.start-settings{grid-template-columns:1fr}.build-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.unlock-list{grid-template-columns:1fr}.build-summary{max-width:calc(100vw - 35px);font-size:11px}.hud nav #music{display:none}#pickup-delta{bottom:185px;font-size:12px}.actions{gap:5px}.actions button{padding:8px}}
+@media(max-height:520px){.build-summary{max-width:400px;font-size:11px}#pickup-delta{bottom:82px;font-size:12px;padding:7px 12px}.hud nav #music{display:none}}
+@media(prefers-reduced-motion:no-preference){button{transition:transform .12s ease,background-color .15s,border-color .15s}button:active:not(:disabled){transform:translateY(2px) scale(.98)}}

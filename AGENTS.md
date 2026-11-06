@@ -1,5 +1,36 @@
 # Project instructions
 
+## ACTIVE v76: tactical room crawl, compositional builds and replay unlocks
+
+Root runs dungeon76 modules. Read docs/dungeon76.md and assets/sanctuary76/CREDITS.md.
+The exact previous root is dungeon75.html (SHA2562b63f1ca823be0b5f2389918feea40dc4cc5ad8a95378e267717ad6a87d21c6d).
+Old75 engine/world/art/diagnostic source pins stay unchanged. No delegation.
+Room20/21,12 tactical templates tie cover and enemy roles together; retain actual
+cover after narrow doorway aprons, shared physical collision and connected32px
+navigation. Gold2/shop1 remain geometric leaves attached only to combat.
+At most2 strong windups,0.34s apart, committed targets. Each boss3 patterns;
+half-HP changes only at commitment; recovery damage ×1.25.
+One shared immutable shot plan carries trajectory/status effects across pellet,
+charge/fan/beam/melee/children. No recursive splitting. Caps100 friendly/90 hostile/
+35 fire/80 zones. Charged input cancels in menus, pending source casts do not.
+Butter whole poses/size80/foot/-22.4Y/flip/muzzle/source releases are unchanged.
+Playable Velvet uses unchanged source71 whole cells at fixed.8 across all clips.
+Do not fabricate additional original clips or directional art.
+Forest/book hazards affect both teams; portals also move both teams safely.
+Event/augment/trial/pause freezes gameplay and deadline clocks. Auto-pick38 and
+boss-only augment rules remain. Events quote without mutations, pay/grant once;
+shop never auto-spends. Resource RNG is separate from loot RNG, safety supply
+after3 dry clears if a key/bomb resource is0. Current effects must match UI.
+Content unlocks persist at checkpoints, not flat permanent attack inflation.
+SAVE_KEY butter.dungeon76.v1 imports75 PROFILE only; old active run stays in75.
+Keep exact pending queues/plans/biomes/transactions on resume, never free refill.
+Renderer/map/UI are read-only. New fan atlas PNG/WebP and measured alpha24 bounds/
+feet/5px gutter/hash pins must remain. Check-art76 and canon/source checks required.
+Run npm tests, browser76 plus archived75/74. Native DOM3-room run is separate
+from boss/event/Velvet fixtures and full-information policy runs. Tests and
+policy win rates do not establish fun, human difficulty or commercial quality.
+Preserve unrelated tools/sprite-sources/butter-chibi-release.webp.
+
 ## ACTIVE v75: walk-over artifacts, boss-only augments and plain wooden crates
 
 Root uses dungeon75 client/content/engine/save/renderer/css; world74 and original
