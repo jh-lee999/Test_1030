@@ -1,5 +1,30 @@
 # Project instructions
 
+## ACTIVE v79: explore for loot, no free starter artifacts
+
+Read docs/dungeon79.md. Root79 uses engine/save/world/loot/renderer/UI79 with
+unchanged77 content/build/shots/CSS and78 indirect hints. Exact78 root is archived
+as dungeon78.html; do not modify77/78 source art/rules or old diagnostic pins.
+No start pedestal/chest/item/loadout grant on any floor, including unlocked starts.
+Treasure rooms and boss clears have one cached walk-over artifact; ordinary
+combat has no guaranteed artifact. Wooden crate3%, gold chest30%, combat room
+gold-chest placement20% independent layout RNG. These are fan-game rates, not
+verified PokeIsaac rates. Luck affects rarity, not container occurrence rates.
+Secret/archive/trial/rush now offer golden chests, not guaranteed artifacts.
+Shops and paid HP contracts remain deliberate purchases. Gold chest requires
+cleared room, proximity and explicit F/key1 once, fallback3–6coins+one supply.
+Keep collision/navigation and whole original characters unchanged. Drops land
+reachable, separated and away from player for preview; auto pickup38, no drafts.
+Pending floor artifacts reserve IDs but never count as owned luck/stats. No RNG
+in rendering/preview; broken/opened/taken and RNG survive exact save/resume.
+Boss artifact is separate from boss augment. Unwanted trolls may be left behind;
+never force artifact pickup to leave. Augments still first two bosses only.
+Save79 imports77 profile only; active77/78 stays in archive and must not be
+overwritten, including old volume preference. New rule requires a new run.
+Run npm tests, browser79 and archive78. Label room/drop/boss fixtures separately
+from native input and full-information diagnostic policy; no automated fun claim.
+Preserve unrelated chibi WebP. No delegation.
+
 ## ACTIVE v78: indirect casting hints, presentation-only shared77 rules/save
 
 Root uses dungeon78 client/renderer/hints and unchanged77 CSS/engine/content/save.
