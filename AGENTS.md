@@ -1,5 +1,24 @@
 # Project instructions
 
+## ACTIVE v83: two review iterations, honest hits and exploration decisions
+
+Read docs/dungeon83.md. Compare PokeIsaac by observed offline gameplay only;
+do not copy its code/art/UI or claim all stages/shop/items were played.
+83 contacts resolve enemy circles/first solid in time order; retain finite pierce,
+range,82 manual launch/delayed seeker/random-on-hit ricochet and loot RNG split.
+Re-evaluate after proc knockback/deaths. No phantom hidden-target procs.
+Journal is visited enabled visible rooms ONLY. Navigation goes through visited,
+cleared unlocked doors; no auto move/aim/teleport/key spend/hidden-room leak.
+Target selection is temporary UI state, memory derives from existing saved rooms.
+Shop peek uses real shopPrice, budget/stat deltas and no auto payment; active
+items are NOT permanent rarity stat gains. Keep F/key/drop/source-pool rules.
+Same save80 key, unchanged81 cached whole original art/anchors/source releases,
+body nav81 and fixed stage balance. Exact82 root is dungeon82.html. Old tests
+redirect to archives only; keep old engines and diagnostic JSON/source pins.
+Run full unit/browser83/decisions/mobile/current82 archive/source/native checks.
+Keep evidence distinctions and do not equate automated results with human fun.
+Preserve unrelated chibi WebP. No delegation.
+
 ## ACTIVE v82: manual launch, delayed homing, random hit ricochet and wooden crates
 
 Read docs/dungeon82.md. User clarified: launch along manual aim, homing only

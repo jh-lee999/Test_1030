@@ -13,7 +13,7 @@ function fixture(){const g=E.createGame('collision82'),r=E.current(g);r.obstacle
 function apiFor(g){return {bullet:b=>g.bullets.push({id:++g.id,age:0,hits:{},...b}),breakCrate:o=>E.breakCrate(g,o),effect(){},hit(e,d){e.hp-=d;},area(){},lightning(){},los(){return true;},nearest(b,except,range,accept){return E.current(g).enemies.filter(e=>e.id!==except&&e.hp>0&&Math.hypot(e.x-b.x,e.y-b.y)<range&&(!accept||accept(e))).sort((a,c)=>Math.hypot(a.x-b.x,a.y-b.y)-Math.hypot(c.x-b.x,c.y-b.y))[0];}};}
 const pellet=(g,data={})=>{const b={id:++g.id,kind:'stone',x:560,y:420,vx:600,vy:0,life:3,age:0,radius:7,damage:14,hits:{},pierce:0,wallBounces:0,...data};g.bullets.push(b);return b;};
 test('82 preserves exact81 archive and original optimized renderer/cache, uses same save',()=>{
- assert.equal(createHash('sha256').update(read('dungeon81.html')).digest('hex'),'355b3502e6484425aca8dba57ef7179fe77359cfdc47e1e24dc20a8f65f22d2e');assert.match(read('index.html'),/dungeon82.js\?v=82/);assert.match(read('dungeon82-renderer.js'),/dungeon81-cache.js/);assert.match(read('dungeon82.js'),/dungeon80-save.js/);
+ assert.equal(createHash('sha256').update(read('dungeon81.html')).digest('hex'),'355b3502e6484425aca8dba57ef7179fe77359cfdc47e1e24dc20a8f65f22d2e');assert.match(read('dungeon82.html'),/dungeon82.js\?v=82/);assert.match(read('dungeon82-renderer.js'),/dungeon81-cache.js/);assert.match(read('dungeon82.js'),/dungeon80-save.js/);
  for(const [path,hash]of Object.entries(JSON.parse(read('docs/dungeon81-performance.json')).sourceHashes)){
   let source=read(path==='index.html'?'dungeon81.html':path);
   if(path==='test/dungeon81.test.js')source=source.replace("read('dungeon81.html'),/dungeon81","read('index.html'),/dungeon81");

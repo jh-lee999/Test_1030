@@ -1,0 +1,97 @@
+{
+  "version": 83,
+  "scope": "Two offline-reference review/implementation/check cycles; ordered hits and feedback, then remembered exploration/shop decisions",
+  "reference": {
+    "url": "https://pokeisaac.com/",
+    "mode": "Public offline Classic",
+    "observed": [
+      "title and mode selection",
+      "starting room",
+      "next combat room",
+      "movement and directional attack",
+      "damage numbers and impacts",
+      "minimap",
+      "pause and stats screen"
+    ],
+    "notVerified": [
+      "full campaign",
+      "shop play this visit",
+      "all item interactions",
+      "online/account/co-op"
+    ],
+    "copiedCodeOrArt": false
+  },
+  "sourceHashes": {
+    "index.html": "d806d4f62ea59256f6d3c1c0d62b09dd61520305978b8bb16a6647b832ff2773",
+    "dungeon82.html": "e02ec7b2b6658d913843dc9ea76fb98cb6022109d8f3192a1f65d50ded0d7d7a",
+    "dungeon81-cache.js": "53140b44701cc303a77188a563f9be0bd0f0465ff3300de56fb4c29e93a2dda2",
+    "dungeon81-nav.js": "4526b45ddfb6034bbae12bc0052f961dfb571731c9080dbd7d254d96edbd8fb1",
+    "dungeon80-save.js": "0acf10be3d797699546c5c331d40eff77a51d111a71c150352fefc3063767818",
+    "dungeon83-audio.js": "1b256da5a1f57d35036e8c3def72cbc28d2962d710a05ef2d13bc811c74f8bb1",
+    "dungeon83-contacts.js": "84ec67cbbeeb67bb252d582bcd852cff348923317164dacb56090a537d24bd4c",
+    "dungeon83-engine.js": "553028ebb929012e1c0d128c3c8d5d5a554fdd0b27a0920c7d0fb13a88fa8ccc",
+    "dungeon83-exploration.js": "05aad6840b4b3be5a4ac9288391353c7fe57fba4e7731aded6a5cfcca5a369d3",
+    "dungeon83-items-ui.js": "0ec761cb1f253926e4d52dfc4e41237d5f7a1e7c7598a0bf322d55d429916c8f",
+    "dungeon83-renderer.js": "d7af4de294ace8d6c48d8cfa41012c35db28df46438dd5fda5ac3b1cee34ca50",
+    "dungeon83-shots.js": "140a5421fc06d4fd2f7b2aa9b3ad1d3f23f09613b1718667ac97688c630f5efd",
+    "dungeon83-ui.js": "a8a8cdb61e60e81d010f3ad549f19fe278aebd9f0f6b8d35b9745793e62f4e8d",
+    "dungeon83.css": "1f0f128317f4061aebf8bd8f7a372848242a8f0611b08145b14bab01b6072a6a",
+    "dungeon83.js": "52d5a08254e68cdb3a104424c128b90e1522fc2bdb62d5d5f66591a20382843c",
+    "test/dungeon83.test.js": "827a4650bfec4a65c553bb35e93cc80d0927fc379c9b99c1e044c40542349842",
+    "test/dungeon83-regressions.test.js": "97c40cb866560cee72b0f81ffafade8824aaa73b2c02cd4821233f725b78f22f",
+    "tools/check-dungeon83-browser.mjs": "f372374f0b49ede5b20312789ad0579dca102aa33ad963cc4064999acdf3b67a",
+    "tools/check-dungeon83-crates-browser.mjs": "a9117692d87d8cb66c5cff53292323bc0b729ebf57c233cd723b86b12caf0f52",
+    "tools/check-dungeon83-decisions-browser.mjs": "82bd50d08c22a6fc540e422475af4bc5b08ce5d171fbffca55b946b1b9834ced",
+    "tools/playtest-dungeon83.mjs": "e2f7c16fc036ad6d7df2e628e849597cc58647fcfefba5a1b454d6334bc3cd04"
+  },
+  "unit": {
+    "total": 575,
+    "passed": 575,
+    "core83": 15,
+    "regression83": 13
+  },
+  "browser": {
+    "current83": true,
+    "archive82": true,
+    "mobileDualTouch": [
+      390,
+      568
+    ],
+    "mobileMapNoOverflow": true,
+    "shop": {
+      "explicitRoomAndWalletFixture": true,
+      "realKeyboardPurchase": true,
+      "priceMatches": true,
+      "noAutoPayment": true
+    },
+    "journal": {
+      "explicitVisitedRoomFixture": true,
+      "realDOMSelection": true,
+      "noAutoMovement": true,
+      "renderPure": true
+    },
+    "mouseCrateFixtures": [
+      "standard",
+      "inside muzzle",
+      "yellow",
+      "fan",
+      "charge",
+      "prism",
+      "velvet"
+    ],
+    "exact81To83And82To83Continue": true,
+    "imageStorageFailure": true
+  },
+  "native": {
+    "stateInjection": false,
+    "fullInformationController": true,
+    "seed": "native80-0",
+    "phase": "playing",
+    "time": 39.090099999999474,
+    "clears": 3,
+    "kills": 12,
+    "hp": 60,
+    "errors": []
+  },
+  "caveat": "Observed public early-game flow plus independent fan-game implementation; automated fixtures/policy are not human fun, human win-rate, commercial quality, or measured user-device FPS."
+}
