@@ -1,5 +1,22 @@
 # Project instructions
 
+## ACTIVE v81: performance only; same80 combat and exact active save
+
+Read docs/dungeon81.md. Root81 reuses unchanged80 content/save/audio/art and
+an otherwise identical engine whose normal-enemy steer import is optimized81.
+Exact80 root is dungeon80.html. Preserve every80/older engine and diagnostic pin.
+No balance, timing, RNG, enemy count, source pose/size/foot/muzzle changes.
+No new save key or migration: continue butter.dungeon80.v1 exactly.
+Whole source-cell CPU caches are bounded24MiB/192entries; do not upload huge
+atlases into each cache context. Base terrain redraws on room/size/art/geometry
+changes; minimap redraws on visible map changes. HUD20Hz, phase/input actions
+immediate; simulation/render still every rAF. Retain image/storage failure paths.
+Run unit/replay equivalence, browser81 and archived80, source checks and native
+inputs. Run paired cold-entry performance checks WITHOUT concurrent tests or CPU
+profiling; label headless fixture/CPU submission time vs user FPS/GPU memory.
+Original images are NOT reduced/replaced. Preserve unrelated chibi WebP.
+No delegation.
+
 ## ACTIVE v80: connected roguelike algorithms, not a PokeIsaac code copy
 
 Read docs/dungeon80.md and its23-row acceptance map. User explicitly authorized

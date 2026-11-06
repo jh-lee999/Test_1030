@@ -1,0 +1,215 @@
+{
+  "method": "Three paired fresh browser instances, alternating order, headless Chromium,1366x850,DPR1,seed lag80,7s cold combat entry. Explicit invulnerability/door fixture, no CPU profiler/throttling or concurrent tests. render120ms measures paused CPU submission time, not GPU paint latency. Not user-device FPS or measured GPU/RAM.",
+  "reports": [
+    {
+      "round": 0,
+      "version": 80,
+      "frames": {
+        "frames": 395,
+        "meanMs": 17.85,
+        "p95Ms": 16.8,
+        "maxMs": 266.6,
+        "over33": 5
+      },
+      "longTasks": {
+        "count": 3,
+        "maxMs": 240
+      },
+      "portraitWrites": 396,
+      "render120ms": 805.4000000059605,
+      "cache": null,
+      "room": {
+        "shape": "normal",
+        "enemies": 5
+      }
+    },
+    {
+      "round": 0,
+      "version": 81,
+      "frames": {
+        "frames": 419,
+        "meanMs": 17.02,
+        "p95Ms": 16.7,
+        "maxMs": 116.7,
+        "over33": 2
+      },
+      "longTasks": {
+        "count": 0,
+        "maxMs": 0
+      },
+      "portraitWrites": 0,
+      "render120ms": 18.299999997019768,
+      "cache": {
+        "bytes": 24837716,
+        "entries": 192,
+        "hits": 6854,
+        "misses": 284,
+        "limit": 25165824
+      },
+      "room": {
+        "shape": "normal",
+        "enemies": 5
+      }
+    },
+    {
+      "round": 1,
+      "version": 81,
+      "frames": {
+        "frames": 419,
+        "meanMs": 17.02,
+        "p95Ms": 16.8,
+        "maxMs": 99.9,
+        "over33": 2
+      },
+      "longTasks": {
+        "count": 0,
+        "maxMs": 0
+      },
+      "portraitWrites": 0,
+      "render120ms": 17,
+      "cache": {
+        "bytes": 24837716,
+        "entries": 192,
+        "hits": 6845,
+        "misses": 285,
+        "limit": 25165824
+      },
+      "room": {
+        "shape": "normal",
+        "enemies": 5
+      }
+    },
+    {
+      "round": 1,
+      "version": 80,
+      "frames": {
+        "frames": 400,
+        "meanMs": 17.79,
+        "p95Ms": 16.8,
+        "maxMs": 183.4,
+        "over33": 7
+      },
+      "longTasks": {
+        "count": 4,
+        "maxMs": 186
+      },
+      "portraitWrites": 401,
+      "render120ms": 851.6000000089407,
+      "cache": null,
+      "room": {
+        "shape": "normal",
+        "enemies": 5
+      }
+    },
+    {
+      "round": 2,
+      "version": 80,
+      "frames": {
+        "frames": 401,
+        "meanMs": 17.58,
+        "p95Ms": 16.8,
+        "maxMs": 199.9,
+        "over33": 4
+      },
+      "longTasks": {
+        "count": 3,
+        "maxMs": 183
+      },
+      "portraitWrites": 402,
+      "render120ms": 762.2999999970198,
+      "cache": null,
+      "room": {
+        "shape": "normal",
+        "enemies": 5
+      }
+    },
+    {
+      "round": 2,
+      "version": 81,
+      "frames": {
+        "frames": 420,
+        "meanMs": 16.98,
+        "p95Ms": 16.8,
+        "maxMs": 116.6,
+        "over33": 2
+      },
+      "longTasks": {
+        "count": 0,
+        "maxMs": 0
+      },
+      "portraitWrites": 0,
+      "render120ms": 16.30000001192093,
+      "cache": {
+        "bytes": 24837716,
+        "entries": 192,
+        "hits": 6829,
+        "misses": 284,
+        "limit": 25165824
+      },
+      "room": {
+        "shape": "normal",
+        "enemies": 5
+      }
+    }
+  ],
+  "errors": [],
+  "version": 81,
+  "measuredAtKST": "2026-11-06 14:37:21 +09:00",
+  "sourceHashes": {
+    "index.html": "355b3502e6484425aca8dba57ef7179fe77359cfdc47e1e24dc20a8f65f22d2e",
+    "dungeon80.html": "825e86ecf8767636e390d0092b57cb122cb80cba65379954a110a93fd2fc28d3",
+    "dungeon80-engine.js": "da1a2782d0d8f9970b1ad9ea5fe2dcd24a58f9ff8030ae531e108433a143670b",
+    "dungeon80-save.js": "0acf10be3d797699546c5c331d40eff77a51d111a71c150352fefc3063767818",
+    "dungeon81.js": "7e21891375b916376f27c40891006026433657f4ae234ffc83184d9e3fd9f34e",
+    "dungeon81-engine.js": "b87f35e4374c51e8da9f25a2dd573cca393c157649c18780087a12010e417c28",
+    "dungeon81-nav.js": "4526b45ddfb6034bbae12bc0052f961dfb571731c9080dbd7d254d96edbd8fb1",
+    "dungeon81-renderer.js": "a2b048ac9b3703a30fd95cf78ab781bdff9408fa3b4dccb1d8081bf07fe8c457",
+    "dungeon81-cache.js": "53140b44701cc303a77188a563f9be0bd0f0465ff3300de56fb4c29e93a2dda2",
+    "test/dungeon81.test.js": "e4e782edb21e57917cca37350f3b85a5d113d129f7274f9a8ec97a17a6f41d28",
+    "tools/check-dungeon81-browser.mjs": "703a1636aeed4bf93ea9be8ac84514dbd8c3f97c567cfa8e7a7827a553310a1b",
+    "tools/check-dungeon81-cache-browser.mjs": "107ffb2dca5f3334da5c8947f6ee2100a23060ee9b9b9d05c7a0693c098257d7",
+    "tools/check-dungeon81-performance.mjs": "858066e254b6461b54d7308f90fb4429b932da077c033dfc9afb2520e58caac7",
+    "tools/playtest-dungeon81.mjs": "e318e5beaac55f666ce1f0e05acef9591945f39ebeba87cda3469e1baaedf410"
+  },
+  "summary": {
+    "80": {
+      "meanFrameMsMedian": 17.79,
+      "maxFrameMsWorst": 266.6,
+      "over33Total": 16,
+      "longTasksTotal": 10,
+      "render120msMedian": 805.4000000059605,
+      "portraitWritesTotal": 1199
+    },
+    "81": {
+      "meanFrameMsMedian": 17.02,
+      "maxFrameMsWorst": 116.7,
+      "over33Total": 6,
+      "longTasksTotal": 0,
+      "render120msMedian": 17,
+      "portraitWritesTotal": 0
+    }
+  },
+  "nativeInput": {
+    "fixtureStateWrites": false,
+    "fullInformationPolicy": true,
+    "seed": "native80-0",
+    "clears": 3,
+    "kills": 12,
+    "time": 35.39029999999979,
+    "hp": 60,
+    "items": [
+      "mirror"
+    ],
+    "errors": []
+  },
+  "browser": {
+    "current81": "passed mobile dual touch/reduced motion/image-storage failure/exact resume/large-room and boss fixtures",
+    "archive80": "passed",
+    "compatibility": "exact80 save resumed in81",
+    "wholeCellNativePixels": {
+      "comparisons": 64,
+      "maxRGBADifference": 0,
+      "actualSubpixelFiltering": "Browser HTMLImage vs Canvas/Bitmap filtering may differ; not pixel-identical at every world transform."
+    }
+  }
+}

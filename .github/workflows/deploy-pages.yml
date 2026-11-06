@@ -112,6 +112,7 @@ jobs:
           node --check dungeon78-hints.js
           for module in dungeon79*.js; do node --check "$module"; done
           for module in dungeon80*.js; do node --check "$module"; done
+          for module in dungeon81*.js; do node --check "$module"; done
           node --check dice.js
           node --check dice55.js
           node --check dice-selection.js
